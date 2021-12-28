@@ -1,8 +1,8 @@
 @file:Suppress("RUNTIME_ANNOTATION_NOT_SUPPORTED")
 
-package app.saboten.commonCllient.domain.usecase.user
+package app.saboten.commonClient.domain.usecase.user
 
-import app.saboten.commonCllient.domain.repository.UserRepository
+import app.saboten.commonClient.domain.repository.UserRepository
 import com.chrynan.inject.Inject
 import com.chrynan.inject.Singleton
 

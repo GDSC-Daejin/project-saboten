@@ -1,1 +1,1 @@
-config.output.filename = "web.js"
+config.output.filename = "app.js"

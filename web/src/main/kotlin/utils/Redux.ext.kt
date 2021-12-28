@@ -1,6 +1,6 @@
 package utils
 
-import app.saboten.commonCllient.presentation.UnidirectionalViewModelDelegate
+import app.saboten.commonClient.presentation.UnidirectionalViewModelDelegate
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

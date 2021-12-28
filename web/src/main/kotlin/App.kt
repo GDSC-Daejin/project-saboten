@@ -8,9 +8,9 @@ import react.fc
 import react.router.Route
 import react.router.Routes
 import react.router.dom.Link
-import routes.Home
-import routes.Profile
-import utils.component
+import routes.home
+import routes.profile
+import utils.functionalComponent
 
 external interface AppProps : Props {
 
@@ -38,28 +38,20 @@ private val app = fc<AppProps> {
 
             Route {
                 attrs.path = "/"
-                attrs.element = createElement {
-                    Home {
-
-                    }
-                }
+                attrs.element = createElement { home() }
             }
 
             Route {
                 attrs.path = "/profile"
-                attrs.element = createElement {
-                    Profile {
-
-                    }
-                }
+                attrs.element = createElement { profile() }
             }
 
         }
     }
 }
 
-fun RBuilder.App(
-    handler : AppProps.() -> Unit
+fun RBuilder.app(
+    handler : AppProps.() -> Unit = {}
 ) {
-    component(app, handler)
+    functionalComponent(app, handler)
 }

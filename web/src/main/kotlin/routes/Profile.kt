@@ -3,9 +3,8 @@ package routes
 import react.Props
 import react.RBuilder
 import react.dom.h2
-import react.dom.p
 import react.fc
-import utils.component
+import utils.functionalComponent
 
 external interface ProfileProps : Props {
 
@@ -19,8 +18,8 @@ private val profile = fc<ProfileProps> {
 
 }
 
-fun RBuilder.Profile(
-    handler : ProfileProps.() -> Unit
+fun RBuilder.profile(
+    handler : ProfileProps.() -> Unit = {}
 ) {
-    component(profile, handler)
+    functionalComponent(profile, handler)
 }

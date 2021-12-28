@@ -34,7 +34,6 @@ val Google.Android.maps get() = "com.google.maps.android:maps-ktx:_"
 val Google.Android.mapsUtils get() = "com.google.maps.android:maps-utils-ktx:_"
 val Google.Accompanist.navigation get() = Navigation
 val Google.Accompanist.placeholderMaterial get() = "com.google.accompanist:accompanist-placeholder-material:_"
-val AndroidX.Compose.material3 get() = "androidx.compose.material3:material3:_"
 
 object Navigation {
     const val animation = "com.google.accompanist:accompanist-navigation-animation:_"

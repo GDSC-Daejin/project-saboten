@@ -1,4 +1,4 @@
-package app.saboten.commonCllient.presentation
+package app.saboten.commonClient.presentation
 
 import kotlinx.coroutines.CoroutineScope
 

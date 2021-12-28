@@ -6,7 +6,7 @@ import react.Props
 import react.RBuilder
 import react.fc
 import styled.styledDiv
-import utils.component
+import utils.functionalComponent
 
 external interface PostItemProps : Props {
     var post: Post
@@ -21,8 +21,8 @@ private val postItem = fc<PostItemProps> { props ->
     }
 }
 
-fun RBuilder.PostItem(post: Post, onClick: () -> Unit) {
-    component(postItem) {
+fun RBuilder.postItem(post: Post, onClick: () -> Unit) {
+    functionalComponent(postItem) {
         this.post = post
         this.onClick = onClick
     }

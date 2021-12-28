@@ -4,7 +4,7 @@ import react.Props
 import react.RBuilder
 import react.dom.h2
 import react.fc
-import utils.component
+import utils.functionalComponent
 
 external interface HomeProps : Props {
 
@@ -18,8 +18,8 @@ private val home = fc<HomeProps> {
 
 }
 
-fun RBuilder.Home(
-    handler : HomeProps.() -> Unit
+fun RBuilder.home(
+    handler : HomeProps.() -> Unit = {}
 ) {
-    component(home, handler)
+    functionalComponent(home, handler)
 }

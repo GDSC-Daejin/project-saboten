@@ -1,12 +1,11 @@
-package app.saboten.commonCllient.presentation
+package app.saboten.commonClient.presentation
 
-import app.saboten.common.entities.ApiResponse
 import app.saboten.common.entities.Post
 import app.saboten.common.entities.User
-import app.saboten.commonCllient.data.LoadState
-import app.saboten.commonCllient.domain.usecase.post.GetPosts
-import app.saboten.commonCllient.domain.usecase.user.GetMe
-import app.saboten.commonCllient.presentation.HomeScreenViewModelDelegate.*
+import app.saboten.commonClient.data.LoadState
+import app.saboten.commonClient.domain.usecase.post.GetPosts
+import app.saboten.commonClient.domain.usecase.user.GetMe
+import app.saboten.commonClient.presentation.HomeScreenViewModelDelegate.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

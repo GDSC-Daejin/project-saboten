@@ -3,6 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.*
 plugins {
     kotlin("js")
     kotlin("plugin.serialization")
+//    id("com.bnorm.react.kotlin-react-function") version "0.6.0"
 }
 
 group = "app.saboten"
@@ -31,6 +32,7 @@ kotlin {
         binaries.executable()
         browser {
             commonWebpackConfig {
+                outputFileName = "app.js"
                 cssSupport.enabled = true
                 mode = if(project.hasProperty("prod")) Mode.PRODUCTION else Mode.DEVELOPMENT
             }

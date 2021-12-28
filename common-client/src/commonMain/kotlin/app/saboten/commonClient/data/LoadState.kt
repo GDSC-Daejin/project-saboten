@@ -1,4 +1,4 @@
-package app.saboten.commonCllient.data
+package app.saboten.commonClient.data
 
 typealias EmptyLoadState = LoadState<Unit>
 
