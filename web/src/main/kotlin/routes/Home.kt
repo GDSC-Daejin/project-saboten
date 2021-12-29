@@ -1,25 +1,31 @@
 package routes
 
+import app.saboten.commonClient.presentation.HomeScreenViewModel
+import components.Space
+import kotlinx.css.px
 import react.Props
 import react.RBuilder
 import react.dom.h2
-import react.fc
-import utils.functionalComponent
+import utils.component
+import utils.extract
+import utils.vfc
 
 external interface HomeProps : Props {
 
 }
 
-private val home = fc<HomeProps> {
+private val home = vfc<HomeProps, HomeScreenViewModel> { _, vm ->
+    val (state, effect, event) = vm.extract()
 
+    Space(100.px)
     h2 {
-        +"Home"
+        +"Home ${state?.me}"
     }
 
 }
 
-fun RBuilder.home(
-    handler : HomeProps.() -> Unit = {}
+fun RBuilder.Home(
+    handler: (HomeProps) -> Unit = {}
 ) {
-    functionalComponent(home, handler)
+    component(home, handler)
 }

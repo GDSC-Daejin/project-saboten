@@ -8,8 +8,13 @@ actual open class PlatformViewModel : ViewModel() {
 
     protected actual val platformViewModelScope: CoroutineScope = viewModelScope
 
-    protected actual override fun onCleared() {
+    actual open fun onViewModelCleared() {
+
+    }
+
+    override fun onCleared() {
         super.onCleared()
+        onViewModelCleared()
     }
 
 }

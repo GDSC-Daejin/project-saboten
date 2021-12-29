@@ -4,7 +4,7 @@ import react.Props
 import react.RBuilder
 import react.dom.h2
 import react.fc
-import utils.functionalComponent
+import utils.component
 
 external interface ProfileProps : Props {
 
@@ -18,8 +18,8 @@ private val profile = fc<ProfileProps> {
 
 }
 
-fun RBuilder.profile(
-    handler : ProfileProps.() -> Unit = {}
+fun RBuilder.Profile(
+    handler : (ProfileProps) -> Unit = {}
 ) {
-    functionalComponent(profile, handler)
+    component(profile, handler)
 }

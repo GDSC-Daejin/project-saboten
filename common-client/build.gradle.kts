@@ -38,6 +38,7 @@ kotlin {
                 api(project(":common"))
                 api(KotlinX.coroutines.core)
                 api(Utils.inject)
+                api(Koin.core)
             }
         }
         val commonTest by getting {
@@ -57,7 +58,6 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-
             }
         }
         val iosTest by getting
@@ -70,10 +70,10 @@ kotlin {
 }
 
 android {
-    compileSdk = 32
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+    compileSdk = Properties.androidTargetSDK
     defaultConfig {
-        minSdk = 24
-        targetSdk = 32
+        sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        minSdk = Properties.androidMinSDK
+        targetSdk = Properties.androidTargetSDK
     }
 }

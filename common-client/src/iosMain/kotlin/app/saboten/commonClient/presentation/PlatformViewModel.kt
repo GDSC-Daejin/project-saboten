@@ -5,13 +5,13 @@ import platform.darwin.dispatch_async
 import platform.darwin.dispatch_get_main_queue
 import kotlin.coroutines.CoroutineContext
 
-private class MainDispatcher: CoroutineDispatcher() {
+private class MainDispatcher : CoroutineDispatcher() {
     override fun dispatch(context: CoroutineContext, block: Runnable) {
         dispatch_async(dispatch_get_main_queue()) { block.run() }
     }
 }
 
-internal class MainScope: CoroutineScope {
+internal class MainScope : CoroutineScope {
     private val dispatcher = MainDispatcher()
     private val job = Job()
 
@@ -22,7 +22,7 @@ internal class MainScope: CoroutineScope {
 actual open class PlatformViewModel actual constructor() {
     protected actual val platformViewModelScope: CoroutineScope = MainScope()
 
-    protected actual fun onCleared() {
+    protected actual open fun onViewModelCleared() {
         platformViewModelScope.cancel()
     }
 

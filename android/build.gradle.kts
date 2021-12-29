@@ -53,13 +53,13 @@ dependencies {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = Properties.androidTargetSDK
     defaultConfig {
-        applicationId = "app.saboten.android"
-        minSdk = 24
-        targetSdk = 32
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = Properties.androidPackageName
+        minSdk = Properties.androidMinSDK
+        targetSdk = Properties.androidTargetSDK
+        versionCode = Properties.androidAppVersionCode
+        versionName = Properties.androidAppVersionName
     }
     buildTypes {
         getByName("release") {

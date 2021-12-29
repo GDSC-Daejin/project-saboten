@@ -5,8 +5,8 @@ import kotlinx.coroutines.Dispatchers.Default
 import kotlinx.coroutines.cancel
 
 actual open class PlatformViewModel {
-    protected actual val platformViewModelScope: CoroutineScope get() = CoroutineScope(Default)
-    protected actual fun onCleared() {
+    protected actual val platformViewModelScope: CoroutineScope get() = jsCoroutineScope
+    actual open fun onViewModelCleared() {
         platformViewModelScope.cancel()
     }
 }

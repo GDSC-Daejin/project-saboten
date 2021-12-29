@@ -2,6 +2,7 @@ package app.saboten.commonClient.presentation
 
 import app.saboten.common.entities.Post
 import app.saboten.common.entities.User
+import app.saboten.common.logger.PlatformLogger
 import app.saboten.commonClient.data.LoadState
 import app.saboten.commonClient.domain.usecase.post.GetPosts
 import app.saboten.commonClient.domain.usecase.user.GetMe
@@ -51,6 +52,11 @@ class HomeScreenViewModel(
                 Event.ReloadContents -> reloadTrigger.emit(Unit)
             }
         }
+    }
+
+    override fun onViewModelCleared() {
+        super.onViewModelCleared()
+        PlatformLogger.d("Cleared!")
     }
 
 }

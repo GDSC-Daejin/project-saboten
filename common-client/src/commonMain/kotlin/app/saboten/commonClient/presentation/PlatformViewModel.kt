@@ -6,6 +6,6 @@ expect open class PlatformViewModel() {
 
     protected val platformViewModelScope : CoroutineScope
 
-    protected fun onCleared()
+    open fun onViewModelCleared()
 
 }
