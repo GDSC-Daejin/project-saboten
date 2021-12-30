@@ -4,7 +4,6 @@ import kotlinx.css.*
 import react.RBuilder
 import styled.css
 import styled.styledDiv
-import styles.MAX_WIDTH_LANDSCAPE_TABLETS
 import styles.MAX_WIDTH_PORTRAIT_TABLETS
 import styles.MAX_WIDTH_SMALL_PHONE
 import styles.mediaMaxWidth
@@ -41,6 +40,24 @@ fun RBuilder.SubTitle(text: String) {
                 MAX_WIDTH_PORTRAIT_TABLETS,
             ) {
                 fontSize = 16.px
+            }
+        }
+        +text
+    }
+}
+
+fun RBuilder.ButtonText(text: String) {
+    styledDiv {
+        css {
+            fontSize = 16.px
+            fontWeight = FontWeight.normal
+            textAlign = TextAlign.center
+            width = 100.pct
+            mediaMaxWidth(
+                MAX_WIDTH_SMALL_PHONE,
+                MAX_WIDTH_PORTRAIT_TABLETS,
+            ) {
+                fontSize = 14.px
             }
         }
         +text

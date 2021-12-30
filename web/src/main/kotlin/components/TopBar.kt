@@ -13,7 +13,11 @@ fun RBuilder.TopBar(
 ) {
     styledDiv {
         css {
+            width = 100.pct
+            position = Position.fixed
+            zIndex = 999
             borderBottom = dividerBoarder
+            backgroundColor = Color.white
         }
 
         styledDiv {
