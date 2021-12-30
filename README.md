@@ -4,7 +4,7 @@
 - [Architectures](#1)
   - [Project Architecture Overall](#1-1)
   - [Common Client Side Architecture Overall](#1-2)
-- [Branch Rules](#2)
+- [Git Rules](#2)
 
 <a name="1"/>
 
@@ -50,4 +50,6 @@
 
 <a name="2"/>
 
-## Branch Rules
+## Git Rules
+
+### Branch
