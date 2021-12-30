@@ -9,7 +9,6 @@
 ### Concept
 #### Kotlin Multiplatform
 - Supports android, ios, web, server (jvm)
-- 
 
 ## Common Client Side Architecture Overall
 
