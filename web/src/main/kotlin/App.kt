@@ -1,22 +1,28 @@
-import components.TopBar
-import kotlinx.css.*
+import components.*
 import react.Props
 import react.RBuilder
 import react.fc
 import react.router.Routes
+import react.router.useLocation
 import routes.home
-import routes.profile
+import routes.login
 import routes.route
-import styled.css
 import styled.styledDiv
 import utils.component
 
 private val app = fc<Props> {
     styledDiv {
-        TopBar()
+        val location = useLocation()
+        TopBar {
+            Logo()
+            TabContainer {
+                Tab("/contact", "문의하기", location.pathname == "/contact")
+                Tab("/login", "로그인", location.pathname == "/login")
+            }
+        }
         Routes {
             route("/", home)
-            route("/profile", profile)
+            route("/login", login)
         }
     }
 }

@@ -14,10 +14,10 @@ val home = vfc<Props, HomeScreenViewModel> { _, vm ->
     val (state, effect, event) = vm.extract()
     LayoutContainer {
         InnerContainer {
-            Space(100.px)
-            MainTitle("Home")
+            Space(200.px)
+            MainTitle("지금 진행중인\n밸런스 게임")
             Space(20.px)
-            SubTitle("This is Subtitle")
+            SubTitle("다양한 사람들과 소통해보세요.")
         }
     }
 }

@@ -1,26 +1,37 @@
 package components
 
-import csstype.Border
-import csstype.Color
-import csstype.Length
-import csstype.LineStyle
 import kotlinx.css.*
+import kotlinx.html.DIV
 import react.RBuilder
-import react.dom.div
+import styled.StyledDOMBuilder
 import styled.css
 import styled.styledDiv
-import styles.Colors
 import styles.dividerBoarder
 
-fun RBuilder.TopBar() {
-    div {
+fun RBuilder.TopBar(
+    content: StyledDOMBuilder<DIV>.() -> Unit
+) {
+    styledDiv {
+        css {
+            borderBottom = dividerBoarder
+        }
 
         styledDiv {
             css {
-                height = 69.px
-                borderBottom = dividerBoarder
+                display = Display.flex
+                flexGrow = 1.0
+                flexBasis = FlexBasis.zero
+                width = 100.pct
+                height = 70.px
+                minWidth = 320.px
+                maxWidth = 1100.px
+                justifyContent = JustifyContent.spaceBetween
+                margin(all = 0.px)
+                put("margin-left", "auto")
+                put("margin-right", "auto")
             }
-        }
 
+            content()
+        }
     }
 }
