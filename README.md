@@ -10,6 +10,10 @@
 #### Kotlin Multiplatform
 - Supports android, ios, web, server (jvm)
 
+#### Shared Multiplatform Module
+- `common` module 은 클라이언트와 서버 둘 다 사용할법한 API 데이터 Response / Body Request 등의 모델, 유틸 (logger 와 같은) 을 서로 공유합니다.
+- `common-client` module 은 클라이언트만에서 사용할만한 API Fetch, Repository, UseCase 를 포함하여 Presentation (ViewModel) 같은 비지니스 로직을 공유합니다.
+
 ## Common Client Side Architecture Overall
 
 ### Diagram
