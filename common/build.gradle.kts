@@ -1,7 +1,7 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    kotlin("native.cocoapods")
+//    kotlin("native.cocoapods")
     kotlin("kapt")
     id("com.android.library")
 }
@@ -22,6 +22,8 @@ kotlin {
         }
     }
 
+    /*
+    Windows 에서 빌드 불가능
     cocoapods {
         summary = "Saboten Common Module"
         ios.deploymentTarget = "14.0"
@@ -29,7 +31,7 @@ kotlin {
             baseName = "common"
         }
         podfile = project.file("../ios/Podfile")
-    }
+    }*/
 
     js("web", IR) {
         useCommonJs()
