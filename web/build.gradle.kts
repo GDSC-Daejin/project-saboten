@@ -23,17 +23,13 @@ dependencies {
     implementation(kotlinw("react-dom"))
     implementation(kotlinw("react-redux"))
     implementation(kotlinw("react-router-dom"))
-    implementation(kotlinw("mui"))
-    implementation(kotlinw("mui-icons"))
-    implementation(kotlinw("styled"))
+    implementation(kotlinw("styled-next"))
 
     implementation(npm("react", "17.0.2"))
     implementation(npm("react-dom", "17.0.2"))
 
     implementation(npm("styled-components", "5.3.3"))
 
-    implementation(npm("@emotion/react", "11.7.1"))
-    implementation(npm("@emotion/styled", "11.6.0"))
 }
 
 kotlin {

@@ -13,7 +13,7 @@ import react.useContext
 
 fun <P : Props> RBuilder.component(
     component: FC<P>,
-    handler: (P) -> Unit
+    handler: (P) -> Unit = {}
 ) {
     child(component) {
         attrs(handler = handler)

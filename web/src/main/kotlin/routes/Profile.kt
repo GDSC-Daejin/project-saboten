@@ -1,25 +1,18 @@
 package routes
 
+import components.LayoutContainer
+import components.MainTitle
+import components.Space
+import kotlinx.css.px
 import react.Props
 import react.RBuilder
 import react.dom.h2
 import react.fc
 import utils.component
 
-external interface ProfileProps : Props {
-
-}
-
-private val profile = fc<ProfileProps> {
-
-    h2 {
-        +"Profile"
+val profile = fc<Props> {
+    LayoutContainer {
+        Space(100.px)
+        MainTitle("Profile")
     }
-
-}
-
-fun RBuilder.Profile(
-    handler : (ProfileProps) -> Unit = {}
-) {
-    component(profile, handler)
 }

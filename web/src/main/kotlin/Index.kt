@@ -1,13 +1,12 @@
-
 import app.saboten.commonClient.di.initKoin
-import kotlinext.js.Record
 import kotlinx.browser.document
-import mui.system.*
 import org.koin.core.component.KoinComponent
+import react.StrictMode
 import react.createContext
 import react.dom.render
-import react.dom.thead
+import react.dom.style
 import react.router.dom.BrowserRouter
+import styled.injectGlobal
 
 object AppKoinComponent : KoinComponent {
     init {
@@ -21,10 +20,13 @@ fun main() {
     val root = document.getElementById("root")
     root?.let {
         render(it) {
+            injectGlobal(globalStyle)
             AppKoinComponentContext.Provider(AppKoinComponent) {
+                StrictMode {
                     BrowserRouter {
                         App()
                     }
+                }
             }
         }
     }
