@@ -27,6 +27,7 @@ dependencies {
 
     implementation(npm("react", "17.0.2"))
     implementation(npm("react-dom", "17.0.2"))
+    implementation(npm("react-router-dom", "6.2.1"))
 
     implementation(npm("styled-components", "5.3.3"))
 
