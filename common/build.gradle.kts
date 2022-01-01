@@ -1,9 +1,12 @@
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
+    kotlin("plugin.spring")
     kotlin("native.cocoapods")
     kotlin("kapt")
     id("com.android.library")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
 }
 
 group = "app.saboten"
@@ -39,8 +42,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(KotlinX.serialization.core)
-                api(KotlinX.coroutines.core)
+                implementation(KotlinX.serialization.core)
+                implementation(KotlinX.coroutines.core)
             }
         }
         val commonTest by getting {
@@ -53,6 +56,7 @@ kotlin {
                 api(AndroidX.appCompat)
                 api(AndroidX.core.ktx)
                 api(AndroidX.lifecycle.viewModelKtx)
+                api(JakeWharton.timber)
             }
         }
         val androidTest by getting {

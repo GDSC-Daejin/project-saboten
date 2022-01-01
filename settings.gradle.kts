@@ -22,8 +22,9 @@ dependencyResolutionManagement {
 rootProject.name = "saboten-service"
 
 
-include(":android")
 include(":common")
 include(":common-client")
+
+include(":android")
 include(":web")
 include(":server")

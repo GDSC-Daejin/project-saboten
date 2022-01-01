@@ -1,11 +1,8 @@
 import components.*
 import kotlinx.css.Color
 import kotlinx.css.backgroundColor
-import react.Props
-import react.RBuilder
-import react.fc
+import react.*
 import react.router.Routes
-import react.router.useLocation
 import routes.home
 import routes.login
 import routes.route

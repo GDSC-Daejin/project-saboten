@@ -1,14 +1,11 @@
 package routes
 
-import app.saboten.commonClient.presentation.HomeScreenViewModel
+import commonClient.presentation.HomeScreenViewModel
 import components.*
 import kotlinx.css.*
 import react.Props
-import react.RBuilder
-import react.dom.h2
 import styled.css
 import styled.styledDiv
-import utils.component
 import utils.extract
 import utils.vfc
 

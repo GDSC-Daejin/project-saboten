@@ -1,6 +1,6 @@
 package utils
 
-import app.saboten.commonClient.presentation.PlatformViewModel
+import commonClient.presentation.PlatformViewModel
 import react.Props
 import react.RBuilder
 import react.fc

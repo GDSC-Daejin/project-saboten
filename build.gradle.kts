@@ -1,8 +1,16 @@
 plugins {
     id("com.android.application") version "7.0.4" apply false
     id("com.android.library") version "7.0.4" apply false
-    id("org.jetbrains.kotlin.android") version "1.6.10" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10" apply false
+
+    val kotlinVersion = "1.6.10"
+    kotlin("multiplatform") version kotlinVersion apply false
+    kotlin("android") version kotlinVersion apply false
+    kotlin("plugin.serialization") version kotlinVersion apply false
+    kotlin("plugin.spring") version kotlinVersion  apply false
+    kotlin("plugin.jpa") version kotlinVersion  apply false
+
+    id("org.springframework.boot") version "2.6.2" apply false
+    id("io.spring.dependency-management") version "1.0.11.RELEASE"  apply false
 }
 
 buildscript {
