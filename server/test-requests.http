@@ -1,1 +1,2 @@
-http://localhost:8080/api/users/100
+### Sample Request
+GET http://localhost:8080/api/users/100
