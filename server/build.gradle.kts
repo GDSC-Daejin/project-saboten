@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
     kotlin("jvm")
     kotlin("plugin.spring")
@@ -14,7 +12,6 @@ group = "app.saboten"
 version = "1.0.00"
 
 dependencies {
-    testImplementation(kotlin("test"))
     implementation(project(":common"))
 
     implementation(KotlinX.serialization.core)
@@ -27,30 +24,26 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+    testImplementation(kotlin("test"))
 }
 
 tasks.test {
     useJUnitPlatform()
 }
 
-tasks {
-    withType<Test> {
-        useJUnitPlatform()
+tasks.compileKotlin {
+    kotlinOptions {
+        jvmTarget = "11"
     }
+}
 
-    withType<KotlinCompile> {
-        kotlinOptions {
-            jvmTarget = "11"
-            freeCompilerArgs = listOf("-Xjsr305=strict")
-        }
+tasks.processResources {
+    dependsOn(":web:browserWebpack")
+    from(project(":web").projectDir.resolve("src/main/resources")) {
+        into("static")
     }
-    processResources {
-        dependsOn(":web:browserWebpack")
-        from(project(":web").projectDir.resolve("src/main/resources")) {
-            into("static")
-        }
-        from(project(":web").buildDir.resolve("distributions/app.js")) {
-            into("static")
-        }
+    from(project(":web").buildDir.resolve("distributions/app.js")) {
+        into("static")
     }
 }

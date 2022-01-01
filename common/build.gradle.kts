@@ -12,6 +12,14 @@ plugins {
 group = "app.saboten"
 version = "1.0.00"
 
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+    }
+}
+
 kotlin {
     android()
 

@@ -5,7 +5,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import app.saboten.android.ui.screens.AppScreen
 import app.saboten.android.ui.styles.MainTheme
-import common.entities.User
 
 class AppActivity : ComponentActivity() {
 

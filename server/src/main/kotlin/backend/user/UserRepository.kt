@@ -1,17 +1,15 @@
 package backend.user
 
-import org.springframework.stereotype.Repository
 import common.entities.User
+import org.springframework.stereotype.Repository
 
 @Repository
 class UserRepository {
 
-//    fun findUser(id : Long) : User = User(
-//        id,
-//        "Harry",
-//        ""
-//    )
-
-    fun findUser(id : Long) : String = "Harry"
+    fun findUser(id : Long) = User(
+        id,
+        "Harry",
+        ""
+    )
 
 }
