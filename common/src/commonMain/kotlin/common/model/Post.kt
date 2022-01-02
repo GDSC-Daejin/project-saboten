@@ -1,4 +1,4 @@
-package common.entities
+package common.model
 
 import kotlinx.serialization.Serializable
 

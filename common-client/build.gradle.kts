@@ -62,7 +62,14 @@ kotlin {
         }
         val iosTest by getting
         val webMain by getting {
+
+            fun kotlinw(target: String): String =
+                "org.jetbrains.kotlin-wrappers:kotlin-$target"
+
             dependencies {
+                implementation(project.dependencies.enforcedPlatform(kotlinw("wrappers-bom:_")))
+                implementation(kotlinw("react"))
+                implementation(kotlinw("redux"))
             }
         }
         val webTest by getting

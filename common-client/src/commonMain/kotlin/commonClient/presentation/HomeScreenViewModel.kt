@@ -1,8 +1,7 @@
 package commonClient.presentation
 
-import common.entities.Post
-import common.entities.User
-import common.logger.PlatformLogger
+import common.model.Post
+import common.model.User
 import commonClient.data.LoadState
 import commonClient.domain.usecase.post.GetPosts
 import commonClient.domain.usecase.user.GetMe
@@ -52,11 +51,6 @@ class HomeScreenViewModel(
                 Event.ReloadContents -> reloadTrigger.emit(Unit)
             }
         }
-    }
-
-    override fun onViewModelCleared() {
-        super.onViewModelCleared()
-        PlatformLogger.d("Cleared!")
     }
 
 }

@@ -1,4 +1,4 @@
-package common.entities
+package common.model
 
 class ApiResponse<T>(
     val error : String?,

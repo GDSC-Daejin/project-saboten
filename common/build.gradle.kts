@@ -65,6 +65,9 @@ kotlin {
                 api(AndroidX.core.ktx)
                 api(AndroidX.lifecycle.viewModelKtx)
                 api(JakeWharton.timber)
+
+                api(AndroidX.compose.compiler)
+                api(AndroidX.compose.runtime)
             }
         }
         val androidTest by getting {

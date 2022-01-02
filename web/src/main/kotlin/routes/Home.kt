@@ -1,12 +1,12 @@
 package routes
 
+import commonClient.extension.extract
 import commonClient.presentation.HomeScreenViewModel
 import components.*
 import kotlinx.css.*
 import react.Props
 import styled.css
 import styled.styledDiv
-import utils.extract
 import utils.vfc
 
 val home = vfc<Props, HomeScreenViewModel> { _, vm ->

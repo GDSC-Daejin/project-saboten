@@ -1,6 +1,6 @@
 package commonClient.data.repository
 
-import common.entities.Post
+import common.model.Post
 import commonClient.data.LoadState
 import commonClient.domain.repository.PostRepository
 import kotlinx.coroutines.delay

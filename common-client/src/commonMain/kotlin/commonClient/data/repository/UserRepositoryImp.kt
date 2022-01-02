@@ -1,6 +1,6 @@
 package commonClient.data.repository
 
-import common.entities.User
+import common.model.User
 import commonClient.data.LoadState
 import commonClient.data.LoadState.Companion.loading
 import commonClient.data.LoadState.Companion.success

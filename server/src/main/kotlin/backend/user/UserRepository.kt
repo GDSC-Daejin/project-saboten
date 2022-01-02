@@ -1,6 +1,6 @@
 package backend.user
 
-import common.entities.User
+import common.model.User
 import org.springframework.stereotype.Repository
 
 @Repository
