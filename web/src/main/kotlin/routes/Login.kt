@@ -26,9 +26,7 @@ val login = fc<Props> {
                 ColoredButton(
                     buttonStyle = ColoredButtonStyle.white,
                     style = { minWidth = 300.px },
-                    icon = {
-                        img(src = "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg") {}
-                    },
+                    icon = { img(src = "https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg") {} },
                     text = { ButtonText("구글 이메일로 로그인") }
                 ) {
 
@@ -37,9 +35,7 @@ val login = fc<Props> {
                 ColoredButton(
                     buttonStyle = ColoredButtonStyle.facebook,
                     style = { minWidth = 300.px },
-                    icon = {
-                        span(classes = "material-icons md-24") { +"facebook" }
-                    },
+                    icon = { span(classes = "material-icons md-24") { +"facebook" } },
                     text = { ButtonText("Facebook 으로 로그인") }
                 ) {
 
@@ -47,9 +43,7 @@ val login = fc<Props> {
                 Space(10.px)
                 AccentButton(
                     style = { minWidth = 300.px },
-                    icon = {
-                        span(classes = "material-icons md-24") { +"email" }
-                    },
+                    icon = { span(classes = "material-icons md-24") { +"email" } },
                     text = { ButtonText("이메일로 로그인") }
                 ) {
 
