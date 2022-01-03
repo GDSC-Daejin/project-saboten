@@ -1,13 +1,10 @@
 import commonClient.di.dataModule
 import commonClient.di.domainModule
-import commonClient.di.initKoin
 import commonClient.di.presentationModule
 import di.jsKoinModule
-import io.ktor.client.engine.js.*
 import kotlinx.browser.document
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
 import react.StrictMode
 import react.createContext
 import react.dom.render
