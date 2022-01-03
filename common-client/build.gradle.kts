@@ -39,6 +39,12 @@ kotlin {
                 api(KotlinX.coroutines.core)
                 api(Utils.inject)
                 api(Koin.core)
+                api(Ktor.serializationKotlinx)
+                api(Ktor.client.core)
+                api(Ktor.client.contentNegotiation)
+                api(Ktor.client.json)
+                api(Ktor.client.serialization)
+                api(Ktor.client.logging)
             }
         }
         val commonTest by getting {
@@ -48,7 +54,10 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-
+                api(Ktor.client.cio)
+                kapt(AndroidX.hilt.compiler)
+                kapt(Google.dagger.hilt.compiler)
+                implementation(Google.dagger.hilt.android)
             }
         }
         val androidTest by getting {
@@ -58,6 +67,7 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
+                implementation(Ktor.client.darwin)
             }
         }
         val iosTest by getting
