@@ -53,6 +53,7 @@ fun RBuilder.ButtonText(text: String) {
             fontWeight = FontWeight.normal
             textAlign = TextAlign.center
             width = 100.pct
+            userSelect = UserSelect.none
             mediaMaxWidth(
                 MAX_WIDTH_SMALL_PHONE,
                 MAX_WIDTH_PORTRAIT_TABLETS,

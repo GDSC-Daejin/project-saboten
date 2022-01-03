@@ -7,6 +7,7 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.context.startKoin
 import react.StrictMode
 import react.createContext
+import react.dom.link
 import react.dom.render
 import react.router.dom.BrowserRouter
 import styled.injectGlobal
@@ -30,6 +31,7 @@ fun main() {
     val root = document.getElementById("root")
     root?.let {
         render(it) {
+            link(href = "https://fonts.googleapis.com/icon?family=Material+Icons", "stylesheet") {}
             injectGlobal(globalStyle)
             AppKoinComponentContext.Provider(AppKoinComponent) {
                 StrictMode {
