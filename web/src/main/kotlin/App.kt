@@ -1,16 +1,20 @@
-import components.*
+import com.bnorm.react.RFunction
+import components.Logo
+import components.Tab
+import components.TabContainer
+import components.TopBar
 import kotlinx.css.Color
 import kotlinx.css.backgroundColor
-import react.*
+import react.RBuilder
 import react.router.Routes
 import routes.home
 import routes.login
 import routes.route
 import styled.css
 import styled.styledDiv
-import utils.component
 
-private val app = fc<Props> {
+@RFunction
+fun RBuilder.App() {
     styledDiv {
         css {
             backgroundColor = Color.white
@@ -27,8 +31,4 @@ private val app = fc<Props> {
             route("/login", login)
         }
     }
-}
-
-fun RBuilder.App() {
-    component(app)
 }

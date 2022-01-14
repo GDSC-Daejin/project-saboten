@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpackConfig.*
 plugins {
     kotlin("js")
     kotlin("plugin.serialization")
-//    id("com.bnorm.react.kotlin-react-function") version "0.6.0"
+    id("com.bnorm.react.kotlin-react-function") version "0.7.0"
 }
 
 group = "app.saboten"
