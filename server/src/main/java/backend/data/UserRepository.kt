@@ -1,4 +1,4 @@
-package backend.user
+package backend.data
 
 import common.model.User
 import org.springframework.stereotype.Repository
@@ -6,10 +6,8 @@ import org.springframework.stereotype.Repository
 @Repository
 class UserRepository {
 
-    fun findUser(id : Long) = User(
-        id,
-        "Harry",
-        ""
-    )
+    suspend fun findMe() : User? {
+        return null
+    }
 
 }

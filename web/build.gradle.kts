@@ -30,7 +30,6 @@ dependencies {
     implementation(npm("react-router-dom", "6.2.1"))
 
     implementation(npm("styled-components", "5.3.3"))
-    implementation(npm("framer-motion", "5.5.5"))
 
 }
 
@@ -46,4 +45,8 @@ kotlin {
             useCommonJs()
         }
     }
+}
+
+rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
+    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.0.0"
 }
