@@ -47,6 +47,19 @@ kotlin {
     }
 }
 
+tasks.named<org.jetbrains.kotlin.gradle.dsl.KotlinJsCompile>("compileKotlinJs") {
+    kotlinOptions {
+        freeCompilerArgs = freeCompilerArgs + listOf(
+            "-Xopt-in=kotlin.RequiresOptIn",
+            "-Xopt-in=kotlin.OptIn",
+            "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+
+            "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsApi",
+            "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsImplementation",
+        )
+    }
+}
+
 rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootPlugin> {
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension>().nodeVersion = "16.0.0"
 }

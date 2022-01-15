@@ -1,6 +1,7 @@
 import commonClient.di.dataModule
 import commonClient.di.domainModule
 import commonClient.di.presentationModule
+import di.initKoin
 import di.jsKoinModule
 import kotlinx.browser.document
 import org.koin.core.component.KoinComponent
@@ -14,14 +15,7 @@ import styled.injectGlobal
 
 object AppKoinComponent : KoinComponent {
     init {
-        startKoin {
-            modules(
-                jsKoinModule,
-                dataModule(),
-                domainModule(),
-                presentationModule()
-            )
-        }
+        initKoin()
     }
 }
 

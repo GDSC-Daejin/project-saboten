@@ -45,6 +45,9 @@ kotlin {
                 api(Ktor.client.json)
                 api(Ktor.client.serialization)
                 api(Ktor.client.logging)
+                api(MultiplatformSettings.core)
+                api(MultiplatformSettings.coroutines)
+                api(MultiplatformSettings.serialization)
             }
         }
         val commonTest by getting {
@@ -55,6 +58,8 @@ kotlin {
         val androidMain by getting {
             dependencies {
                 api(Ktor.client.cio)
+                api(MultiplatformSettings.datastore)
+                api(AndroidX.dataStore.preferences)
                 kapt(AndroidX.hilt.compiler)
                 kapt(Google.dagger.hilt.compiler)
                 implementation(Google.dagger.hilt.android)
@@ -67,9 +72,7 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-                //FIXME: Use the darwin artifact for ktor 2.0+
-                implementation("io.ktor:ktor-client-ios:_")
-//                       moved:Ktor.client.darwin)
+                implementation(Ktor.client.darwin)
             }
         }
         val iosTest by getting
@@ -94,5 +97,30 @@ android {
         sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
         minSdk = Properties.androidMinSDK
         targetSdk = Properties.androidTargetSDK
+    }
+}
+
+kotlin {
+    targets.all {
+        compilations.all {
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf(
+                    "-Xopt-in=kotlin.RequiresOptIn",
+                    "-Xopt-in=kotlin.OptIn",
+                    "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+
+                    "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi",
+                    "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
+                    "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
+
+                    "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi",
+
+                    "-Xopt-in=coil.annotation.ExperimentalCoilApi",
+
+                    "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsApi",
+                    "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsImplementation",
+                )
+            }
+        }
     }
 }
