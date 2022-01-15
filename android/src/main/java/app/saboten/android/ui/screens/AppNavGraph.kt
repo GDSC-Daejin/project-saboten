@@ -6,8 +6,8 @@ object AppNavGraph {
 
     object Login : NavGraphRoute("login")
 
-    object Home : NavGraphRoute("home") {
-        object Main : NavGraphRoute("$route/main")
+    object Main : NavGraphRoute("main") {
+        object Home : NavGraphRoute("$route/home")
         object Profile : NavGraphRoute("$route/profile")
         object Notifications : NavGraphRoute("$route/notifications")
     }

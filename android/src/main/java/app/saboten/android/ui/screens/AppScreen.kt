@@ -6,8 +6,8 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.plusAssign
 import app.saboten.android.ui.providers.ProvideNavController
-import app.saboten.android.ui.screens.home.HomeScreen
 import app.saboten.android.ui.screens.login.LoginScreen
+import app.saboten.android.ui.screens.main.mainScreenRoutes
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -29,13 +29,9 @@ fun AppScreen() {
                 startDestination = AppNavGraph.Login.route
             ) {
 
-                composable(AppNavGraph.Login.route) {
-                    LoginScreen()
-                }
+                composable(AppNavGraph.Login.route) { LoginScreen() }
 
-                composable(AppNavGraph.Home.route) {
-                    HomeScreen()
-                }
+                mainScreenRoutes()
 
             }
         }
