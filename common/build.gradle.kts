@@ -25,13 +25,7 @@ kotlin {
 
     jvm("server")
 
-    iosArm64("ios") {
-        binaries {
-            framework {
-                baseName = "common"
-            }
-        }
-    }
+    iosArm64("ios")
 
     cocoapods {
         summary = "Saboten Common Module"
@@ -50,7 +44,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(KotlinX.serialization.core)
+                api(KotlinX.serialization.core)
+                api(KotlinX.serialization.json)
                 implementation(KotlinX.coroutines.core)
             }
         }
@@ -100,4 +95,15 @@ android {
         minSdk = Properties.androidMinSDK
         targetSdk = Properties.androidTargetSDK
     }
+}
+
+
+kotlin {
+
+    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
+        binaries.all {
+            binaryOptions["memoryModel"] = "experimental"
+        }
+    }
+
 }

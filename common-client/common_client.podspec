@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.license                  = ''
     spec.summary                  = 'Saboten Common Client Module'
 
-    spec.vendored_frameworks      = "build/cocoapods/framework/common-client.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/commonclient.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 

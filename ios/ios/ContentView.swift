@@ -1,5 +1,4 @@
 import SwiftUI
-import client
 
 struct ContentView: View {
 	var body: some View {

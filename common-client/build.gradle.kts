@@ -11,18 +11,14 @@ version = "1.0.00"
 
 kotlin {
     android()
-    iosArm64("ios") {
-        binaries {
-            framework {
-                baseName = "common"
-            }
-        }
-    }
+
+    iosArm64("ios")
+
     cocoapods {
         summary = "Saboten Common Client Module"
         ios.deploymentTarget = "14.0"
         framework {
-            baseName = "common-client"
+            baseName = "commonclient"
         }
         podfile = project.file("../ios/Podfile")
     }
@@ -101,6 +97,13 @@ android {
 }
 
 kotlin {
+
+    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
+        binaries.all {
+            binaryOptions["memoryModel"] = "experimental"
+        }
+    }
+
     targets.all {
         compilations.all {
             kotlinOptions {
@@ -110,6 +113,16 @@ kotlin {
                     "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
                     "-Xopt-in=kotlinx.coroutines.FlowPreview",
 
+                    "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsApi",
+                    "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsImplementation",
+                )
+            }
+        }
+    }
+    targets.getByName("android") {
+        compilations.all {
+            kotlinOptions {
+                freeCompilerArgs = freeCompilerArgs + listOf(
                     "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi",
                     "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",
                     "-Xopt-in=androidx.compose.foundation.ExperimentalFoundationApi",
@@ -117,9 +130,6 @@ kotlin {
                     "-Xopt-in=com.google.accompanist.pager.ExperimentalPagerApi",
 
                     "-Xopt-in=coil.annotation.ExperimentalCoilApi",
-
-                    "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsApi",
-                    "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsImplementation",
                 )
             }
         }
