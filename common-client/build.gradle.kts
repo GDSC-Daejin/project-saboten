@@ -108,6 +108,7 @@ kotlin {
                     "-Xopt-in=kotlin.RequiresOptIn",
                     "-Xopt-in=kotlin.OptIn",
                     "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                    "-Xopt-in=kotlinx.coroutines.FlowPreview",
 
                     "-Xopt-in=androidx.compose.animation.ExperimentalAnimationApi",
                     "-Xopt-in=androidx.compose.material.ExperimentalMaterialApi",

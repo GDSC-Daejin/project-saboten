@@ -37,7 +37,6 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
                     allowSpecialFloatingPointValues = true
                     useArrayPolymorphism = true
                     prettyPrint = true
-                    explicitNulls = false
                     allowStructuredMapKeys = true
                     coerceInputValues = true
                     useAlternativeNames = false

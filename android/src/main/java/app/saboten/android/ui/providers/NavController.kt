@@ -6,7 +6,9 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
-val LocalAppNavController = staticCompositionLocalOf<NavController> { rememberNavController() }
+val LocalAppNavController = staticCompositionLocalOf<NavController> {
+    error("Not Provided!")
+}
 
 @Composable
 fun ProvideNavController(

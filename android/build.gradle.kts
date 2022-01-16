@@ -1,3 +1,5 @@
+import de.fayard.refreshVersions.core.versionFor
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -85,4 +87,13 @@ android {
             "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsImplementation",
         )
     }
+
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.ui)
+    }
+
 }
