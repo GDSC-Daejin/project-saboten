@@ -1,13 +1,13 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'common_client'
     spec.version                  = '1.0.00'
-    spec.homepage                 = ''
+    spec.homepage                 = 'https://gdsc-dju.web.app/'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''
     spec.summary                  = 'Saboten Common Client Module'
 
-    spec.vendored_frameworks      = "build/cocoapods/framework/commonclient.framework"
+    spec.vendored_frameworks      = "build/cocoapods/framework/common_client.framework"
     spec.libraries                = "c++"
     spec.module_name              = "#{spec.name}_umbrella"
 

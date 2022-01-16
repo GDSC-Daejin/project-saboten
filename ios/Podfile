@@ -2,4 +2,6 @@ target 'ios' do
   use_frameworks!
   platform :ios, '14.0'
 
+  pod 'common', :path => '../common'
+  pod 'common_client', :path => '../common-client'
 end

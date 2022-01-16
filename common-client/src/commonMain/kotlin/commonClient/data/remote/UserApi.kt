@@ -1,9 +1,9 @@
 package commonClient.data.remote
 
-import com.chrynan.inject.Inject
-import com.chrynan.inject.Singleton
 import common.model.ApiResponse
 import common.model.User
+import commonClient.di.Inject
+import commonClient.di.Singleton
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.request.*

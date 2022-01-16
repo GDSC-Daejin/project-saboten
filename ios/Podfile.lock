@@ -1,3 +1,21 @@
-PODFILE CHECKSUM: 51d97f80a9c7e8a967058ad6442e5aebb8461fcd
+PODS:
+  - common (1.0.00)
+  - common_client (1.0.00)
+
+DEPENDENCIES:
+  - common (from `../common`)
+  - common_client (from `../common-client`)
+
+EXTERNAL SOURCES:
+  common:
+    :path: "../common"
+  common_client:
+    :path: "../common-client"
+
+SPEC CHECKSUMS:
+  common: fbe97a9c6935f61c004da16117fde02b53096701
+  common_client: f0d96eca5592794858961319349842d7bce920e5
+
+PODFILE CHECKSUM: 5342129ec57f824153a1523bbd55c0b7060044c3
 
 COCOAPODS: 1.11.2

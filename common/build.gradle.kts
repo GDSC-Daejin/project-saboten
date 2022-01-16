@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
@@ -25,10 +27,17 @@ kotlin {
 
     jvm("server")
 
-    iosArm64("ios")
+    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
+        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
+        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
+        else -> ::iosX64
+    }
+
+    iosTarget("ios") {}
 
     cocoapods {
         summary = "Saboten Common Module"
+        homepage = "https://gdsc-dju.web.app/"
         ios.deploymentTarget = "14.0"
         framework {
             baseName = "common"
@@ -100,7 +109,7 @@ android {
 
 kotlin {
 
-    targets.withType(org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget::class.java) {
+    targets.withType(KotlinNativeTarget::class.java) {
         binaries.all {
             binaryOptions["memoryModel"] = "experimental"
         }

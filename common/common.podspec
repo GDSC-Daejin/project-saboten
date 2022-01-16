@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'common'
     spec.version                  = '1.0.00'
-    spec.homepage                 = ''
+    spec.homepage                 = 'https://gdsc-dju.web.app/'
     spec.source                   = { :git => "Not Published", :tag => "Cocoapods/#{spec.name}/#{spec.version}" }
     spec.authors                  = ''
     spec.license                  = ''

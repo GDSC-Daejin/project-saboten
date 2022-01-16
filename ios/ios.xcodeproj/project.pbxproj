@@ -8,12 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
+		4AFB124E27940F0500AFD8A8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB124D27940F0500AFD8A8 /* HomeView.swift */; };
+		4AFB125027940F1B00AFD8A8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB124F27940F1B00AFD8A8 /* MenuView.swift */; };
+		4AFB125227940F2C00AFD8A8 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB125127940F2C00AFD8A8 /* NotificationView.swift */; };
+		4AFB12542794105300AFD8A8 /* AppIcon.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AFB12532794105300AFD8A8 /* AppIcon.xcassets */; };
+		4AFB12562794106200AFD8A8 /* Color.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4AFB12552794106200AFD8A8 /* Color.xcassets */; };
 		66BBAC15A48BE3FB47641309 /* Pods_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DF80EF4CDE6744FF139AB569 /* Pods_ios.framework */; };
 		7555FF83242A565900829871 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* ContentView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
+		4AFB124D27940F0500AFD8A8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		4AFB124F27940F1B00AFD8A8 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		4AFB125127940F2C00AFD8A8 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
+		4AFB12532794105300AFD8A8 /* AppIcon.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = AppIcon.xcassets; sourceTree = "<group>"; };
+		4AFB12552794106200AFD8A8 /* Color.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Color.xcassets; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -43,6 +53,60 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		4AFB124727940ECD00AFD8A8 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7555FF8C242A565B00829871 /* Info.plist */,
+				4AFB12532794105300AFD8A8 /* AppIcon.xcassets */,
+				4AFB12552794106200AFD8A8 /* Color.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		4AFB124827940EDD00AFD8A8 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				4AFB124927940EE800AFD8A8 /* Main */,
+				7555FF82242A565900829871 /* ContentView.swift */,
+				2152FB032600AC8F00CF470E /* iOSApp.swift */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
+		4AFB124927940EE800AFD8A8 /* Main */ = {
+			isa = PBXGroup;
+			children = (
+				4AFB124C27940EF900AFD8A8 /* Notification */,
+				4AFB124B27940EF200AFD8A8 /* Menu */,
+				4AFB124A27940EED00AFD8A8 /* Home */,
+			);
+			path = Main;
+			sourceTree = "<group>";
+		};
+		4AFB124A27940EED00AFD8A8 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				4AFB124D27940F0500AFD8A8 /* HomeView.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		4AFB124B27940EF200AFD8A8 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				4AFB124F27940F1B00AFD8A8 /* MenuView.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
+		4AFB124C27940EF900AFD8A8 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				4AFB125127940F2C00AFD8A8 /* NotificationView.swift */,
+			);
+			path = Notification;
+			sourceTree = "<group>";
+		};
 		7555FF72242A565900829871 = {
 			isa = PBXGroup;
 			children = (
@@ -64,9 +128,8 @@
 		7555FF7D242A565900829871 /* ios */ = {
 			isa = PBXGroup;
 			children = (
-				7555FF82242A565900829871 /* ContentView.swift */,
-				7555FF8C242A565B00829871 /* Info.plist */,
-				2152FB032600AC8F00CF470E /* iOSApp.swift */,
+				4AFB124827940EDD00AFD8A8 /* Source */,
+				4AFB124727940ECD00AFD8A8 /* Resources */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -138,6 +201,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AFB12542794105300AFD8A8 /* AppIcon.xcassets in Resources */,
+				4AFB12562794106200AFD8A8 /* Color.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -173,8 +238,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AFB124E27940F0500AFD8A8 /* HomeView.swift in Sources */,
+				4AFB125027940F1B00AFD8A8 /* MenuView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
 				7555FF83242A565900829871 /* ContentView.swift in Sources */,
+				4AFB125227940F2C00AFD8A8 /* NotificationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -303,13 +371,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HFHA6YB7W3;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = ios/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ios/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.saboten.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
@@ -323,13 +393,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = HFHA6YB7W3;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = ios/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/ios/Resources/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.saboten.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;

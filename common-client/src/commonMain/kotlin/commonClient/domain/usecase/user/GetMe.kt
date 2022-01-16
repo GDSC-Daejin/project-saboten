@@ -2,9 +2,9 @@
 
 package commonClient.domain.usecase.user
 
+import commonClient.di.Inject
+import commonClient.di.Singleton
 import commonClient.domain.repository.UserRepository
-import com.chrynan.inject.Inject
-import com.chrynan.inject.Singleton
 
 @Singleton
 class GetMe @Inject constructor(
