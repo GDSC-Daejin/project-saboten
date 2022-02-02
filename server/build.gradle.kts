@@ -18,7 +18,7 @@ dependencies {
     implementation(KotlinX.coroutines.core)
 
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
@@ -29,6 +29,9 @@ dependencies {
     implementation("io.springfox:springfox-swagger-ui:2.9.2")
 
     testImplementation(kotlin("test"))
+}
+repositories {
+    mavenCentral()
 }
 
 tasks.test {
