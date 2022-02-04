@@ -1,4 +1,8 @@
 import de.fayard.refreshVersions.core.versionFor
+import java.io.ByteArrayOutputStream
+import java.util.Properties
+import Properties as AppProperties
+import kotlin.lazy
 
 plugins {
     id("com.android.application")
@@ -9,6 +13,17 @@ plugins {
 
 group = "app.saboten"
 version = "1.0.00"
+
+val gitDescribe by lazy {
+    val stdout = ByteArrayOutputStream()
+    rootProject.exec {
+        executable("/bin/sh")
+        args("-c", "git rev-parse --short HEAD")
+        standardOutput = stdout
+    }
+    val commit = stdout.toString().trim()
+    commit
+}
 
 dependencies {
     implementation(project(":common-client"))
@@ -56,15 +71,18 @@ dependencies {
 }
 
 android {
-    compileSdk = Properties.androidTargetSDK
+    compileSdk = AppProperties.androidTargetSDK
     defaultConfig {
-        applicationId = Properties.androidPackageName
-        minSdk = Properties.androidMinSDK
-        targetSdk = Properties.androidTargetSDK
-        versionCode = Properties.androidAppVersionCode
-        versionName = Properties.androidAppVersionName
+        applicationId = AppProperties.androidPackageName
+        minSdk = AppProperties.androidMinSDK
+        targetSdk = AppProperties.androidTargetSDK
+        versionCode = AppProperties.androidAppVersionCode
+        versionName = AppProperties.androidAppVersionName
     }
     buildTypes {
+        getByName("debug") {
+            versionNameSuffix = "-$gitDescribe-DEBUG"
+        }
         getByName("release") {
             isMinifyEnabled = false
         }
@@ -86,6 +104,27 @@ android {
             "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsApi",
             "-Xopt-in=com.russhwolf.settings.ExperimentalSettingsImplementation",
         )
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = file("${project.rootDir.absolutePath}/keystore/debug.keystore")
+            storePassword = "android"
+        }
+
+        /*
+        create("release") {
+            val keystoreProperties = java.util.Properties().apply {
+                load(file("${project.rootDir.absolutePath}/keystore/keystore").inputStream())
+            }
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storeFile = file(keystoreProperties.getProperty("storeFile"))
+            storePassword = keystoreProperties.getProperty("storePassword")
+        }
+        */
     }
 
     buildFeatures {
