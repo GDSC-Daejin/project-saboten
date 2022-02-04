@@ -2,7 +2,7 @@ name: Distribute
 
 on:
   push:
-    branches: [ develop/android ]
+    branches: [ develop-android ]
 
 jobs:
   distribute:
