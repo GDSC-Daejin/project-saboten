@@ -1,1 +1,16 @@
-CI / CD 테스트
+Version: 
+	Ver 1.00.00-7ac3cc9-DEBUG
+
+Branch
+	feature:android:SBOT-1
+
+Developer
+	"Harry Park"
+
+Project Development Overview
+	Task
+		Harry Park(15 hours ago)-[feature/android/SBOT-1] Target Branch 수정
+		Harry Park(16 hours ago)-[feature/android/SBOT-1] PR Template 수정
+		Harry Park(16 hours ago)-[feature/android/SBOT-1] CI/CD 셋업
+		GitHub(3 days ago)-Create pull_request_template.md
+		GitHub(3 days ago)-Merge pull request #2 from GDSC-Daejin/feature/BE/SBT-deps-versions

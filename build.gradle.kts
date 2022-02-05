@@ -19,6 +19,7 @@ buildscript {
     }
     dependencies {
         classpath(Google.dagger.hilt.android.gradlePlugin)
+        classpath(Google.firebase.appDistributionGradlePlugin)
     }
 }
 

@@ -1,28 +1,28 @@
 import de.fayard.refreshVersions.core.versionFor
-import java.io.ByteArrayOutputStream
-import java.util.Properties
 import Properties as AppProperties
-import kotlin.lazy
 
 plugins {
     id("com.android.application")
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.firebase.appdistribution")
 }
 
 group = "app.saboten"
-version = "1.0.00"
+version = AppProperties.androidAppVersionName
 
-val gitDescribe by lazy {
-    val stdout = ByteArrayOutputStream()
-    rootProject.exec {
-        executable("/bin/sh")
-        args("-c", "git rev-parse --short HEAD")
-        standardOutput = stdout
-    }
-    val commit = stdout.toString().trim()
-    commit
+fun createDebugReleaseNote(): String {
+    val releaseNote = File("${project.rootDir}/fastlane/metadata/android/ko-KR/changelogs/debug-release-notes.txt")
+    releaseNote.writeText(
+        "Version: \n\tVer ${AppProperties.androidAppVersionName}-$gitDescribe-DEBUG\n\n" +
+                "Branch\n\t$gitBranch\n\n" +
+                "Developer\n\t$developer\n\n" +
+                "Project Development Overview\n" +
+                "\tTask\n\t\t$commitList"
+    )
+    releaseNote.createNewFile()
+    return releaseNote.absolutePath
 }
 
 dependencies {
@@ -81,6 +81,7 @@ android {
     }
     buildTypes {
         getByName("debug") {
+            createDebugReleaseNote()
             versionNameSuffix = "-$gitDescribe-DEBUG"
         }
         getByName("release") {
