@@ -19,7 +19,7 @@ fun BottomButtonBar(
                 Box(modifier = Modifier.weight(1 - rightButtonRatio)) {
                     leftButton()
                 }
-                Spacer(Modifier.width(20.dp))
+                Spacer(Modifier.width(10.dp))
             }
 
             Box(modifier = Modifier.weight(rightButtonRatio)) {
