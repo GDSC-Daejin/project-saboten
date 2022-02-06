@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "673605323296",
+    "project_id": "saboten-10954",
+    "storage_bucket": "saboten-10954.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:673605323296:android:76b4d3088a39662c67ca45",
+        "android_client_info": {
+          "package_name": "app.saboten.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "673605323296-6rem1bo2d102t11juf89fva94mqph115.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.android",
+            "certificate_hash": "888cd6de0b4ce794fa0375789db72749c1308b53"
+          }
+        },
+        {
+          "client_id": "673605323296-a57su9dkjm3ni9f8i5tl2puac6mr5fsj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC1TvgClvjhZUbYJhqEtzX-5t6QI4JENz8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "673605323296-a57su9dkjm3ni9f8i5tl2puac6mr5fsj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
