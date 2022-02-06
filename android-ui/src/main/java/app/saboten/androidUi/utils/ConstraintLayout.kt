@@ -1,4 +1,4 @@
-package app.saboten.android.ui.ext
+package app.saboten.androidUi.utils
 
 
 import androidx.compose.runtime.Composable
