@@ -1,5 +1,6 @@
 package app.saboten.androidUi.lists
 
+import android.text.style.BackgroundColorSpan
 import app.saboten.androidUi.utils.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
@@ -15,6 +16,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 @Composable
 fun BasicListItem(
     modifier: Modifier = Modifier,
+    backgroundColor : Color = MaterialTheme.colors.surface,
     title: String,
     subtitle: String? = null,
     leftSideUi: (@Composable () -> Unit)? = null,
@@ -24,6 +26,7 @@ fun BasicListItem(
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
+        color = backgroundColor,
         onClick = onClick
     ) {
 
