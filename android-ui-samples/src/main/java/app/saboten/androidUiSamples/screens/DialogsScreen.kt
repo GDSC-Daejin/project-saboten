@@ -82,7 +82,7 @@ fun DialogsScreen(navController: NavController) {
                     Box(
                         modifier = Modifier.fillMaxWidth()
                             .height(200.dp)
-                            .clip(MaterialTheme.shapes.medium)
+                            .clip(MaterialTheme.shapes.small)
                             .background(MaterialTheme.colors.surfaceOver)
                     )
                 }

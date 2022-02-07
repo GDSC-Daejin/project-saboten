@@ -36,10 +36,11 @@ fun BasicDialog(
     ) {
         Surface(shape = RoundedCornerShape(20.dp)) {
             Column(modifier = Modifier.padding(20.dp), horizontalAlignment = Alignment.CenterHorizontally) {
-                Spacer(modifier = Modifier.height(10.dp))
                 if (content != null && dialogContentGravity == DialogContentGravity.Top) {
                     content.invoke()
                     Spacer(modifier = Modifier.height(20.dp))
+                } else {
+                    Spacer(modifier = Modifier.height(10.dp))
                 }
                 Text(
                     textAlign = TextAlign.Center,
