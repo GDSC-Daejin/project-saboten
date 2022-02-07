@@ -9,3 +9,4 @@
 .externalNativeBuild
 .cxx
 local.properties
+/fastlane/metadata/android/*/changelogs/debug-release-notes.txt
