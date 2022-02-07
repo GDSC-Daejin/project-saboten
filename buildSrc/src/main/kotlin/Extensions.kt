@@ -24,8 +24,7 @@ val Project.gitDescribe: String
     get() {
         val stdout = ByteArrayOutputStream()
         rootProject.exec {
-            executable("/bin/sh")
-            args("-c", "git rev-parse --short HEAD")
+            commandLine = "git rev-parse --short HEAD -c".split(" ")
             standardOutput = stdout
         }
         return stdout.toString().trim()
