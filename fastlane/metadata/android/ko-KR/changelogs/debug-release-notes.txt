@@ -1,16 +1,16 @@
 Version: 
-	Ver 1.00.00-7ac3cc9-DEBUG
+	Ver 1.00.00-7f3baa1-DEBUG
 
 Branch
-	feature:android:SBOT-1
+	develop
 
 Developer
-	"Harry Park"
+	"GitHub"
 
 Project Development Overview
 	Task
-		Harry Park(15 hours ago)-[feature/android/SBOT-1] Target Branch 수정
-		Harry Park(16 hours ago)-[feature/android/SBOT-1] PR Template 수정
-		Harry Park(16 hours ago)-[feature/android/SBOT-1] CI/CD 셋업
-		GitHub(3 days ago)-Create pull_request_template.md
-		GitHub(3 days ago)-Merge pull request #2 from GDSC-Daejin/feature/BE/SBT-deps-versions
+		GitHub(23 hours ago)-Merge pull request #3 from GDSC-Daejin/feature/android/SBOT-1
+		Harry Park(2 days ago)-[feature/android/SBOT-1] Release Note 자동생성
+		Harry Park(3 days ago)-[feature/android/SBOT-1] Target Branch 수정
+		Harry Park(3 days ago)-[feature/android/SBOT-1] PR Template 수정
+		Harry Park(3 days ago)-[feature/android/SBOT-1] CI/CD 셋업
