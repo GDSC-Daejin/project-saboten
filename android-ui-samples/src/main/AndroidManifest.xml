@@ -2,9 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="app.saboten.androidUiSamples">
 
-    <application>
-        <activity android:name=".UiSamplesActivity" android:exported="true"
-                  android:theme="@style/Theme.SabotenAndroidUiSamples">
+    <application
+        android:allowBackup="false"
+        android:supportsRtl="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="Saboten UI Samples"
+        android:theme="@style/Theme.SabotenAndroidUiSamples">
+        <activity android:name=".UiSamplesActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

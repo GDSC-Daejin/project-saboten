@@ -2,15 +2,12 @@
 
 package app.saboten.androidUiSamples
 
-import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.plusAssign
 import app.hdj.datepick.ui.animation.materialTransitionZaxisIn
 import app.hdj.datepick.ui.animation.materialTransitionZaxisOut
-import app.saboten.androidUi.styles.MainTheme
 import app.saboten.androidUiSamples.screens.*
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
@@ -20,21 +17,18 @@ import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 
 @Composable
-fun UiSamplesApp() {
+fun UiSamplesApp(viewModel: UiSamplesViewModel) {
 
     val navController = rememberAnimatedNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
 
     navController.navigatorProvider += bottomSheetNavigator
 
-    val default = isSystemInDarkTheme()
-    var isDarkTheme by remember { mutableStateOf(default) }
-
-    MainTheme(isDarkTheme) {
-        ModalBottomSheetLayout(
-            bottomSheetNavigator = bottomSheetNavigator,
-            sheetBackgroundColor = Color.Unspecified
-        ) {
+    ModalBottomSheetLayout(
+        bottomSheetNavigator = bottomSheetNavigator,
+        sheetBackgroundColor = Color.Unspecified
+    ) {
+        Scaffold {
 
             AnimatedNavHost(
                 navController = navController,
@@ -44,9 +38,7 @@ fun UiSamplesApp() {
             ) {
 
                 composable(UiSamplesAppRoutes.Home.route) {
-                    HomeScreen(navController) {
-                        isDarkTheme = isDarkTheme.not()
-                    }
+                    HomeScreen(navController, viewModel)
                 }
 
                 composable(UiSamplesAppRoutes.Buttons.route) {
@@ -77,6 +69,5 @@ fun UiSamplesApp() {
 
         }
     }
-
 
 }

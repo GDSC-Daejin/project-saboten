@@ -6,13 +6,13 @@ import androidx.compose.runtime.Composable
 
 @Composable
 fun MainTheme(
-    isDarkMode : Boolean = isSystemInDarkTheme(),
+    isDarkTheme : Boolean = isSystemInDarkTheme(),
     content : @Composable () -> Unit
 ) {
     MaterialTheme(
-        if (isDarkMode) darkColors else lightColors,
+        if (isDarkTheme) darkColors else lightColors,
         shapes = shape,
         typography = typo,
-        content = content
+        content = { content() }
     )
 }

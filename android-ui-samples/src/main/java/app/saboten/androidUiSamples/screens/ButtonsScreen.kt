@@ -2,7 +2,6 @@ package app.saboten.androidUiSamples.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddAPhoto
@@ -15,6 +14,7 @@ import app.saboten.androidUi.bars.ToolbarBackButton
 import app.saboten.androidUi.buttons.BottomButtonBar
 import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.styles.surfaceOver
+import com.google.accompanist.insets.ui.Scaffold
 
 @Composable
 fun ButtonsScreen(navController: NavController) {
@@ -34,6 +34,7 @@ fun ButtonsScreen(navController: NavController) {
         },
         bottomBar = {
             BottomButtonBar(
+                modifier = Modifier.navigationBarsPadding(),
                 rightButtonRatio = 0.7f,
                 leftButton = {
                     FilledButton(
@@ -57,14 +58,18 @@ fun ButtonsScreen(navController: NavController) {
             )
         }
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            FilledButton({}, text = "FilledButton")
+        Box(modifier = Modifier.padding(it)) {
 
-            Spacer(Modifier.height(10.dp))
+            Column(modifier = Modifier.padding(20.dp)) {
+                FilledButton({}, text = "FilledButton")
 
-            FilledButton({}, text = "FilledButton with Icon", icon = Icons.Rounded.AddAPhoto)
+                Spacer(Modifier.height(10.dp))
 
-            Spacer(Modifier.height(10.dp))
+                FilledButton({}, text = "FilledButton with Icon", icon = Icons.Rounded.AddAPhoto)
+
+                Spacer(Modifier.height(10.dp))
+
+            }
 
         }
     }

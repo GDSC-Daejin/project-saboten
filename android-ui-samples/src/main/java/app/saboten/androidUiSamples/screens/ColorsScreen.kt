@@ -4,7 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
+import com.google.accompanist.insets.ui.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -53,11 +53,19 @@ fun ColorsScreen(navController: NavController) {
         )
     }) {
         LazyVerticalGrid(
+            modifier = Modifier.padding(it),
             cells = GridCells.Fixed(3),
             contentPadding = PaddingValues(10.dp)
         ) {
-            items(colors) { (name, color) ->
-                ColorGridItem(name, color)
+            items(
+                colors + (0..colors.size % 3).map { null }
+            ) { item ->
+                if (item != null) ColorGridItem(item.first, item.second)
+                else Box(modifier = Modifier.fillMaxWidth())
+            }
+
+            item(span = { GridItemSpan(1) }) {
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }
