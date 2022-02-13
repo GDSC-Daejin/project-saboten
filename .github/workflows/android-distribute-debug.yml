@@ -1,4 +1,4 @@
-name: Distribute
+name: Android Distribute Debug
 
 on:
   push:

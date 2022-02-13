@@ -20,6 +20,7 @@ buildscript {
     dependencies {
         classpath(Google.dagger.hilt.android.gradlePlugin)
         classpath(Google.firebase.appDistributionGradlePlugin)
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10")
     }
 }
 
