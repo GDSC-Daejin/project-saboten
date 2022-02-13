@@ -4,7 +4,7 @@ platform :android do
 
     desc "Lane for distributing app using Firebase App Distributions"
     lane :distributeDebug do
-        gradle(task: "clean assembleDebug")
+        gradle(task: "clean :android:assembleDebug")
 
         version_name = get_version_name(
               gradle_file_path:"android/build/generated/source/buildConfig/debug/app/saboten/android/BuildConfig.java",
