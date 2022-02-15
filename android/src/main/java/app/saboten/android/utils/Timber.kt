@@ -15,6 +15,7 @@ fun initializeTimber(isDebug : Boolean) {
                         val newThrowable = Throwable().initCause(t).apply {
                             stackTrace = Thread.currentThread().stackTrace
                         }
+
                         FirebaseCrashlytics.getInstance().recordException(newThrowable)
                     }
                     else -> FirebaseCrashlytics.getInstance().log("$tag | $message")
