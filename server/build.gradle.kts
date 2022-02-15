@@ -25,8 +25,7 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation(SpringFox.swagger2)
-    implementation(SpringFox.swaggerUi)
+    implementation(SpringFox.swagger3)
 
     testImplementation(kotlin("test"))
 }
