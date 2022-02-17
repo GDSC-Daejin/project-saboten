@@ -10,3 +10,4 @@
 .cxx
 local.properties
 /fastlane/metadata/android/*/changelogs/debug-release-notes.txt
+/server/src/main/resources/config.properties
