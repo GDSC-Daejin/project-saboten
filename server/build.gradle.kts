@@ -25,19 +25,22 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
+    // 임시
+    implementation("org.postgresql:postgresql")
+
     implementation(SpringFox.swagger3)
 
     testImplementation(Test.bootStatertest)
     testImplementation(Test.mockk)
-    testImplementation(kotlin("test"))
+    //testImplementation(kotlin("test"))
 }
 repositories {
     mavenCentral()
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
+//tasks.test {
+//    useJUnitPlatform()
+//}
 
 tasks.withType<org.gradle.api.tasks.testing.Test> {
     useJUnitPlatform()

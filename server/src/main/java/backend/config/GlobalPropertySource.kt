@@ -1,24 +1,23 @@
 package backend.config
 
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.PropertySource
 
 @Configuration
-@PropertySource("classpath:db.config.properties")
-@ConfigurationProperties("spring.datasource")
+@PropertySource("classpath:config.properties")
+// @ConfigurationProperties("spring.datasource")
 class GlobalPropertySource {
-    @Value("\${driverClassName}")
+    @Value("\${spring.datasource.driverClassName}")
     private lateinit var driverClassName: String
 
-    @Value("\${url}")
+    @Value("\${spring.datasource.url}")
     private lateinit var url : String
 
-    @Value("\${username}")
+    @Value("\${spring.datasource.username}")
     private lateinit var username : String
 
-    @Value("\${password}")
+    @Value("\${spring.datasource.password}")
     private lateinit var password : String
 
     fun getDriverClassName() : String = driverClassName
@@ -28,4 +27,8 @@ class GlobalPropertySource {
     fun getUsername() : String = username
 
     fun getPassword() : String = password
+
+    override fun toString(): String {
+        return "driverClassName = ${driverClassName}, url = ${url}, username = ${username}, password = ${password}"
+    }
 }
