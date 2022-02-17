@@ -27,6 +27,8 @@ dependencies {
 
     implementation(SpringFox.swagger3)
 
+    testImplementation(Test.bootStatertest)
+    testImplementation(Test.mockk)
     testImplementation(kotlin("test"))
 }
 repositories {
@@ -34,6 +36,10 @@ repositories {
 }
 
 tasks.test {
+    useJUnitPlatform()
+}
+
+tasks.withType<org.gradle.api.tasks.testing.Test> {
     useJUnitPlatform()
 }
 
