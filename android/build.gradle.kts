@@ -6,7 +6,10 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
     id("com.google.firebase.appdistribution")
+    id("com.google.firebase.crashlytics")
+    id("com.google.firebase.firebase-perf")
 }
 
 group = "app.saboten"
@@ -59,6 +62,11 @@ dependencies {
     implementation(Google.accompanist.navigation.animation)
     implementation(Google.accompanist.navigation.material)
     implementation(Google.accompanist.flowlayout)
+
+    implementation(platform(Google.firebase.bom))
+    implementation(Google.firebase.analyticsKtx)
+    implementation(Google.firebase.crashlyticsKtx)
+    implementation(Google.firebase.performanceMonitoring)
 
     implementation(AndroidX.core.splashscreen)
     implementation(JakeWharton.timber)
