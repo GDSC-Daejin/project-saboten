@@ -9,3 +9,8 @@ object Test {
     const val bootStatertest = "org.springframework.boot:spring-boot-starter-test"
     const val mockk = "io.mockk:mockk:_"
 }
+
+object Jpa {
+    const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
+    const val lombok = "org.projectlombok:lombok"
+}

@@ -29,6 +29,8 @@ dependencies {
     implementation("org.postgresql:postgresql")
 
     implementation(SpringFox.swagger3)
+    implementation(Jpa.jpa)
+    implementation(Jpa.lombok)
 
     testImplementation(Test.bootStatertest)
     testImplementation(Test.mockk)
