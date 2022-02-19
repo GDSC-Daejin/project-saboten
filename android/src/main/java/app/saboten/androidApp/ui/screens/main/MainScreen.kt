@@ -1,12 +1,12 @@
-package app.saboten.android.ui.screens.main
+package app.saboten.androidApp.ui.screens.main
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import app.saboten.android.ui.screens.AppNavGraph
-import app.saboten.android.ui.screens.main.home.HomeScreen
-import app.saboten.android.ui.screens.main.notifications.NotificationsScreen
-import app.saboten.android.ui.screens.main.profile.ProfileScreen
+import app.saboten.androidApp.ui.screens.AppNavGraph
+import app.saboten.androidApp.ui.screens.main.home.HomeScreen
+import app.saboten.androidApp.ui.screens.main.notifications.NotificationsScreen
+import app.saboten.androidApp.ui.screens.main.profile.ProfileScreen
 
 fun NavGraphBuilder.mainScreenRoutes() {
 

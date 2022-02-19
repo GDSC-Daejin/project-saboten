@@ -1,4 +1,4 @@
-package app.saboten.android.ui.screens.main.home
+package app.saboten.androidApp.ui.screens.main.home
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel

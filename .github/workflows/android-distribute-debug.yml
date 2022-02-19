@@ -2,7 +2,8 @@ name: Android Distribute Debug
 
 on:
   push:
-    branches: [ develop-android ]
+#    branches: [ develop-android ]
+    branches: [ feature/SBOT-42 ]
 
 jobs:
   distribute:

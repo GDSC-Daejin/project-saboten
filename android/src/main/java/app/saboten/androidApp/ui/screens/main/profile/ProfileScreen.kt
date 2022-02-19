@@ -1,4 +1,4 @@
-package app.saboten.android.ui.screens.main.profile
+package app.saboten.androidApp.ui.screens.main.profile
 
 import androidx.compose.runtime.Composable
 

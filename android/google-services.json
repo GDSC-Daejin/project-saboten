@@ -1,41 +1,70 @@
 {
   "project_info": {
-    "project_number": "673605323296",
-    "project_id": "saboten-10954",
-    "storage_bucket": "saboten-10954.appspot.com"
+    "project_number": "844420568567",
+    "project_id": "project-saboten",
+    "storage_bucket": "project-saboten.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:673605323296:android:76b4d3088a39662c67ca45",
+        "mobilesdk_app_id": "1:844420568567:android:a8c97b5a0347306cf58af2",
         "android_client_info": {
           "package_name": "app.saboten.android"
         }
       },
       "oauth_client": [
         {
-          "client_id": "673605323296-6rem1bo2d102t11juf89fva94mqph115.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "app.saboten.android",
-            "certificate_hash": "888cd6de0b4ce794fa0375789db72749c1308b53"
-          }
-        },
-        {
-          "client_id": "673605323296-a57su9dkjm3ni9f8i5tl2puac6mr5fsj.apps.googleusercontent.com",
+          "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyC1TvgClvjhZUbYJhqEtzX-5t6QI4JENz8"
+          "current_key": "AIzaSyB39brG7bm6k411dMBFl9A6-NqTRAdhPBQ"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "673605323296-a57su9dkjm3ni9f8i5tl2puac6mr5fsj.apps.googleusercontent.com",
+              "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844420568567:android:70e74271a10a5ad5f58af2",
+        "android_client_info": {
+          "package_name": "app.saboten.androidApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844420568567-2lcdagngmu7nq4bhb4dnq7ff3k5ufb3i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "888cd6de0b4ce794fa0375789db72749c1308b53"
+          }
+        },
+        {
+          "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB39brG7bm6k411dMBFl9A6-NqTRAdhPBQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

@@ -1,4 +1,4 @@
-package app.saboten.android.ui.screens
+package app.saboten.androidApp.ui.screens
 
 open class NavGraphRoute(val route : String)
 

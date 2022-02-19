@@ -1,4 +1,4 @@
-package app.saboten.android.utils
+package app.saboten.androidApp.utils
 
 import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics

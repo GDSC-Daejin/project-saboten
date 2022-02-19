@@ -1,7 +1,7 @@
-package app.saboten.android
+package app.saboten.androidApp
 
 import android.app.Application
-import app.saboten.android.utils.initializeTimber
+import app.saboten.androidApp.utils.initializeTimber
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp

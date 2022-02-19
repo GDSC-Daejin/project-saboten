@@ -1,4 +1,4 @@
-package app.saboten.android.ui.screens.login
+package app.saboten.androidApp.ui.screens.login
 
 import androidx.compose.runtime.Composable
 
