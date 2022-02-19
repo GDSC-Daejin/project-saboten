@@ -10,7 +10,9 @@ object Test {
     const val mockk = "io.mockk:mockk:_"
 }
 
-object Jpa {
+object Database {
     const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
     const val lombok = "org.projectlombok:lombok"
+    const val postgre = "org.postgresql:postgresql"
+    const val h2 = "com.h2database:h2"
 }

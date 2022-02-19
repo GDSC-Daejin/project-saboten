@@ -25,15 +25,15 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    // 임시
-    implementation("org.postgresql:postgresql")
-
     implementation(SpringFox.swagger3)
-    implementation(Jpa.jpa)
-    implementation(Jpa.lombok)
+    implementation(Database.postgre)
+    implementation(Database.jpa)
+    implementation(Database.lombok)
 
     testImplementation(Test.bootStatertest)
     testImplementation(Test.mockk)
+
+    runtimeOnly(Database.h2)
     //testImplementation(kotlin("test"))
 }
 repositories {

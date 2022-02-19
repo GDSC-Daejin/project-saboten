@@ -5,30 +5,20 @@ import backend.repository.TestRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.jdbc.core.JdbcTemplate
-import javax.sql.DataSource
 
 @SpringBootTest
 //@DataJpaTest
-//@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 internal class GlobalPropertySourceTest {
     @Autowired
     val test = GlobalPropertySource()
-
-//    @Autowired
-//    lateinit var dataSource : DataSource
-//
-//    @Autowired
-//    lateinit var jdbcTemplate : JdbcTemplate
 
     @Autowired
     lateinit var testRepository: TestRepository
 
     @Test
-    fun `should do something`() {
+    fun `read database info`() {
         // given
         val driverName = test.getDriverClassName()
         val url = test.getUrl()
@@ -46,15 +36,23 @@ internal class GlobalPropertySourceTest {
     }
 
     @Test
-    fun `Connect Database`() {
+    fun `Insert Database Check`() {
         // given
         val testEntity = TestModel()
+        testEntity.username = "panda"
 
         // when
         val newEntity =  testRepository.save(testEntity)
 
         // then
-        println(newEntity.toString())
+        println(newEntity.id)
         assertThat(newEntity).isNotNull
+
+        val existingEntities = testRepository.findByUsername(newEntity.username)
+        println(existingEntities)
+        existingEntities.forEach {
+            println(it.id)
+        }
+        assertThat(existingEntities).isNotEmpty
     }
 }
