@@ -7,35 +7,6 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:844420568567:android:a8c97b5a0347306cf58af2",
-        "android_client_info": {
-          "package_name": "app.saboten.android"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB39brG7bm6k411dMBFl9A6-NqTRAdhPBQ"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:844420568567:android:70e74271a10a5ad5f58af2",
         "android_client_info": {
           "package_name": "app.saboten.androidApp"
