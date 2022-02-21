@@ -1,4 +1,4 @@
-package app.saboten.android.di
+package app.saboten.androidApp.di
 
 import dagger.Module
 import dagger.hilt.InstallIn

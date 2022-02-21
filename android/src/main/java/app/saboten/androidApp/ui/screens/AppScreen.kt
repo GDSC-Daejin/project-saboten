@@ -1,13 +1,13 @@
 @file:OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 
-package app.saboten.android.ui.screens
+package app.saboten.androidApp.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.plusAssign
-import app.saboten.android.ui.providers.ProvideNavController
-import app.saboten.android.ui.screens.login.LoginScreen
-import app.saboten.android.ui.screens.main.mainScreenRoutes
+import app.saboten.androidApp.ui.providers.ProvideNavController
+import app.saboten.androidApp.ui.screens.login.LoginScreen
+import app.saboten.androidApp.ui.screens.main.mainScreenRoutes
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController

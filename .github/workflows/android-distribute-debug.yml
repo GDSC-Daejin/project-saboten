@@ -2,7 +2,7 @@ name: Android Distribute Debug
 
 on:
   push:
-    branches: [ develop-android ]
+    branches: [ release-android/* ]
 
 jobs:
   distribute:
