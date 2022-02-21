@@ -1,6 +1,42 @@
-object SpringFox {
+import org.gradle.api.artifacts.dsl.DependencyHandler
 
+object SpringFox {
     // swagger 3.0, swaggerUi 3.0 같이 추가 해줌.
     const val swagger3 = "io.springfox:springfox-boot-starter:_"
+}
 
+object Mockk {
+    const val mockk = "io.mockk:mockk:_"
+}
+
+object Postgresql {
+    const val postgre = "org.postgresql:postgresql"
+}
+
+object Lombok {
+    const val lombok = "org.projectlombok:lombok"
+}
+
+object H2 {
+    const val h2 = "com.h2database:h2"
+}
+
+object SpringFramework {
+    object Boot {
+        const val bootTest = "org.springframework.boot:spring-boot-starter-test"
+        const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
+    }
+}
+
+// serverDependency로 하나로 쓸까, 아니면 기능별로 분리해서 관리할까 고민중
+fun DependencyHandler.serverDependency() {
+    add("implementation", SpringFramework.Boot.jpa)
+    add("implementation", Postgresql.postgre)
+    add("implementation", Lombok.lombok)
+    add("implementation", SpringFox.swagger3)
+
+    add("testImplementation", SpringFramework.Boot.bootTest)
+    add("testImplementation", Mockk.mockk)
+
+    add("runtimeOnly", H2.h2)
 }

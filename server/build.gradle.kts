@@ -25,15 +25,18 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation(SpringFox.swagger3)
-
-    testImplementation(kotlin("test"))
+    serverDependency()
+    //testImplementation(kotlin("test"))
 }
 repositories {
     mavenCentral()
 }
 
-tasks.test {
+//tasks.test {
+//    useJUnitPlatform()
+//}
+
+tasks.withType<org.gradle.api.tasks.testing.Test> {
     useJUnitPlatform()
 }
 
