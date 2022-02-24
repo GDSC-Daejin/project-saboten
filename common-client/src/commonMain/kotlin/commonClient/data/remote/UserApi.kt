@@ -1,6 +1,6 @@
 package commonClient.data.remote
 
-import common.model.ApiResponse
+import common.model.reseponse.ApiResponse
 import common.model.User
 import commonClient.di.Inject
 import commonClient.di.Singleton

@@ -56,7 +56,8 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
-                implementation(kotlin("test"))
+                implementation(Kotlin.Test.common)
+                implementation(Kotlin.Test.annotationsCommon)
             }
         }
         val androidMain by getting {
@@ -71,7 +72,11 @@ kotlin {
         }
         val androidTest by getting {
             dependencies {
-                implementation("junit:junit:4.13")
+                implementation(Kotlin.Test.junit5)
+                implementation(project.dependencies.platform(Testing.junit.bom))
+                implementation(Testing.junit.jupiter)
+                implementation(Testing.junit.jupiter.api)
+                implementation(Testing.junit.jupiter.params)
             }
         }
         val iosMain by getting {
