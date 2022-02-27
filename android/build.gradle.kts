@@ -1,4 +1,5 @@
 import de.fayard.refreshVersions.core.versionFor
+import java.util.Properties
 import Properties as AppProperties
 
 plugins {
@@ -88,13 +89,38 @@ android {
         versionCode = AppProperties.androidAppVersionCode
         versionName = AppProperties.androidAppVersionName
     }
+
+    signingConfigs {
+        getByName("debug") {
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+            storeFile = file("${project.rootDir.absolutePath}/keystore/debug.keystore")
+            storePassword = "android"
+        }
+
+        create("release") {
+            val keystoreProperties = Properties().apply {
+                load(file("${project.rootDir.absolutePath}/keystore/keystore").inputStream())
+            }
+            keyAlias = keystoreProperties.getProperty("keyAlias")
+            keyPassword = keystoreProperties.getProperty("keyPassword")
+            storeFile = file(keystoreProperties.getProperty("storeFile"))
+            storePassword = keystoreProperties.getProperty("storePassword")
+        }
+    }
+
     buildTypes {
         getByName("debug") {
             createDebugReleaseNote()
             versionNameSuffix = "-$gitDescribe-DEBUG"
         }
         getByName("release") {
-            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     kotlinOptions {
@@ -116,25 +142,18 @@ android {
         )
     }
 
-    signingConfigs {
-        getByName("debug") {
-            keyAlias = "androiddebugkey"
-            keyPassword = "android"
-            storeFile = file("${project.rootDir.absolutePath}/keystore/debug.keystore")
-            storePassword = "android"
-        }
-
-        /*
-        create("release") {
-            val keystoreProperties = java.util.Properties().apply {
-                load(file("${project.rootDir.absolutePath}/keystore/keystore").inputStream())
+    bundle {
+        bundle {
+            language {
+                enableSplit = false
             }
-            keyAlias = keystoreProperties.getProperty("keyAlias")
-            keyPassword = keystoreProperties.getProperty("keyPassword")
-            storeFile = file(keystoreProperties.getProperty("storeFile"))
-            storePassword = keystoreProperties.getProperty("storePassword")
+            density {
+                enableSplit = true
+            }
+            abi {
+                enableSplit = true
+            }
         }
-        */
     }
 
     buildFeatures {
@@ -145,4 +164,11 @@ android {
         kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.ui)
     }
 
+    applicationVariants.all {
+        outputs.all {
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+                    .replace("app-release", "saboten-android-${AppProperties.androidAppVersionName}")
+                    .replace("app-debug", "saboten-android-${AppProperties.androidAppVersionName}")
+        }
+    }
 }
