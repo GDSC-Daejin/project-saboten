@@ -9,7 +9,7 @@ plugins {
     kotlin("plugin.spring") version kotlinVersion  apply false
     kotlin("plugin.jpa") version kotlinVersion  apply false
 
-    id("org.springframework.boot") version "2.5.6" apply false
+    id("org.springframework.boot") version "2.6.2" apply false
     id("io.spring.dependency-management") version "1.0.11.RELEASE"  apply false
 }
 
