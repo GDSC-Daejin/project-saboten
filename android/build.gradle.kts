@@ -78,11 +78,17 @@ dependencies {
     kapt(Google.dagger.hilt.compiler)
     implementation(Google.dagger.hilt.android)
     implementation(AndroidX.hilt.navigationCompose)
+
+    testImplementation(Kotlin.Test.junit5)
+    testImplementation(platform(Testing.junit.bom))
+    testImplementation(Testing.junit.jupiter.api)
+    testImplementation(Testing.junit.jupiter.params)
 }
 
 android {
     compileSdk = AppProperties.androidTargetSDK
     defaultConfig {
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         applicationId = AppProperties.androidPackageName
         minSdk = AppProperties.androidMinSDK
         targetSdk = AppProperties.androidTargetSDK
@@ -171,4 +177,8 @@ android {
                     .replace("app-debug", "saboten-android-${AppProperties.androidAppVersionName}")
         }
     }
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
