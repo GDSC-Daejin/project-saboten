@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource
 
 @Configuration
 @PropertySource("classpath:config.properties")
-class GlobalPropertySource {
+class DatabaseConfig {
     @Value("\${spring.datasource.driverClassName}")
     private lateinit var driverClassName: String
 
