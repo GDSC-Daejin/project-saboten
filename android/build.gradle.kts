@@ -172,7 +172,7 @@ android {
 
     applicationVariants.all {
         outputs.all {
-            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+            (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName = outputFileName
                     .replace("app-release", "saboten-android-${AppProperties.androidAppVersionName}")
                     .replace("app-debug", "saboten-android-${AppProperties.androidAppVersionName}")
         }

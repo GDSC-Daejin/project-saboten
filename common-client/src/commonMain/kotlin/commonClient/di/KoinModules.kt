@@ -1,6 +1,8 @@
 package commonClient.di
 
 import commonClient.data.remote.SabotenApiHttpClient
+import commonClient.data.remote.UserApi
+import commonClient.data.remote.UserApiImp
 import commonClient.data.repository.UserRepositoryImp
 import commonClient.domain.repository.UserRepository
 import commonClient.domain.usecase.user.GetMe
@@ -12,9 +14,10 @@ import org.koin.dsl.module
 fun dataModule() = module {
 
     single { SabotenApiHttpClient(get<HttpClientEngineFactory<*>>()) }
+    single<UserApi> { UserApiImp(get()) }
 
     /* Repository */
-    single<UserRepository> { UserRepositoryImp() }
+    single<UserRepository> { UserRepositoryImp(get()) }
 
 }
 

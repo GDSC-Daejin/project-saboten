@@ -26,18 +26,10 @@ dependencies {
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     serverDependency()
-    //testImplementation(kotlin("test"))
 }
+
 repositories {
     mavenCentral()
-}
-
-//tasks.test {
-//    useJUnitPlatform()
-//}
-
-tasks.withType<org.gradle.api.tasks.testing.Test> {
-    useJUnitPlatform()
 }
 
 tasks.compileKotlin {

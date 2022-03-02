@@ -21,7 +21,7 @@ class UserApiImp @Inject constructor(
 
     override suspend fun getMe(): ApiResponse<User> {
 
-        val response =  httpClient.get("") {
+        val response =  httpClient.get("/api/users/me") {
 
         }
 

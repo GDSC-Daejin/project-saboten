@@ -12,7 +12,7 @@ import io.ktor.serialization.kotlinx.*
 import kotlinx.serialization.json.Json
 
 // TODO Change URL
-private const val URL = ""
+private const val URL = "localhost:8080"
 
 @Suppress("FunctionName")
 fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
@@ -62,7 +62,7 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
         }
 
         url {
-            protocol = URLProtocol.HTTPS
+            protocol = URLProtocol.HTTP
             host = URL
         }
     }

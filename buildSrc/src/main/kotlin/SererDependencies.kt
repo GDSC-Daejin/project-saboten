@@ -10,15 +10,15 @@ object Mockk {
 }
 
 object Postgresql {
-    const val postgre = "org.postgresql:postgresql"
+    const val postgre = "org.postgresql:postgresql:_"
 }
 
 object Lombok {
-    const val lombok = "org.projectlombok:lombok"
+    const val lombok = "org.projectlombok:lombok:_"
 }
 
 object H2 {
-    const val h2 = "com.h2database:h2"
+    const val h2 = "com.h2database:h2:_"
 }
 
 object SpringFramework {
