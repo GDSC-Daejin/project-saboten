@@ -56,6 +56,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
+                implementation(Kotlin.test)
                 implementation(Kotlin.Test.common)
                 implementation(Kotlin.Test.annotationsCommon)
             }

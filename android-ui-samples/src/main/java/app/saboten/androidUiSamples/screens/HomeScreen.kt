@@ -10,7 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.lists.BasicListItem
 import app.saboten.androidUiSamples.UiSamplesAppRoutes
 import app.saboten.androidUiSamples.UiSamplesViewModel
@@ -36,7 +36,7 @@ private val samples = listOf(
 fun HomeScreen(navController: NavController, viewModel: UiSamplesViewModel) {
     com.google.accompanist.insets.ui.Scaffold(
         topBar = {
-            ToolBar(title = {
+            BasicTopBar(title = {
                 Text("\uD83C\uDF35 UI Samples")
             })
         },

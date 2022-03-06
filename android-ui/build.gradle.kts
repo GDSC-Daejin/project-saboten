@@ -34,6 +34,7 @@ dependencies {
     implementation(Google.accompanist.navigation.material)
     implementation(Google.accompanist.flowlayout)
 
+    implementation(COIL.compose)
 }
 
 android {

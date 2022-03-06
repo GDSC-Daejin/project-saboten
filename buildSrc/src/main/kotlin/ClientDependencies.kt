@@ -72,3 +72,9 @@ object Utils {
 
     const val inject = "com.chrynan.inject:inject:_"
 }
+
+object ComposeDestination {
+    const val core = "io.github.raamcosta.compose-destinations:core:_"
+    const val animationsCore = "io.github.raamcosta.compose-destinations:animations-core:_"
+    const val ksp = "io.github.raamcosta.compose-destinations:ksp:_"
+}

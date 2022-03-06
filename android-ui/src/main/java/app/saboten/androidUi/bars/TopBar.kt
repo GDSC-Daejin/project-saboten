@@ -22,7 +22,7 @@ fun ToolbarBackButton(onClick: () -> Unit) {
 }
 
 @Composable
-fun ToolBar(
+fun BasicTopBar(
     title: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = rememberInsetsPaddingValues(LocalWindowInsets.current.statusBars),
