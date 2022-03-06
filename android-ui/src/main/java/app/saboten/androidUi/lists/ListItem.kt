@@ -15,7 +15,7 @@ import app.saboten.androidUi.utils.*
 @Composable
 fun BasicListItem(
     modifier: Modifier = Modifier,
-    backgroundColor : Color = MaterialTheme.colors.surface,
+    backgroundColor : Color = MaterialTheme.colors.background,
     title: String,
     subtitle: String? = null,
     leftSideUi: (@Composable () -> Unit)? = null,
