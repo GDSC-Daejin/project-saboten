@@ -11,10 +11,8 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
 val jsKoinModule = module {
-    module {
-        single<HttpClientEngineFactory<*>> { Js }
-        single { JsSettings().toSuspendSettings() }
-    }
+    single<HttpClientEngineFactory<*>> { Js }
+    single { JsSettings().toSuspendSettings() }
 }
 
 fun initKoin() {
