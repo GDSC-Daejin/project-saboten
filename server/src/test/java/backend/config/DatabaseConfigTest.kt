@@ -15,28 +15,7 @@ import javax.transaction.Transactional
 @Transactional
 internal class DatabaseConfigTest {
     @Autowired
-    val test = DatabaseConfig()
-
-    @Autowired
     lateinit var testRepository: TestRepository
-
-    @Test
-    fun `read database info`() {
-        // given
-        val driverName = test.getDriverClassName()
-        val url = test.getUrl()
-        val userName = test.getUsername()
-        val password = test.getPassword()
-
-        // when
-        println(test.toString())
-
-        // then
-        assertThat(driverName).isNotNull
-        assertThat(url).isNotNull
-        assertThat(userName).isNotNull
-        assertThat(password).isNotNull
-    }
 
     @Test
     fun `Insert Database Check`() {
