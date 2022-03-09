@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.dialogs.BasicDialog
@@ -30,7 +30,7 @@ fun DialogsScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            ToolBar(
+            BasicTopBar(
                 title = {
                     Text("Dialogs")
                 },

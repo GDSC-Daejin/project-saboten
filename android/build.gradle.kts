@@ -11,6 +11,7 @@ plugins {
     id("com.google.firebase.appdistribution")
     id("com.google.firebase.crashlytics")
     id("com.google.firebase.firebase-perf")
+    id("com.google.devtools.ksp")
 }
 
 group = "app.saboten"
@@ -79,10 +80,26 @@ dependencies {
     implementation(Google.dagger.hilt.android)
     implementation(AndroidX.hilt.navigationCompose)
 
+    implementation(ComposeDestination.core)
+    implementation(ComposeDestination.animationsCore)
+    ksp(ComposeDestination.ksp)
+
+    testImplementation(Kotlin.test)
     testImplementation(Kotlin.Test.junit5)
     testImplementation(platform(Testing.junit.bom))
     testImplementation(Testing.junit.jupiter.api)
     testImplementation(Testing.junit.jupiter.params)
+}
+
+kotlin {
+    sourceSets {
+        debug {
+            kotlin.srcDir("build/generated/ksp/debug/kotlin")
+        }
+        release {
+            kotlin.srcDir("build/generated/ksp/release/kotlin")
+        }
+    }
 }
 
 android {

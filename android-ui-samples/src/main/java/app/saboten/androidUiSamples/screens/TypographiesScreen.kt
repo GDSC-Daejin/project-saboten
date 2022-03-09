@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 
 @Composable
@@ -38,7 +38,7 @@ fun TypographiesScreen(navController: NavController) {
     val list = typographies()
     Scaffold(
         topBar = {
-            ToolBar(
+            BasicTopBar(
                 title = {
                     Text("Typographies")
                 },

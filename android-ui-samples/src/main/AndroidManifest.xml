@@ -8,7 +8,7 @@
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:label="Saboten UI Samples"
-        android:theme="@style/Theme.SabotenAndroidUiSamples">
+        android:theme="@style/Theme.SabotenAndroid">
         <activity android:name=".UiSamplesActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

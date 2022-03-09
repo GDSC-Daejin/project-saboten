@@ -1,4 +1,4 @@
-package app.saboten.androidApp.ui.screens.main.notifications
+package app.saboten.androidApp.ui.screens.main.liked
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
@@ -16,7 +16,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun NotificationsScreen(
+fun LikedScreen(
     navigator: DestinationsNavigator
 ) {
 
@@ -24,7 +24,7 @@ fun NotificationsScreen(
     BasicScaffold(
         topBar = {
             BasicTopBar(title = {
-                Text("Notifications")
+                Text("Liked")
             })
         }
     ) {

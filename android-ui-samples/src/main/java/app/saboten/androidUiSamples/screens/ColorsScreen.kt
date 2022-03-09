@@ -14,7 +14,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 import app.saboten.androidUi.styles.surfaceOver
 
@@ -41,7 +41,7 @@ fun ColorsScreen(navController: NavController) {
     val colors = colors()
 
     Scaffold(topBar = {
-        ToolBar(
+        BasicTopBar(
             navigationIcon = {
                 ToolbarBackButton {
                     navController.popBackStack()

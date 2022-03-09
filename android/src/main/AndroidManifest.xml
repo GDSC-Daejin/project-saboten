@@ -4,7 +4,7 @@
         android:name=".AndroidApp"
         android:allowBackup="false"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/Theme.SabotenAndroid">
         <activity android:name=".AppActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
