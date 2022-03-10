@@ -28,12 +28,19 @@ object SpringFramework {
     }
 }
 
+object Sentry {
+    const val sentry = "io.sentry:sentry-spring-boot-starter:_"
+    const val logback = "io.sentry:sentry-logback:_"
+}
+
 // serverDependency로 하나로 쓸까, 아니면 기능별로 분리해서 관리할까 고민중
 fun DependencyHandler.serverDependency() {
     add("implementation", SpringFramework.Boot.jpa)
     add("implementation", Postgresql.postgre)
     add("implementation", Lombok.lombok)
     add("implementation", SpringFox.swagger3)
+    add("implementation", Sentry.sentry)
+    add("implementation", Sentry.logback)
 
     add("testImplementation", SpringFramework.Boot.bootTest)
     add("testImplementation", Mockk.mockk)
