@@ -19,10 +19,8 @@ import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 @Composable
 fun UiSamplesApp(viewModel: UiSamplesViewModel) {
 
-    val navController = rememberAnimatedNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
-
-    navController.navigatorProvider += bottomSheetNavigator
+    val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(
         bottomSheetNavigator = bottomSheetNavigator,
