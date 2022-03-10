@@ -10,7 +10,7 @@ import kotlin.test.assertTrue
 class ApiResponseTest {
 
     @Test
-    fun `만약 ApiResponse 가 내려왔을때 enum class 와 code 의 비교함수 isCodeEquals 를 true 로 통과해야함`() {
+    fun testApiResponseParse() {
 
         val json = """
             {
