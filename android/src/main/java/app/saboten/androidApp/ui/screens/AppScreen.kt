@@ -22,9 +22,8 @@ import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 @Composable
 fun AppScreen() {
 
-    val navController = rememberAnimatedNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
-    navController.navigatorProvider += bottomSheetNavigator
+    val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(bottomSheetNavigator) {
         MainDestinationScaffold(navController)
