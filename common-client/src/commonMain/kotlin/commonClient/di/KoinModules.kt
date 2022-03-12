@@ -13,7 +13,7 @@ import org.koin.dsl.module
 
 fun dataModule() = module {
 
-    single { SabotenApiHttpClient(get<HttpClientEngineFactory<*>>()) }
+    single { SabotenApiHttpClient(get<HttpClientEngineFactory<*>>(), get()) }
     single<UserApi> { UserApiImp(get()) }
 
     /* Repository */

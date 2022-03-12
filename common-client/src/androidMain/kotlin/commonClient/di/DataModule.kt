@@ -7,6 +7,7 @@ import com.russhwolf.settings.datastore.DataStoreSettings
 import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.UserApi
 import commonClient.data.remote.UserApiImp
+import commonClient.utils.ClientProperties
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -26,7 +27,7 @@ interface DataModule {
 
         @Provides
         @Singleton
-        fun provideHttpClient() = SabotenApiHttpClient(CIO)
+        fun provideHttpClient(properties: ClientProperties) = SabotenApiHttpClient(CIO, properties)
 
         @Provides
         @Singleton
