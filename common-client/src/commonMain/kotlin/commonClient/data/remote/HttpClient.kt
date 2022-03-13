@@ -1,7 +1,6 @@
 package commonClient.data.remote
 
-import common.logger.PlatformLogger
-import common.utils.Platform
+import commonClient.utils.ClientProperties
 import io.ktor.client.*
 import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
@@ -17,10 +16,11 @@ private const val URL = "localhost:8080"
 @Suppress("FunctionName")
 fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     engineFactory: HttpClientEngineFactory<T>,
+    properties: ClientProperties,
     block: HttpClientConfig<T>.() -> Unit = {}
 ) = HttpClient(engineFactory) {
 
-    developmentMode = Platform.isDevelopmentMode
+    developmentMode = properties.isDebug
     expectSuccess = false
 
     install(HttpTimeout) {
@@ -47,7 +47,6 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
-                PlatformLogger.d(message)
             }
         }
         level = LogLevel.ALL

@@ -48,3 +48,8 @@ tasks.processResources {
         into("static")
     }
 }
+
+tasks.bootRun {
+    val activeProfile = System.getProperty("spring.profiles.active")
+    systemProperty("spring.profiles.active", activeProfile)
+}
