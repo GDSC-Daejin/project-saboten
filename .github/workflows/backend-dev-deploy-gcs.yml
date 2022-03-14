@@ -38,16 +38,16 @@ jobs:
       - name: Create Spring Properties
         run: |
           touch server/src/main/resources/application-dev.properties
-          echo "DEV_SPRING_PROPERTIES" > application-dev.properties.b64
+          echo "$DEV_SPRING_PROPERTIES" > application-dev.properties.b64
           base64 -d -i application-dev.properties.b64 > server/src/main/resources/application-dev.properties
         env:
           DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
 
       - name: Build with Gradle
         run: |
-          ./gradlew clean :server:build -Pprofile=dev
+          ./gradlew clean :server:build -Pprofile=dev      
 
-# 일단 이거는 기본적인 Docker build이고 밑에서 docker build 쓸거 같음
+      # 일단 이거는 기본적인 Docker build이고 밑에서 docker build 쓸거 같음
 #      - name: Docker build
 #        run: docker build -t spring-saboten-image .
 
