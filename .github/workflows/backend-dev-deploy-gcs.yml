@@ -66,10 +66,10 @@ jobs:
       - name: Build
         run: |-
           docker build --tag "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" server
-#      # Push the Docker image to Google Container Registry
-#      - name: Publish
-#        run: |-
-#          docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
+      # Push the Docker image to Google Container Registry
+      - name: Publish
+        run: |-
+          docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
       - name: Deploy
         run: |-
           gcloud compute instances update-container "$GCE_INSTANCE" \
