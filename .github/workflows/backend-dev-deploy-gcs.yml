@@ -72,4 +72,7 @@ jobs:
           docker push "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA"
       - name: Deploy
         run: |-
-          gcloud run deploy --image "gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA" --platform managed --port 8080
+          gcloud run deploy $GCE_INSTANCE \
+          --region $GCE_INSTANCE_ZONE
+          --image gcr.io/$PROJECT_ID/$GCE_INSTANCE-image:$GITHUB_SHA \
+          --port 8080
