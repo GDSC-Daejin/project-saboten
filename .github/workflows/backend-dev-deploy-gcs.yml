@@ -2,7 +2,7 @@ name: Backend Dev Deploy to GCS
 
 on:
   push:
-    branches: [ feature/SBOT-55 ]
+    branches: [ release-server/* ]
 
 env:
   PROJECT_ID: ${{ secrets.GCS_PROJECT_ID }}
