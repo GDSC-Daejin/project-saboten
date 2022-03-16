@@ -1,8 +1,6 @@
 package backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Builder
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity @Table(name="TB_User")
@@ -19,7 +18,7 @@ public class UserEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "user_nickname", nullable = false, length = 50)
+    @Column(name = "user_nickname", nullable = false, unique = true, length = 50)
     private String nickname;
 
     @Column(name = "age")
