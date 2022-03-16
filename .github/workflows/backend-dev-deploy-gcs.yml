@@ -1,11 +1,11 @@
-name: Backend Dev Deploy to GCS
+name: Backend Dev Deploy to GCE
 
 on:
   push:
     branches: [ release-server/* ]
 
 env:
-  PROJECT_ID: ${{ secrets.GCS_PROJECT_ID }}
+  PROJECT_ID: ${{ secrets.GCE_PROJECT_ID }}
   GCE_INSTANCE: ${{ secrets.GCE_INSTANCE }}
   GCE_INSTANCE_ZONE: ${{ secrets.GCE_INSTANCE_ZONE }}
 
@@ -54,8 +54,8 @@ jobs:
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v0
         with:
-          service_account_key: ${{ secrets.GCS_SERVICE_ACCOUNT_KEY }}
-          project_id: ${{ secrets.GCS_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCE_SERVICE_ACCOUNT_KEY }}
+          project_id: ${{ secrets.GCE_PROJECT_ID }}
           export_default_credentials: true
 
       # Configure Docker to use the gcloud command-line tool as a credential
