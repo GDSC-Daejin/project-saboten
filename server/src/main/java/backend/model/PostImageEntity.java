@@ -14,7 +14,7 @@ public class PostImageEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="post_id", nullable = false)
-    public PostEntity post;
+    public PostEntity postId;
 
     @Id
     @Column(name = "post_image_id")

@@ -1,6 +1,7 @@
 package backend.model;
 
 import lombok.*;
+import lombok.extern.apachecommons.CommonsLog;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 public class PostEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id", nullable = false)
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
