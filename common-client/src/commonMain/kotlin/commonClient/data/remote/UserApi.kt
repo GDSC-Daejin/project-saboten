@@ -1,7 +1,7 @@
 package commonClient.data.remote
 
 import common.model.reseponse.ApiResponse
-import common.model.User
+import common.model.reseponse.user.User
 import commonClient.di.Inject
 import commonClient.di.Singleton
 import io.ktor.client.*

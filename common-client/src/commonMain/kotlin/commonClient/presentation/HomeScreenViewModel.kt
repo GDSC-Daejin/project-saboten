@@ -1,7 +1,6 @@
 package commonClient.presentation
 
-import common.model.User
-import commonClient.data.LoadState
+import common.model.reseponse.user.User
 import commonClient.di.Inject
 import commonClient.domain.usecase.user.GetMe
 import commonClient.presentation.HomeScreenViewModelDelegate.*

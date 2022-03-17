@@ -1,4 +1,4 @@
-package common.model.reseponse.message
+package common.message
 
 interface ResponseMessage {
     val message: String

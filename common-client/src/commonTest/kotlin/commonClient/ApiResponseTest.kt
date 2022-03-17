@@ -1,7 +1,7 @@
 package commonClient
-import common.model.User
+import common.model.reseponse.user.User
 import common.model.reseponse.ApiResponse
-import common.model.reseponse.message.UserResponseMessage
+import common.message.UserResponseMessage
 import commonClient.extension.isCodeEquals
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
