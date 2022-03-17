@@ -11,16 +11,19 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity @IdClass(CommentPK.class)
+@Entity
 @Table(name = "TB_Comment")
 public class CommentEntity {
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY)
+    private Long postId;
+
+    @MapsId
+    @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
