@@ -43,4 +43,8 @@ public class PostEntity {
     @Column(name = "post_modify_date")
     private LocalDateTime postModifyDate = LocalDateTime.now();
 
+
+    @Embedded
+    private VoteEntity vote = new VoteEntity();
+
 }
