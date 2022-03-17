@@ -4,37 +4,57 @@ package app.saboten.androidApp.ui.screens
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.plusAssign
-import app.saboten.androidApp.ui.providers.ProvideNavController
-import app.saboten.androidApp.ui.screens.login.LoginScreen
-import app.saboten.androidApp.ui.screens.main.mainScreenRoutes
-import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
+import app.saboten.androidApp.ui.screens.main.MainBottomNavigation
+import app.saboten.androidUi.motions.materialTransitionZaxisIn
+import app.saboten.androidUi.motions.materialTransitionZaxisOut
+import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
+import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.animations.defaults.DestinationEnterTransition
+import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
+import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 
 @Composable
 fun AppScreen() {
 
-    val navController = rememberAnimatedNavController()
     val bottomSheetNavigator = rememberBottomSheetNavigator()
-    navController.navigatorProvider += bottomSheetNavigator
+    val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
-    ProvideNavController(navController) {
-        ModalBottomSheetLayout(bottomSheetNavigator) {
-            AnimatedNavHost(
-                navController,
-                startDestination = AppNavGraph.Login.route
-            ) {
+    ModalBottomSheetLayout(bottomSheetNavigator) {
+        MainDestinationScaffold(navController)
+    }
 
-                composable(AppNavGraph.Login.route) { LoginScreen() }
+}
 
-                mainScreenRoutes()
+@Composable
+private fun MainDestinationScaffold(navController: NavHostController) {
 
-            }
+    val animatedNavHostEngine = rememberAnimatedNavHostEngine(
+        rootDefaultAnimations = RootNavGraphDefaultAnimations(
+            enterTransition = { materialTransitionZaxisIn },
+            exitTransition = { materialTransitionZaxisOut },
+            popEnterTransition = { materialTransitionZaxisIn },
+            popExitTransition = { materialTransitionZaxisOut }
+        )
+    )
+
+    BasicScaffold(
+        bottomBar = {
+            MainBottomNavigation(navController)
         }
+    ) {
+
+        DestinationsNavHost(
+            NavGraphs.root,
+            engine = animatedNavHostEngine,
+            navController = navController
+        )
+
     }
 
 }

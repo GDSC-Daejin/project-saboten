@@ -9,8 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
+import app.saboten.androidUi.buttons.SmallOutlinedButton
 import app.saboten.androidUi.buttons.BottomButtonBar
 import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.styles.surfaceOver
@@ -21,7 +22,7 @@ fun ButtonsScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            ToolBar(
+            BasicTopBar(
                 title = {
                     Text("Buttons")
                 },
@@ -66,6 +67,14 @@ fun ButtonsScreen(navController: NavController) {
                 Spacer(Modifier.height(10.dp))
 
                 FilledButton({}, text = "FilledButton with Icon", icon = Icons.Rounded.AddAPhoto)
+
+                Spacer(Modifier.height(10.dp))
+
+                SmallOutlinedButton({}, text = "SmallOutlinedButton")
+
+                Spacer(Modifier.height(10.dp))
+
+                SmallOutlinedButton({}, text = "SmallOutlinedButton with Icon", icon = Icons.Rounded.AddAPhoto)
 
                 Spacer(Modifier.height(10.dp))
 

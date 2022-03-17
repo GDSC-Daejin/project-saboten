@@ -56,6 +56,7 @@ kotlin {
         }
         val commonTest by getting {
             dependencies {
+                implementation(Kotlin.test)
                 implementation(Kotlin.Test.common)
                 implementation(Kotlin.Test.annotationsCommon)
             }
@@ -68,6 +69,9 @@ kotlin {
                 kapt(AndroidX.hilt.compiler)
                 kapt(Google.dagger.hilt.compiler)
                 implementation(Google.dagger.hilt.android)
+
+                implementation(project.dependencies.platform(Google.firebase.bom))
+                implementation(Google.firebase.crashlyticsKtx)
             }
         }
         val androidTest by getting {

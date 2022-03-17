@@ -11,6 +11,7 @@ plugins {
 
     id("org.springframework.boot") version "2.5.6" apply false
     id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
+    id("com.google.devtools.ksp") version "1.6.10-1.0.2" apply false
 }
 
 buildscript {

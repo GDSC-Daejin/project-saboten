@@ -1,5 +1,5 @@
 @file:OptIn(ExperimentalAnimationApi::class)
-package app.hdj.datepick.ui.animation
+package app.saboten.androidUi.motions
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.FastOutLinearInEasing

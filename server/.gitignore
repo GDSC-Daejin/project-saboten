@@ -1,1 +1,3 @@
 /build
+*dev.properties
+*prod.properties
