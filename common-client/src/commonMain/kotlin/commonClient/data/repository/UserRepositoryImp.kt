@@ -1,6 +1,6 @@
 package commonClient.data.repository
 
-import common.model.User
+import common.model.reseponse.user.User
 import commonClient.data.LoadState
 import commonClient.data.LoadState.Companion.failed
 import commonClient.data.LoadState.Companion.loading

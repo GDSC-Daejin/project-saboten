@@ -1,6 +1,6 @@
 package common.model.reseponse
 
-import common.model.reseponse.message.ResponseMessage
+import common.message.ResponseMessage
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
 
