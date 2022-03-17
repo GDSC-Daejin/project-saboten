@@ -1,4 +1,4 @@
-package common.model.reseponse.message
+package common.message
 
 enum class BasicResponseMessage(
     override val message: String
