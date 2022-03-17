@@ -1,6 +1,6 @@
 package commonClient.domain.repository
 
-import common.model.User
+import common.model.reseponse.user.User
 import commonClient.data.LoadState
 import kotlinx.coroutines.flow.Flow
 
