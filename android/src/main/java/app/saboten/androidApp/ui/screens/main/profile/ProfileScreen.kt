@@ -15,8 +15,6 @@ import app.saboten.androidUi.buttons.SmallOutlinedButton
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.lists.BasicListItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.statusBarsPadding
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
@@ -91,7 +89,8 @@ fun ProfileScreen(
                     }
                 }
                 item {
-                    Spacer(modifier = Modifier.navigationBarsHeight(20.dp))
+                    Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+                    Spacer(modifier = Modifier.height(20.dp))
                 }
             }
         }

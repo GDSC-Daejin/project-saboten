@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.core.view.WindowCompat
 import app.saboten.androidApp.ui.screens.AppScreen
 import app.saboten.androidUi.styles.MainTheme
-import com.google.accompanist.insets.ProvideWindowInsets
 
 class AppActivity : ComponentActivity() {
 
@@ -15,9 +14,7 @@ class AppActivity : ComponentActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             MainTheme {
-                ProvideWindowInsets {
-                    AppScreen()
-                }
+                AppScreen()
             }
         }
     }
