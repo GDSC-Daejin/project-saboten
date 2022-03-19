@@ -2,6 +2,7 @@ package app.saboten.androidUiSamples.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddAPhoto
@@ -15,7 +16,6 @@ import app.saboten.androidUi.buttons.SmallOutlinedButton
 import app.saboten.androidUi.buttons.BottomButtonBar
 import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.styles.surfaceOver
-import com.google.accompanist.insets.ui.Scaffold
 
 @Composable
 fun ButtonsScreen(navController: NavController) {

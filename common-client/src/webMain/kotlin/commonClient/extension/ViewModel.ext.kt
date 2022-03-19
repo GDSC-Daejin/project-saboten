@@ -12,7 +12,7 @@ actual data class ViewModelComponent<S, EF, E> constructor(
     val dispatch: (E) -> Unit
 )
 
-actual fun <S : Any, EF, E> UnidirectionalViewModelDelegate<S, EF, E>.extract(): ViewModelComponent<S?, EF, E> {
+actual fun <S : Any, EF, E> UnidirectionalViewModelDelegate<S, EF, E>.extract(): ViewModelComponent<S, EF, E> {
     val (reduxState, setReduxState) = useState<S>()
 
     useLaunchedLayoutEffect {

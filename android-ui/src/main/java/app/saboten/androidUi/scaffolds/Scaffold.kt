@@ -1,7 +1,6 @@
 package app.saboten.androidUi.scaffolds
 
-import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -10,8 +9,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.google.accompanist.insets.ui.LocalScaffoldPadding
-import com.google.accompanist.insets.ui.Scaffold
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
 import com.google.accompanist.swiperefresh.SwipeRefreshState
@@ -35,9 +32,11 @@ fun BasicScaffold(
     drawerScrimColor: Color = DrawerDefaults.scrimColor,
     backgroundColor: Color = MaterialTheme.colors.background,
     contentColor: Color = contentColorFor(backgroundColor),
-    contentPadding: PaddingValues = LocalScaffoldPadding.current,
     content: @Composable (PaddingValues) -> Unit
 ) {
+
+    Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+    Spacer(modifier = Modifier.height(20.dp))
     Scaffold(
         modifier,
         scaffoldState,
@@ -56,7 +55,6 @@ fun BasicScaffold(
         drawerScrimColor,
         backgroundColor,
         contentColor,
-        contentPadding,
         content
     )
 }
@@ -80,8 +78,6 @@ fun SwipeRefreshScaffold(
     drawerScrimColor: Color = DrawerDefaults.scrimColor,
     backgroundColor: Color = MaterialTheme.colors.background,
     contentColor: Color = contentColorFor(backgroundColor),
-    contentPadding: PaddingValues = LocalScaffoldPadding.current,
-
     swipeRefreshState: SwipeRefreshState,
     onRefresh: () -> Unit,
     swipeEnabled: Boolean = true,
@@ -111,8 +107,7 @@ fun SwipeRefreshScaffold(
         drawerContentColor,
         drawerScrimColor,
         backgroundColor,
-        contentColor,
-        contentPadding
+        contentColor
     ) {
         SwipeRefresh(
             swipeRefreshState,

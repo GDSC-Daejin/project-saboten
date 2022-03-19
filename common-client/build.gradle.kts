@@ -59,6 +59,8 @@ kotlin {
                 implementation(Kotlin.test)
                 implementation(Kotlin.Test.common)
                 implementation(Kotlin.Test.annotationsCommon)
+                implementation(KotlinX.coroutines.test)
+                implementation(MultiplatformSettings.test)
             }
         }
         val androidMain by getting {

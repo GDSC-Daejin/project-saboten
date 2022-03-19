@@ -1,6 +1,6 @@
 package app.saboten.androidUiSamples.screens
 
-import com.google.accompanist.insets.ui.Scaffold
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController

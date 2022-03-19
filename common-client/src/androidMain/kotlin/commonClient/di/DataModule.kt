@@ -5,8 +5,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.russhwolf.settings.coroutines.SuspendSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import commonClient.data.remote.SabotenApiHttpClient
-import commonClient.data.remote.UserApi
-import commonClient.data.remote.UserApiImp
+import commonClient.data.remote.endpoints.*
+import commonClient.data.repository.UserRepositoryImp
+import commonClient.domain.repository.UserRepository
 import commonClient.utils.ClientProperties
 import dagger.Binds
 import dagger.Module
@@ -39,4 +40,12 @@ interface DataModule {
     @get:[Binds]
     val UserApiImp.userApi: UserApi
 
+    @get:[Binds]
+    val PostApiImp.postApi: PostApi
+
+    @get:[Binds]
+    val AuthApiImp.authApi: AuthApi
+
+    @get:[Binds]
+    val UserRepositoryImp.userRepository: UserRepository
 }

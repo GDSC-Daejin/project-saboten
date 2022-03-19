@@ -3,6 +3,7 @@ package app.saboten.androidApp.ui.screens.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -25,9 +26,6 @@ import app.saboten.androidApp.ui.screens.NavGraphs
 import app.saboten.androidApp.ui.screens.destinations.*
 import app.saboten.androidApp.ui.screens.navDestination
 import app.saboten.androidApp.ui.screens.startDestination
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.ui.BottomNavigation
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
 
@@ -85,23 +83,25 @@ fun MainBottomNavigation(
         exit = slideOutVertically { it }
     ) {
 
-        BottomNavigation(
-            backgroundColor = Color.Black,
-            contentPadding = rememberInsetsPaddingValues(LocalWindowInsets.current.navigationBars),
-        ) {
-            mainNavigationBarData.forEach {
-                BottomNavigationItem(
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.2f),
-                    icon = { it.icon(destination == it.direction) },
-                    selected = destination == it.direction,
-                    onClick = {
-                        navController.navigatorProvider
-                        navController.navigateTo(it.direction) {
-                            launchSingleTop = true
-                            restoreState = true
+        Surface(color = Color.Black) {
+            BottomNavigation(
+                modifier = Modifier.navigationBarsPadding(),
+                backgroundColor = Color.Transparent
+            ) {
+                mainNavigationBarData.forEach {
+                    BottomNavigationItem(
+                        unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.2f),
+                        icon = { it.icon(destination == it.direction) },
+                        selected = destination == it.direction,
+                        onClick = {
+                            navController.navigatorProvider
+                            navController.navigateTo(it.direction) {
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
 

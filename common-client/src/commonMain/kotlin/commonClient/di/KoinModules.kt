@@ -1,11 +1,12 @@
 package commonClient.di
 
+import commonClient.data.cache.MeCache
 import commonClient.data.remote.SabotenApiHttpClient
-import commonClient.data.remote.UserApi
-import commonClient.data.remote.UserApiImp
+import commonClient.data.remote.endpoints.UserApi
+import commonClient.data.remote.endpoints.UserApiImp
 import commonClient.data.repository.UserRepositoryImp
 import commonClient.domain.repository.UserRepository
-import commonClient.domain.usecase.user.GetMe
+import commonClient.domain.usecase.user.GetMeUseCase
 import commonClient.presentation.HomeScreenViewModel
 import io.ktor.client.engine.*
 import org.koin.dsl.module
@@ -15,16 +16,17 @@ fun dataModule() = module {
 
     single { SabotenApiHttpClient(get<HttpClientEngineFactory<*>>(), get()) }
     single<UserApi> { UserApiImp(get()) }
+    single { MeCache(get()) }
 
     /* Repository */
-    single<UserRepository> { UserRepositoryImp(get()) }
+    single<UserRepository> { UserRepositoryImp(get(), get()) }
 
 }
 
 fun domainModule() = module {
 
     /* UseCase */
-    single { GetMe(get()) }
+    single { GetMeUseCase(get()) }
 
 }
 

@@ -54,8 +54,6 @@ dependencies {
     implementation(COIL.compose)
     implementation(COIL.composeBase)
 
-    implementation(Google.accompanist.insets)
-    implementation(Google.accompanist.insets.ui)
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)
     implementation(Google.accompanist.systemuicontroller)
