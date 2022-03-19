@@ -19,8 +19,8 @@ class AppActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
+            val (state) = appViewModel.extract()
             MainTheme {
-                val (state) = appViewModel.extract()
                 ProvideMeInfo(state.me) {
                     AppScreen()
                 }
