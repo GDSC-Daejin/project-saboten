@@ -1,7 +1,11 @@
 package commonClient.presentation
 
 import common.model.reseponse.user.UserInfo
+import commonClient.di.HiltViewModel
 import commonClient.di.Inject
+import commonClient.domain.entity.AppTheme
+import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
+import commonClient.domain.usecase.settings.UpdateAppThemeSettingsUseCase
 import commonClient.domain.usecase.user.GetMeUseCase
 import commonClient.presentation.HomeScreenViewModelDelegate.*
 import kotlinx.coroutines.channels.Channel
@@ -24,6 +28,7 @@ interface HomeScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, E
 
 }
 
+@HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     getMeUseCase: GetMeUseCase
 ) : PlatformViewModel(), HomeScreenViewModelDelegate {

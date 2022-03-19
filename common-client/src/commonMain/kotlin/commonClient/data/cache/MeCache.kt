@@ -1,8 +1,5 @@
-@file:OptIn(ExperimentalSettingsApi::class)
-
 package commonClient.data.cache
 
-import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.SuspendSettings
 import common.model.reseponse.user.UserInfo
 import commonClient.di.Inject

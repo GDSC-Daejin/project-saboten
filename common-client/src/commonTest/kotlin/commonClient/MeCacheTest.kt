@@ -19,32 +19,37 @@ class MeCacheTest {
     lateinit var meCache: MeCache
 
     @BeforeTest
-    fun beforeTest() {
+    fun setup() {
         val testSettings = MockSettings()
         meCache = MeCache(testSettings.toSuspendSettings())
     }
 
     @Test
-    fun observeTest() = runTest {
+    fun `Given UserInfo saved to MeCache and delete, When UserInfo Flow is observing, Then UserInfo Flow value should be changed`() = runTest {
 
-        meCache.save(
-            UserInfo(
-                id = Random.nextLong(),
-                nickname = "Harry",
-                profilePhotoUrl = "",
-                email = "harry.park@mathpresso.com",
-                introduction = "Hello I'm Harry",
-                age = 24,
-                gender = Gender.M
-            )
+        // Given
+        val userInfo = UserInfo(
+            id = Random.nextLong(),
+            nickname = "Harry",
+            profilePhotoUrl = "",
+            email = "harry.park@mathpresso.com",
+            introduction = "Hello I'm Harry",
+            age = 24,
+            gender = Gender.M
         )
 
+        // When
+        meCache.save(userInfo)
+
+        // Then
         val savedMe = meCache.me.firstOrNull()
         println("observeTest : Me=$savedMe")
         assertTrue(savedMe != null)
 
+        // When
         meCache.flush()
 
+        // Then
         val deletedMe = meCache.me.firstOrNull()
         println("observeTest : Me=$deletedMe")
         assertTrue(deletedMe == null)

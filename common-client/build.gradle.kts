@@ -87,9 +87,7 @@ kotlin {
         }
         val iosMain by getting {
             dependencies {
-                //FIXME: Use the darwin artifact for ktor 2.0+
-                implementation("io.ktor:ktor-client-ios:_")
-//                       moved:Ktor.client.darwin)
+                implementation(Ktor.client.darwin)
             }
         }
         val iosTest by getting

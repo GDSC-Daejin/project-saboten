@@ -1,4 +1,4 @@
-package commonClient.extension
+package app.saboten.androidApp.extensions
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -6,14 +6,14 @@ import androidx.compose.runtime.getValue
 import commonClient.presentation.UnidirectionalViewModelDelegate
 import kotlinx.coroutines.flow.Flow
 
-actual data class ViewModelComponent<S, EF, E> constructor(
-    val state: S,
-    val effect: Flow<EF>,
-    val dispatch: (E) -> Unit
+data class ViewModelComponent<S, EF, E>(
+    val state : S,
+    val effect : Flow<EF>,
+    val dispatch : (E) -> Unit
 )
 
 @Composable
-actual fun <S : Any, EF, E> UnidirectionalViewModelDelegate<S, EF, E>.extract(): ViewModelComponent<S, EF, E> {
+fun <S : Any, EF, E> UnidirectionalViewModelDelegate<S, EF, E>.extract(): ViewModelComponent<S, EF, E> {
 
     val state by state.collectAsState()
 

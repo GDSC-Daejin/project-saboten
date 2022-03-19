@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -11,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import app.saboten.androidApp.ui.screens.destinations.SettingsScreenDestination
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.buttons.SmallOutlinedButton
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.lists.BasicListItem
@@ -44,14 +48,20 @@ fun ProfileScreen(
             Surface {
                 Column(modifier = Modifier.statusBarsPadding()) {
 
-                    ProfileBannerUi()
+                    ProfileBannerUi(
+                        openSettings = {
+                            navigator.navigate(SettingsScreenDestination())
+                        }
+                    )
 
                     TabRow(
                         modifier = Modifier.height(56.dp),
+                        backgroundColor = MaterialTheme.colors.surface,
                         selectedTabIndex = pagerState.currentPage,
                         indicator = { tabPositions ->
                             TabRowDefaults.Indicator(
-                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+                                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions),
+                                color = MaterialTheme.colors.onSurface
                             )
                         }
                     ) {
@@ -101,34 +111,51 @@ fun ProfileScreen(
 }
 
 @Composable
-private fun ProfileBannerUi() {
+private fun ProfileBannerUi(
+    openSettings: () -> Unit
+) {
 
     Surface(modifier = Modifier.fillMaxWidth()) {
 
-        Box(modifier = Modifier.padding(20.dp)) {
+        Column {
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
+            BasicTopBar(
+                title = {},
+                actions = {
+                    // Setting Icons
+                    IconButton(onClick = openSettings) {
+                        Icon(Icons.Rounded.Settings, null)
+                    }
+                }
+            )
 
-                NetworkImage(
-                    modifier = Modifier.size(56.dp).clip(CircleShape),
-                    "https://picsum.photos/200"
-                )
+            Box(modifier = Modifier.fillMaxWidth().padding(20.dp)) {
 
-                Spacer(modifier = Modifier.width(20.dp))
 
-                Column {
-                    Text("Name", style = MaterialTheme.typography.h6)
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        "@username",
-                        style = MaterialTheme.typography.body2,
-                        color = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+
+                    NetworkImage(
+                        modifier = Modifier.size(56.dp).clip(CircleShape),
+                        "https://picsum.photos/200"
                     )
+
+                    Spacer(modifier = Modifier.width(20.dp))
+
+                    Column {
+                        Text("Name", style = MaterialTheme.typography.h6)
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            "@username",
+                            style = MaterialTheme.typography.body2,
+                            color = MaterialTheme.colors.onSurface.copy(ContentAlpha.medium)
+                        )
+                    }
+
                 }
 
-            }
+                SmallOutlinedButton({}, text = "프로필 수정", modifier = Modifier.align(Alignment.CenterEnd))
 
-            SmallOutlinedButton({}, text = "프로필 수정", modifier = Modifier.align(Alignment.CenterEnd))
+            }
 
         }
 
