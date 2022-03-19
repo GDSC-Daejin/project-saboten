@@ -22,6 +22,11 @@ import com.ramcosta.composedestinations.spec.DestinationStyle
 fun LoginDialog(
     navigator: DestinationsNavigator
 ) {
+    LoginDialogContent()
+}
+
+@Composable
+fun LoginDialogContent() {
     Box(
         modifier = Modifier
             .fillMaxSize()
