@@ -13,7 +13,7 @@ actual data class ViewModelComponent<S, EF, E> constructor(
 )
 
 @Composable
-actual fun <S : Any, EF, E> UnidirectionalViewModelDelegate<S, EF, E>.extract(): ViewModelComponent<S?, EF, E> {
+actual fun <S : Any, EF, E> UnidirectionalViewModelDelegate<S, EF, E>.extract(): ViewModelComponent<S, EF, E> {
 
     val state by state.collectAsState()
 
