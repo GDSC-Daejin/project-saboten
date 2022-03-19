@@ -26,7 +26,7 @@ class MeCache @Inject constructor(
     suspend fun getMe() =
         settings.getStringOrNull(KEY_CACHE_USER_ME)?.let { Json.decodeFromString(UserInfo.serializer(), it) }
 
-    override suspend fun delete(id: Long) {
+    suspend fun flush() {
         settings.remove(KEY_CACHE_USER_ME)
         _me.emit(null)
     }

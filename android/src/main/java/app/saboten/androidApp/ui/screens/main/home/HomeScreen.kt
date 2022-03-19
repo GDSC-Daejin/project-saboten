@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.bars.BasicTopBar
-import app.saboten.androidUi.lists.BasicListItem
 import app.saboten.androidUi.lists.FeedSelectItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.ramcosta.composedestinations.annotation.Destination
