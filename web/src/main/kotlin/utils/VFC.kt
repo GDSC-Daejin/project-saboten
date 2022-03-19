@@ -1,6 +1,7 @@
 package utils
 
 import commonClient.presentation.PlatformViewModel
+import extensions.inject
 import react.Props
 import react.RBuilder
 import react.fc

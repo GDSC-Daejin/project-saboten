@@ -6,7 +6,9 @@ import com.russhwolf.settings.coroutines.SuspendSettings
 import com.russhwolf.settings.datastore.DataStoreSettings
 import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.endpoints.*
+import commonClient.data.repository.AppThemeSettingsRepositoryImp
 import commonClient.data.repository.UserRepositoryImp
+import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.domain.repository.UserRepository
 import commonClient.utils.ClientProperties
 import dagger.Binds
@@ -37,6 +39,7 @@ interface DataModule {
 
     }
 
+    /* API */
     @get:[Binds]
     val UserApiImp.userApi: UserApi
 
@@ -46,6 +49,11 @@ interface DataModule {
     @get:[Binds]
     val AuthApiImp.authApi: AuthApi
 
+    /* Repositories */
     @get:[Binds]
     val UserRepositoryImp.userRepository: UserRepository
+
+    @get:[Binds]
+    val AppThemeSettingsRepositoryImp.appThemeSettingsRepository: AppThemeSettingsRepository
+
 }

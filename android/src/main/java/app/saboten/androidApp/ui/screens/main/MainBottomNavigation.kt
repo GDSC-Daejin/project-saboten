@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import app.saboten.androidApp.ui.screens.navDestination
 import app.saboten.androidApp.ui.screens.startDestination
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
+import commonClient.logger.ClientLogger
 
 private data class NavigationData(
     val direction: Direction,
@@ -50,7 +52,7 @@ private val mainNavigationBarData = listOf(
             Icon(
                 Icons.Rounded.Add,
                 null,
-                tint = MaterialTheme.colors.onSurface
+                tint = Color.White
             )
         }
     },
@@ -70,15 +72,18 @@ fun MainBottomNavigation(
     val currentBackStackEntryAsState by navController.currentBackStackEntryAsState()
 
     val destination = currentBackStackEntryAsState?.navDestination
-        ?: NavGraphs.root.startRoute.startDestination
 
-    AnimatedVisibility(
-        destination in listOf(
+    val isVisible = remember(destination) {
+        destination != null && destination in listOf(
             HomeScreenDestination,
             ProfileScreenDestination,
             NotificationsScreenDestination,
             LikedScreenDestination
-        ),
+        )
+    }
+
+    AnimatedVisibility(
+        isVisible,
         enter = slideInVertically { it },
         exit = slideOutVertically { it }
     ) {
@@ -90,7 +95,8 @@ fun MainBottomNavigation(
             ) {
                 mainNavigationBarData.forEach {
                     BottomNavigationItem(
-                        unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.2f),
+                        unselectedContentColor = Color.White.copy(0.2f),
+                        selectedContentColor = Color.White,
                         icon = { it.icon(destination == it.direction) },
                         selected = destination == it.direction,
                         onClick = {

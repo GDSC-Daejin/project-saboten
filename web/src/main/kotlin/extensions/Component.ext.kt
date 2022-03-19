@@ -1,4 +1,4 @@
-package utils
+package extensions
 
 import AppKoinComponentContext
 import org.koin.core.component.inject
