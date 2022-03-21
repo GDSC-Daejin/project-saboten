@@ -1,5 +1,6 @@
 package backend.model;
 
+import backend.model.compositekey.PostLikePK;
 import lombok.*;
 
 import javax.persistence.*;

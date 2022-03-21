@@ -1,4 +1,4 @@
-package backend.model;
+package backend.model.compositekey;
 
 import lombok.Builder;
 

@@ -21,12 +21,6 @@ public class PostEntity {
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="category_id", nullable = false)
-    private CategoryEntity category;
-
-
-
 
     @Column(name = "post_title", nullable = false)
     private String postTitle;
@@ -44,9 +38,4 @@ public class PostEntity {
     @Builder.Default
     @Column(name = "post_modify_date")
     private LocalDateTime postModifyDate = LocalDateTime.now();
-
-
-    @Embedded
-    private VoteEntity vote = new VoteEntity();
-
 }

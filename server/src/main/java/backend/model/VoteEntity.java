@@ -1,25 +1,27 @@
 package backend.model;
 
+import backend.model.compositekey.VotePK;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
-@Embeddable
 @Builder
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity @IdClass(VotePK.class)
 public class VoteEntity {
-    @Column(name = "first_topic", nullable = false)
-    private String firstTopic;
+    @Id
+    private Long voteId;
 
-    @Column(name = "second_topic", nullable = false)
-    private String secondTopic;
+    @Id
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="post_id", nullable = false)
+    private PostEntity postId;
 
-    @Column(name = "first_count", nullable = false)
-    private Long firstCount;
+    @Column(name = "topic", length = 24, nullable = false)
+    private String topic;
 
-    @Column(name = "second_count", nullable = false)
-    private Long secondCount;
+    @Column(name = "count", nullable = false)
+    private int count;
 }

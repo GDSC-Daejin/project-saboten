@@ -27,8 +27,8 @@ public class CommentEntity {
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "comment_contents", nullable = false)
-    private String commentContents;
+    @Column(name = "comment_text", nullable = false)
+    private String commentText;
 
     @Column(name = "comment_like_count", nullable = false)
     private Long commentLikeCount;

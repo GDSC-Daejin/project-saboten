@@ -1,5 +1,6 @@
 package backend.model;
 
+import backend.model.compositekey.PostImagePK;
 import lombok.*;
 
 import javax.persistence.*;

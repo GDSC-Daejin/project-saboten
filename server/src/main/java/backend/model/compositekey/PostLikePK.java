@@ -1,16 +1,16 @@
-package backend.model;
+package backend.model.compositekey;
 
 import lombok.Builder;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-public class VoteSelectPK implements Serializable {
+public class PostLikePK implements Serializable {
     private Long postId;
     private Long userId;
 
     @Builder
-    public VoteSelectPK(Long postId, Long userId) {
+    public PostLikePK(Long postId, Long userId) {
         this.postId = postId;
         this.userId = userId;
     }
@@ -18,8 +18,8 @@ public class VoteSelectPK implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof VoteSelectPK)) return false;
-        VoteSelectPK that = (VoteSelectPK) o;
+        if (!(o instanceof PostLikePK)) return false;
+        PostLikePK that = (PostLikePK) o;
         return Objects.equals(postId, that.postId) && Objects.equals(userId, that.userId);
     }
 
