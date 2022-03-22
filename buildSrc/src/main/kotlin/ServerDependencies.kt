@@ -45,5 +45,7 @@ fun DependencyHandler.serverDependency() {
     add("testImplementation", SpringFramework.Boot.bootTest)
     add("testImplementation", Mockk.mockk)
 
+    add("annotationProcessor", Lombok.lombok)
+
     add("runtimeOnly", H2.h2)
 }
