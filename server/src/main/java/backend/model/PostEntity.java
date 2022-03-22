@@ -21,7 +21,6 @@ public class PostEntity {
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity userId;
 
-
     @Column(name = "post_title", nullable = false)
     private String postTitle;
 

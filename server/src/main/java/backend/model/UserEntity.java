@@ -38,8 +38,6 @@ public class UserEntity {
     @Column(name = "user_gender")
     private Integer gender;
 
-
-
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "userId")
     private List<PostEntity> posts = new ArrayList<>();
 }

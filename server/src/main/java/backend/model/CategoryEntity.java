@@ -1,9 +1,6 @@
 package backend.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -11,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity @Table(name="TB_Cartegory")
+@Entity @Table(name="TB_Category")
 public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +17,9 @@ public class CategoryEntity {
 
     @Column(name = "category_name", nullable = false, length = 50)
     private String categoryName;
+
+    @Override
+    public String toString() {
+        return "id : " + categoryId.toString() + " category_name : " + categoryName;
+    }
 }
