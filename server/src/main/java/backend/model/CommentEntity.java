@@ -6,13 +6,11 @@ import org.apache.tomcat.jni.Local;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Embeddable
 @Builder
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "TB_Comment")
+@Entity @Table(name = "TB_Comment")
 public class CommentEntity {
 
     @Id

@@ -19,7 +19,7 @@ public class PostEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", nullable = false)
-    private UserEntity user;
+    private UserEntity userId;
 
 
     @Column(name = "post_title", nullable = false)

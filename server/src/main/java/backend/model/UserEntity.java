@@ -42,7 +42,4 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private List<PostEntity> posts = new ArrayList<>();
-
-    @Embedded
-    private RefreshTokenEntity refreshToken = new RefreshTokenEntity();
 }
