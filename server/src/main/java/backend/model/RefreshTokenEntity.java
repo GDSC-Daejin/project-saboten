@@ -2,15 +2,24 @@ package backend.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import javax.persistence.*;
 
-@Embeddable
 @Builder
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity @Table(name = "TB_Refresh_Token")
 public class RefreshTokenEntity {
+
+    @Id
+    @Column(name="user_id", nullable = false)
+    private Long userId;
+
+    @MapsId
+    @OneToOne
+    @JoinColumn(name="user_id", nullable = false)
+    public UserEntity user;
+
     @Column(name = "refresh_token", nullable = false)
     private String refreshToken;
 }
