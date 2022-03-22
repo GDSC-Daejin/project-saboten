@@ -7,22 +7,24 @@ import java.util.Objects;
 
 public class CategoryInPostPK implements Serializable {
     private Long postId;
-    private Long caregoryId;
+    private Long categoryId;
 
     @Builder
-    public CategoryInPostPK(Long postId, Long caregoryId) {
+    public CategoryInPostPK(Long postId, Long categoryId) {
         this.postId = postId;
-        this.caregoryId = caregoryId;
+        this.categoryId = categoryId;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof CategoryInPostPK)) return false;
         CategoryInPostPK that = (CategoryInPostPK) o;
-        return Objects.equals(postId, that.postId) && Objects.equals(caregoryId, that.caregoryId);
+        return Objects.equals(postId, that.postId) && Objects.equals(categoryId, that.categoryId);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(postId, caregoryId); }
+    public int hashCode() {
+        return Objects.hash(postId, categoryId);
+    }
 }

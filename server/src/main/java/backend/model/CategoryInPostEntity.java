@@ -7,7 +7,6 @@ import javax.persistence.*;
 
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity @IdClass(CategoryInPostPK.class)
