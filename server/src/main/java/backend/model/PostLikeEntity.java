@@ -14,10 +14,10 @@ public class PostLikeEntity {
     @Id
     @ManyToOne
     @JoinColumn(name="post_id", nullable = false)
-    public PostEntity postId;
+    public PostEntity post;
 
     @Id
     @ManyToOne
     @JoinColumn(name="user_id", nullable = false)
-    public UserEntity userId;
+    public UserEntity user;
 }

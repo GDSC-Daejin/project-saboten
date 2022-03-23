@@ -7,10 +7,8 @@ import backend.repository.user.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.transaction.Transactional;
 
 import java.util.List;
 
@@ -51,8 +49,8 @@ class PostLikeRepositoryTest {
 
         // 사용자가 해당글을 좋아요 버튼 누름
         PostLikeEntity postLike = PostLikeEntity.builder()
-                .postId(post)
-                .userId(user)
+                .post(post)
+                .user(user)
                 .build();
 
         savedPostLike = postLikeRepository.save(postLike);
@@ -66,25 +64,24 @@ class PostLikeRepositoryTest {
             // given
             //then
             assertNotNull(savedPostLike);
-            assertEquals(post.getPostId(), savedPostLike.getPostId().getPostId());
-            assertEquals(user.getUserId(), savedPostLike.getUserId().getUserId());
+            assertEquals(post.getPostId(), savedPostLike.getPost().getPostId());
+            assertEquals(user.getUserId(), savedPostLike.getUser().getUserId());
         }
     }
 
     @Nested
     @DisplayName("조회")
     class Read {
-
         @Test
         public void 찜한_게시물_전체_조회() {
             // given
 
             // when
-            List<PostLikeEntity> findPostLike = postLikeRepository.findAllByUserId(user);
+            List<PostLikeEntity> findPostLike = postLikeRepository.findAllByUser(user);
             //then
 
             assertTrue(!findPostLike.isEmpty());
-            assertEquals(findPostLike.get(0).getUserId().getUserId(), user.getUserId());
+            assertEquals(findPostLike.get(0).getUser().getUserId(), user.getUserId());
         }
     }
 
@@ -96,8 +93,8 @@ class PostLikeRepositoryTest {
             // given
 
             // when
-            postLikeRepository.deleteByUserIdAndPostId(user, post);
-            PostLikeEntity deletedPostLike = postLikeRepository.findByUserIdAndPostId(user,post);
+            postLikeRepository.deleteByUserAndPost(user, post);
+            PostLikeEntity deletedPostLike = postLikeRepository.findByUserAndPost(user,post);
 
             //then
             assertNull(deletedPostLike);

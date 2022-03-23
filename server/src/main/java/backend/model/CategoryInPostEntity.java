@@ -15,10 +15,10 @@ public class CategoryInPostEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "post_id", nullable = false)
-    private PostEntity postId;
+    private PostEntity post;
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "category_id", nullable = false)
-    private CategoryEntity categoryId;
+    private CategoryEntity category;
 }
