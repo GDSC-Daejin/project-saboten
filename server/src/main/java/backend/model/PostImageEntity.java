@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Entity @IdClass(PostImagePK.class)
 @Table(name = "TB_PostImage")
 public class PostImageEntity {
-
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="post_id", nullable = false)

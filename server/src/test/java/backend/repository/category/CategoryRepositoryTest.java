@@ -15,7 +15,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 @ActiveProfiles("dev")
 class CategoryRepositoryTest {
-
     @Autowired
     private CategoryRepository repository;
 
@@ -67,7 +66,5 @@ class CategoryRepositoryTest {
             assertNotNull(findCategory);
             assertEquals(findCategory.getCategoryId(), id);
         }
-
     }
-
 }
