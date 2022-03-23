@@ -2,6 +2,8 @@ package commonClient.di
 
 import commonClient.data.cache.MeCache
 import commonClient.data.remote.SabotenApiHttpClient
+import commonClient.data.remote.endpoints.CategoryApi
+import commonClient.data.remote.endpoints.CategoryApiImp
 import commonClient.data.remote.endpoints.UserApi
 import commonClient.data.remote.endpoints.UserApiImp
 import commonClient.data.repository.CategoryRepositoryImp
@@ -18,6 +20,7 @@ fun dataModule() = module {
 
     single { SabotenApiHttpClient(get<HttpClientEngineFactory<*>>(), get()) }
     single<UserApi> { UserApiImp(get()) }
+    single<CategoryApi> { CategoryApiImp(get()) }
     single { MeCache(get()) }
 
     /* Repository */
@@ -34,5 +37,5 @@ fun domainModule() = module {
 }
 
 fun presentationModule() = module {
-    single { HomeScreenViewModel(get()) }
+    single { HomeScreenViewModel(get(), get()) }
 }

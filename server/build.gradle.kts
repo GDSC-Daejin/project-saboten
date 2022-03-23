@@ -39,6 +39,7 @@ tasks.compileKotlin {
     }
 }
 
+/*
 tasks.processResources {
     dependsOn(":web:browserWebpack")
     from(project(":web").projectDir.resolve("src/main/resources")) {
@@ -48,6 +49,7 @@ tasks.processResources {
         into("static")
     }
 }
+*/
 
 tasks.bootRun {
     val activeProfile = System.getProperty("spring.profiles.active")

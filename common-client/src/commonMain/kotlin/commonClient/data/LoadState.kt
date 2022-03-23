@@ -4,6 +4,10 @@ typealias EmptyLoadState = LoadState<Unit>
 
 sealed interface LoadState<T> {
 
+    val isLoading: Boolean get() = this is Loading
+
+    val isFailed: Boolean get() = this is Failed
+
     fun getDataOrNull(): T? = when (this) {
         is Loading -> null
         is Success -> data

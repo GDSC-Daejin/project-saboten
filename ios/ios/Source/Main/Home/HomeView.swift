@@ -7,8 +7,10 @@
 //
 
 import SwiftUI
+import common_client
 
 struct HomeView: View {
+    
     var body: some View {
         NavigationView {
             List {
