@@ -1,10 +1,11 @@
 package backend.model.compositekey;
 
-import lombok.Builder;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@NoArgsConstructor
 public class PostLikePK implements Serializable {
     private Long postId;
     private Long userId;

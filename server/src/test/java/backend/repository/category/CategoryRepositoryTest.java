@@ -1,11 +1,10 @@
-package backend.model;
+package backend.repository.category;
 
-import backend.repository.category.CategoryRepository;
+import backend.model.CategoryEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
@@ -17,14 +16,14 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @Transactional
 @ActiveProfiles("dev")
-class CategoryEntityTest {
+class CategoryRepositoryTest {
 
     @Autowired
     private CategoryRepository repository;
 
     @Nested
     @DisplayName("조회")
-    class select {
+    class Read {
         @Test
         public void 카테고리_이름_조회() {
             // given

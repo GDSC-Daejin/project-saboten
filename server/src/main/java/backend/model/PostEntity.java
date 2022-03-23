@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity @Table(name="TB_Post")
 public class PostEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "post_id", nullable = false)
     private Long postId;
 
