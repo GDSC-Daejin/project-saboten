@@ -4,7 +4,9 @@ import commonClient.data.cache.MeCache
 import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.endpoints.UserApi
 import commonClient.data.remote.endpoints.UserApiImp
+import commonClient.data.repository.CategoryRepositoryImp
 import commonClient.data.repository.UserRepositoryImp
+import commonClient.domain.repository.CategoryRepository
 import commonClient.domain.repository.UserRepository
 import commonClient.domain.usecase.user.GetMeUseCase
 import commonClient.presentation.HomeScreenViewModel
@@ -20,6 +22,7 @@ fun dataModule() = module {
 
     /* Repository */
     single<UserRepository> { UserRepositoryImp(get(), get()) }
+    single<CategoryRepository> { CategoryRepositoryImp(get()) }
 
 }
 
