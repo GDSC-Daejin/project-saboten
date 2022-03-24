@@ -1,0 +1,58 @@
+package commonClient
+
+import com.russhwolf.settings.ExperimentalSettingsApi
+import com.russhwolf.settings.MockSettings
+import com.russhwolf.settings.coroutines.toSuspendSettings
+import common.model.reseponse.user.Gender
+import common.model.reseponse.user.UserInfo
+import commonClient.data.cache.MeCache
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.test.runTest
+import kotlin.random.Random
+import kotlin.test.BeforeTest
+import kotlin.test.Test
+import kotlin.test.assertTrue
+
+@OptIn(ExperimentalSettingsApi::class)
+class MeCacheTest {
+
+    lateinit var meCache: MeCache
+
+    @BeforeTest
+    fun setup() {
+        val testSettings = MockSettings()
+        meCache = MeCache(testSettings.toSuspendSettings())
+    }
+
+    @Test
+    fun `Given UserInfo saved to MeCache and delete, When UserInfo Flow is observing, Then UserInfo Flow value should be changed`() = runTest {
+
+        // Given
+        val userInfo = UserInfo(
+            id = Random.nextLong(),
+            nickname = "Harry",
+            profilePhotoUrl = "",
+            email = "harry.park@mathpresso.com",
+            introduction = "Hello I'm Harry",
+            age = 24,
+            gender = Gender.M
+        )
+
+        // When
+        meCache.save(userInfo)
+
+        // Then
+        val savedMe = meCache.me.firstOrNull()
+        println("observeTest : Me=$savedMe")
+        assertTrue(savedMe != null)
+
+        // When
+        meCache.flush()
+
+        // Then
+        val deletedMe = meCache.me.firstOrNull()
+        println("observeTest : Me=$deletedMe")
+        assertTrue(deletedMe == null)
+    }
+
+}

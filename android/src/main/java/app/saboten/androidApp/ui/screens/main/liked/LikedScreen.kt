@@ -1,7 +1,6 @@
 package app.saboten.androidApp.ui.screens.main.liked
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -10,7 +9,6 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.lists.BasicListItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
-import com.google.accompanist.insets.navigationBarsHeight
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -43,7 +41,8 @@ fun LikedScreen(
             }
 
             item {
-                Spacer(modifier = Modifier.navigationBarsHeight(20.dp))
+                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+                Spacer(modifier = Modifier.height(20.dp))
             }
         }
 

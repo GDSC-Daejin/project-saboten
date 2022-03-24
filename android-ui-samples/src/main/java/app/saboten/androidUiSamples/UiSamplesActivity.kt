@@ -24,19 +24,16 @@ class UiSamplesActivity : AppCompatActivity() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
         setContent {
-            CommonProvider {
+            val themeState by viewModel.themeStateFlow.collectAsState()
 
-                val themeState by viewModel.themeStateFlow.collectAsState()
+            val systemUiController = rememberSystemUiController()
 
-                val systemUiController = rememberSystemUiController()
+            LaunchedEffect(themeState) {
+                systemUiController.systemBarsDarkContentEnabled = themeState == Light
+            }
 
-                LaunchedEffect(themeState) {
-                    systemUiController.systemBarsDarkContentEnabled = themeState == Light
-                }
-
-                MainTheme(isDarkTheme = themeState == Dark) {
-                    UiSamplesApp(viewModel)
-                }
+            MainTheme(isDarkTheme = themeState == Dark) {
+                UiSamplesApp(viewModel)
             }
         }
 

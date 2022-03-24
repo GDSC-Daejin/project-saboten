@@ -54,8 +54,6 @@ dependencies {
     implementation(COIL.compose)
     implementation(COIL.composeBase)
 
-    implementation(Google.accompanist.insets)
-    implementation(Google.accompanist.insets.ui)
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)
     implementation(Google.accompanist.systemuicontroller)
@@ -193,6 +191,11 @@ android {
                     .replace("app-release", "saboten-android-${AppProperties.androidAppVersionName}")
                     .replace("app-debug", "saboten-android-${AppProperties.androidAppVersionName}")
         }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
     }
 }
 

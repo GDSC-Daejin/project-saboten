@@ -3,6 +3,7 @@ package app.saboten.androidApp.ui.screens.main
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -25,11 +27,9 @@ import app.saboten.androidApp.ui.screens.NavGraphs
 import app.saboten.androidApp.ui.screens.destinations.*
 import app.saboten.androidApp.ui.screens.navDestination
 import app.saboten.androidApp.ui.screens.startDestination
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.ui.BottomNavigation
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
+import commonClient.logger.ClientLogger
 
 private data class NavigationData(
     val direction: Direction,
@@ -52,7 +52,7 @@ private val mainNavigationBarData = listOf(
             Icon(
                 Icons.Rounded.Add,
                 null,
-                tint = MaterialTheme.colors.onSurface
+                tint = Color.White
             )
         }
     },
@@ -72,36 +72,42 @@ fun MainBottomNavigation(
     val currentBackStackEntryAsState by navController.currentBackStackEntryAsState()
 
     val destination = currentBackStackEntryAsState?.navDestination
-        ?: NavGraphs.root.startRoute.startDestination
 
-    AnimatedVisibility(
-        destination in listOf(
+    val isVisible = remember(destination) {
+        destination != null && destination in listOf(
             HomeScreenDestination,
             ProfileScreenDestination,
             NotificationsScreenDestination,
             LikedScreenDestination
-        ),
+        )
+    }
+
+    AnimatedVisibility(
+        isVisible,
         enter = slideInVertically { it },
         exit = slideOutVertically { it }
     ) {
 
-        BottomNavigation(
-            backgroundColor = Color.Black,
-            contentPadding = rememberInsetsPaddingValues(LocalWindowInsets.current.navigationBars),
-        ) {
-            mainNavigationBarData.forEach {
-                BottomNavigationItem(
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.2f),
-                    icon = { it.icon(destination == it.direction) },
-                    selected = destination == it.direction,
-                    onClick = {
-                        navController.navigatorProvider
-                        navController.navigateTo(it.direction) {
-                            launchSingleTop = true
-                            restoreState = true
+        Surface(color = Color.Black) {
+            BottomNavigation(
+                modifier = Modifier.navigationBarsPadding(),
+                backgroundColor = Color.Transparent
+            ) {
+                mainNavigationBarData.forEach {
+                    BottomNavigationItem(
+                        unselectedContentColor = Color.White.copy(0.2f),
+                        selectedContentColor = Color.White,
+                        icon = { it.icon(destination == it.direction) },
+                        selected = destination == it.direction,
+                        onClick = {
+                            navController.navigatorProvider
+                            navController.navigateTo(it.direction) {
+                                launchSingleTop = true
+                                restoreState = true
+                            }
                         }
-                    }
-                )
+                    )
+                }
             }
         }
 

@@ -1,9 +1,12 @@
 package commonClient.presentation
 
-import common.model.User
-import commonClient.data.LoadState
+import common.model.reseponse.user.UserInfo
+import commonClient.di.HiltViewModel
 import commonClient.di.Inject
-import commonClient.domain.usecase.user.GetMe
+import commonClient.domain.entity.AppTheme
+import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
+import commonClient.domain.usecase.settings.UpdateAppThemeSettingsUseCase
+import commonClient.domain.usecase.user.GetMeUseCase
 import commonClient.presentation.HomeScreenViewModelDelegate.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -12,7 +15,7 @@ import kotlinx.coroutines.launch
 interface HomeScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val me: User? = null,
+        val me: UserInfo? = null,
     )
 
     sealed class Effect {
@@ -25,14 +28,15 @@ interface HomeScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, E
 
 }
 
+@HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    getMe: GetMe
+    getMeUseCase: GetMeUseCase
 ) : PlatformViewModel(), HomeScreenViewModelDelegate {
 
     private val effectChannel = Channel<Effect>(Channel.UNLIMITED)
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
-    override val state: StateFlow<State> = getMe().map {
+    override val state: StateFlow<State> = getMeUseCase().map {
         State(me = it.getDataOrNull())
     }.distinctUntilChanged().asStateFlow(State(), platformViewModelScope)
 

@@ -1,5 +1,6 @@
 package app.saboten.androidUiSamples.screens
 
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,7 +15,6 @@ import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.lists.BasicListItem
 import app.saboten.androidUiSamples.UiSamplesAppRoutes
 import app.saboten.androidUiSamples.UiSamplesViewModel
-import com.google.accompanist.insets.navigationBarsPadding
 
 private data class Sample(
     val icon: ImageVector,
@@ -34,7 +34,7 @@ private val samples = listOf(
 
 @Composable
 fun HomeScreen(navController: NavController, viewModel: UiSamplesViewModel) {
-    com.google.accompanist.insets.ui.Scaffold(
+    Scaffold(
         topBar = {
             BasicTopBar(title = {
                 Text("\uD83C\uDF35 UI Samples")
