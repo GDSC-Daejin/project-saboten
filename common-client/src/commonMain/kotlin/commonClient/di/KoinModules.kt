@@ -37,5 +37,5 @@ fun domainModule() = module {
 }
 
 fun presentationModule() = module {
-    single { HomeScreenViewModel(get(), get()) }
+    single { HomeScreenViewModel(get()) }
 }

@@ -1,12 +1,31 @@
 package commonClient.data
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 typealias EmptyLoadState = LoadState<Unit>
+
+@OptIn(ExperimentalContracts::class)
+fun <T> LoadState<T>.isLoading(): Boolean {
+    contract {
+        returns(true) implies (this@isLoading is LoadState.Loading)
+    }
+    return this is LoadState.Loading
+}
+
+@OptIn(ExperimentalContracts::class)
+fun <T> LoadState<T>.isFailed(): Boolean {
+    contract {
+        returns(true) implies (this@isFailed is LoadState.Failed)
+    }
+    return this is LoadState.Failed
+}
 
 sealed interface LoadState<T> {
 
-    val isLoading: Boolean get() = this is Loading
-
-    val isFailed: Boolean get() = this is Failed
+//    val isLoading: Boolean get() = this is Loading
+//
+//    val isFailed: Boolean get() = this is Failed
 
     fun getDataOrNull(): T? = when (this) {
         is Loading -> null
