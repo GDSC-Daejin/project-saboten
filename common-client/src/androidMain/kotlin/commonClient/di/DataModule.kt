@@ -49,6 +49,9 @@ interface DataModule {
     @get:[Binds]
     val AuthApiImp.authApi: AuthApi
 
+    @get:[Binds]
+    val CategoryApiImp.categoryApi: CategoryApi
+
     /* Repositories */
     @get:[Binds]
     val UserRepositoryImp.userRepository: UserRepository

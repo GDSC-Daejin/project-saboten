@@ -13,7 +13,7 @@ import io.ktor.client.request.*
 
 interface UserApi : Api {
 
-    override val prefixUrl: String get() = "/api/v1/users/"
+    override val prefixUrl: String get() = "/api/v1/users"
 
     suspend fun getMe(): ApiResponse<UserInfo>
 

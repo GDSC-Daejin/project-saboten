@@ -12,7 +12,7 @@ import io.ktor.client.request.*
 
 interface PostApi : Api {
 
-    override val prefixUrl: String get() = "/api/v1/post/"
+    override val prefixUrl: String get() = "/api/v1/post"
 
     suspend fun createPost(request: PostCreateRequest): ApiResponse<Post>
 
