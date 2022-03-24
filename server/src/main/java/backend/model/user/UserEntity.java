@@ -1,5 +1,6 @@
-package backend.model;
+package backend.model.user;
 
+import backend.model.post.PostEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,7 +15,7 @@ import java.util.List;
 @Entity @Table(name="TB_User")
 public class UserEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Long userId;
 

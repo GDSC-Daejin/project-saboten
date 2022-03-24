@@ -1,8 +1,8 @@
 package backend.repository.post;
 
-import backend.model.PostEntity;
-import backend.model.PostLikeEntity;
-import backend.model.UserEntity;
+import backend.model.post.PostEntity;
+import backend.model.post.PostLikeEntity;
+import backend.model.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

@@ -1,6 +1,7 @@
-package backend.model;
+package backend.model.post;
 
 import backend.model.compositekey.PostImagePK;
+import backend.model.post.PostEntity;
 import lombok.*;
 
 import javax.persistence.*;

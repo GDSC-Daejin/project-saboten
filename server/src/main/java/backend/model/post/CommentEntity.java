@@ -1,7 +1,7 @@
-package backend.model;
+package backend.model.post;
 
+import backend.model.user.UserEntity;
 import lombok.*;
-import org.apache.tomcat.jni.Local;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;

@@ -1,6 +1,8 @@
-package backend.model;
+package backend.model.post;
 
+import backend.model.category.CategoryEntity;
 import backend.model.compositekey.CategoryInPostPK;
+import backend.model.post.PostEntity;
 import lombok.*;
 
 import javax.persistence.*;

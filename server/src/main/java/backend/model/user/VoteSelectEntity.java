@@ -1,6 +1,8 @@
-package backend.model;
+package backend.model.user;
 
 import backend.model.compositekey.VoteSelectPK;
+import backend.model.post.PostEntity;
+import backend.model.user.UserEntity;
 import lombok.*;
 
 import javax.persistence.*;

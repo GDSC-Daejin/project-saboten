@@ -1,8 +1,8 @@
 package backend.repository.post;
 
-import backend.model.PostEntity;
-import backend.model.PostLikeEntity;
-import backend.model.UserEntity;
+import backend.model.post.PostEntity;
+import backend.model.post.PostLikeEntity;
+import backend.model.user.UserEntity;
 import backend.repository.user.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,6 +1,6 @@
 package backend.repository.category;
 
-import backend.model.CategoryEntity;
+import backend.model.category.CategoryEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

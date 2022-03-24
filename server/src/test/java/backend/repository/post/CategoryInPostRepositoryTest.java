@@ -1,6 +1,9 @@
 package backend.repository.post;
 
-import backend.model.*;
+import backend.model.category.CategoryEntity;
+import backend.model.post.CategoryInPostEntity;
+import backend.model.post.PostEntity;
+import backend.model.user.UserEntity;
 import backend.repository.category.CategoryRepository;
 import backend.repository.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;

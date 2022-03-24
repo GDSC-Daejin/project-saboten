@@ -1,8 +1,8 @@
 package backend.repository.user;
 
-import backend.model.PostEntity;
-import backend.model.UserEntity;
-import backend.model.VoteSelectEntity;
+import backend.model.post.PostEntity;
+import backend.model.user.UserEntity;
+import backend.model.user.VoteSelectEntity;
 import backend.repository.post.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

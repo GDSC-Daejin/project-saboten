@@ -1,7 +1,7 @@
-package backend.model;
+package backend.model.post;
 
+import backend.model.user.UserEntity;
 import lombok.*;
-import lombok.extern.apachecommons.CommonsLog;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Entity @Table(name="TB_Post")
 public class PostEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
     private Long postId;
 

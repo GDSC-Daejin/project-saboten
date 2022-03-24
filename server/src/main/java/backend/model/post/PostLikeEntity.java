@@ -1,5 +1,6 @@
-package backend.model;
+package backend.model.post;
 
+import backend.model.user.UserEntity;
 import backend.model.compositekey.PostLikePK;
 import lombok.*;
 

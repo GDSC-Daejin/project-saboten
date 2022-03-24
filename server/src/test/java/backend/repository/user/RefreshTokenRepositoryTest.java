@@ -1,7 +1,7 @@
 package backend.repository.user;
 
-import backend.model.RefreshTokenEntity;
-import backend.model.UserEntity;
+import backend.model.user.RefreshTokenEntity;
+import backend.model.user.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
