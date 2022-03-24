@@ -21,7 +21,8 @@ class UserRepositoryImp @Inject constructor(
 
     override fun getMe() = flow {
         emit(loading())
-        userApi.runCatching { getMe() }
+        userApi
+            .runCatching { getMe() }
             .onFailure { emit(failed(it, meCache.getMe())) }
             .onSuccess {
                 meCache.save(it.data)
@@ -31,14 +32,16 @@ class UserRepositoryImp @Inject constructor(
 
     override fun getUser(id: Long) = flow<LoadState<UserInfo>> {
         emit(loading())
-        userApi.runCatching { getUser(id) }
+        userApi
+            .runCatching { getUser(id) }
             .onFailure { emit(failed(it)) }
             .onSuccess { emit(success(it.data)) }
     }
 
     override fun updateUserInfo(userUpdateRequest: UserUpdateRequest) = flow {
         emit(loading())
-        userApi.runCatching { updateUserInfo(userUpdateRequest) }
+        userApi
+            .runCatching { updateUserInfo(userUpdateRequest) }
             .onFailure { emit(failed(it, meCache.getMe())) }
             .onSuccess {
                 meCache.save(it.data)

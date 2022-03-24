@@ -6,6 +6,7 @@ import com.russhwolf.settings.coroutines.toSuspendSettings
 import common.model.reseponse.user.Gender
 import common.model.reseponse.user.UserInfo
 import commonClient.data.cache.MeCache
+import commonClient.utils.JsName
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.test.runTest
 import kotlin.random.Random
@@ -25,7 +26,8 @@ class MeCacheTest {
     }
 
     @Test
-    fun `Given UserInfo saved to MeCache and delete, When UserInfo Flow is observing, Then UserInfo Flow value should be changed`() = runTest {
+    @JsName("UserCacheTest")
+    fun `GIVEN UserInfo cached and delete WHEN UserInfo Flow is observing Then UserInfo Flow value should be changed`() = runTest {
 
         // Given
         val userInfo = UserInfo(

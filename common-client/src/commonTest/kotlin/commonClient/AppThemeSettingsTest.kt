@@ -7,6 +7,7 @@ import commonClient.domain.entity.AppTheme
 import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
 import commonClient.domain.usecase.settings.UpdateAppThemeSettingsUseCase
+import commonClient.utils.JsName
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import kotlin.test.BeforeTest
@@ -29,7 +30,8 @@ class AppThemeSettingsTest {
     }
 
     @Test
-    fun `Given AppTheme is DARK, When Default is SYSTEM Then AppTheme should change to DARK`() = runTest {
+    @JsName("AppThemeChangeTest")
+    fun `GIVEN AppTheme = "DARK" WHEN Default = "SYSTEM" THEN AppTheme = "DARK"`() = runTest {
 
         val defaultTheme = observeAppThemeSettingsUseCase().first()
         println("defaultTheme: $defaultTheme")
