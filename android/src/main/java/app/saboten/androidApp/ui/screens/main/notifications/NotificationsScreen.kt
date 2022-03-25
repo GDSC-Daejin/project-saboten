@@ -28,12 +28,12 @@ fun NotificationsScreen(
             })
         }
     ) {
-        CategoryContent()
+        CategoryTap()
     }
 }
 
 @Composable
-private fun CategoryContent() {
+private fun CategoryTap() {
 
     Box() {
         Column() {
@@ -77,6 +77,6 @@ private fun CategoryContent() {
 @Composable
 private fun CategoryContentPreview() {
     MainTheme {
-        CategoryContent()
+        CategoryTap()
     }
 }
