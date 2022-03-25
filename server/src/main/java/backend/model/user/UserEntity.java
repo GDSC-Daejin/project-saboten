@@ -1,5 +1,6 @@
 package backend.model.user;
 
+import backend.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity @Table(name="TB_User")
-public class UserEntity {
+public class UserEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
@@ -27,14 +28,6 @@ public class UserEntity {
 
     @Column(name = "user_mypage_introduction")
     private String myPageIntroduction;
-
-    @Builder.Default
-    @Column(name = "user_regist_date", nullable = false)
-    private LocalDateTime registDate = LocalDateTime.now();
-
-    @Builder.Default
-    @Column(name = "user_modify_date")
-    private LocalDateTime modifyDate = LocalDateTime.now();
 
     @Column(name = "user_gender")
     private Integer gender;

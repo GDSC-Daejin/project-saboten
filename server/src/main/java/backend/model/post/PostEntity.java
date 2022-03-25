@@ -1,5 +1,6 @@
 package backend.model.post;
 
+import backend.common.BaseTimeEntity;
 import backend.model.user.UserEntity;
 import lombok.*;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity @Table(name="TB_Post")
-public class PostEntity {
+public class PostEntity extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", nullable = false)
@@ -29,12 +30,4 @@ public class PostEntity {
 
     @Column(name = "post_like_count", nullable = false)
     private Integer postLikeCount;
-
-    @Builder.Default
-    @Column(name = "post_regist_date", nullable = false)
-    private LocalDateTime postRegistDate = LocalDateTime.now();
-
-    @Builder.Default
-    @Column(name = "post_modify_date")
-    private LocalDateTime postModifyDate = LocalDateTime.now();
 }
