@@ -5,6 +5,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -24,20 +26,22 @@ fun CategoryItem(
     onClick: () -> Unit
 ) {
     Column(
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier.padding(10.dp).clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .background(Color(0xFF3AC55E), shape = RoundedCornerShape(5.dp))
-                .size(50.dp),
-            contentAlignment = Alignment.Center
+        Surface(
+            modifier = Modifier.size(50.dp),
+            color = MaterialTheme.colors.secondary,
+            shape = RoundedCornerShape(5.dp)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = text,
-                tint = Color.White
-            )
+            Box(modifier = Modifier.size(26.dp)) {
+                Icon(
+                    modifier = Modifier.align(Alignment.Center),
+                    imageVector = icon,
+                    contentDescription = text,
+                    tint = Color.White
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(10.dp))
