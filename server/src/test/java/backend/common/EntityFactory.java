@@ -4,6 +4,7 @@ import backend.model.category.CategoryEntity;
 import backend.model.post.CommentEntity;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
+import backend.model.user.VoteSelectEntity;
 import lombok.Getter;
 
 @Getter
@@ -12,12 +13,18 @@ public class EntityFactory {
     public static UserEntity basicUserEntity(){
         return UserEntity.builder()
                 .nickname("일반 사용자")
+                .age(20)
+                .myPageIntroduction("안녕하세요. 다육이입니다.")
+                .gender(1)
                 .build();
     }
 
     public static UserEntity authorUserEntity(){
         return UserEntity.builder()
                 .nickname("작성자")
+                .age(20)
+                .myPageIntroduction("안녕하세요. 다육이입니다.")
+                .gender(1)
                 .build();
     }
 
@@ -27,7 +34,7 @@ public class EntityFactory {
                 .postLikeCount(0)
                 .postTitle("게시물 제목")
                 .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-                .userId(authorUserEntity())
+                .user(authorUserEntity())
                 .build();
     }
 
@@ -44,5 +51,12 @@ public class EntityFactory {
                 .build();
     }
 
+    public static VoteSelectEntity basicVoteSelectEntity(){
+        return VoteSelectEntity.builder()
+                .user(basicUserEntity())
+                .post(basicPostEntity())
+                .voteResult(1)  // 1번 Topic 2번 Topic 이라고 가정!
+                .build();
+    }
 
 }
