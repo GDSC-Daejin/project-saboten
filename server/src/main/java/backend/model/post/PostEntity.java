@@ -20,7 +20,7 @@ public class PostEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", nullable = false)
-    private UserEntity userId;
+    private UserEntity user;
 
     @Column(name = "post_title", nullable = false)
     private String postTitle;
@@ -30,4 +30,6 @@ public class PostEntity extends BaseTimeEntity {
 
     @Column(name = "post_like_count", nullable = false)
     private Integer postLikeCount;
+
+
 }

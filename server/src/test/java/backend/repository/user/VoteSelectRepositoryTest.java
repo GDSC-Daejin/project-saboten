@@ -36,7 +36,7 @@ class VoteSelectRepositoryTest {
             .postLikeCount(0)
             .postTitle("게시물 제목")
             .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-            .userId(author)
+            .user(author)
             .build();
     private UserEntity user = UserEntity.builder()
             .nickname("일반 사용자")
@@ -101,7 +101,7 @@ class VoteSelectRepositoryTest {
                     .postLikeCount(0)
                     .postTitle("수업쨀까?")
                     .postText("내일 수업 듣는다 vs 안듣는다")
-                    .userId(author)
+                    .user(author)
                     .build();
             // when
 

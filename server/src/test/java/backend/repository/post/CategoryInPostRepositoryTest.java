@@ -38,7 +38,7 @@ class CategoryInPostRepositoryTest {
             .postLikeCount(0)
             .postTitle("게시물 제목")
             .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-            .userId(author)
+            .user(author)
             .build();
 
     // 테스트 일때만 Create 해주고 실제는 카테고리 Create 기능 제공 안할거에요!

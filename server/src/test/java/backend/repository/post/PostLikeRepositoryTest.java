@@ -33,7 +33,7 @@ class PostLikeRepositoryTest {
             .postLikeCount(0)
             .postTitle("게시물 제목")
             .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-            .userId(author)
+            .user(author)
             .build();
     private UserEntity user = UserEntity.builder()
             .nickname("일반 사용자")
