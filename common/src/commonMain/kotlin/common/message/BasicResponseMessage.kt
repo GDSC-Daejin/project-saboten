@@ -10,5 +10,6 @@ enum class BasicResponseMessage(
     BAD_REQUEST("잘못된 요청입니다."),
     UNAUTHORIZED("인증이 필요합니다."),
     FORBIDDEN("권한이 없습니다."),
+    INVALID_PARAMETER("매개변수가 잘못됬습니다.")
 
 }
