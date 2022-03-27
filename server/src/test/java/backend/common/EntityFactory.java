@@ -46,7 +46,30 @@ public class EntityFactory {
 
     public static CommentEntity basicCommentEntity(){
         return CommentEntity.builder()
+                .post(basicPostEntity())
+                .user(basicUserEntity())
+                .post(basicPostEntity())
                 .commentText("민트초코가 짱이라 치약에 민트맛을 넣은거에요! 매일 맛봐도 안질리니까")
+                .commentLikeCount(100L)
+                .build();
+    }
+
+    public static CommentEntity basicCommentEntity2(){
+        return CommentEntity.builder()
+                .post(basicPostEntity())
+                .user(authorUserEntity())
+                .post(basicPostEntity())
+                .commentText("아 민트는 좀...")
+                .commentLikeCount(50L)
+                .build();
+    }
+
+    public static CommentEntity basicCommentEntity3(){
+        return CommentEntity.builder()
+                .post(basicPostEntity())
+                .user(basicUserEntity())
+                .post(basicPostEntity())
+                .commentText("민트초코 맛을 모르다니,,,")
                 .commentLikeCount(100L)
                 .build();
     }
