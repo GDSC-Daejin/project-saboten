@@ -23,10 +23,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import app.saboten.androidApp.ui.screens.NavGraphs
-import app.saboten.androidApp.ui.screens.destinations.*
-import app.saboten.androidApp.ui.screens.navDestination
-import app.saboten.androidApp.ui.screens.startDestination
+import app.saboten.androidApp.ui.destinations.*
+import app.saboten.androidApp.ui.navDestination
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
 import commonClient.logger.ClientLogger

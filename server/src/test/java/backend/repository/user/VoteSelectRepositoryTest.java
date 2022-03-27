@@ -34,7 +34,6 @@ class VoteSelectRepositoryTest {
             .build();
     private PostEntity post = PostEntity.builder()
             .postLikeCount(0)
-            .postTitle("게시물 제목")
             .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
             .userId(author)
             .build();
@@ -99,7 +98,6 @@ class VoteSelectRepositoryTest {
             // given
             PostEntity otherPost = PostEntity.builder()
                     .postLikeCount(0)
-                    .postTitle("수업쨀까?")
                     .postText("내일 수업 듣는다 vs 안듣는다")
                     .userId(author)
                     .build();

@@ -9,7 +9,6 @@ import kotlin.random.Random
 @Serializable
 data class Post(
     @SerialName("id") val id: Long,
-    @SerialName("title") val title: String,
     @SerialName("text") val text: String,
     @SerialName("author") val author: User,
     @SerialName("votes") val votes: List<Vote>,

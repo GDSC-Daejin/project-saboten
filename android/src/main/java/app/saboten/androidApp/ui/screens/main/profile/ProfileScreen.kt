@@ -13,7 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import app.saboten.androidApp.ui.screens.destinations.SettingsScreenDestination
+import app.saboten.androidApp.ui.destinations.SettingsScreenDestination
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.buttons.SmallOutlinedButton
 import app.saboten.androidUi.image.NetworkImage
