@@ -1,6 +1,5 @@
 package backend.common;
 
-import backend.model.post.CommentEntity;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.repository.post.CommentRepository;
@@ -53,8 +52,8 @@ class BaseTimeEntityTest {
         postRepository.save(post);
 
         //then
-        LocalDateTime regDate = postRepository.findByPostTitle(post.getPostTitle()).getRegistDate();
-        LocalDateTime modDate = postRepository.findByPostTitle(post.getPostTitle()).getModifyDate();
+        LocalDateTime regDate = postRepository.findByPostText(post.getPostText()).getRegistDate();
+        LocalDateTime modDate = postRepository.findByPostText(post.getPostText()).getModifyDate();
         assertNotNull(regDate);
         assertNotNull(modDate);
         System.out.println(">>>>> regDate : "+regDate+",  "+">>>>> modifyDate : "+modDate);

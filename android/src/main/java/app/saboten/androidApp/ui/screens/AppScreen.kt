@@ -5,7 +5,7 @@ package app.saboten.androidApp.ui.screens
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
-import androidx.navigation.plusAssign
+import app.saboten.androidApp.ui.NavGraphs
 import app.saboten.androidApp.ui.screens.main.MainBottomNavigation
 import app.saboten.androidUi.motions.materialTransitionZaxisIn
 import app.saboten.androidUi.motions.materialTransitionZaxisOut
@@ -15,7 +15,6 @@ import com.google.accompanist.navigation.material.ExperimentalMaterialNavigation
 import com.google.accompanist.navigation.material.ModalBottomSheetLayout
 import com.google.accompanist.navigation.material.rememberBottomSheetNavigator
 import com.ramcosta.composedestinations.DestinationsNavHost
-import com.ramcosta.composedestinations.animations.defaults.DestinationEnterTransition
 import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultAnimations
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 

@@ -1,9 +1,9 @@
 package app.saboten.androidUi.image
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import app.saboten.androidUi.utils.shimmer
@@ -13,7 +13,8 @@ import coil.request.ImageRequest
 @Composable
 fun NetworkImage(
     modifier: Modifier = Modifier,
-    url: Any?
+    url: Any?,
+    colorFilter: ColorFilter? = null,
 ) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
@@ -25,6 +26,7 @@ fun NetworkImage(
         contentScale = ContentScale.Crop,
         loading = {
             Box(modifier = modifier.shimmer())
-        }
+        },
+        colorFilter = colorFilter
     )
 }
