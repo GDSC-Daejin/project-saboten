@@ -13,6 +13,9 @@ import app.saboten.androidApp.extensions.extract
 import app.saboten.androidApp.ui.providers.ProvideMeInfo
 import app.saboten.androidApp.ui.screens.AppScreen
 import app.saboten.androidUi.styles.MainTheme
+import coil.Coil
+import coil.ImageLoader
+import coil.decode.SvgDecoder
 import commonClient.domain.entity.AppTheme
 import commonClient.logger.ClientLogger
 import commonClient.presentation.AppViewModel
@@ -28,6 +31,12 @@ class AppActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        Coil.setImageLoader(
+            ImageLoader.Builder(this)
+                .components { add(SvgDecoder.Factory()) }
+                .build()
+        )
 
         appViewModel.state
             .onEach {
