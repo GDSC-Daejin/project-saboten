@@ -1,6 +1,5 @@
-package app.saboten.androidApp.ui.screens.main.categories
+package app.saboten.androidApp.ui.screens.main.search
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -11,10 +10,9 @@ import androidx.compose.material.icons.rounded.QuestionMark
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.extensions.extract
 import app.saboten.androidUi.bars.BasicTopBar
-import app.saboten.androidUi.lists.CategoryItem
+import app.saboten.androidApp.ui.list.CategoryItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.styles.MainTheme
 import com.ramcosta.composedestinations.annotation.Destination
@@ -25,7 +23,7 @@ import commonClient.presentation.AppViewModel
 
 @Composable
 @Destination
-fun CategoriesScreen(
+fun SearchScreen(
     navigator: DestinationsNavigator,
     appViewModel: AppViewModel
 ) {
@@ -35,7 +33,7 @@ fun CategoriesScreen(
     BasicScaffold(
         topBar = {
             BasicTopBar(title = {
-                Text("Categories")
+                Text("Search")
             })
         }
     ) {
@@ -50,7 +48,7 @@ fun CategoriesScreen(
 }
 
 @Composable
-fun CategoryGridList(
+private fun CategoryGridList(
     onClick: (Category) -> Unit,
     modifier: Modifier = Modifier,
     categoriesState: LoadState<List<Category>>,
@@ -68,10 +66,7 @@ fun CategoryGridList(
                 columns = GridCells.Fixed(4)
             ) {
                 items(categoriesState.data, key = { it.id }) {
-                    CategoryItem(
-                        text = it.name,
-                        icon = Icons.Rounded.QuestionMark
-                    ) { onClick(it) }
+                    CategoryItem(it, onClick)
                 }
             }
         }

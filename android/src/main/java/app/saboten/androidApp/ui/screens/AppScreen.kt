@@ -28,6 +28,9 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
+import com.ramcosta.composedestinations.navigation.dependency
+import commonClient.presentation.AppViewModel
 
 @Composable
 fun AppScreen(appViewModel: AppViewModel) {
@@ -66,7 +69,7 @@ private fun MainDestinationScaffold(
         destination != null && destination in listOf(
             HomeScreenDestination,
             ProfileScreenDestination,
-            CategoriesScreenDestination,
+            SearchScreenDestination,
             LikedScreenDestination
         )
     }

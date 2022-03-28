@@ -1,27 +1,18 @@
 package app.saboten.androidApp.ui.screens.main
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import app.saboten.androidApp.ui.destinations.*
-import app.saboten.androidApp.ui.navDestination
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
 
@@ -34,8 +25,8 @@ private val mainNavigationBarData = listOf(
     NavigationData(HomeScreenDestination) {
         Icon(if (it) Icons.Rounded.Home else Icons.Outlined.Home, null)
     },
-    NavigationData(CategoriesScreenDestination) {
-        Icon(if (it) Icons.Rounded.Category else Icons.Outlined.Category, null)
+    NavigationData(SearchScreenDestination) {
+        Icon(if (it) Icons.Rounded.Search else Icons.Outlined.Search, null)
     },
     null,
     NavigationData(LikedScreenDestination) {

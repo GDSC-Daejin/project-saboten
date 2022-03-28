@@ -22,7 +22,11 @@ class GetCategoriesUseCase @Inject constructor(
             delay(2000)
             emit(LoadState.success(
                 (0..7L).map {
-                    Category(it, "Category $it")
+                    Category(
+                        it,
+                        "Category $it",
+                        "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg"
+                    )
                 }
             ))
         }
