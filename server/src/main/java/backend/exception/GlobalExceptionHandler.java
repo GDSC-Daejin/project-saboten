@@ -78,6 +78,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private ResponseEntity<Object> makeErrorResponse(ResponseMessage errorMessage) {
         ApiResponse<?> errorResponse = ApiResponse.withMessage(null, errorMessage);
         // 일단은 statusCode를 NOT_FOUND로 했는데 추후 ApiResponse 에서 status 추가 필요
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        return ResponseEntity.status(errorMessage.getStatusCode()).body(errorResponse);
     }
 }
