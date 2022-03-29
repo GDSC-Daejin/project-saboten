@@ -1,9 +1,13 @@
 package backend.common;
 
 import backend.model.category.CategoryEntity;
+import backend.model.post.CategoryInPostEntity;
 import backend.model.post.CommentEntity;
 import backend.model.post.PostEntity;
+import backend.model.post.PostLikeEntity;
+import backend.model.user.RefreshTokenEntity;
 import backend.model.user.UserEntity;
+import backend.model.user.VoteSelectEntity;
 import lombok.Getter;
 
 @Getter
@@ -26,13 +30,14 @@ public class EntityFactory {
         return PostEntity.builder()
                 .postLikeCount(0)
                 .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-                .userId(authorUserEntity())
+                .user(authorUserEntity())
                 .build();
     }
 
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
                 .categoryName("음악")
+                .iconUrl("https://www.google.com")
                 .build();
     }
 
@@ -43,5 +48,58 @@ public class EntityFactory {
                 .build();
     }
 
+    public static CategoryInPostEntity basicCategoryInPostEntity(){
+        return CategoryInPostEntity.builder()
+                .post(basicPostEntity())
+                .category(basicCategoryEntity())
+                .build();
+    }
+
+    public static PostLikeEntity basicPostLikeEntity() {
+        return PostLikeEntity.builder()
+                .post(basicPostEntity())
+                .user(basicUserEntity())
+                .build();
+    }
+
+    public static VoteSelectEntity basicVoteSelectEntity() {
+        return VoteSelectEntity.builder()
+                .post(basicPostEntity())
+                .user(basicUserEntity())
+                .voteResult(1)
+                .build();
+    }
+
+    public static RefreshTokenEntity basicRefreshTokenEntity() {
+        return RefreshTokenEntity.builder()
+                .refreshToken("JWTJWTJWTJWT")
+                .user(basicUserEntity())
+                .build();
+    }
 
 }
+
+//    // given
+//    private UserEntity author = UserEntity.builder()
+//            .nickname("작성자")
+//            .build();
+//    private PostEntity post = PostEntity.builder()
+//            .postLikeCount(0)
+//            .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
+//            .userId(author)
+//            .build();
+
+
+
+//    // given
+//    private UserEntity author = UserEntity.builder()
+//            .nickname("작성자")
+//            .build();
+//    private PostEntity post = PostEntity.builder()
+//            .postLikeCount(0)
+//            .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
+//            .userId(author)
+//            .build();
+//    private UserEntity user = UserEntity.builder()
+//            .nickname("일반 사용자")
+//            .build();

@@ -1,5 +1,6 @@
 package backend.repository.post;
 
+import backend.common.EntityFactory;
 import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
 import backend.model.post.PostEntity;
@@ -26,39 +27,17 @@ class CategoryInPostRepositoryTest {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private CategoryRepository categoryRepository;
 
-    // given
-    private UserEntity author = UserEntity.builder()
-            .nickname("작성자")
-            .build();
-    private PostEntity post = PostEntity.builder()
-            .postLikeCount(0)
-            .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-            .userId(author)
-            .build();
-
-    // 테스트 일때만 Create 해주고 실제는 카테고리 Create 기능 제공 안할거에요!
-    private CategoryEntity category = CategoryEntity.builder()
-            .categoryName("음악")
-            .build();
-
-    private CategoryInPostEntity savedCategoryInPost = null;
+    private CategoryInPostEntity categoryInPost = EntityFactory.basicCategoryInPostEntity();
+    private PostEntity post = categoryInPost.getPost();
+    private CategoryEntity category = categoryInPost.getCategory();
 
     @BeforeEach
-    private void saveCategoryInPost() {
-        userRepository.save(author);
+    private void setUp() {
         postRepository.save(post);
         categoryRepository.save(category);
-
-        CategoryInPostEntity categoryInPost = CategoryInPostEntity.builder()
-                .post(post)
-                .category(category)
-                .build();
-
-        savedCategoryInPost = categoryInPostRepository.save(categoryInPost);
+        categoryInPostRepository.save(categoryInPost);
     }
 
     @Nested
@@ -67,10 +46,10 @@ class CategoryInPostRepositoryTest {
         @Test
         public void 게시물_등록시_카테고리_추가() {
             //then
-            assertThat(savedCategoryInPost)
+            assertThat(categoryInPost)
                     .isNotNull();
-            assertEquals(savedCategoryInPost.getCategory().getCategoryName(), category.getCategoryName());
-            assertEquals(savedCategoryInPost.getPost().getPostId(), post.getPostId());
+            assertEquals(categoryInPost.getCategory().getCategoryName(), category.getCategoryName());
+            assertEquals(categoryInPost.getPost().getPostId(), post.getPostId());
         }
     }
 
@@ -93,10 +72,8 @@ class CategoryInPostRepositoryTest {
     class Delete {
         @Test
         public void 삭제_성공() {
-            // given
-
             // when
-            categoryInPostRepository.delete(savedCategoryInPost);
+            categoryInPostRepository.delete(categoryInPost);
 
             List<CategoryInPostEntity> findCategoryInPost = categoryInPostRepository.findByPost(post);
             //then

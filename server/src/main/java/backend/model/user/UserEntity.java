@@ -32,6 +32,6 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "user_gender")
     private Integer gender;
 
-    @OneToMany(mappedBy = "userId")
+    @OneToMany(mappedBy = "user")
     private List<PostEntity> posts = new ArrayList<>();
 }
