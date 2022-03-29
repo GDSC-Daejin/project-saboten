@@ -3,6 +3,7 @@ package backend.common;
 import backend.model.category.CategoryEntity;
 import backend.model.post.CommentEntity;
 import backend.model.post.PostEntity;
+import backend.model.post.VoteEntity;
 import backend.model.user.UserEntity;
 import backend.model.user.VoteSelectEntity;
 import lombok.Getter;
@@ -79,6 +80,21 @@ public class EntityFactory {
                 .user(basicUserEntity())
                 .post(basicPostEntity())
                 .voteResult(1)  // 1번 Topic 2번 Topic 이라고 가정!
+                .build();
+    }
+
+    public static VoteEntity basicVoteEntityTrue(){
+        return VoteEntity.builder()
+                .topic("민초파 찬성")
+                .post(basicPostEntity())
+                .count(20)
+                .build();
+    }
+    public static VoteEntity basicVoteEntityFalse(){
+        return VoteEntity.builder()
+                .topic("민초파 반대")
+                .post(basicPostEntity())
+                .count(10)
                 .build();
     }
 
