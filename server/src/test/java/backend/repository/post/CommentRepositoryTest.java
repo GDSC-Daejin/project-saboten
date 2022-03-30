@@ -83,30 +83,30 @@ class CommentRepositoryTest {
             assertEquals(myComment.getUser(), comment.getUser());
         }
 
-//        @Test
-//        public void 특정게시글에_달린_댓글들_조회() {
-//            // given
-//            CommentEntity comment1 = EntityFactory.basicCommentEntity();
-//            CommentEntity comment2 = EntityFactory.basicCommentEntity2();
-//            CommentEntity comment3 = EntityFactory.basicCommentEntity3();
-//
-//            comment1.setUser(myUser);
-//            comment1.setPost(myPost);
-//            comment2.setUser(myAuthor);
-//            comment2.setPost(myPost);
-//            comment3.setUser(myUser);
-//            comment3.setPost(myPost);
-//
-//            commentRepository.save(comment1);
-//            commentRepository.save(comment2);
-//            commentRepository.save(comment3);
-//
-//            // when
-//            List<CommentEntity> commetedList = commentRepository.findAllByPostId(myPost.getPostId());
-//            //then
-//            assertEquals(3, commetedList.size());
-//            System.out.println(">>>>"+commetedList.get(0).getCommentText());
-//        }
+        @Test
+        public void 특정게시글에_달린_댓글들_조회() {
+            // given
+            CommentEntity comment1 = EntityFactory.basicCommentEntity();
+            CommentEntity comment2 = EntityFactory.basicCommentEntity2();
+            CommentEntity comment3 = EntityFactory.basicCommentEntity3();
+
+            comment1.setUser(myUser);
+            comment1.setPost(myPost);
+            comment2.setUser(myAuthor);
+            comment2.setPost(myPost);
+            comment3.setUser(myUser);
+            comment3.setPost(myPost);
+
+            commentRepository.save(comment1);
+            commentRepository.save(comment2);
+            commentRepository.save(comment3);
+
+            // when
+            List<CommentEntity> commetedList = commentRepository.findAllByPost(myPost.getPostId());
+            //then
+            assertEquals(3, commetedList.size());
+            System.out.println(">>>>"+commetedList.get(0).getCommentText());
+        }
 
         @Test
         public void 특정유저가_단_댓글들조회() {
