@@ -19,7 +19,10 @@ public class CategoryEntity {
     @Column(name = "category_name", nullable = false, length = 50)
     private String categoryName;
 
+    @Column(name = "icon_url", nullable = false)
+    private String iconUrl;
+
     public Category toDTO() {
-        return new Category(this.categoryId, this.categoryName);
+        return new Category(this.categoryId, this.categoryName, this.iconUrl);
     }
 }

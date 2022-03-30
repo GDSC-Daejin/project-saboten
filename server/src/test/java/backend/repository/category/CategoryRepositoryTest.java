@@ -1,6 +1,9 @@
 package backend.repository.category;
 
+import backend.common.EntityFactory;
 import backend.model.category.CategoryEntity;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -18,18 +21,22 @@ class CategoryRepositoryTest {
     @Autowired
     private CategoryRepository repository;
 
+    private CategoryEntity category = EntityFactory.basicCategoryEntity();
+
+    @BeforeEach
+    private void setUp() {
+        repository.save(category);
+    }
+
     @Nested
     @DisplayName("조회")
     class Read {
         @Test
         public void 카테고리_이름_조회() {
             // given
-            // 데이터베이스 무조건 음식 이라는 카테고리가 있어야 통과 됨.
-            CategoryEntity category = new CategoryEntity(null,"음식");
             String categoryName = category.getCategoryName();
 
             // when
-            repository.save(category);
             CategoryEntity findCategory = repository.findByCategoryName(categoryName);
 
             // then
@@ -39,13 +46,7 @@ class CategoryRepositoryTest {
 
         @Test
         public void 전체조회() {
-            // given
-            CategoryEntity category = new CategoryEntity(100L,"음식");
-            CategoryEntity category2 = new CategoryEntity(200L,"연애");
-
             // when
-            repository.save(category);
-            repository.save(category2);
             List<CategoryEntity> categoryEntities = repository.findAll();
 
             //then
@@ -55,11 +56,9 @@ class CategoryRepositoryTest {
         @Test
         public void ID_조회() {
             // given
-            CategoryEntity category = new CategoryEntity(100L,"음식");
             Long id = category.getCategoryId();
 
             // when
-            repository.save(category);
             CategoryEntity findCategory = repository.getById(id);
 
             //then

@@ -46,7 +46,7 @@ class VoteRepositoryTest {
 
         post.setUser(myUser);
         postRepository.save(post);
-        myPost = postRepository.findByPostTitle(post.getPostTitle());
+        myPost = postRepository.findByPostText(post.getPostText());
 
         vote1.setPost(myPost);
         vote2.setPost(myPost);

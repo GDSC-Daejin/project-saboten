@@ -53,6 +53,7 @@ dependencies {
 
     implementation(COIL.compose)
     implementation(COIL.composeBase)
+    implementation(COIL.svg)
 
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)

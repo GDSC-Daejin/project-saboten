@@ -1,5 +1,6 @@
 package backend.repository.user;
 
+import backend.common.EntityFactory;
 import backend.model.user.RefreshTokenEntity;
 import backend.model.user.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,26 +21,15 @@ class RefreshTokenRepositoryTest {
     @Autowired
     private UserRepository userRepository;
 
-    // given
-    private UserEntity user = UserEntity.builder()
-            .nickname("일반 사용자")
-            .build();
-
-    private RefreshTokenEntity savedRefreshToken = null;
+    private RefreshTokenEntity refreshToken = EntityFactory.basicRefreshTokenEntity();
+    private UserEntity user = refreshToken.getUser();
 
     // JWT 생성 및 검증 부분은 Auth 테스트 코드에서 작성함으로
     // 여기서는 검증 제외한 단순한 CRUD를 함.
-
     @BeforeEach
     private void saveRefreshToken() {
         userRepository.save(user);
-
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .user(user)
-                .refreshToken("JWTJWTJWTJWT")
-                .build();
-
-        savedRefreshToken = refreshTokenRepository.save(refreshToken);
+        refreshTokenRepository.save(refreshToken);
     }
     
     @Nested
@@ -48,9 +38,9 @@ class RefreshTokenRepositoryTest {
         @Test
         public void 생성_성공() {
             // then
-            assertThat(savedRefreshToken)
+            assertThat(refreshToken)
                     .isNotNull();
-            assertEquals(savedRefreshToken.getUser().getUserId(), user.getUserId());
+            assertEquals(refreshToken.getUser().getUserId(), user.getUserId());
         }
     }
     
@@ -59,8 +49,6 @@ class RefreshTokenRepositoryTest {
     class Read {
         @Test
         public void 조회_성공() {
-            // given
-
             // when
             RefreshTokenEntity findRefreshToken = refreshTokenRepository.findByUser(user);
             //then
@@ -77,7 +65,7 @@ class RefreshTokenRepositoryTest {
             // given
             String newJwt = "NEWJWTNEWJWTNEWJWT";
 
-            RefreshTokenEntity newRefreshToken = savedRefreshToken;
+            RefreshTokenEntity newRefreshToken = refreshToken;
             newRefreshToken.setRefreshToken(newJwt);
 
             // when
@@ -99,7 +87,7 @@ class RefreshTokenRepositoryTest {
             // given
 
             // when
-            refreshTokenRepository.delete(savedRefreshToken);
+            refreshTokenRepository.delete(refreshToken);
             RefreshTokenEntity findRefreshToken = refreshTokenRepository.findByUser(user);
             //then
             assertNull(findRefreshToken);

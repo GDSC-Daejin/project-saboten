@@ -1,7 +1,9 @@
 package backend.service;
 
+import backend.exception.ApiException;
 import backend.model.category.CategoryEntity;
 import backend.repository.category.CategoryRepository;
+import common.message.BasicResponseMessage;
 import common.model.reseponse.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +32,7 @@ public class CategoryService {
     public Category findCategory(Long id) {
         Optional<CategoryEntity> category = categoryRepository.findById(id);
         if(category.isEmpty())
-            throw new NoSuchElementException();
+            throw new ApiException(BasicResponseMessage.NOT_FOUND);     // Category ResponseMessage 정의해야함
         else
             return category.get().toDTO();
     }

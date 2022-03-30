@@ -35,11 +35,12 @@ class PostRepositoryTest {
 
     @BeforeEach
     public void savePost(){
-        postRepository.save(post);
-        myPost = postRepository.findByPostId(post.getPostId());
-
         userRepository.save(user);
         myUser = userRepository.findByNickname(user.getNickname());
+
+        post.setUser(myUser);
+        postRepository.save(post);
+        myPost = postRepository.findByPostId(post.getPostId());
 
         postFirst.setUser(myUser);
         postSec.setUser(myUser);
@@ -55,7 +56,6 @@ class PostRepositoryTest {
             // when
             //then
             assertEquals(myPost.getPostId(), post.getPostId());
-            assertEquals(myPost.getPostTitle(), post.getPostTitle());
             assertEquals(myPost.getPostText(), post.getPostText());
             assertEquals(myPost.getPostLikeCount(), post.getPostLikeCount());
             assertEquals(myPost.getUser(),post.getUser());
@@ -66,33 +66,6 @@ class PostRepositoryTest {
     @Nested
     @DisplayName("조회")
     class Read {
-        @Test
-        public void 게시물_제목으로_조회() {
-            // given
-            // when
-            myPost = postRepository.findByPostTitle(post.getPostTitle());
-            //then
-            assertEquals(myPost,post);
-        }
-
-
-        @Test
-        public void 제목에_특정키워드_포함_모든게시글_조회() {
-            // given
-            postFirst.setPostTitle("민트초코 VS 화이트초코");
-            postSec.setPostTitle("고양이상 VS 강아지상");
-            postThird.setPostTitle("고양이로 살아보기 VS 까마귀로 살아보기");
-
-            postRepository.save(postFirst);
-            postRepository.save(postSec);
-            postRepository.save(postThird);
-            // when
-            List<PostEntity> myPostList = postRepository.findAllByPostTitleContainingIgnoreCase("고양이");
-            //then
-            assertEquals(myPostList.size(),2);
-            System.out.println(myPostList.get(0).getPostTitle()+" / "+ myPostList.get(1).getPostTitle());
-        }
-
         @Test
         public void 내용에_특정키워드_포함_모든게시글_조회() {
             // given
@@ -116,7 +89,7 @@ class PostRepositoryTest {
             // when
             UserEntity author= myPost.getUser();
             //then
-            assertEquals(author.getNickname(),"작성자");
+            assertEquals(author.getNickname(),"일반 사용자");
             assertEquals(author.getAge(),20);
             assertEquals(author.getMyPageIntroduction(),"안녕하세요. 다육이입니다.");
             assertEquals(author.getGender(),1);
@@ -129,14 +102,12 @@ class PostRepositoryTest {
         @Test
         public void 게시글수정() {
             // given
-            myPost.setPostTitle("게시글제목 수정");
             myPost.setPostText("게시글본문 수정");
             // when
             postRepository.save(myPost);
             PostEntity updatedPost = postRepository.findByPostId(post.getPostId());
             //then
             assertEquals(myPost.getPostId(), updatedPost.getPostId());
-            assertEquals(myPost.getPostTitle(), updatedPost.getPostTitle());
             assertEquals(myPost.getPostText(), updatedPost.getPostText());
         }
     }

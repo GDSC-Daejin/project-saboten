@@ -1,9 +1,12 @@
 package backend.common;
 
 import backend.model.category.CategoryEntity;
+import backend.model.post.CategoryInPostEntity;
 import backend.model.post.CommentEntity;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
+import backend.model.post.PostLikeEntity;
+import backend.model.user.RefreshTokenEntity;
 import backend.model.user.UserEntity;
 import backend.model.user.VoteSelectEntity;
 import lombok.Getter;
@@ -29,11 +32,9 @@ public class EntityFactory {
                 .build();
     }
 
-
     public static PostEntity basicPostEntity(){
         return PostEntity.builder()
                 .postLikeCount(0)
-                .postTitle("게시물 제목")
                 .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
                 .user(authorUserEntity())
                 .build();
@@ -42,6 +43,7 @@ public class EntityFactory {
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
                 .categoryName("음악")
+                .iconUrl("https://www.google.com")
                 .build();
     }
 
@@ -94,6 +96,26 @@ public class EntityFactory {
                 .topic("민초파 반대")
                 .post(basicPostEntity())
                 .count(10)
+                .build();
+    }
+    public static CategoryInPostEntity basicCategoryInPostEntity(){
+        return CategoryInPostEntity.builder()
+                .post(basicPostEntity())
+                .category(basicCategoryEntity())
+                .build();
+    }
+
+    public static PostLikeEntity basicPostLikeEntity() {
+        return PostLikeEntity.builder()
+                .post(basicPostEntity())
+                .user(basicUserEntity())
+                .build();
+    }
+
+    public static RefreshTokenEntity basicRefreshTokenEntity() {
+        return RefreshTokenEntity.builder()
+                .refreshToken("JWTJWTJWTJWT")
+                .user(basicUserEntity())
                 .build();
     }
 

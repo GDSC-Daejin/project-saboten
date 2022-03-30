@@ -22,14 +22,9 @@ public class PostEntity extends BaseTimeEntity {
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
-    @Column(name = "post_title", nullable = false)
-    private String postTitle;
-
     @Column(name = "post_text", nullable = false)
     private String postText;
 
     @Column(name = "post_like_count", nullable = false)
     private Integer postLikeCount;
-
-
 }

@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long> {
     PostEntity findByPostId(Long postId);
-    PostEntity findByPostTitle(String postTitle);
-    List<PostEntity> findAllByPostTitleContainingIgnoreCase(String postTitle);
-    List<PostEntity> findAllByPostTextContainingIgnoreCase(String postTitle);
+    List<PostEntity> findAllByPostTextContainingIgnoreCase(String postText);
+    PostEntity findByPostText(String postText);
 }
