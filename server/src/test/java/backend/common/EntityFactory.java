@@ -49,7 +49,6 @@ public class EntityFactory {
         return CommentEntity.builder()
                 .post(basicPostEntity())
                 .user(basicUserEntity())
-                .post(basicPostEntity())
                 .commentText("민트초코가 짱이라 치약에 민트맛을 넣은거에요! 매일 맛봐도 안질리니까")
                 .commentLikeCount(100L)
                 .build();

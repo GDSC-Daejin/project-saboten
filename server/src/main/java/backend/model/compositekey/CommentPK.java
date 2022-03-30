@@ -7,8 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@EqualsAndHashCode
 @NoArgsConstructor
+@EqualsAndHashCode
 @AllArgsConstructor
 public class CommentPK implements Serializable {
     private Long commentId;
