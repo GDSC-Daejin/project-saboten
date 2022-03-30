@@ -2,7 +2,10 @@ package backend.model.user;
 
 import backend.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
+import common.model.request.user.UserSignInRequest;
+import common.model.reseponse.user.User;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -34,4 +37,17 @@ public class UserEntity extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "user")
     private List<PostEntity> posts = new ArrayList<>();
+
+    // 테스트용
+    public UserEntity(UserSignInRequest userSignInRequest) {
+        this.nickname = userSignInRequest.getNickname();
+        this.myPageIntroduction = userSignInRequest.getIntroduction();
+        this.age = userSignInRequest.getAge();
+        this.gender = userSignInRequest.getGender().getValue();
+    }
+
+    // url 수정 필요
+    public User toDto() {
+        return new User(this.userId, this.nickname, "url");
+    }
 }
