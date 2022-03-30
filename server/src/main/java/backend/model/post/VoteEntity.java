@@ -10,13 +10,16 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "TB_Vote")
 @Entity @IdClass(VotePK.class)
 public class VoteEntity {
     @Id
+    @Column(name = "vote_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long voteId;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post_id", nullable = false)
     private PostEntity post;
 

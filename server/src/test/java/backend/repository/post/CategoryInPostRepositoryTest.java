@@ -28,13 +28,17 @@ class CategoryInPostRepositoryTest {
     private PostRepository postRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     private CategoryInPostEntity categoryInPost = EntityFactory.basicCategoryInPostEntity();
     private PostEntity post = categoryInPost.getPost();
+    private UserEntity author = post.getUser();
     private CategoryEntity category = categoryInPost.getCategory();
 
     @BeforeEach
     private void setUp() {
+        userRepository.save(author);
         postRepository.save(post);
         categoryRepository.save(category);
         categoryInPostRepository.save(categoryInPost);
