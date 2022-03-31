@@ -1,6 +1,5 @@
 package backend.repository.post;
 
-import backend.model.compositekey.VotePK;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
