@@ -1,6 +1,5 @@
 package backend.model.post;
 
-import backend.model.compositekey.CommentPK;
 import backend.model.user.UserEntity;
 import lombok.*;
 
@@ -12,15 +11,15 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "TB_Comment")
-@Entity @IdClass(CommentPK.class)
+@Entity
 public class CommentEntity {
 
     @Id
     @Column(name = "comment_id", nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-    @Id
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;

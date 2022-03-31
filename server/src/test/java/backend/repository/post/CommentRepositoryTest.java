@@ -20,10 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-// 희한하게 H2 DB에서는 에러남.....
-// 원인 찾는게 필요함.
-@SpringBootTest
-@Transactional
+@DataJpaTest
 @ActiveProfiles("dev")
 class CommentRepositoryTest {
 
