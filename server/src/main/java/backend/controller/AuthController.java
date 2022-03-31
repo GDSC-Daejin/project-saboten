@@ -1,13 +1,13 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
-import backend.jwt.JwtToken;
 import backend.service.AuthService;
 import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignInRequest;
 import common.model.reseponse.ApiResponse;
+import common.model.reseponse.auth.JwtToken;
 import common.model.reseponse.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
