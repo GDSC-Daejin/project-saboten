@@ -1,7 +1,5 @@
 package backend.model.post;
 
-import backend.model.compositekey.VotePK;
-import backend.model.post.PostEntity;
 import lombok.*;
 
 import javax.persistence.*;
@@ -10,13 +8,15 @@ import javax.persistence.*;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity @IdClass(VotePK.class)
+@Table(name = "TB_Vote")
+@Entity
 public class VoteEntity {
     @Id
+    @Column(name = "vote_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long voteId;
 
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="post_id", nullable = false)
     private PostEntity post;
 

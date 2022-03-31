@@ -10,18 +10,21 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity @Table(name = "TB_Comment")
+@Table(name = "TB_Comment")
+@Entity
 public class CommentEntity {
 
     @Id
-    private Long postId;
+    @Column(name = "comment_id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long commentId;
 
-    @MapsId
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 

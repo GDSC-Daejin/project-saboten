@@ -18,9 +18,9 @@ public class PostEntity extends BaseTimeEntity {
     @Column(name = "post_id", nullable = false)
     private Long postId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="user_id", nullable = false)
-    private UserEntity userId;
+    private UserEntity user;
 
     @Column(name = "post_text", nullable = false)
     private String postText;

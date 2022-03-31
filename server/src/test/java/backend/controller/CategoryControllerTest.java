@@ -1,5 +1,6 @@
 package backend.controller;
 
+import backend.common.EntityFactory;
 import backend.model.category.CategoryEntity;
 import backend.repository.category.CategoryRepository;
 import common.message.BasicResponseMessage;
@@ -42,9 +43,7 @@ class CategoryControllerTest {
     private CategoryRepository categoryRepository;
 
     // given
-    private CategoryEntity category = CategoryEntity.builder()
-            .categoryName("연애")
-            .build();
+    private CategoryEntity category = EntityFactory.basicCategoryEntity();
 
     @BeforeEach
     private void setup() {
@@ -92,12 +91,14 @@ class CategoryControllerTest {
             Category categoryDTO = category.toDTO();
             Long id = category.getCategoryId();
             String categoryName = categoryDTO.getName();
+            String iconUrl = categoryDTO.getIconUrl();
 
             // when then
             mockMvc.perform(get(baseUrl + "/" + id))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.id").value(id))
                     .andExpect(jsonPath("$.data.name").value(categoryName))
+                    .andExpect(jsonPath("$.data.icon_url").value(iconUrl))
                     .andExpect(jsonPath("$.code").value(message.toString()))
                     .andExpect(jsonPath("$.message").value(message.getMessage()))
                     .andDo(print());

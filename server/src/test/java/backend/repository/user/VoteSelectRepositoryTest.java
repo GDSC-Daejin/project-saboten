@@ -1,5 +1,6 @@
 package backend.repository.user;
 
+import backend.common.EntityFactory;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.model.user.VoteSelectEntity;
@@ -28,35 +29,17 @@ class VoteSelectRepositoryTest {
     @Autowired
     private PostRepository postRepository;
 
-    // given
-    private UserEntity author = UserEntity.builder()
-            .nickname("작성자")
-            .build();
-    private PostEntity post = PostEntity.builder()
-            .postLikeCount(0)
-            .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-            .userId(author)
-            .build();
-    private UserEntity user = UserEntity.builder()
-            .nickname("일반 사용자")
-            .build();
-
-    private VoteSelectEntity savedVoteSelect = null;
+    private VoteSelectEntity voteSelect = EntityFactory.basicVoteSelectEntity();
+    private UserEntity user = voteSelect.getUser();
+    private PostEntity post = voteSelect.getPost();
+    private UserEntity author = post.getUser();
 
     @BeforeEach
     private void saveVoteSelect() {
         userRepository.save(author);
         userRepository.save(user);
         postRepository.save(post);
-
-        // 사용자가 Topic에 투표를 함
-        VoteSelectEntity voteSelect = VoteSelectEntity.builder()
-                .user(user)
-                .post(post)
-                .voteResult(1)  // 1번 Topic 2번 Topic 이라고 가정!
-                .build();
-
-        savedVoteSelect = voteSelectRepository.save(voteSelect);
+        voteSelectRepository.save(voteSelect);
     }
 
     @Nested
@@ -64,9 +47,9 @@ class VoteSelectRepositoryTest {
     class Create  {
         @Test
         public void 투표_성공() {
-            assertNotNull(savedVoteSelect);
-            assertEquals(savedVoteSelect.getUser().getUserId(), user.getUserId());
-            assertEquals(savedVoteSelect.getPost().getPostId(), post.getPostId());
+            assertNotNull(voteSelect);
+            assertEquals(voteSelect.getUser().getUserId(), user.getUserId());
+            assertEquals(voteSelect.getPost().getPostId(), post.getPostId());
         }
     }
 
@@ -99,10 +82,9 @@ class VoteSelectRepositoryTest {
             PostEntity otherPost = PostEntity.builder()
                     .postLikeCount(0)
                     .postText("내일 수업 듣는다 vs 안듣는다")
-                    .userId(author)
+                    .user(author)
                     .build();
             // when
-
             postRepository.save(otherPost);
             VoteSelectEntity findVoteSelect = voteSelectRepository.findByUserAndPost(user, otherPost);
 

@@ -48,7 +48,9 @@ class BaseTimeEntityTest {
     public void BaseTimeEntity_Post_적용() {
         // given
         PostEntity post = EntityFactory.basicPostEntity();
+        UserEntity author = post.getUser();
         // when
+        userRepository.save(author);
         postRepository.save(post);
 
         //then
