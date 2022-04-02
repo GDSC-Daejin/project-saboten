@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.saboten.androidApp.extensions.extract
 import app.saboten.androidUi.bars.BasicTopBar
-import app.saboten.androidUi.lists.FeedSelectItem
+import app.saboten.androidUi.lists.PostSelectItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -44,7 +44,7 @@ fun HomeScreenContent(
 
         LazyColumn(modifier = Modifier.padding(it)) {
             items(10) {
-                FeedSelectItem()
+                PostSelectItem(text = "무인도에 떨어졌는데 둘 중 하나만 먹을 수 있다면?")
             }
 
             item {
