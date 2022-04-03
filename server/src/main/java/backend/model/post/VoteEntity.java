@@ -1,7 +1,7 @@
 package backend.model.post;
 
 import backend.model.compositekey.VotePK;
-import backend.model.post.PostEntity;
+import common.model.reseponse.post.Vote;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,4 +28,8 @@ public class VoteEntity {
 
     @Column(name = "count", nullable = false)
     private int count;
+
+    public Vote toDto() {
+        return new Vote(this.voteId, this.topic, this.count);
+    }
 }
