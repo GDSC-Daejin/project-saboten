@@ -8,5 +8,18 @@ data class Vote(
     @SerialName("id") val id : Long,
     @SerialName("topic") val topic : String,
     @SerialName("count") val count : Int,
-//    @SerialName("image_url") val imageUrl : String
-)
+    @SerialName("color") val color : Colors
+) {
+    enum class Colors {
+        RED,
+        GREEN,
+        BLUE,
+        YELLOW,
+        PURPLE,
+        PINK,
+        ORANGE,
+        BROWN,
+        BLACK,
+        WHITE
+    }
+}
