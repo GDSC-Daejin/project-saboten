@@ -2,6 +2,7 @@ package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
 import backend.service.AuthService;
+import common.message.BasicResponseMessage;
 import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
@@ -39,9 +40,9 @@ public class AuthController {
 //
 //    }
 
-//    @PostMapping(authUrl + "/reissue")
-//    public ApiResponse<JwtToken> reissue(@RequestBody TokenReissueRequest tokenReissueRequest) {
-//        authService.reissue(tokenReissueRequest)
-//        return ResponseEntity.ok(authService.reissue(tokenReissueRequest));
-//    }
+    @PostMapping(authUrl + "/reissue")
+    public ApiResponse<JwtToken> reissue(@RequestBody TokenReissueRequest tokenReissueRequest) {
+        JwtToken jwtToken = authService.reissue(tokenReissueRequest);
+        return ApiResponse.withMessage(jwtToken, UserResponseMessage.USER_TOKEN_REISSUE);
+    }
 }
