@@ -1,4 +1,4 @@
-package common.model.request.post
+package common.model.request.post.create
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -7,6 +7,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class PostCreateRequest(
     @SerialName("text") val text: String,
-    @SerialName("vote_topics") val voteTopics: List<String>,
+    @SerialName("vote_topics") val voteTopics: List<VoteCreateRequest>,
     @SerialName("category_ids") val categoryIds: List<Long>
 )

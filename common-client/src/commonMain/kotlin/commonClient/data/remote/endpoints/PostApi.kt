@@ -1,6 +1,6 @@
 package commonClient.data.remote.endpoints
 
-import common.model.request.post.PostCreateRequest
+import common.model.request.post.create.PostCreateRequest
 import common.model.request.post.PostUpdateRequest
 import common.model.reseponse.ApiResponse
 import common.model.reseponse.post.Post

@@ -6,7 +6,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtil {
-
     private SecurityUtil() { }
 
     // SecurityContext 에 유저 정보가 저장되는 시점
@@ -21,4 +20,7 @@ public class SecurityUtil {
 
         return Long.parseLong(authentication.getName());
     }
+
+
+
 }

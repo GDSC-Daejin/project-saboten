@@ -7,6 +7,7 @@ import common.message.UserResponseMessage;
 import common.model.reseponse.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepository userRepository;
 
+    @Transactional
     public UserEntity findUserEntity(Long id) {
         Optional<UserEntity> userEntity = userRepository.findById(id);
 

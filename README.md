@@ -53,5 +53,5 @@
 ## Git Rules
 
 ### Branch Create
-- 브랜치 생성시 "feature/{포지션 : BE, FE, AND, IOS}/SBT-{이슈번호}-{비고(Optional)}" 로 생성합니다.
-  - 예 : "feature/BE/SBT-120-user-api"
+- 브랜치 생성시 "feature/{포지션 : BE, FE, AND, IOS}/SBOT-{이슈번호}-{비고(Optional)}" 로 생성합니다.
+  - 예 : "feature/BE/SBOT-120-user-api"
