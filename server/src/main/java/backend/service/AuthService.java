@@ -1,6 +1,7 @@
 package backend.service;
 
 import backend.exception.ApiException;
+import backend.jwt.RedisUtil;
 import backend.jwt.RoleType;
 import backend.jwt.TokenProvider;
 import backend.model.user.RefreshTokenEntity;
@@ -28,6 +29,7 @@ public class AuthService {
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserService userService;
+    private final RedisUtil redisUtil;
 
     @Transactional
     public User signup(UserSignInRequest userSignInRequest) {
@@ -101,5 +103,24 @@ public class AuthService {
 
         // 토큰 발급
         return newRefreshToken;
+    }
+
+    @Transactional
+    public void logout(String accessToken, String refreshToken) {
+        // 1. Access Token 검증
+        if (!tokenProvider.validateToken(accessToken)) {
+            throw new ApiException(BasicResponseMessage.UNAUTHORIZED);
+        }
+
+        // 2. Access Token 에서 authentication 을 가져옵니다.
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+
+        // 3. DB에 저장된 Refresh Token 제거
+        Long userId = Long.parseLong(authentication.getName());
+        refreshTokenRepository.deleteById(userId);
+
+        // 4. Access Token blacklist에 등록하여 만료시키기
+        Long expiration = tokenProvider.getExpiration(accessToken);
+        redisUtil.setBlackList(accessToken, "access_token", expiration);
     }
 }
