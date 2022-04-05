@@ -26,6 +26,7 @@ object SpringFramework {
         const val bootTest = "org.springframework.boot:spring-boot-starter-test"
         const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
         const val security = "org.springframework.boot:spring-boot-starter-security"
+        const val redis = "org.springframework.boot:spring-boot-starter-data-redis"
     }
 }
 
@@ -44,6 +45,7 @@ object Jwt {
 fun DependencyHandler.serverDependency() {
     add("implementation", SpringFramework.Boot.jpa)
     add("implementation", SpringFramework.Boot.security)
+    add("implementation", SpringFramework.Boot.redis)
     add("implementation", Jwt.jjwtApi)
     add("implementation", Postgresql.postgre)
     add("implementation", Lombok.lombok)
