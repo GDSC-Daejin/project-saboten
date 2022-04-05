@@ -2,11 +2,10 @@ package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
 import backend.service.AuthService;
-import common.message.BasicResponseMessage;
 import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
-import common.model.request.user.UserSignInRequest;
+import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.auth.JwtToken;
 import common.model.reseponse.user.User;
@@ -23,7 +22,7 @@ public class AuthController {
 
     // 현재 auth 기능들은 제대로 된 auth 가 아니라서 추후 소셜로그인 구현이 되면 제대로 구현합시다!
     @PostMapping(authUrl + "/signup")
-    public ApiResponse<User> signup(@RequestBody UserSignInRequest userSignInRequest) {
+    public ApiResponse<User> signup(@RequestBody UserSignUpRequest userSignInRequest) {
         User user = authService.signup(userSignInRequest);
         return ApiResponse.withMessage(user, UserResponseMessage.USER_CREATED);
     }

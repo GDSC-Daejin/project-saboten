@@ -55,6 +55,8 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     defaultRequest {
 //        header("Authorization", "Bearer ${authenticator.idToken}")
 
+        header(HttpHeaders.ContentType, ContentType.Application.Json)
+
         headers {
             accept(ContentType.Application.Json)
             accept(ContentType.MultiPart.FormData)

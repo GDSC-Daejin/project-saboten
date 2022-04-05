@@ -52,6 +52,7 @@ kotlin {
                 api(MultiplatformSettings.core)
                 api(MultiplatformSettings.coroutines)
                 api(MultiplatformSettings.serialization)
+                api(KotlinX.datetime)
             }
         }
         val commonTest by getting {
@@ -68,6 +69,7 @@ kotlin {
                 api(Ktor.client.cio)
                 api(MultiplatformSettings.datastore)
                 api(AndroidX.dataStore.preferences)
+                implementation(AndroidX.security.cryptoKtx)
                 kapt(AndroidX.hilt.compiler)
                 kapt(Google.dagger.hilt.compiler)
                 implementation(Google.dagger.hilt.android)
