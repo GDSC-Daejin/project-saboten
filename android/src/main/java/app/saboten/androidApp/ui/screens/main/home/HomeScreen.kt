@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import app.saboten.androidApp.extensions.extract
 import app.saboten.androidUi.bars.BasicTopBar
-import app.saboten.androidUi.lists.PostSelectItem
+import app.saboten.androidApp.ui.list.PostSelectItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.utils.shimmer
 import com.google.accompanist.pager.HorizontalPager
