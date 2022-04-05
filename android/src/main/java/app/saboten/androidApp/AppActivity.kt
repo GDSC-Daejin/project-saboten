@@ -60,7 +60,7 @@ class AppActivity : AppCompatActivity() {
                 }
             ) {
                 ProvideMeInfo(state.me) {
-                    AppScreen()
+                    AppScreen(appViewModel)
                 }
             }
         }

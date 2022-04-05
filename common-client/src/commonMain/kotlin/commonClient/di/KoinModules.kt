@@ -11,6 +11,7 @@ import commonClient.data.repository.UserRepositoryImp
 import commonClient.domain.repository.CategoryRepository
 import commonClient.domain.repository.UserRepository
 import commonClient.domain.usecase.user.GetMeUseCase
+import commonClient.presentation.AppViewModel
 import commonClient.presentation.HomeScreenViewModel
 import io.ktor.client.engine.*
 import org.koin.dsl.module
@@ -37,5 +38,6 @@ fun domainModule() = module {
 }
 
 fun presentationModule() = module {
-    single { HomeScreenViewModel(get()) }
+    single { AppViewModel(get(), get(), get()) }
+    single { HomeScreenViewModel() }
 }
