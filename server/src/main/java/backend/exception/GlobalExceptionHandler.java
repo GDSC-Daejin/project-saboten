@@ -8,6 +8,7 @@ import io.sentry.SentryLevel;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -44,6 +45,23 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         });
 
         final ResponseMessage errorMessage = BasicResponseMessage.INVALID_PARAMETER;
+        return makeErrorResponse(errorMessage);
+    }
+
+    // Request Body와 형식이 맞지 않거나, JSON 형태를 지키지 않았을 경우 발생한다.
+    @Override
+    public ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request
+    ) {
+        Sentry.configureScope(scope -> {
+            scope.setLevel(SentryLevel.ERROR);
+            Sentry.captureMessage(ex.getMessage());
+        });
+
+        final ResponseMessage errorMessage = BasicResponseMessage.INVALID_JSON;
         return makeErrorResponse(errorMessage);
     }
 

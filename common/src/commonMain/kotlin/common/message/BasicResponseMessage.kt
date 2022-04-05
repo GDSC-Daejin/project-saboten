@@ -12,5 +12,6 @@ enum class BasicResponseMessage(
     UNAUTHORIZED("인증이 필요합니다.", 401),
     FORBIDDEN("권한이 없습니다.", 403),
     INVALID_PARAMETER("매개변수가 잘못됬습니다.", 400),
-
+    INVALID_JSON("JSON 형식이 잘못되었습니다.", 400),
+    INVALID_REFRESH_TOKEN("Refresh Token이 유효하지 않습니다.", 400),
 }
