@@ -10,6 +10,7 @@ import common.model.reseponse.ApiResponse;
 import common.model.reseponse.auth.JwtToken;
 import common.model.reseponse.user.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -43,5 +44,11 @@ public class AuthController {
     public ApiResponse<JwtToken> reissue(@RequestBody TokenReissueRequest tokenReissueRequest) {
         JwtToken jwtToken = authService.reissue(tokenReissueRequest);
         return ApiResponse.withMessage(jwtToken, UserResponseMessage.USER_TOKEN_REISSUE);
+    }
+
+    @DeleteMapping(authUrl + "/logout")
+    public ApiResponse<?> logout(@RequestBody TokenReissueRequest tokenReissueRequest) {
+        authService.logout(tokenReissueRequest.getAccessToken(), tokenReissueRequest.getRefreshToken());
+        return ApiResponse.withMessage(null, UserResponseMessage.USER_LOGOUT);
     }
 }

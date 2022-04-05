@@ -1,4 +1,4 @@
-package app.saboten.androidUi.lists
+package app.saboten.androidApp.ui.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
