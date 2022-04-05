@@ -89,6 +89,7 @@ public class EntityFactory {
                 .topic("민초파 찬성")
                 .post(basicPostEntity())
                 .count(20)
+                .color("WHITE")
                 .build();
     }
     public static VoteEntity basicVoteEntityFalse(){
@@ -96,6 +97,7 @@ public class EntityFactory {
                 .topic("민초파 반대")
                 .post(basicPostEntity())
                 .count(10)
+                .color("WHITE")
                 .build();
     }
     public static CategoryInPostEntity basicCategoryInPostEntity(){

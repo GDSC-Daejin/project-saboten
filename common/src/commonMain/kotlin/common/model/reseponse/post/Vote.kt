@@ -11,6 +11,7 @@ data class Vote(
     @SerialName("color") val color : Colors
 ) {
     enum class Colors {
+        WHITE,
         RED,
         GREEN,
         BLUE,
@@ -20,6 +21,5 @@ data class Vote(
         ORANGE,
         BROWN,
         BLACK,
-        WHITE
     }
 }

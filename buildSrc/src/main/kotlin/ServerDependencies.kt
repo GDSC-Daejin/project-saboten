@@ -25,6 +25,7 @@ object SpringFramework {
     object Boot {
         const val bootTest = "org.springframework.boot:spring-boot-starter-test"
         const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
+        const val security = "org.springframework.boot:spring-boot-starter-security"
     }
 }
 
@@ -33,9 +34,17 @@ object Sentry {
     const val logback = "io.sentry:sentry-logback:_"
 }
 
+object Jwt {
+    const val jjwtApi = "io.jsonwebtoken:jjwt-api:_"
+    const val jjwtImpl = "io.jsonwebtoken:jjwt-impl:_"
+    const val jjwtJackson = "io.jsonwebtoken:jjwt-jackson:_"
+}
+
 // serverDependency로 하나로 쓸까, 아니면 기능별로 분리해서 관리할까 고민중
 fun DependencyHandler.serverDependency() {
     add("implementation", SpringFramework.Boot.jpa)
+    add("implementation", SpringFramework.Boot.security)
+    add("implementation", Jwt.jjwtApi)
     add("implementation", Postgresql.postgre)
     add("implementation", Lombok.lombok)
     add("implementation", SpringFox.swagger3)
@@ -47,5 +56,7 @@ fun DependencyHandler.serverDependency() {
 
     add("annotationProcessor", Lombok.lombok)
 
+    add("runtimeOnly", Jwt.jjwtImpl)
+    add("runtimeOnly", Jwt.jjwtJackson)
     add("runtimeOnly", H2.h2)
 }
