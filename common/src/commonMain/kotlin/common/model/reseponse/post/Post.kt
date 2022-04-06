@@ -13,7 +13,7 @@ data class Post(
     @SerialName("author") val author: User,
     @SerialName("votes") val votes: List<Vote>,
     @SerialName("categories") val categories: List<Category>,
-    @SerialName("selected_vote") val selectedVote: Long?,
+    @SerialName("selected_vote") val selectedVote: Int?,
     @SerialName("is_liked") val isLiked: Boolean?,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String?
