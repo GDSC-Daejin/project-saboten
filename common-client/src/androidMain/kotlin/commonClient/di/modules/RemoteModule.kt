@@ -1,10 +1,5 @@
-package commonClient.di
+package commonClient.di.modules
 
-import android.content.Context
-import androidx.datastore.preferences.preferencesDataStore
-import com.russhwolf.settings.Settings
-import com.russhwolf.settings.coroutines.SuspendSettings
-import com.russhwolf.settings.datastore.DataStoreSettings
 import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.endpoints.*
 import commonClient.data.repository.AppThemeSettingsRepositoryImp
@@ -13,19 +8,15 @@ import commonClient.data.repository.UserRepositoryImp
 import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.domain.repository.CategoryRepository
 import commonClient.domain.repository.UserRepository
+import commonClient.utils.AuthTokenManager
 import commonClient.utils.ClientProperties
-import commonClient.utils.EncryptedSettingsHolder
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.engine.cio.*
-import javax.inject.Named
 import javax.inject.Singleton
-
-private val Context.dataStore by preferencesDataStore("datastore")
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -35,18 +26,11 @@ interface DataModule {
 
         @Provides
         @Singleton
-        fun provideHttpClient(properties: ClientProperties) = SabotenApiHttpClient(CIO, properties)
+        fun provideHttpClient(
+            properties: ClientProperties,
+            authTokenManager: AuthTokenManager
+        ) = SabotenApiHttpClient(CIO, authTokenManager, properties)
 
-        @Provides
-        @Singleton
-        fun provideAndroidSettings(@ApplicationContext context: Context): SuspendSettings =
-            DataStoreSettings(context.dataStore)
-
-        @Provides
-        @Singleton
-        @Named("encrypted")
-        fun provideEncryptedSettings(@ApplicationContext context: Context): Settings =
-            EncryptedSettingsHolder.newInstance(context).settings
     }
 
     /* API */

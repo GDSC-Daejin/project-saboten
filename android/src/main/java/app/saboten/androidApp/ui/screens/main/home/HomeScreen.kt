@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import app.saboten.androidApp.extensions.collectInLaunchedEffect
 import app.saboten.androidApp.extensions.extract
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidApp.ui.list.PostSelectItem
@@ -35,22 +36,18 @@ import kotlinx.coroutines.launch
 @Composable
 @Destination(start = true)
 fun HomeScreen(
-    navigator: DestinationsNavigator,
-    appViewModel: AppViewModel
+    navigator: DestinationsNavigator
 ) {
     HomeScreenContent(
-        hiltViewModel<HomeScreenViewModel>(),
-        appViewModel
+        hiltViewModel<HomeScreenViewModel>()
     )
 }
 
 @Composable
 fun HomeScreenContent(
-    vm: HomeScreenViewModelDelegate,
-    appVm: AppViewModelDelegate
+    vm: HomeScreenViewModelDelegate
 ) {
 
-    val (appState, appEffect, appEvent) = appVm.extract()
     val (state, effect, event) = vm.extract()
 
     val pagerState = rememberPagerState()
@@ -65,7 +62,7 @@ fun HomeScreenContent(
                 )
                 HomeCategoryTab(
                     pagerState = pagerState,
-                    categoriesState = appState.categoriesState,
+                    categoriesState = state.categoriesState,
                 )
             }
         }
@@ -74,7 +71,7 @@ fun HomeScreenContent(
         HomeFeedPage(
             modifier = Modifier.padding(it),
             pagerState = pagerState,
-            categoriesState = appState.categoriesState
+            categoriesState = state.categoriesState
         )
 
     }

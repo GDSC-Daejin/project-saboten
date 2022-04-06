@@ -3,14 +3,16 @@
     <application
         android:name=".AndroidApp"
         android:allowBackup="false"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true">
-        <activity android:name=".SplashActivity" android:exported="true"
+        <activity android:name=".AppActivity" android:exported="true"
                   android:theme="@style/Theme.SabotenAndroid.Starting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".AppActivity" android:exported="true" android:theme="@style/Theme.SabotenAndroid"/>
     </application>
 </manifest>

@@ -9,7 +9,6 @@ import commonClient.di.Named
 import commonClient.di.Singleton
 import commonClient.logger.ClientLogger
 import kotlinx.datetime.Clock
-import kotlin.jvm.Synchronized
 
 @Singleton
 class AuthTokenManager @Inject constructor(
@@ -23,30 +22,26 @@ class AuthTokenManager @Inject constructor(
         settings.putLong(KEY_EXPIRES_IN, jwtToken.accessTokenExpiresIn)
     }
 
-    fun getToken(): String {
-        return settings.getString(KEY_ACCESS_TOKEN)
+    fun getToken(): String? {
+        return settings.getStringOrNull(KEY_ACCESS_TOKEN)
     }
 
-    val isTokenExpired
-        get() =
-            (settings.getLongOrNull(KEY_EXPIRES_IN) ?: 0L) < Clock.System.now().toEpochMilliseconds()
+    private val isTokenExpired
+        get() = (settings.getLongOrNull(KEY_EXPIRES_IN) ?: 0L) < Clock.System.now().toEpochMilliseconds()
 
-    suspend fun refreshToken() {
-        if (!isTokenExpired) return
+    suspend fun refreshTokenIfNeeded(): Result<Unit> {
+        if (getToken() == null) return Result.success(Unit)
+        if (!isTokenExpired) return Result.success(Unit)
 
-        authApi.runCatching {
-            reissue(
+        return authApi.runCatching {
+            val response = reissue(
                 TokenReissueRequest(
                     accessToken = settings.getString(KEY_ACCESS_TOKEN),
                     refreshToken = settings.getString(KEY_REFRESH_TOKEN)
                 )
             )
-        }.onSuccess { response ->
             setToken(response.data)
-        }.onFailure {
-            ClientLogger.e(it)
-        }
-
+        }.onFailure(ClientLogger::e)
     }
 
     companion object {

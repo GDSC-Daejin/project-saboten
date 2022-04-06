@@ -1,12 +1,18 @@
 package app.saboten.androidApp
 
+import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.view.View
+import android.view.ViewTreeObserver
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.core.animation.doOnEnd
+import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
@@ -17,12 +23,18 @@ import app.saboten.androidUi.styles.MainTheme
 import coil.Coil
 import coil.ImageLoader
 import coil.decode.SvgDecoder
+import commonClient.data.isFailed
+import commonClient.data.isLoading
+import commonClient.data.isSuccess
 import commonClient.domain.entity.AppTheme
 import commonClient.logger.ClientLogger
 import commonClient.presentation.AppViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
@@ -31,17 +43,15 @@ class AppActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val splashScreen = installSplashScreen()
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
-        Coil.setImageLoader(
-            ImageLoader.Builder(this)
-                .components { add(SvgDecoder.Factory()) }
-                .build()
-        )
+        setupSplashScreen(splashScreen)
+        setupCoilImageLoader()
+        setupUi()
 
         appViewModel.state
             .onEach {
-                ClientLogger.d("AppActivity | state: $it")
                 AppCompatDelegate.setDefaultNightMode(
                     when (it.appTheme) {
                         AppTheme.SYSTEM -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
@@ -50,7 +60,9 @@ class AppActivity : AppCompatActivity() {
                     }
                 )
             }.launchIn(lifecycleScope)
+    }
 
+    private fun setupUi() {
         setContent {
             val (state) = appViewModel.extract()
             MainTheme(
@@ -65,6 +77,41 @@ class AppActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    private fun setupCoilImageLoader() {
+        Coil.setImageLoader(
+            ImageLoader.Builder(this)
+                .components { add(SvgDecoder.Factory()) }
+                .build()
+        )
+    }
+
+    private fun setupSplashScreen(splashScreen: SplashScreen) {
+
+        splashScreen.setOnExitAnimationListener { splashScreenView ->
+            with(ObjectAnimator.ofFloat(splashScreenView.view, View.ALPHA, 1f, 0f)) {
+                duration = 450L
+                doOnEnd { splashScreenView.remove() }
+                start()
+            }
+        }
+
+        /*  */
+        val content: View = findViewById(android.R.id.content)
+        content.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    return if (!appViewModel.state.value.appLoadingState.isLoading()) {
+                        content.viewTreeObserver.removeOnPreDrawListener(this)
+                        true
+                    } else {
+                        false
+                    }
+                }
+            }
+        )
+
     }
 
 }

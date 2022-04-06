@@ -21,6 +21,15 @@ fun <T> LoadState<T>.isFailed(): Boolean {
     return this is LoadState.Failed
 }
 
+@OptIn(ExperimentalContracts::class)
+fun <T> LoadState<T>.isSuccess(): Boolean {
+    contract {
+        returns(true) implies (this@isSuccess is LoadState.Success)
+    }
+    return this is LoadState.Success
+}
+
+
 sealed interface LoadState<T> {
 
 //    val isLoading: Boolean get() = this is Loading

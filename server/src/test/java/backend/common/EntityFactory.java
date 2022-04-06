@@ -43,7 +43,7 @@ public class EntityFactory {
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
                 .categoryName("음악")
-                .iconUrl("https://www.google.com")
+                .categoryIconUrl("https://www.google.com")
                 .build();
     }
 
