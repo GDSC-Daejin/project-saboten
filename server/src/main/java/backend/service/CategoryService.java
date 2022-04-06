@@ -7,6 +7,7 @@ import common.message.BasicResponseMessage;
 import common.model.reseponse.category.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ public class CategoryService {
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) { this.categoryRepository = categoryRepository; }
 
+    @Transactional
     public List<Category> findCategories() {
         List<CategoryEntity> categoryEntities = categoryRepository.findAll();
         List<Category> categories = new ArrayList<>();
@@ -29,6 +31,7 @@ public class CategoryService {
         return categories;
     }
 
+    @Transactional
     public Category findCategory(Long id) {
         Optional<CategoryEntity> category = categoryRepository.findById(id);
         if(category.isEmpty())
