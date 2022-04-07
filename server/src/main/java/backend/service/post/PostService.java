@@ -29,50 +29,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository postRepository;
-    private final CategoryRepository categoryRepository;
-    private final VoteRepository voteRepository;
-    private final CategoryInPostRepository categoryInPostRepository;
 
     @Transactional
-    public PostCreatedResponse create(PostCreateRequest postCreateRequest, UserEntity userEntity) {
-        // Post(dto)는 PostEntity, VoteEntity, CategoryEntity가 합쳐진 형태
-        List<Vote> votes = new ArrayList<>();
-        List<Category> categories = new ArrayList<>();
-
-        // 1. Post 엔티티 생성 및 저장
+    public PostEntity create(PostCreateRequest postCreateRequest, UserEntity userEntity) {
         PostEntity postEntity = PostEntity.builder()
                 .postText(postCreateRequest.getText())
                 .postLikeCount(0)
                 .user(userEntity)
                 .build();
-
         postEntity = postRepository.save(postEntity);
-        User user = userEntity.toDto();
-
-        // 2. 투표 정보 생성
-        for(VoteCreateRequest vote : postCreateRequest.getVoteTopics()){
-            VoteEntity voteEntity = VoteEntity.builder()
-                    .post(postEntity)
-                    .topic(vote.getTopic())
-                    .count(0)
-                    .color(vote.getColor().name())
-                    .build();
-            voteRepository.save(voteEntity);
-            votes.add(voteEntity.toDto());
-        }
-
-        // 3. Category 엔티티 생성 및 저장
-        for (Long categoryId : postCreateRequest.getCategoryIds()) {
-            CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId);
-            categories.add(categoryEntity.toDTO());
-            categoryInPostRepository.save(CategoryInPostEntity.builder().post(postEntity).category(categoryEntity).build());
-        }
-
-        // 받아온 생성정보를  포스트(Post) 형태로 만들어 반환
-        PostCreatedResponse post = new PostCreatedResponse(postEntity.getPostId(),postEntity.getPostText(), user,
-                votes,categories, postEntity.getRegistDate().toString());
-
-        return post;
+        return postEntity;
     }
 
     @Transactional
