@@ -1,4 +1,4 @@
-package commonClient.di
+package commonClient.di.modules
 
 import dagger.Module
 import dagger.hilt.InstallIn

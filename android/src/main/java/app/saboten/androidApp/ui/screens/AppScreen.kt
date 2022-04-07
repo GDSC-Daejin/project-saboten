@@ -28,9 +28,12 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import app.saboten.androidApp.extensions.collectInLaunchedEffect
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
 import commonClient.presentation.AppViewModel
+import commonClient.presentation.AppViewModelDelegate
+import commonClient.presentation.HomeScreenViewModelDelegate
 
 @Composable
 fun AppScreen(appViewModel: AppViewModel) {
@@ -39,7 +42,7 @@ fun AppScreen(appViewModel: AppViewModel) {
     val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(bottomSheetNavigator) {
-        MainDestinationScaffold(navController) {
+        MainDestinationScaffold(appViewModel, navController) {
             dependency(appViewModel)
         }
     }
@@ -48,6 +51,7 @@ fun AppScreen(appViewModel: AppViewModel) {
 
 @Composable
 private fun MainDestinationScaffold(
+    appViewModel: AppViewModel,
     navController: NavHostController,
     dependenciesContainerBuilder: @Composable DependenciesContainerBuilder<*>.() -> Unit,
 ) {
@@ -72,6 +76,14 @@ private fun MainDestinationScaffold(
             SearchScreenDestination,
             LikedScreenDestination
         )
+    }
+
+    appViewModel.effect.collectInLaunchedEffect {
+        when (it) {
+            AppViewModelDelegate.Effect.ShowNetworkErrorUi -> {
+                navController.navigate(AppInitializeFailedDialogDestination.route)
+            }
+        }
     }
 
     BasicScaffold(

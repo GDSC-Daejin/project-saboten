@@ -13,20 +13,38 @@ class CategoryRepositoryImp @Inject constructor(
     private val categoryApi: CategoryApi
 ) : CategoryRepository {
 
+    private var memoryCachedCategories: List<Category>? = null
+
     override fun getCategories() = flow<LoadState<List<Category>>> {
-        emit(LoadState.loading())
-        categoryApi
-            .runCatching { getCategories() }
-            .onFailure { emit(LoadState.failed(it, null)) }
-            .onSuccess { emit(LoadState.success(it.data)) }
+        if (memoryCachedCategories.isNullOrEmpty()) {
+            emit(LoadState.loading())
+            categoryApi
+                .runCatching { getCategories() }
+                .onFailure { emit(LoadState.failed(it, null)) }
+                .onSuccess {
+                    memoryCachedCategories = it.data
+                    emit(LoadState.success(it.data))
+                }
+        } else {
+            emit(LoadState.success(memoryCachedCategories!!))
+        }
     }
 
-    override fun getCategory(id: Long)= flow<LoadState<Category>> {
-        emit(LoadState.loading())
-        categoryApi
-            .runCatching { getCategory(id) }
-            .onFailure { emit(LoadState.failed(it, null)) }
-            .onSuccess { emit(LoadState.success(it.data)) }
+    override fun getCategory(id: Long) = flow<LoadState<Category>> {
+        if (memoryCachedCategories.isNullOrEmpty()) {
+            emit(LoadState.loading())
+            categoryApi
+                .runCatching { getCategory(id) }
+                .onFailure { emit(LoadState.failed(it, null)) }
+                .onSuccess { emit(LoadState.success(it.data)) }
+        } else {
+            val category = memoryCachedCategories!!.find { it.id == id }
+            if (category != null) {
+                emit(LoadState.success(category))
+            } else {
+                emit(LoadState.failed(Exception("Category not found"), null))
+            }
+        }
     }
 
 }

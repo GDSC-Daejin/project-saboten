@@ -1,5 +1,6 @@
 package commonClient.data.remote
 
+import commonClient.utils.AuthTokenManager
 import commonClient.utils.ClientProperties
 import io.ktor.client.*
 import io.ktor.client.engine.*
@@ -16,6 +17,7 @@ private const val URL = "localhost:8080"
 @Suppress("FunctionName")
 fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     engineFactory: HttpClientEngineFactory<T>,
+    authTokenManager: AuthTokenManager,
     properties: ClientProperties,
     block: HttpClientConfig<T>.() -> Unit = {}
 ) = HttpClient(engineFactory) {
@@ -53,7 +55,12 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     }
 
     defaultRequest {
-//        header("Authorization", "Bearer ${authenticator.idToken}")
+
+        authTokenManager.getToken()?.let {
+            header("Authorization", "Bearer $it")
+        }
+
+        header(HttpHeaders.ContentType, ContentType.Application.Json)
 
         headers {
             accept(ContentType.Application.Json)

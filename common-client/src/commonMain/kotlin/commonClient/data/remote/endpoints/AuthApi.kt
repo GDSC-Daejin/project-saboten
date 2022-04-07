@@ -1,7 +1,9 @@
 package commonClient.data.remote.endpoints
 
-import common.model.request.user.UserSignInRequest
+import common.model.request.auth.TokenReissueRequest
+import common.model.request.user.UserSignUpRequest
 import common.model.reseponse.ApiResponse
+import common.model.reseponse.auth.JwtToken
 import commonClient.data.remote.Api
 import commonClient.data.remote.responsePost
 import commonClient.di.Inject
@@ -11,27 +13,30 @@ import io.ktor.client.request.*
 
 interface AuthApi : Api {
 
-    override val prefixUrl: String get() = "/api/v1/users"
+    override val prefixUrl: String get() = "/api/v1/auth"
 
-    suspend fun login(): ApiResponse<String>
+    suspend fun signup(userSignInRequest: UserSignUpRequest): ApiResponse<String>
 
-    suspend fun signIn(request: UserSignInRequest): ApiResponse<String>
+    suspend fun login(): ApiResponse<JwtToken>
 
-    suspend fun signOut(): ApiResponse<String>
+    suspend fun reissue(tokenReissueRequest: TokenReissueRequest): ApiResponse<JwtToken>
 
 }
 
 @Singleton
 class AuthApiImp @Inject constructor(override val httpClient: HttpClient) : AuthApi {
 
-    override suspend fun login(): ApiResponse<String> {
-        TODO("Not yet implemented")
+    override suspend fun signup(userSignInRequest: UserSignUpRequest): ApiResponse<String> = responsePost("/signup") {
+        setBody(userSignInRequest)
     }
 
-    override suspend fun signIn(request: UserSignInRequest) = responsePost<String>("/signin") { setBody(request) }
+    override suspend fun login(): ApiResponse<JwtToken> = responsePost("/login") {
 
-    override suspend fun signOut(): ApiResponse<String> {
-        TODO("Not yet implemented")
     }
+
+    override suspend fun reissue(tokenReissueRequest: TokenReissueRequest): ApiResponse<JwtToken> =
+        responsePost("/reissue") {
+            setBody(tokenReissueRequest)
+        }
 
 }
