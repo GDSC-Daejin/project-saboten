@@ -23,10 +23,13 @@ object H2 {
 
 object SpringFramework {
     object Boot {
-        const val bootTest = "org.springframework.boot:spring-boot-starter-test"
         const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
         const val security = "org.springframework.boot:spring-boot-starter-security"
         const val redis = "org.springframework.boot:spring-boot-starter-data-redis"
+    }
+    object BootTest {
+        const val bootTest = "org.springframework.boot:spring-boot-starter-test"
+        const val securityTest = "org.springframework.security:spring-security-test"
     }
 }
 
@@ -53,7 +56,8 @@ fun DependencyHandler.serverDependency() {
     add("implementation", Sentry.sentry)
     add("implementation", Sentry.logback)
 
-    add("testImplementation", SpringFramework.Boot.bootTest)
+    add("testImplementation", SpringFramework.BootTest.bootTest)
+    add("testImplementation", SpringFramework.BootTest.securityTest)
     add("testImplementation", Mockk.mockk)
 
     add("annotationProcessor", Lombok.lombok)
