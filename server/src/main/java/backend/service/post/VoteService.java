@@ -3,6 +3,8 @@ package backend.service.post;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
 import backend.repository.post.VoteRepository;
+import common.model.request.post.create.PostCreateRequest;
+import common.model.request.post.create.VoteCreateRequest;
 import common.model.reseponse.post.Vote;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,23 @@ public class VoteService {
             votes.add(voteEntity.toDto());
         }
 
+        return votes;
+    }
+
+    //투표 정보 생성
+    @Transactional
+    public List<Vote> saveVotes(PostCreateRequest postCreateRequest, PostEntity postEntity){
+        List<Vote> votes = new ArrayList<>();
+        for(VoteCreateRequest vote : postCreateRequest.getVoteTopics()){
+            VoteEntity voteEntity = VoteEntity.builder()
+                    .post(postEntity)
+                    .topic(vote.getTopic())
+                    .count(0)
+                    .color(vote.getColor().name())
+                    .build();
+            voteRepository.save(voteEntity);
+            votes.add(voteEntity.toDto());
+        }
         return votes;
     }
 }
