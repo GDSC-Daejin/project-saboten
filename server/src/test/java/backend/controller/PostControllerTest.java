@@ -7,9 +7,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import common.message.PostResponseMessage;
 import common.message.ResponseMessage;
-import io.swagger.models.auth.In;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -130,5 +127,17 @@ class PostControllerTest {
 
         }
 
+        @Test
+        @WithMockUser(username = "1")
+        public void 없는_게시물_조회() throws Exception {
+            // given
+            int postId = 100451;
+            ResponseMessage responseMessage = PostResponseMessage.POST_NOT_FOUND;
+            // when then
+            mockMvc.perform(get(baseUrl + "/" + postId))
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
     }
 }
