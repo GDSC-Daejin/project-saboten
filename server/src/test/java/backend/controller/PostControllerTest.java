@@ -1,31 +1,19 @@
 package backend.controller;
 
-import backend.common.EntityFactory;
-import backend.model.category.CategoryEntity;
-import backend.repository.category.CategoryRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import common.message.PostResponseMessage;
 import common.message.ResponseMessage;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
-
-import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,48 +33,12 @@ class PostControllerTest {
 
     private final String baseUrl = "/api/v1/post";
 
-    // 카테고리 있어야함 ( post 등록을 위해)
-    @Autowired
-    private CategoryRepository categoryRepository;
-    private final CategoryEntity categoryEntity = EntityFactory.basicCategoryEntity();
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    // Integer postId = null;
-
     @BeforeEach
     private void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                 .alwaysDo(print())
                 .build();
-
-        // Want랑 논의 후 삭제 예정
-//        categoryRepository.save(categoryEntity);
-//
-//        // 회원가입
-//        Map<String, Object> content = new HashMap<>();
-//        List<Map<String, String>> votes = new ArrayList<>();
-//        votes.add(Map.of("topic", "당근 윈도우! 맥은 한글 못쓰짆아",
-//                "color", "WHITE"));
-//        votes.add(Map.of("topic", "맥이지! 윈도우는 스벅 못감",
-//                "color", "WHITE"));
-//        List<Integer> categoryIds = new ArrayList<>();
-//        categoryIds.add(1);
-//        content.put("text", "윈도우 VS 맥?");
-//        content.put("vote_topics", votes);
-//        content.put("category_ids", categoryIds);
-//
-//        ResponseMessage responseMessage = PostResponseMessage.POST_CREATED;
-//        // post 생성
-//        MvcResult result = mockMvc.perform(post(baseUrl)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsString(content)))
-//                .andExpect(jsonPath("$.code").value(responseMessage.toString()))
-//                .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
-//                .andReturn();
-//        postId = JsonPath.read(result.getResponse().getContentAsString(), "$.data.id");
     }
 
     @Nested
