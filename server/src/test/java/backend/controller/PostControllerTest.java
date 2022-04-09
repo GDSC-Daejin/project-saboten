@@ -53,7 +53,7 @@ class PostControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    Integer postId = null;
+    // Integer postId = null;
 
     @BeforeEach
     private void setup() throws Exception {
@@ -62,30 +62,31 @@ class PostControllerTest {
                 .alwaysDo(print())
                 .build();
 
-        categoryRepository.save(categoryEntity);
-
-        // 회원가입
-        Map<String, Object> content = new HashMap<>();
-        List<Map<String, String>> votes = new ArrayList<>();
-        votes.add(Map.of("topic", "당근 윈도우! 맥은 한글 못쓰짆아",
-                "color", "WHITE"));
-        votes.add(Map.of("topic", "맥이지! 윈도우는 스벅 못감",
-                "color", "WHITE"));
-        List<Integer> categoryIds = new ArrayList<>();
-        categoryIds.add(1);
-        content.put("text", "윈도우 VS 맥?");
-        content.put("vote_topics", votes);
-        content.put("category_ids", categoryIds);
-
-        ResponseMessage responseMessage = PostResponseMessage.POST_CREATED;
-        // post 생성
-        MvcResult result = mockMvc.perform(post(baseUrl)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(content)))
-                .andExpect(jsonPath("$.code").value(responseMessage.toString()))
-                .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
-                .andReturn();
-        postId = JsonPath.read(result.getResponse().getContentAsString(), "$.data.id");
+        // Want랑 논의 후 삭제 예정
+//        categoryRepository.save(categoryEntity);
+//
+//        // 회원가입
+//        Map<String, Object> content = new HashMap<>();
+//        List<Map<String, String>> votes = new ArrayList<>();
+//        votes.add(Map.of("topic", "당근 윈도우! 맥은 한글 못쓰짆아",
+//                "color", "WHITE"));
+//        votes.add(Map.of("topic", "맥이지! 윈도우는 스벅 못감",
+//                "color", "WHITE"));
+//        List<Integer> categoryIds = new ArrayList<>();
+//        categoryIds.add(1);
+//        content.put("text", "윈도우 VS 맥?");
+//        content.put("vote_topics", votes);
+//        content.put("category_ids", categoryIds);
+//
+//        ResponseMessage responseMessage = PostResponseMessage.POST_CREATED;
+//        // post 생성
+//        MvcResult result = mockMvc.perform(post(baseUrl)
+//                .contentType(MediaType.APPLICATION_JSON)
+//                .content(objectMapper.writeValueAsString(content)))
+//                .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+//                .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+//                .andReturn();
+//        postId = JsonPath.read(result.getResponse().getContentAsString(), "$.data.id");
     }
 
     @Nested
@@ -93,8 +94,9 @@ class PostControllerTest {
     class GetPost {
         @Test
         @WithMockUser(username = "1")
-        public void 로그인시_성공() throws Exception {
+        public void 로그인시_조회() throws Exception {
             // given
+            int postId = 1;
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ONE;
             // when then
             // 단순히 data가 들어오는걸로 테스트를 진행해야 될지 상세한 값들도 다 조회해야 할지 의문
@@ -107,8 +109,8 @@ class PostControllerTest {
         }
 
         @Test
-        // 로그인 안하면 글 생성을 못함.....
-        public void 비로그인시_성공() throws Exception {
+        @WithAnonymousUser
+        public void 비로그인시_조회() throws Exception {
             // given
             int postId = 1;
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ONE;
@@ -121,10 +123,11 @@ class PostControllerTest {
                     .andExpect(jsonPath("$.data.votes").isNotEmpty())
                     .andExpect(jsonPath("$.data.categories").isArray())
                     .andExpect(jsonPath("$.data.categories").isNotEmpty())
+                    .andExpect(jsonPath("$.data.selected_vote").doesNotExist())
+                    .andExpect(jsonPath("$.data.is_liked").value(false))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
-
         }
 
         @Test

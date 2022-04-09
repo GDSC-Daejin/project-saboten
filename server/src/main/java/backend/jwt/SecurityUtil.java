@@ -19,7 +19,7 @@ public class SecurityUtil {
         }
 
         String name = authentication.getName();
-        if(name.equals("anonymousUser"))
+        if(name.equals("anonymousUser") || name.equals("anonymous"))
             return null;
         return Long.parseLong(name);
     }

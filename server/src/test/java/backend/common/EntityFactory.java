@@ -43,7 +43,7 @@ public class EntityFactory {
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
                 .categoryName("음악")
-                .categoryIconUrl("https://www.google.com")
+                .categoryIconUrl("https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg")
                 .build();
     }
 
