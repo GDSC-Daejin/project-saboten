@@ -3,9 +3,11 @@ package commonClient.di
 import com.russhwolf.settings.AppleSettings
 import com.russhwolf.settings.coroutines.toSuspendSettings
 import commonClient.utils.ClientProperties
+import commonClient.utils.EncryptedSettingsHolder
 import io.ktor.client.engine.*
 import io.ktor.client.engine.darwin.*
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import platform.Foundation.NSBundle
 import platform.Foundation.NSUserDefaults
@@ -19,6 +21,11 @@ private val iosKoinModule = module {
             Platform.isDebugBinary
         )
     }
+
+    single(named("encrypted")) {
+        EncryptedSettingsHolder().settings
+    }
+
     single {
         AppleSettings(NSUserDefaults.standardUserDefaults).toSuspendSettings()
     }

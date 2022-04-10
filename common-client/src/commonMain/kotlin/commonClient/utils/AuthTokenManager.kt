@@ -45,8 +45,8 @@ class AuthTokenManager @Inject constructor(
     }
 
     companion object {
-        private const val KEY_ACCESS_TOKEN = "access_token"
-        private const val KEY_REFRESH_TOKEN = "refresh_token"
-        private const val KEY_EXPIRES_IN = "expires_in"
+        const val KEY_ACCESS_TOKEN = "access_token"
+        const val KEY_REFRESH_TOKEN = "refresh_token"
+        const val KEY_EXPIRES_IN = "expires_in"
     }
 }

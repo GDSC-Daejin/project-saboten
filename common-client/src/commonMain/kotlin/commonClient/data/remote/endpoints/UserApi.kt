@@ -8,6 +8,7 @@ import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePatch
 import commonClient.di.Inject
 import commonClient.di.Singleton
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.*
 import io.ktor.client.request.*
 
@@ -24,7 +25,9 @@ interface UserApi : Api {
 }
 
 @Singleton
-class UserApiImp @Inject constructor(override val httpClient: HttpClient) : UserApi {
+class UserApiImp @Inject constructor(
+    override val httpClient: HttpClient
+) : UserApi {
 
     override suspend fun getMe() = responseGet<UserInfo>("me")
 

@@ -1,5 +1,6 @@
 package commonClient.di
 
+import com.russhwolf.settings.Settings
 import commonClient.data.cache.MeCache
 import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.endpoints.*
@@ -11,13 +12,22 @@ import commonClient.domain.usecase.user.GetMeUseCase
 import commonClient.presentation.AppViewModel
 import commonClient.presentation.HomeScreenViewModel
 import commonClient.utils.AuthTokenManager
+import commonClient.utils.EncryptedSettingsHolder
 import io.ktor.client.engine.*
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 
 fun dataModule() = module {
 
-    single { SabotenApiHttpClient(get<HttpClientEngineFactory<*>>(), get(), get()) }
+    single {
+        SabotenApiHttpClient(
+            get<HttpClientEngineFactory<*>>(),
+            get<Settings>(named("encrypted")).getStringOrNull(AuthTokenManager.KEY_ACCESS_TOKEN),
+            get()
+        )
+    }
+
     single<UserApi> { UserApiImp(get()) }
     single<CategoryApi> { CategoryApiImp(get()) }
     single<AuthApi> { AuthApiImp(get()) }
