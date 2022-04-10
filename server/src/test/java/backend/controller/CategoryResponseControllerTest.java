@@ -6,7 +6,7 @@ import backend.repository.category.CategoryRepository;
 import common.message.BasicResponseMessage;
 import common.message.CategoryResponseMessage;
 import common.message.ResponseMessage;
-import common.model.reseponse.category.Category;
+import common.model.reseponse.category.CategoryResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles("dev")
-class CategoryControllerTest {
+class CategoryResponseControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
@@ -62,7 +62,7 @@ class CategoryControllerTest {
 
     @Nested
     @DisplayName("GET /api/v1/category")
-    class GetCategory {
+    class GetCategoryResponse {
         @Test
         public void 전체조회() throws Exception {
             // given
@@ -82,16 +82,16 @@ class CategoryControllerTest {
 
     @Nested
     @DisplayName("GET /api/v1/category/{:id}")
-    class GetCategoryById {
+    class GetCategoryByIdResponse {
         @Test
         public void 특정_카테고리_조회_성공() throws Exception {
             // given
             ResponseMessage message = CategoryResponseMessage.CATEGORY_FIND_ONE;
 
-            Category categoryDTO = category.toDTO();
+            CategoryResponse categoryResponseDTO = category.toDTO();
             Long id = category.getCategoryId();
-            String categoryName = categoryDTO.getName();
-            String iconUrl = categoryDTO.getIconUrl();
+            String categoryName = categoryResponseDTO.getName();
+            String iconUrl = categoryResponseDTO.getIconUrl();
 
             // when then
             mockMvc.perform(get(baseUrl + "/" + id))

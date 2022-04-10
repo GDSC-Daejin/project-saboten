@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("dev")
-class CommentRepositoryTest {
+class CommentResponseRepositoryTest {
 
     @Autowired
     private CommentRepository commentRepository;

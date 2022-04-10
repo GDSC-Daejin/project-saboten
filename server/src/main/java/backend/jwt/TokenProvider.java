@@ -1,8 +1,6 @@
 package backend.jwt;
 
-import backend.exception.ApiException;
-import common.message.BasicResponseMessage;
-import common.model.reseponse.auth.JwtToken;
+import common.model.reseponse.auth.JwtTokenResponse;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -43,7 +41,7 @@ public class TokenProvider {
         this.redisUtil = redisUtil;
     }
 
-    public JwtToken generateJwtToken(String id, RoleType role) {
+    public JwtTokenResponse generateJwtToken(String id, RoleType role) {
         long now = (new Date()).getTime();
 
         // Access Token 생성
@@ -61,7 +59,7 @@ public class TokenProvider {
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
 
-        return new JwtToken(BEARER_TYPE, accessToken, refreshToken, accessTokenExpiresIn.getTime());
+        return new JwtTokenResponse(BEARER_TYPE, accessToken, refreshToken, accessTokenExpiresIn.getTime());
     }
 
     public Authentication getAuthentication(String accessToken) {

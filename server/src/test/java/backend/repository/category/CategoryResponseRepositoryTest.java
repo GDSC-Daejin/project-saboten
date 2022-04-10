@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("dev")
-class CategoryRepositoryTest {
+class CategoryResponseRepositoryTest {
 
     private static final String categoryIconUrl = "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg";
 

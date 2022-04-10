@@ -7,8 +7,8 @@ import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.ApiResponse;
-import common.model.reseponse.auth.JwtToken;
-import common.model.reseponse.user.User;
+import common.model.reseponse.auth.JwtTokenResponse;
+import common.model.reseponse.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,15 +23,15 @@ public class AuthController {
 
     // 현재 auth 기능들은 제대로 된 auth 가 아니라서 추후 소셜로그인 구현이 되면 제대로 구현합시다!
     @PostMapping(authUrl + "/signup")
-    public ApiResponse<User> signup(@RequestBody UserSignUpRequest userSignInRequest) {
-        User user = authService.signup(userSignInRequest);
-        return ApiResponse.withMessage(user, UserResponseMessage.USER_CREATED);
+    public ApiResponse<UserResponse> signup(@RequestBody UserSignUpRequest userSignInRequest) {
+        UserResponse userResponse = authService.signup(userSignInRequest);
+        return ApiResponse.withMessage(userResponse, UserResponseMessage.USER_CREATED);
     }
 
     @PostMapping(authUrl + "/login")
-    public ApiResponse<JwtToken> login(@RequestBody UserLoginTestRequest userLoginTestRequest) {
-        JwtToken jwtToken = authService.login(userLoginTestRequest);
-        return ApiResponse.withMessage(jwtToken, UserResponseMessage.USER_LOGIN);
+    public ApiResponse<JwtTokenResponse> login(@RequestBody UserLoginTestRequest userLoginTestRequest) {
+        JwtTokenResponse jwtTokenResponse = authService.login(userLoginTestRequest);
+        return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 
     // 소셜로그인 부분
@@ -41,9 +41,9 @@ public class AuthController {
 //    }
 
     @PostMapping(authUrl + "/reissue")
-    public ApiResponse<JwtToken> reissue(@RequestBody TokenReissueRequest tokenReissueRequest) {
-        JwtToken jwtToken = authService.reissue(tokenReissueRequest);
-        return ApiResponse.withMessage(jwtToken, UserResponseMessage.USER_TOKEN_REISSUE);
+    public ApiResponse<JwtTokenResponse> reissue(@RequestBody TokenReissueRequest tokenReissueRequest) {
+        JwtTokenResponse jwtTokenResponse = authService.reissue(tokenReissueRequest);
+        return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_TOKEN_REISSUE);
     }
 
     @DeleteMapping(authUrl + "/logout")

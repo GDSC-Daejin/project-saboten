@@ -1,6 +1,6 @@
 package commonClient.data.repository
 
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
 import commonClient.data.remote.endpoints.CategoryApi
 import commonClient.di.Inject
@@ -13,9 +13,9 @@ class CategoryRepositoryImp @Inject constructor(
     private val categoryApi: CategoryApi
 ) : CategoryRepository {
 
-    private var memoryCachedCategories: List<Category>? = null
+    private var memoryCachedCategories: List<CategoryResponse>? = null
 
-    override fun getCategories() = flow<LoadState<List<Category>>> {
+    override fun getCategories() = flow<LoadState<List<CategoryResponse>>> {
         if (memoryCachedCategories.isNullOrEmpty()) {
             emit(LoadState.loading())
             categoryApi
@@ -30,7 +30,7 @@ class CategoryRepositoryImp @Inject constructor(
         }
     }
 
-    override fun getCategory(id: Long) = flow<LoadState<Category>> {
+    override fun getCategory(id: Long) = flow<LoadState<CategoryResponse>> {
         if (memoryCachedCategories.isNullOrEmpty()) {
             emit(LoadState.loading())
             categoryApi

@@ -3,7 +3,7 @@ package backend.model.user;
 import backend.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
 import common.model.request.user.UserSignUpRequest;
-import common.model.reseponse.user.User;
+import common.model.reseponse.user.UserResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -45,7 +45,7 @@ public class UserEntity extends BaseTimeEntity {
     }
 
     // url 수정 필요
-    public User toDto() {
-        return new User(this.userId, this.nickname, "url");
+    public UserResponse toDto() {
+        return new UserResponse(this.userId, this.nickname, "url");
     }
 }
