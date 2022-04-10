@@ -8,7 +8,6 @@ import backend.service.UserService;
 import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.reseponse.ApiResponse;
-import common.model.reseponse.post.Post;
 import common.model.reseponse.post.create.PostCreatedResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;

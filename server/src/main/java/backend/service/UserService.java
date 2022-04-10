@@ -4,7 +4,6 @@ import backend.exception.ApiException;
 import backend.model.user.UserEntity;
 import backend.repository.user.UserRepository;
 import common.message.UserResponseMessage;
-import common.model.reseponse.user.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

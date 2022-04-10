@@ -1,6 +1,5 @@
 package app.saboten.androidApp.ui.screens.main.search
 
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -8,16 +7,13 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import app.saboten.androidApp.extensions.extract
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidApp.ui.list.CategoryItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.styles.MainTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import common.model.reseponse.category.Category
-import commonClient.data.LoadState
-import commonClient.presentation.AppViewModel
+import common.model.reseponse.category.CategoryResponse
 
 @Composable
 @Destination
@@ -51,9 +47,9 @@ private fun SearchScreenContent() {
 
 @Composable
 private fun CategoryGridList(
-    onClick: (Category) -> Unit,
+    onClick: (CategoryResponse) -> Unit,
     modifier: Modifier = Modifier,
-    categories: List<Category>,
+    categories: List<CategoryResponse>,
 ) {
     LazyVerticalGrid(
         modifier = modifier,

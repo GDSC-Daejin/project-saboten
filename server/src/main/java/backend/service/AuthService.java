@@ -13,8 +13,8 @@ import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignUpRequest;
-import common.model.reseponse.user.User;
-import common.model.reseponse.auth.JwtToken;
+import common.model.reseponse.user.UserResponse;
+import common.model.reseponse.auth.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class AuthService {
     private final RedisUtil redisUtil;
 
     @Transactional
-    public User signup(UserSignUpRequest userSignInRequest) {
+    public UserResponse signup(UserSignUpRequest userSignInRequest) {
         if (userRepository.existsByNickname(userSignInRequest.getNickname())) {
             throw new ApiException(UserResponseMessage.USER_ALREADY_REGISTERED);
         }
@@ -42,7 +42,7 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtToken login(UserLoginTestRequest userLoginTestRequest) {
+    public JwtTokenResponse login(UserLoginTestRequest userLoginTestRequest) {
         // 테스트용
         Long id = userLoginTestRequest.getId();
 
@@ -53,23 +53,23 @@ public class AuthService {
         UserEntity user = userService.findUserEntity(id);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        JwtToken jwtToken = tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
+        JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
 
         // 4. RefreshToken 저장
         RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
                 .user(user)
-                .refreshToken(jwtToken.getRefreshToken())
+                .refreshToken(jwtTokenResponse.getRefreshToken())
                 .build();
 
         refreshTokenRepository.save(refreshToken);
 
         // 5. 토큰 발급
-        return jwtToken;
+        return jwtTokenResponse;
     }
 
     // TODO : 이미 로그인 상태면 exception 발생 해줘야함.
     @Transactional
-    public JwtToken reissue(TokenReissueRequest tokenReissueRequest) {
+    public JwtTokenResponse reissue(TokenReissueRequest tokenReissueRequest) {
         // 1. Refresh Token 검증
         if (!tokenProvider.validateToken(tokenReissueRequest.getRefreshToken())) {
             throw new ApiException(BasicResponseMessage.INVALID_REFRESH_TOKEN);
@@ -95,7 +95,7 @@ public class AuthService {
         }
 
         // 5. 새로운 토큰 생성
-        JwtToken newRefreshToken = tokenProvider.generateJwtToken(id, RoleType.USER);
+        JwtTokenResponse newRefreshToken = tokenProvider.generateJwtToken(id, RoleType.USER);
 
         // 6. 저장소 정보 업데이트
         refreshToken.setRefreshToken(newRefreshToken.getRefreshToken());

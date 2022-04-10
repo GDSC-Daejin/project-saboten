@@ -1,10 +1,11 @@
 package common.model.reseponse.user
 
+import common.model.Gender
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class UserInfo(
+data class UserInfoResponse(
     @SerialName("id") override val id: Long,
     @SerialName("nickname") override val nickname: String,
     @SerialName("profile_photo_url") override val profilePhotoUrl: String,

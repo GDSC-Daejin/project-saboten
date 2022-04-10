@@ -1,7 +1,7 @@
 package commonClient.data.remote.endpoints
 
 import common.model.reseponse.ApiResponse
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
 import commonClient.di.Inject
@@ -12,18 +12,18 @@ interface CategoryApi : Api {
 
     override val prefixUrl: String get() = "/api/v1/category"
 
-    suspend fun getCategories(): ApiResponse<List<Category>>
+    suspend fun getCategories(): ApiResponse<List<CategoryResponse>>
 
-    suspend fun getCategory(id: Long): ApiResponse<Category>
+    suspend fun getCategory(id: Long): ApiResponse<CategoryResponse>
 
 }
 
 @Singleton
 class CategoryApiImp @Inject constructor(override val httpClient: HttpClient) : CategoryApi {
 
-    override suspend fun getCategories() = responseGet<List<Category>>()
+    override suspend fun getCategories() = responseGet<List<CategoryResponse>>()
 
-    override suspend fun getCategory(id: Long) = responseGet<Category>(id)
+    override suspend fun getCategory(id: Long) = responseGet<CategoryResponse>(id)
 
 }
 

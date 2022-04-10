@@ -2,7 +2,7 @@ package commonClient.utils
 
 import com.russhwolf.settings.Settings
 import common.model.request.auth.TokenReissueRequest
-import common.model.reseponse.auth.JwtToken
+import common.model.reseponse.auth.JwtTokenResponse
 import commonClient.data.remote.endpoints.AuthApi
 import commonClient.di.Inject
 import commonClient.di.Named
@@ -16,10 +16,10 @@ class AuthTokenManager @Inject constructor(
     private val authApi: AuthApi
 ) {
 
-    fun setToken(jwtToken: JwtToken) {
-        settings.putString(KEY_ACCESS_TOKEN, jwtToken.accessToken)
-        settings.putString(KEY_REFRESH_TOKEN, jwtToken.refreshToken)
-        settings.putLong(KEY_EXPIRES_IN, jwtToken.accessTokenExpiresIn)
+    fun setToken(jwtTokenResponse: JwtTokenResponse) {
+        settings.putString(KEY_ACCESS_TOKEN, jwtTokenResponse.accessToken)
+        settings.putString(KEY_REFRESH_TOKEN, jwtTokenResponse.refreshToken)
+        settings.putLong(KEY_EXPIRES_IN, jwtTokenResponse.accessTokenExpiresIn)
     }
 
     fun getToken(): String? {
