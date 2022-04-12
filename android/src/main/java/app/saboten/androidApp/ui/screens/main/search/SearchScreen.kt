@@ -5,8 +5,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.QuestionMark
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,11 +22,15 @@ import commonClient.presentation.AppViewModel
 @Composable
 @Destination
 fun SearchScreen(
-    navigator: DestinationsNavigator,
-    appViewModel: AppViewModel
+    navigator: DestinationsNavigator
 ) {
+    SearchScreenContent()
+}
 
-    val (appState, appEffect, appEvent) = appViewModel.extract()
+@Composable
+private fun SearchScreenContent() {
+
+//    val (state, effect, event) = vm.extract()
 
     BasicScaffold(
         topBar = {
@@ -37,13 +39,13 @@ fun SearchScreen(
             })
         }
     ) {
-        CategoryGridList(
-            onClick = {
-
-            },
-            modifier = Modifier.fillMaxWidth(),
-            categoriesState = appState.categoriesState,
-        )
+//        CategoryGridList(
+//            onClick = {
+//
+//            },
+//            modifier = Modifier.fillMaxWidth(),
+//            categories = state.categories,
+//        )
     }
 }
 
@@ -51,24 +53,14 @@ fun SearchScreen(
 private fun CategoryGridList(
     onClick: (Category) -> Unit,
     modifier: Modifier = Modifier,
-    categoriesState: LoadState<List<Category>>,
+    categories: List<Category>,
 ) {
-    when (categoriesState) {
-        is LoadState.Failed -> {
-
-        }
-        is LoadState.Loading -> {
-
-        }
-        is LoadState.Success -> {
-            LazyVerticalGrid(
-                modifier = modifier,
-                columns = GridCells.Fixed(4)
-            ) {
-                items(categoriesState.data, key = { it.id }) {
-                    CategoryItem(it, onClick)
-                }
-            }
+    LazyVerticalGrid(
+        modifier = modifier,
+        columns = GridCells.Fixed(4)
+    ) {
+        items(categories, key = { it.id }) {
+            CategoryItem(it, onClick)
         }
     }
 }

@@ -12,7 +12,7 @@ import common.message.BasicResponseMessage;
 import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
-import common.model.request.user.UserSignInRequest;
+import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.user.User;
 import common.model.reseponse.auth.JwtToken;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class AuthService {
     private final RedisUtil redisUtil;
 
     @Transactional
-    public User signup(UserSignInRequest userSignInRequest) {
+    public User signup(UserSignUpRequest userSignInRequest) {
         if (userRepository.existsByNickname(userSignInRequest.getNickname())) {
             throw new ApiException(UserResponseMessage.USER_ALREADY_REGISTERED);
         }

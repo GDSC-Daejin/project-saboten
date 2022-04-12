@@ -22,6 +22,7 @@ dependencies {
     implementation(AndroidX.compose.ui)
     implementation(AndroidX.compose.ui.tooling)
     implementation(AndroidX.constraintLayout.compose)
+    implementation(AndroidX.core.splashscreen)
 
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)
