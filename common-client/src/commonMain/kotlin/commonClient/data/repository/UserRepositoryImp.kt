@@ -1,7 +1,7 @@
 package commonClient.data.repository
 
 import common.model.request.user.UserUpdateRequest
-import common.model.reseponse.user.UserInfo
+import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.LoadState
 import commonClient.data.LoadState.Companion.failed
 import commonClient.data.LoadState.Companion.loading
@@ -30,7 +30,7 @@ class UserRepositoryImp @Inject constructor(
             }
     }
 
-    override fun getUser(id: Long) = flow<LoadState<UserInfo>> {
+    override fun getUser(id: Long) = flow<LoadState<UserInfoResponse>> {
         emit(loading())
         userApi
             .runCatching { getUser(id) }

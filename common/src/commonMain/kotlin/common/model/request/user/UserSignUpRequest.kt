@@ -1,6 +1,6 @@
 package common.model.request.user
 
-import common.model.reseponse.user.Gender
+import common.model.Gender
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 

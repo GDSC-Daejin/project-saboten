@@ -6,25 +6,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.image.NetworkImage
-import app.saboten.androidUi.styles.MainTheme
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 
 @Composable
 fun CategoryItem(
-    category: Category,
-    onClick: (Category) -> Unit
+    categoryResponse: CategoryResponse,
+    onClick: (CategoryResponse) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(10.dp).clickable { onClick(category) },
+        modifier = Modifier.padding(10.dp).clickable { onClick(categoryResponse) },
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Surface(
@@ -35,7 +31,7 @@ fun CategoryItem(
             Box(modifier = Modifier.fillMaxSize()) {
                 NetworkImage(
                     modifier = Modifier.size(26.dp).align(Alignment.Center),
-                    url = category.iconUrl,
+                    url = categoryResponse.iconUrl,
                     colorFilter = ColorFilter.tint(MaterialTheme.colors.onSurface)
                 )
             }
@@ -43,7 +39,7 @@ fun CategoryItem(
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = category.name)
+        Text(text = categoryResponse.name)
     }
 
 }

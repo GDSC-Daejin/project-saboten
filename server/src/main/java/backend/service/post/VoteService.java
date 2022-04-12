@@ -5,7 +5,7 @@ import backend.model.post.VoteEntity;
 import backend.repository.post.VoteRepository;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.create.VoteCreateRequest;
-import common.model.reseponse.post.Vote;
+import common.model.reseponse.post.VoteResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +19,9 @@ public class VoteService {
     private final VoteRepository voteRepository;
 
     @Transactional
-    public List<Vote> findVotes(PostEntity postEntity) {
+    public List<VoteResponse> findVotes(PostEntity postEntity) {
         List<VoteEntity> voteEntities = voteRepository.findAllByPost(postEntity);
-        List<Vote> votes = new ArrayList<>();
+        List<VoteResponse> votes = new ArrayList<>();
         for(VoteEntity voteEntity : voteEntities) {
             votes.add(voteEntity.toDto());
         }
@@ -31,8 +31,8 @@ public class VoteService {
 
     //투표 정보 생성
     @Transactional
-    public List<Vote> saveVotes(PostCreateRequest postCreateRequest, PostEntity postEntity){
-        List<Vote> votes = new ArrayList<>();
+    public List<VoteResponse> saveVotes(PostCreateRequest postCreateRequest, PostEntity postEntity){
+        List<VoteResponse> votes = new ArrayList<>();
         for(VoteCreateRequest vote : postCreateRequest.getVoteTopics()){
             VoteEntity voteEntity = VoteEntity.builder()
                     .post(postEntity)

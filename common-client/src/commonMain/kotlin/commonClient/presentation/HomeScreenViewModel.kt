@@ -1,6 +1,6 @@
 package commonClient.presentation
 
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
 import commonClient.di.HiltViewModel
 import commonClient.di.Inject
@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 interface HomeScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val categoriesState: LoadState<List<Category>> = LoadState.Loading(),
+        val categoriesState: LoadState<List<CategoryResponse>> = LoadState.Loading(),
     )
 
     sealed class Effect {

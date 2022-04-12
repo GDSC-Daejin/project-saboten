@@ -12,18 +12,17 @@ import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.reseponse.ApiResponse;
-import common.model.reseponse.category.Category;
-import common.model.reseponse.post.Post;
-import common.model.reseponse.post.Vote;
+import common.model.reseponse.category.CategoryResponse;
+import common.model.reseponse.post.PostResponse;
+import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
-import common.model.reseponse.user.User;
+import common.model.reseponse.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Version1RestController
@@ -47,15 +46,15 @@ class PostController {
     }
 
     @GetMapping("/post/{id}")
-    public ApiResponse<Post> getPost(@PathVariable Long id) {
+    public ApiResponse<PostResponse> getPost(@PathVariable Long id) {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.findPost(id);
-        List<Vote> votes = voteService.findVotes(postEntity);
-        List<Category> categories = categoryInPostService.findCagegoriesInPost(postEntity);
+        List<VoteResponse> votes = voteService.findVotes(postEntity);
+        List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
         Integer voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
         boolean isLike = postLikeService.findPostIsLike(userEntity, postEntity);
 
-        Post post = new Post(postEntity.getPostId(),
+        PostResponse post = new PostResponse(postEntity.getPostId(),
                 postEntity.getPostText(),
                 postEntity.getUser().toDto(),
                 votes,
@@ -69,12 +68,12 @@ class PostController {
     @PostMapping("/post")
     public ApiResponse<PostCreatedResponse> createPost(@RequestBody PostCreateRequest postCreateRequest) {
         UserEntity userEntity = getUser();
-        User user = userEntity.toDto();
+        UserResponse user = userEntity.toDto();
 
         PostEntity postEntity= postService.create(postCreateRequest, userEntity);
-        List<Vote> votes = voteService.saveVotes(postCreateRequest, postEntity);
+        List<VoteResponse> votes = voteService.saveVotes(postCreateRequest, postEntity);
         List<CategoryEntity> categoryEntities = categoryService.createCategoryInPost(postCreateRequest);
-        List<Category> categories = categoryInPostService.saveCagegoriesInPost(categoryEntities, postEntity);
+        List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoryEntities, postEntity);
 
         PostCreatedResponse post = new PostCreatedResponse(postEntity.getPostId(),postEntity.getPostText(),
                 user,votes,categories, postEntity.getRegistDate().toString());

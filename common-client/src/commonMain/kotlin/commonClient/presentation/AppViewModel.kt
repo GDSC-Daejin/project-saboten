@@ -1,7 +1,7 @@
 package commonClient.presentation
 
 import common.coroutines.PlatformDispatchers
-import common.model.reseponse.user.UserInfo
+import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.LoadState
 import commonClient.data.isFailed
 import commonClient.di.HiltViewModel
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.*
 interface AppViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val me: UserInfo? = null,
+        val me: UserInfoResponse? = null,
         val appTheme: AppTheme = AppTheme.SYSTEM,
         val appLoadingState: LoadState<Unit> = LoadState.loading()
     )
