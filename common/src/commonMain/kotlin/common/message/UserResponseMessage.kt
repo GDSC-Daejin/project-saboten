@@ -6,6 +6,7 @@ enum class UserResponseMessage(
 ) : ResponseMessage {
 
     USER_CREATED("유저가 생성되었습니다.", 201),
+    USER_READ("유저가 조회되었습니다.",200),
     USER_UPDATED("유저가 수정되었습니다.", 200),
     USER_DELETED("유저가 삭제되었습니다.", 200),
     USER_LOGIN("유저가 로그인되었습니다.", 200),
