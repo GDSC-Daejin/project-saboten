@@ -7,6 +7,8 @@ import backend.repository.post.PostRepository;
 import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -30,10 +32,14 @@ public class PostService {
 
     @Transactional
     public PostEntity findPost(Long id) {
-        // 1. post 정보 얻기
         Optional<PostEntity> postEntity = postRepository.findById(id);
         if(postEntity.isEmpty())
             throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
         return postEntity.get();
+    }
+
+    @Transactional
+    public Page<PostEntity> getUserPost(UserEntity user, Pageable pageable) {
+        return postRepository.findAllByUser(user, pageable);
     }
 }
