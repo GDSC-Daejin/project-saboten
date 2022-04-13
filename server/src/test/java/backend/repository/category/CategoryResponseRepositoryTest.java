@@ -17,10 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("dev")
-class CategoryResponseRepositoryTest {
-
-    private static final String categoryIconUrl = "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg";
-
+class CategoryRepositoryTest {
     @Autowired
     private CategoryRepository repository;
 
@@ -37,9 +34,6 @@ class CategoryResponseRepositoryTest {
         @Test
         public void 카테고리_이름_조회() {
             // given
-            // 데이터베이스 무조건 음식 이라는 카테고리가 있어야 통과 됨.
-            CategoryEntity category = new CategoryEntity(null, "음식", categoryIconUrl);
-
             String categoryName = category.getCategoryName();
 
             // when
@@ -53,9 +47,6 @@ class CategoryResponseRepositoryTest {
         @Test
         public void 전체조회() {
             // given
-            CategoryEntity category = new CategoryEntity(100L, "음식", categoryIconUrl);
-            CategoryEntity category2 = new CategoryEntity(200L, "연애", categoryIconUrl);
-          
             // when
             List<CategoryEntity> categoryEntities = repository.findAll();
 
@@ -66,8 +57,6 @@ class CategoryResponseRepositoryTest {
         @Test
         public void ID_조회() {
             // given
-            CategoryEntity category = new CategoryEntity(100L, "음식", categoryIconUrl);
-          
             Long id = category.getCategoryId();
 
             // when
