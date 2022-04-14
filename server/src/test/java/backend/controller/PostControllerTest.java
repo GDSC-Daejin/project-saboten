@@ -12,6 +12,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
@@ -39,6 +41,7 @@ class PostControllerTest {
                 .alwaysDo(print())
                 .build();
     }
+
 
     @Nested
     @DisplayName("GET /api/v1/post/{id}")
@@ -94,4 +97,36 @@ class PostControllerTest {
                     .andDo(print());
         }
     }
+
+    @Nested
+    @DisplayName("GET /api/v1/post")
+    class getUserPost {
+        @Test
+        @WithMockUser(username = "1")
+        public void 내가_쓴_게시글_조회() throws Exception{
+            // given
+            String postId = "1";
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_USER;
+            MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+
+            param.add("id", postId);
+            param.add("page", "0");
+            param.add("size", "2");
+            param.add("sort","postId,DESC");
+
+            // when then
+            mockMvc.perform(get(baseUrl)
+                    .params(param))
+                    .andExpect(jsonPath("$.data.content").exists())
+                    .andExpect(jsonPath("$.data.content").hasJsonPath())
+                    .andExpect(jsonPath(("$.data.content[0].author.id")).value(postId))
+                    .andExpect(jsonPath("$.data.pageable").exists())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+
 }
