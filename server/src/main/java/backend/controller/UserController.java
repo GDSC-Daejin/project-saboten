@@ -4,6 +4,7 @@ import backend.controller.annotation.Version1RestController;
 import backend.jwt.SecurityUtil;
 import backend.model.user.UserEntity;
 import backend.service.UserService;
+import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
 import common.model.reseponse.ApiResponse;
 import common.message.UserResponseMessage;
@@ -17,6 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 class UserController {
     private final UserService userService;
 
+    private UserEntity getUserEntity() {
+        Long userId = SecurityUtil.getCurrentUserId();
+        if(userId != null)
+            return userService.findUserEntity(userId);
+
+        return null;
+    }
+
     @ApiOperation(value = "유저정보조회 Api 테스트", notes = "임시 테스트용")
     @GetMapping("/users/{id}")
     public ApiResponse<UserResponse> getUser(@PathVariable("id") Long id) {
@@ -29,5 +38,17 @@ class UserController {
         Long userId = SecurityUtil.getCurrentUserId();
         UserEntity userEntity = userService.findUserEntity(userId);
         return ApiResponse.withMessage(userEntity.toDto(), UserResponseMessage.USER_LOGIN);
+    }
+
+    @GetMapping("/userInfo")
+    public ApiResponse<UserInfoResponse> getUserInfo() {
+        UserEntity userEntity = getUserEntity();
+        return ApiResponse.withMessage(userEntity.toUserInfoDTO(),UserResponseMessage.USER_READ);
+    }
+
+    @GetMapping("/userInfo/{id}")
+    public ApiResponse<UserInfoResponse> getOtherUserInfo(@PathVariable Long id) {
+        UserEntity userEntity = userService.findUserEntity(id);
+        return ApiResponse.withMessage(userEntity.toUserInfoDTO(),UserResponseMessage.USER_READ);
     }
 }

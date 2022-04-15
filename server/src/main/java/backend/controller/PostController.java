@@ -16,12 +16,12 @@ import common.model.reseponse.category.CategoryResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
+import common.model.reseponse.post.read.PostReadedResponse;
 import common.model.reseponse.user.UserResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -79,5 +79,18 @@ class PostController {
                 user,votes,categories, postEntity.getRegistDate().toString());
 
         return ApiResponse.withMessage(post, PostResponseMessage.POST_CREATED);
+    }
+
+    // 내가 쓴 게시글 조회 API
+    @GetMapping("/post")
+    public ApiResponse<Page<PostReadedResponse>> getUserPost(@RequestParam Long id,
+                                                             Pageable pageable){  //보안상 userId가 url에 노출되어도 괜찮을까?
+        UserEntity userEntity = userService.findUserEntity(id);
+        Page<PostEntity> postEntityPage = postService.getUserPost(userEntity, pageable);
+        Page<PostReadedResponse> myPostPage = postEntityPage.map(postEntity ->
+                new PostReadedResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+                        voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString()));
+
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_USER);
     }
 }

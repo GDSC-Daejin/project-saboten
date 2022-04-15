@@ -2,7 +2,9 @@ package backend.model.user;
 
 import backend.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
+import common.model.Gender;
 import common.model.request.user.UserSignUpRequest;
+import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
 import lombok.*;
 
@@ -47,5 +49,15 @@ public class UserEntity extends BaseTimeEntity {
     // url 수정 필요
     public UserResponse toDto() {
         return new UserResponse(this.userId, this.nickname, "url");
+    }
+
+    // url, email 수정 필요  //TODO: url, email 테이블에 추가하는 것도 좋은 것 같기도?
+    public UserInfoResponse toUserInfoDTO(){
+        Gender gender = null;
+        if(this.gender == 1) gender = Gender.M;
+        else if(this.gender == 2) gender = Gender.F;
+
+        return new UserInfoResponse(this.userId, this.nickname, "url","want@email.com",this.myPageIntroduction,
+                this.age, gender);
     }
 }
