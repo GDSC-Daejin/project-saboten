@@ -98,7 +98,7 @@ class PostController {
 
     // 전체 리스트 조회
     @GetMapping("/post")
-    public ApiResponse<?> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
+    public ApiResponse<Page<PostReadedResponse>> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
         Page<CategoryInPostEntity> categoryInPostEntitiesPage = null;
 
         if(categoryId != null){
