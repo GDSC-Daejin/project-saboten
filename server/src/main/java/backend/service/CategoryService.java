@@ -3,7 +3,7 @@ package backend.service;
 import backend.exception.ApiException;
 import backend.model.category.CategoryEntity;
 import backend.repository.category.CategoryRepository;
-import common.message.BasicResponseMessage;
+import common.message.CategoryResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.reseponse.category.CategoryResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +32,12 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse findCategory(Long id) {
+    public CategoryEntity findCategory(Long id) {
         Optional<CategoryEntity> category = categoryRepository.findById(id);
         if(category.isEmpty())
-            throw new ApiException(BasicResponseMessage.NOT_FOUND);     // Category ResponseMessage 정의해야함
+            throw new ApiException(CategoryResponseMessage.CATEGORY_NOT_FOUND);
         else
-            return category.get().toDTO();
+            return category.get();
     }
 
     @Transactional

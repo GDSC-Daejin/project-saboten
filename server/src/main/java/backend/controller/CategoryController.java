@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.model.category.CategoryEntity;
 import backend.service.CategoryService;
 import common.message.CategoryResponseMessage;
 import common.model.reseponse.ApiResponse;
@@ -30,7 +31,8 @@ public class CategoryController {
 
     @GetMapping("/category/{id}")
     public ApiResponse<CategoryResponse> getCategory(@PathVariable Long id) {
-        CategoryResponse categoryResponse = categoryService.findCategory(id);
+        CategoryEntity categoryEntity = categoryService.findCategory(id);
+        CategoryResponse categoryResponse = categoryEntity.toDTO();
         return ApiResponse.withMessage(categoryResponse, CategoryResponseMessage.CATEGORY_FIND_ONE);
     }
 }

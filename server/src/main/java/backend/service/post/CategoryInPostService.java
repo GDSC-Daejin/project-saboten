@@ -6,6 +6,8 @@ import backend.model.post.PostEntity;
 import backend.repository.post.CategoryInPostRepository;
 import common.model.reseponse.category.CategoryResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,5 +37,15 @@ public class CategoryInPostService {
             categories.add(categoryEntity.toDTO());
         }
         return categories;
+    }
+
+    @Transactional
+    public Page<CategoryInPostEntity> findCategoryInPostPageByCategoryId(CategoryEntity categoryEntity, Pageable pageable) {
+        return categoryInPostRepository.findALLByCategory(categoryEntity, pageable);
+    }
+
+    @Transactional
+    public Page<CategoryInPostEntity> findAllCagegoryInPostPage(Pageable pageable) {
+        return categoryInPostRepository.findAll(pageable);
     }
 }
