@@ -3,7 +3,7 @@ package commonClient.data.remote.endpoints
 import common.model.request.auth.TokenReissueRequest
 import common.model.request.user.UserSignUpRequest
 import common.model.reseponse.ApiResponse
- eimport common.model.reseponse.auth.JwtTokenResponse
+import common.model.reseponse.auth.JwtTokenResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responsePost
 import commonClient.di.Inject

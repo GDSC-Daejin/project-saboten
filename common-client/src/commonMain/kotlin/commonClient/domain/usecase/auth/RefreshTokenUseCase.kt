@@ -1,23 +1,14 @@
 package commonClient.domain.usecase.auth
 
-import commonClient.data.LoadState
 import commonClient.di.Inject
 import commonClient.di.Singleton
-import commonClient.utils.AuthTokenManager
-import kotlinx.coroutines.flow.flow
+import commonClient.domain.repository.AuthRepository
 
 @Singleton
 class RefreshTokenUseCase @Inject constructor(
-    private val authTokenManager: AuthTokenManager
+    private val authRepository: AuthRepository
 ) {
 
-    suspend operator fun invoke() = flow<LoadState<Unit>> {
-        authTokenManager.refreshTokenIfNeeded()
-            .onFailure {
-                emit(LoadState.Failed(it))
-            }.onSuccess {
-                emit(LoadState.Success(Unit))
-            }
-    }
+    operator fun invoke(forceRefresh : Boolean) = authRepository.refreshToken(forceRefresh)
 
 }

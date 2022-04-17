@@ -1,12 +1,13 @@
 package commonClient.di.modules
 
-import com.russhwolf.settings.Settings
 import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.endpoints.*
 import commonClient.data.repository.AppThemeSettingsRepositoryImp
+import commonClient.data.repository.AuthRepositoryImp
 import commonClient.data.repository.CategoryRepositoryImp
 import commonClient.data.repository.UserRepositoryImp
 import commonClient.domain.repository.AppThemeSettingsRepository
+import commonClient.domain.repository.AuthRepository
 import commonClient.domain.repository.CategoryRepository
 import commonClient.domain.repository.UserRepository
 import commonClient.utils.AuthTokenManager
@@ -17,7 +18,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import io.ktor.client.engine.cio.*
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -30,10 +30,10 @@ interface DataModule {
         @Singleton
         fun provideHttpClient(
             properties: ClientProperties,
-            @Named("encrypted") settings: Settings
+            authTokenManager: AuthTokenManager
         ) = SabotenApiHttpClient(
             CIO,
-            settings.getStringOrNull(AuthTokenManager.KEY_ACCESS_TOKEN),
+            authTokenManager,
             properties
         )
 
@@ -61,5 +61,8 @@ interface DataModule {
 
     @get:[Binds]
     val AppThemeSettingsRepositoryImp.appThemeSettingsRepository: AppThemeSettingsRepository
+
+    @get:[Binds]
+    val AuthRepositoryImp.authRepository: AuthRepository
 
 }
