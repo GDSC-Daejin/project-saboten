@@ -1,6 +1,6 @@
 package backend.model.user;
 
-import backend.common.BaseTimeEntity;
+import backend.model.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
 import common.model.Gender;
 import common.model.request.user.UserSignUpRequest;
