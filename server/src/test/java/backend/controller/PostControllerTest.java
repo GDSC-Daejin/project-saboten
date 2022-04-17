@@ -99,7 +99,7 @@ class PostControllerTest {
     }
 
     @Nested
-    @DisplayName("GET /api/v1/post")
+    @DisplayName("GET /api/v1/post/my")
     class getUserPost {
         @Test
         @WithMockUser(username = "1")
@@ -109,13 +109,12 @@ class PostControllerTest {
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_USER;
             MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
 
-            param.add("id", postId);
             param.add("page", "0");
             param.add("size", "2");
             param.add("sort","postId,DESC");
 
             // when then
-            mockMvc.perform(get(baseUrl)
+            mockMvc.perform(get(baseUrl + "/my")
                     .params(param))
                     .andExpect(jsonPath("$.data.content").exists())
                     .andExpect(jsonPath("$.data.content").hasJsonPath())

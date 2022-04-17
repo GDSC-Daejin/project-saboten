@@ -84,10 +84,9 @@ class PostController {
     }
 
     // 내가 쓴 게시글 조회 API
-    @GetMapping("/post/temp")
-    public ApiResponse<Page<PostReadedResponse>> getUserPost(@RequestParam Long id,
-                                                             Pageable pageable){  //보안상 userId가 url에 노출되어도 괜찮을까?
-        UserEntity userEntity = userService.findUserEntity(id);
+    @GetMapping("/post/my")
+    public ApiResponse<Page<PostReadedResponse>> getUserPost(Pageable pageable){
+        UserEntity userEntity = getUser();
         Page<PostEntity> postEntityPage = postService.getUserPost(userEntity, pageable);
         Page<PostReadedResponse> myPostPage = postEntityPage.map(postEntity ->
                 new PostReadedResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
