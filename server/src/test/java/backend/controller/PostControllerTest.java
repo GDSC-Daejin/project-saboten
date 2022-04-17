@@ -1,5 +1,6 @@
 package backend.controller;
 
+import common.message.CategoryResponseMessage;
 import common.message.PostResponseMessage;
 import common.message.ResponseMessage;
 import org.junit.jupiter.api.*;
@@ -35,17 +36,16 @@ class PostControllerTest {
     private final String baseUrl = "/api/v1/post";
 
     @BeforeEach
-    private void setup() throws Exception {
+    private void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                 .alwaysDo(print())
                 .build();
     }
 
-
     @Nested
     @DisplayName("GET /api/v1/post/{id}")
-    class GetPost {
+    class GetPostOne {
         @Test
         @WithMockUser(username = "1")
         public void 로그인시_조회() throws Exception {
@@ -128,5 +128,61 @@ class PostControllerTest {
         }
     }
 
+    @Nested
+    @DisplayName("GET /api/v1/post")
+    class getPostList {
+        @Test
+        public void 전체_조회() throws Exception {
+            // given
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
 
+            // when then
+            mockMvc.perform(get(baseUrl))
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").exists())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+
+        @Test
+        public void 특정_카테고리_속한_게시물_리스트_조회() throws Exception {
+            // given
+            String categoryId = "1";
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
+            MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+
+            param.add("categoryId", categoryId);
+
+            // when then
+            mockMvc.perform(get(baseUrl)
+                    .params(param))
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").exists())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+
+        @Test
+        public void 존재하지_않는_카테고리_게시물_리스트_조회() throws Exception {
+            String categoryId = "1004";
+            ResponseMessage responseMessage = CategoryResponseMessage.CATEGORY_NOT_FOUND;
+            MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+
+            param.add("categoryId", categoryId);
+
+            // when then
+            mockMvc.perform(get(baseUrl)
+                            .params(param))
+                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
 }

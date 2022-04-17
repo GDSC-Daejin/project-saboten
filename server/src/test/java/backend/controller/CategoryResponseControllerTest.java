@@ -3,7 +3,6 @@ package backend.controller;
 import backend.common.EntityFactory;
 import backend.model.category.CategoryEntity;
 import backend.repository.category.CategoryRepository;
-import common.message.BasicResponseMessage;
 import common.message.CategoryResponseMessage;
 import common.message.ResponseMessage;
 import common.model.reseponse.category.CategoryResponse;
@@ -107,7 +106,7 @@ class CategoryResponseControllerTest {
         @Test
         public void 특정_카테고리_조회_실패() throws Exception {
             // given
-            ResponseMessage errorNotFoundMessage = BasicResponseMessage.NOT_FOUND;
+            ResponseMessage errorNotFoundMessage = CategoryResponseMessage.CATEGORY_NOT_FOUND;
             long id = 232341L;
 
             // when then

@@ -3,6 +3,7 @@ package backend.controller;
 import backend.controller.annotation.Version1RestController;
 import backend.jwt.SecurityUtil;
 import backend.model.category.CategoryEntity;
+import backend.model.post.CategoryInPostEntity;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.service.CategoryService;
@@ -21,6 +22,7 @@ import common.model.reseponse.user.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -82,7 +84,7 @@ class PostController {
     }
 
     // 내가 쓴 게시글 조회 API
-    @GetMapping("/post")
+    @GetMapping("/post/temp")
     public ApiResponse<Page<PostReadedResponse>> getUserPost(@RequestParam Long id,
                                                              Pageable pageable){  //보안상 userId가 url에 노출되어도 괜찮을까?
         UserEntity userEntity = userService.findUserEntity(id);
@@ -92,5 +94,27 @@ class PostController {
                         voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString()));
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_USER);
+    }
+
+    // 전체 리스트 조회
+    @GetMapping("/post")
+    public ApiResponse<Page<PostReadedResponse>> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
+        Page<CategoryInPostEntity> categoryInPostEntitiesPage = null;
+
+        if(categoryId != null){
+            CategoryEntity categoryEntity = categoryService.findCategory(categoryId);
+            categoryInPostEntitiesPage = categoryInPostService.findCategoryInPostPageByCategoryId(categoryEntity, pageable);
+        }
+        else {
+            categoryInPostEntitiesPage = categoryInPostService.findAllCagegoryInPostPage(pageable);
+        }
+
+        Page<PostReadedResponse> myPostPage = categoryInPostEntitiesPage.map(categoryInPostEntity -> {
+            PostEntity postEntity = categoryInPostEntity.getPost();
+            return new PostReadedResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+                    voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
+        });
+
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 }
