@@ -17,11 +17,26 @@ class SwaggerConfig {
     @Bean
     fun sabotenApi(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
+            .consumes(getConsumeContentTypes())
+            .produces(getProduceContentTypes())
             .select()
             .apis(RequestHandlerSelectors.any())
             //.apis(RequestHandlerSelectors.basePackage("server.src.main.java.backend.controller"))
             .build()
             .apiInfo(this.metaInfo())
+    }
+
+    private fun getConsumeContentTypes(): Set<String> {
+        val consumes: MutableSet<String> = HashSet()
+        consumes.add("application/json;charset=UTF-8")
+        consumes.add("application/x-www-form-urlencoded")
+        return consumes
+    }
+
+    private fun getProduceContentTypes(): Set<String> {
+        val produces: MutableSet<String> = HashSet()
+        produces.add("application/json;charset=UTF-8")
+        return produces
     }
 
     private fun metaInfo(): ApiInfo {
@@ -41,8 +56,4 @@ class SwaggerConfig {
             )
             .build()
     }
-
-
-
-
 }

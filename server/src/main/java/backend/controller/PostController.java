@@ -19,10 +19,13 @@ import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
 import common.model.reseponse.post.read.PostReadedResponse;
 import common.model.reseponse.user.UserResponse;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,6 +50,7 @@ class PostController {
         return null;
     }
 
+    @ApiOperation(value = "특정 게시물 조회", notes = "특정 게시물을 조회하여 모든 정보를 Response로 얻습니다.")
     @GetMapping("/post/{id}")
     public ApiResponse<PostResponse> getPost(@PathVariable Long id) {
         UserEntity userEntity = getUser();
@@ -67,7 +71,9 @@ class PostController {
         return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
     }
 
+    @ApiOperation(value = "게시물 등록", notes = "사용자가 게시물 작성하여 등록합니다.")
     @PostMapping("/post")
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PostCreatedResponse> createPost(@RequestBody PostCreateRequest postCreateRequest) {
         UserEntity userEntity = getUser();
         UserResponse user = userEntity.toDto();
@@ -84,6 +90,7 @@ class PostController {
     }
 
     // 내가 쓴 게시글 조회 API
+    @ApiOperation(value = "내가 쓴 게시물 조회", notes = "로그인한 사용자 자기자신의 게시물을 조회합니다.")
     @GetMapping("/post/my")
     public ApiResponse<Page<PostReadedResponse>> getUserPost(Pageable pageable){
         UserEntity userEntity = getUser();
@@ -96,6 +103,9 @@ class PostController {
     }
 
     // 전체 리스트 조회
+    @ApiOperation(value = "전체 게시물 리스트 조회",
+            notes = "기본적으로는 전체 게시물 리스트를 조회하지만 특정 카테고리에 해당하는 게시물 리스트를 조회할 수도 있습니다.")
+    @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다. (필터 역할)")
     @GetMapping("/post")
     public ApiResponse<Page<PostReadedResponse>> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
         Page<CategoryInPostEntity> categoryInPostEntitiesPage = null;

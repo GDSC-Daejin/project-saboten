@@ -1,4 +1,4 @@
-package backend.common;
+package backend.model.common;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;

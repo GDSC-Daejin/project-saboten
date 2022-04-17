@@ -26,26 +26,14 @@ class UserController {
         return null;
     }
 
-    @ApiOperation(value = "유저정보조회 Api 테스트", notes = "임시 테스트용")
-    @GetMapping("/users/{id}")
-    public ApiResponse<UserResponse> getUser(@PathVariable("id") Long id) {
-        return ApiResponse.withMessage(new UserResponse(id, "", ""), UserResponseMessage.USER_NOT_REGISTERED);
-    }
-
-    // Jwt 잘 작동하는 지 테스트 용도입니다. 근데 이거 좀만 수정해서 제대로 사용하는거 나을듯
-    @GetMapping("/users/test")
-    public ApiResponse<UserResponse> getUserTest() {
-        Long userId = SecurityUtil.getCurrentUserId();
-        UserEntity userEntity = userService.findUserEntity(userId);
-        return ApiResponse.withMessage(userEntity.toDto(), UserResponseMessage.USER_LOGIN);
-    }
-
+    @ApiOperation(value = "로그인한 사용자의 프로필 조회", notes = "로그인한 사용자 자기자신의 프로필을 조회합니다.")
     @GetMapping("/userInfo")
     public ApiResponse<UserInfoResponse> getUserInfo() {
         UserEntity userEntity = getUserEntity();
         return ApiResponse.withMessage(userEntity.toUserInfoDTO(),UserResponseMessage.USER_READ);
     }
 
+    @ApiOperation(value = "특정 사용자 프로필 조회", notes = "특정 사용자 프로필을 조회합니다.")
     @GetMapping("/userInfo/{id}")
     public ApiResponse<UserInfoResponse> getOtherUserInfo(@PathVariable Long id) {
         UserEntity userEntity = userService.findUserEntity(id);
