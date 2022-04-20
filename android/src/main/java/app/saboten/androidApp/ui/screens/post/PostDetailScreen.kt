@@ -180,7 +180,7 @@ private fun PostDetailVoteContent(
                 ) {
                     Text(
                         text = "파인애플 피자",
-                        color = Color.White
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
 
@@ -199,7 +199,7 @@ private fun PostDetailVoteContent(
                         )
                         .padding(horizontal = 15.dp, vertical = 8.dp)
                         .align(Alignment.BottomEnd),
-                    color = Color.White
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
 
@@ -216,7 +216,7 @@ private fun PostDetailVoteContent(
                 ) {
                     Text(
                         text = "민트 초코 아이스크림",
-                        color = Color.White
+                        color = MaterialTheme.colors.onPrimary
                     )
                 }
 
@@ -235,7 +235,7 @@ private fun PostDetailVoteContent(
                         )
                         .padding(horizontal = 15.dp, vertical = 8.dp)
                         .align(Alignment.BottomStart),
-                    color = Color.White
+                    color = MaterialTheme.colors.onPrimary
                 )
             }
         }
@@ -280,7 +280,7 @@ private fun PostDetailVoteIndicator(
                 .height(8.dp)
                 .align(Alignment.CenterVertically),
             progress = 0.55f,
-            backgroundColor = Color(0xFFEBEBEB)
+            backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.08f)
         )
 
         Spacer(modifier = Modifier.width(15.dp))
