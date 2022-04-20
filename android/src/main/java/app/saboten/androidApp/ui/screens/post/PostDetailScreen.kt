@@ -278,6 +278,7 @@ private fun PostDetailVoteIndicator(
         LinearProgressIndicator(
             modifier = Modifier
                 .height(8.dp)
+                .clip(RoundedCornerShape(20.dp))
                 .align(Alignment.CenterVertically),
             progress = 0.55f,
             backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.08f)
