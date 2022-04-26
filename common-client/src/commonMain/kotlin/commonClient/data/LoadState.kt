@@ -1,5 +1,6 @@
 package commonClient.data
 
+import common.model.reseponse.ApiResponse
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -31,10 +32,6 @@ fun <T> LoadState<T>.isSuccess(): Boolean {
 
 
 sealed interface LoadState<T> {
-
-//    val isLoading: Boolean get() = this is Loading
-//
-//    val isFailed: Boolean get() = this is Failed
 
     fun getDataOrNull(): T? = when (this) {
         is Loading -> null

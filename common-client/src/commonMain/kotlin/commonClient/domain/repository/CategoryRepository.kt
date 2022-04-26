@@ -6,8 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {
 
-    fun getCategories(): Flow<LoadState<List<CategoryResponse>>>
+    fun getCategories(): Flow<List<CategoryResponse>>
 
-    fun getCategory(id: Long): Flow<LoadState<CategoryResponse>>
+    fun getCategory(id: Long): Flow<CategoryResponse>
 
 }

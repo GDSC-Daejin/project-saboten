@@ -23,7 +23,7 @@ fun dataModule() = module {
     single {
         SabotenApiHttpClient(
             get<HttpClientEngineFactory<*>>(),
-            get<Settings>(named("encrypted")).getStringOrNull(AuthTokenManager.KEY_ACCESS_TOKEN),
+            get(),
             get()
         )
     }
@@ -38,7 +38,7 @@ fun dataModule() = module {
     single<UserRepository> { UserRepositoryImp(get(), get()) }
     single<CategoryRepository> { CategoryRepositoryImp(get()) }
 
-    single { AuthTokenManager(get(), get()) }
+    single { AuthTokenManager(get()) }
 }
 
 fun domainModule() = module {

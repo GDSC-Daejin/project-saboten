@@ -20,33 +20,20 @@ class UserRepositoryImp @Inject constructor(
 ) : UserRepository {
 
     override fun getMe() = flow {
-        emit(loading())
-        userApi
-            .runCatching { getMe() }
-            .onFailure { emit(failed(it, meCache.getMe())) }
-            .onSuccess {
-                meCache.save(it.data)
-                emit(success(it.data))
-            }
+        val me = userApi.getMe()
+        meCache.save(requireNotNull(me.data))
+        emit(requireNotNull(me.data))
     }
 
-    override fun getUser(id: Long) = flow<LoadState<UserInfoResponse>> {
-        emit(loading())
-        userApi
-            .runCatching { getUser(id) }
-            .onFailure { emit(failed(it)) }
-            .onSuccess { emit(success(it.data)) }
+    override fun getUser(id: Long) = flow {
+        val user = userApi.getUser(id)
+        emit(requireNotNull(user.data))
     }
 
     override fun updateUserInfo(userUpdateRequest: UserUpdateRequest) = flow {
-        emit(loading())
-        userApi
-            .runCatching { updateUserInfo(userUpdateRequest) }
-            .onFailure { emit(failed(it, meCache.getMe())) }
-            .onSuccess {
-                meCache.save(it.data)
-                emit(success(it.data))
-            }
+        val user = userApi.updateUserInfo(userUpdateRequest)
+        meCache.save(requireNotNull(user.data))
+        emit(requireNotNull(user.data))
     }
 
     override fun observeMe() = meCache.me

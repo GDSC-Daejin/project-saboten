@@ -57,6 +57,7 @@ kotlin {
                 api(Ktor.client.json)
                 api(Ktor.client.serialization)
                 api(Ktor.client.logging)
+                api(Ktor.client.auth)
                 api(MultiplatformSettings.core)
                 api(MultiplatformSettings.coroutines)
                 api(MultiplatformSettings.serialization)

@@ -15,19 +15,15 @@ class GetCategoriesUseCase @Inject constructor(
 ) {
 
     //    operator fun invoke() = categoryRepository.getCategories()
-    operator fun invoke(): Flow<LoadState<List<CategoryResponse>>> {
+    operator fun invoke(): Flow<List<CategoryResponse>> {
         return flow {
-            emit(LoadState.loading())
-            delay(2000)
-            emit(LoadState.success(
-                (0..7L).map {
-                    CategoryResponse(
-                        it,
-                        "Category $it",
-                        "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg"
-                    )
-                }
-            ))
+            emit((0..7L).map {
+                CategoryResponse(
+                    it,
+                    "Category $it",
+                    "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg"
+                )
+            })
         }
     }
 
