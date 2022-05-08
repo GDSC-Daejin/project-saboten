@@ -211,7 +211,7 @@ private fun PostSelectItemRightSelection(topic: String, count: Int) {
 }
 
 @Composable
-private fun PostSelectItemIconButton(
+fun PostSelectItemIconButton(
     onClicked: () -> Unit,
     icon: ImageVector,
     iconDescription: String

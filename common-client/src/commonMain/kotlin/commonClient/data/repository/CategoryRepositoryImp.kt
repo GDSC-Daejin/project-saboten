@@ -1,6 +1,6 @@
 package commonClient.data.repository
 
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
 import commonClient.data.remote.endpoints.CategoryApi
 import commonClient.di.Inject
@@ -13,36 +13,27 @@ class CategoryRepositoryImp @Inject constructor(
     private val categoryApi: CategoryApi
 ) : CategoryRepository {
 
-    private var memoryCachedCategories: List<Category>? = null
+    private var memoryCachedCategories: List<CategoryResponse>? = null
 
-    override fun getCategories() = flow<LoadState<List<Category>>> {
+    override fun getCategories() = flow {
         if (memoryCachedCategories.isNullOrEmpty()) {
-            emit(LoadState.loading())
-            categoryApi
-                .runCatching { getCategories() }
-                .onFailure { emit(LoadState.failed(it, null)) }
-                .onSuccess {
-                    memoryCachedCategories = it.data
-                    emit(LoadState.success(it.data))
-                }
+            val response = categoryApi.getCategories()
+            emit(requireNotNull(response.data))
         } else {
-            emit(LoadState.success(memoryCachedCategories!!))
+            emit(requireNotNull(memoryCachedCategories))
         }
     }
 
-    override fun getCategory(id: Long) = flow<LoadState<Category>> {
+    override fun getCategory(id: Long) = flow {
         if (memoryCachedCategories.isNullOrEmpty()) {
-            emit(LoadState.loading())
-            categoryApi
-                .runCatching { getCategory(id) }
-                .onFailure { emit(LoadState.failed(it, null)) }
-                .onSuccess { emit(LoadState.success(it.data)) }
+            val response = categoryApi.getCategory(id)
+            emit(requireNotNull(response.data))
         } else {
             val category = memoryCachedCategories!!.find { it.id == id }
             if (category != null) {
-                emit(LoadState.success(category))
+                emit(category)
             } else {
-                emit(LoadState.failed(Exception("Category not found"), null))
+                throw Exception("Category not found")
             }
         }
     }

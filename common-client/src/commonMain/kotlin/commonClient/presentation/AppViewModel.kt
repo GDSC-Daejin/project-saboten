@@ -1,9 +1,10 @@
 package commonClient.presentation
 
 import common.coroutines.PlatformDispatchers
-import common.model.reseponse.user.UserInfo
+import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.LoadState
 import commonClient.data.isFailed
+import commonClient.data.map
 import commonClient.di.HiltViewModel
 import commonClient.di.Inject
 import commonClient.domain.entity.AppTheme
@@ -11,6 +12,7 @@ import commonClient.domain.usecase.auth.RefreshTokenUseCase
 import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
 import commonClient.domain.usecase.user.ObserveMeUseCase
 import commonClient.presentation.AppViewModelDelegate.*
+import commonClient.utils.toLoadState
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -19,7 +21,7 @@ import kotlinx.coroutines.flow.*
 interface AppViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val me: UserInfo? = null,
+        val me: UserInfoResponse? = null,
         val appTheme: AppTheme = AppTheme.SYSTEM,
         val appLoadingState: LoadState<Unit> = LoadState.loading()
     )
@@ -68,12 +70,13 @@ class AppViewModel @Inject constructor(
     */
     private fun initializeApp() {
         platformViewModelScope.launch(PlatformDispatchers.IO) {
-            refreshTokenUseCase().onEach { refreshTokenState ->
-                if (refreshTokenState.isFailed()) {
-                    effectChannel.send(Effect.ShowNetworkErrorUi)
+            refreshTokenUseCase(true)
+                .toLoadState()
+                .onEach { refreshTokenState ->
+                    if (refreshTokenState.isFailed()) effectChannel.send(Effect.ShowNetworkErrorUi)
+                    appLoadingState.emit(refreshTokenState.map { })
                 }
-                appLoadingState.emit(refreshTokenState)
-            }.collect()
+                .collect()
         }
     }
 

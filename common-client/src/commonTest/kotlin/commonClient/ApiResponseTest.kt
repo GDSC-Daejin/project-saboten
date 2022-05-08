@@ -1,5 +1,5 @@
 package commonClient
-import common.model.reseponse.user.User
+import common.model.reseponse.user.UserResponse
 import common.model.reseponse.ApiResponse
 import common.message.UserResponseMessage
 import commonClient.extension.isCodeEquals
@@ -25,7 +25,7 @@ class ApiResponseTest {
         """.trimIndent()
 
         val parsedResponse = Json.decodeFromString(
-            ApiResponse.serializer(User.serializer()),
+            ApiResponse.serializer(UserResponse.serializer()),
             json
         )
 

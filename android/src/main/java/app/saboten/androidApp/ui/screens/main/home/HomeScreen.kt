@@ -13,7 +13,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import app.saboten.androidApp.extensions.collectInLaunchedEffect
 import app.saboten.androidApp.extensions.extract
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidApp.ui.list.PostSelectItem
@@ -25,10 +24,8 @@ import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
-import commonClient.presentation.AppViewModel
-import commonClient.presentation.AppViewModelDelegate
 import commonClient.presentation.HomeScreenViewModel
 import commonClient.presentation.HomeScreenViewModelDelegate
 import kotlinx.coroutines.launch
@@ -81,7 +78,7 @@ fun HomeScreenContent(
 @Composable
 private fun HomeCategoryTab(
     pagerState: PagerState,
-    categoriesState: LoadState<List<Category>>
+    categoriesState: LoadState<List<CategoryResponse>>
 ) {
     val coroutineScope = rememberCoroutineScope()
     when (categoriesState) {
@@ -147,7 +144,7 @@ private fun HomeCategoryTab(
 private fun HomeFeedPage(
     modifier: Modifier,
     pagerState: PagerState,
-    categoriesState: LoadState<List<Category>>
+    categoriesState: LoadState<List<CategoryResponse>>
 ) {
     when (categoriesState) {
         is LoadState.Failed -> {

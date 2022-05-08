@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
 @ActiveProfiles("dev")
-class VoteSelectRepositoryTest {
+class VoteResponseSelectRepositoryTest {
 
     @Autowired
     private VoteSelectRepository voteSelectRepository;

@@ -1,10 +1,11 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.model.category.CategoryEntity;
 import backend.service.CategoryService;
 import common.message.CategoryResponseMessage;
 import common.model.reseponse.ApiResponse;
-import common.model.reseponse.category.Category;
+import common.model.reseponse.category.CategoryResponse;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +24,15 @@ public class CategoryController {
 
     @ApiOperation(value = "카테고리 전체 조회 API", notes = "모든 카테고리 불러오기")
     @GetMapping("/category")
-    public ApiResponse<List<Category>> getCategories() {
-        List<Category> categories = categoryService.findCategories();
+    public ApiResponse<List<CategoryResponse>> getCategories() {
+        List<CategoryResponse> categories = categoryService.findCategories();
         return ApiResponse.withMessage(categories, CategoryResponseMessage.CATEGORY_FIND_ALL);
     }
 
     @GetMapping("/category/{id}")
-    public ApiResponse<Category> getCategory(@PathVariable Long id) {
-        Category category = categoryService.findCategory(id);
-        return ApiResponse.withMessage(category, CategoryResponseMessage.CATEGORY_FIND_ONE);
+    public ApiResponse<CategoryResponse> getCategory(@PathVariable Long id) {
+        CategoryEntity categoryEntity = categoryService.findCategory(id);
+        CategoryResponse categoryResponse = categoryEntity.toDTO();
+        return ApiResponse.withMessage(categoryResponse, CategoryResponseMessage.CATEGORY_FIND_ONE);
     }
 }

@@ -1,8 +1,8 @@
 package common.model.reseponse.post.create
 
-import common.model.reseponse.category.Category
-import common.model.reseponse.post.Vote
-import common.model.reseponse.user.User
+import common.model.reseponse.category.CategoryResponse
+import common.model.reseponse.post.VoteResponse
+import common.model.reseponse.user.UserResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,8 +10,8 @@ import kotlinx.serialization.Serializable
 data class PostCreatedResponse(
     @SerialName("id") val id: Long,
     @SerialName("text") val text: String,
-    @SerialName("author") val author: User,
-    @SerialName("votes") val votes: List<Vote>,
-    @SerialName("categories") val categories: List<Category>,
+    @SerialName("author") val author: UserResponse,
+    @SerialName("votes") val voteResponses: List<VoteResponse>,
+    @SerialName("categories") val categories: List<CategoryResponse>,
     @SerialName("created_at") val createdAt: String,
 )

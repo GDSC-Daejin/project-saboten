@@ -1,6 +1,6 @@
 package commonClient.domain.usecase.category
 
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
 import commonClient.di.Inject
 import commonClient.di.Singleton
@@ -8,7 +8,6 @@ import commonClient.domain.repository.CategoryRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 
 @Singleton
 class GetCategoriesUseCase @Inject constructor(
@@ -16,19 +15,15 @@ class GetCategoriesUseCase @Inject constructor(
 ) {
 
     //    operator fun invoke() = categoryRepository.getCategories()
-    operator fun invoke(): Flow<LoadState<List<Category>>> {
+    operator fun invoke(): Flow<List<CategoryResponse>> {
         return flow {
-            emit(LoadState.loading())
-            delay(2000)
-            emit(LoadState.success(
-                (0..7L).map {
-                    Category(
-                        it,
-                        "Category $it",
-                        "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg"
-                    )
-                }
-            ))
+            emit((0..7L).map {
+                CategoryResponse(
+                    it,
+                    "Category $it",
+                    "https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg"
+                )
+            })
         }
     }
 

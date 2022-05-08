@@ -1,11 +1,12 @@
 package commonClient.presentation
 
-import common.model.reseponse.category.Category
+import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
 import commonClient.di.HiltViewModel
 import commonClient.di.Inject
 import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.presentation.HomeScreenViewModelDelegate.*
+import commonClient.utils.toLoadState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -13,7 +14,7 @@ import kotlinx.coroutines.launch
 interface HomeScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val categoriesState: LoadState<List<Category>> = LoadState.Loading(),
+        val categoriesState: LoadState<List<CategoryResponse>> = LoadState.Loading(),
     )
 
     sealed class Effect {
@@ -34,8 +35,10 @@ class HomeScreenViewModel @Inject constructor(
     private val effectChannel = Channel<Effect>(Channel.UNLIMITED)
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
+    private val categoriesState = getCategoriesUseCase().toLoadState()
+
     override val state: StateFlow<State> = combine(
-        getCategoriesUseCase(), flowOf(true)
+        categoriesState, flowOf(true)
     ) { categoriesState, _ ->
         State(
             categoriesState = categoriesState

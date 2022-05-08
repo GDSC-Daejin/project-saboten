@@ -3,8 +3,8 @@ package commonClient
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.coroutines.toSuspendSettings
-import common.model.reseponse.user.Gender
-import common.model.reseponse.user.UserInfo
+import common.model.Gender
+import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.cache.MeCache
 import commonClient.utils.JsName
 import kotlinx.coroutines.flow.firstOrNull
@@ -30,7 +30,7 @@ class MeCacheTest {
     fun `GIVEN UserInfo cached and delete WHEN UserInfo Flow is observing Then UserInfo Flow value should be changed`() = runTest {
 
         // Given
-        val userInfo = UserInfo(
+        val userInfoResponse = UserInfoResponse(
             id = Random.nextLong(),
             nickname = "Harry",
             profilePhotoUrl = "",
@@ -41,7 +41,7 @@ class MeCacheTest {
         )
 
         // When
-        meCache.save(userInfo)
+        meCache.save(userInfoResponse)
 
         // Then
         val savedMe = meCache.me.firstOrNull()
