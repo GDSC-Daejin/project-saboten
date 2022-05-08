@@ -2,8 +2,8 @@ package commonClient.presentation
 
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
-import common.model.reseponse.post.Comment
-import common.model.reseponse.post.Post
+import common.model.reseponse.post.CommentResponse
+import common.model.reseponse.post.PostResponse
 import commonClient.data.LoadState
 import commonClient.data.isSuccess
 import commonClient.di.Inject
@@ -21,14 +21,14 @@ interface PostDetailScreenViewModelDelegate :
     UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val postState: LoadState<Post> = LoadState.loading(),
-        val postComments: Flow<PagingData<Comment>> = flowOf()
+        val postState: LoadState<PostResponse> = LoadState.loading(),
+        val postComments: Flow<PagingData<CommentResponse>> = flowOf()
     )
 
     sealed interface Effect
 
     sealed interface Event {
-        class SetPost(val post: Post) : Event
+        class SetPost(val post: PostResponse) : Event
         class LoadPost(val postId: Long) : Event
         object Refresh : Event
     }
@@ -45,7 +45,7 @@ class PostDetailScreenViewModel @Inject constructor(
 
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
-    private val postState = MutableStateFlow<LoadState<Post>>(LoadState.loading())
+    private val postState = MutableStateFlow<LoadState<PostResponse>>(LoadState.loading())
 
     /*
     * 본래는 post 의 id 만 있어도 불러올 수 있으나
