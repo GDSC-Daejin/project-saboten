@@ -7,12 +7,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    fun getMe(): Flow<LoadState<UserInfo>>
+    fun getMe(): Flow<UserInfo>
 
     fun observeMe() : Flow<UserInfo?>
 
-    fun getUser(id: Long): Flow<LoadState<UserInfo>>
+    fun getUser(id: Long): Flow<UserInfo>
 
-    fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : Flow<LoadState<UserInfo>>
+    fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : Flow<UserInfo>
 
 }

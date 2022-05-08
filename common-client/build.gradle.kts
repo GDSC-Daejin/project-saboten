@@ -62,6 +62,7 @@ kotlin {
                 api(MultiplatformSettings.serialization)
                 api(KotlinX.datetime)
                 api(Square.SqlDelight.extensions.coroutines)
+                api(Utils.paging)
             }
         }
         val commonTest by getting {

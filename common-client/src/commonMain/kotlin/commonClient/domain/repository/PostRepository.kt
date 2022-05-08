@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
 
-    fun getPost(postId: Long): Flow<LoadState<Post>>
+    fun getPost(postId: Long): Flow<Post>
 
 }

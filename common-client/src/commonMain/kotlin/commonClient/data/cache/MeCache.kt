@@ -1,15 +1,17 @@
 package commonClient.data.cache
 
+import com.russhwolf.settings.Settings
 import com.russhwolf.settings.coroutines.SuspendSettings
 import common.model.reseponse.user.UserInfo
 import commonClient.di.Inject
+import commonClient.di.Named
 import commonClient.di.Singleton
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
 
 @Singleton
 class MeCache @Inject constructor(
-    private val settings: SuspendSettings
+    @Named("encrypted") private val settings: Settings
 ) : Cache<UserInfo> {
 
     private val _me: MutableStateFlow<UserInfo?> = MutableStateFlow(null)
