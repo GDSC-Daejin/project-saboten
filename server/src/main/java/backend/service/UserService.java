@@ -24,4 +24,15 @@ public class UserService {
         else
             return userEntity.get();
     }
+
+    // 소셜로그인 임시용 함수입니다
+    @Transactional
+    public UserEntity findUserEntityByNickname(String nickname) {
+        UserEntity userEntity = userRepository.findByNickname(nickname);
+
+        if(userEntity == null)
+            throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
+        else
+            return userEntity;
+    }
 }

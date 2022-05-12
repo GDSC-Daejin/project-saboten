@@ -26,6 +26,7 @@ object SpringFramework {
         const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
         const val security = "org.springframework.boot:spring-boot-starter-security"
         const val redis = "org.springframework.boot:spring-boot-starter-data-redis"
+        const val oauth2Client = "org.springframework.boot:spring-boot-starter-oauth2-client"
     }
     object BootTest {
         const val bootTest = "org.springframework.boot:spring-boot-starter-test"
@@ -49,6 +50,7 @@ fun DependencyHandler.serverDependency() {
     add("implementation", SpringFramework.Boot.jpa)
     add("implementation", SpringFramework.Boot.security)
     add("implementation", SpringFramework.Boot.redis)
+    add("implementation", SpringFramework.Boot.oauth2Client)
     add("implementation", Jwt.jjwtApi)
     add("implementation", Postgresql.postgre)
     add("implementation", Lombok.lombok)
