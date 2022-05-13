@@ -42,6 +42,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Override
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+
         String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
@@ -53,15 +54,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-//        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-//                .map(Cookie::getValue);
+        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+                .map(Cookie::getValue);
 
+        // TODO : RedirecURL 유효성 검사
 //        if(redirectUri.isPresent()) {
 //            throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
 //        }
 
-//        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        String targetUrl = "http://localhost:3000/oauth2/redirect";
+        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        // String targetUrl = "http://localhost:3000/oauth2/redirect";
 
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
@@ -84,7 +86,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private JwtTokenResponse createToken(String id) {
-        UserEntity user = userRepository.findByNickname(id);
+        UserEntity user = userRepository.findBySocialId(id);
         if(user == null)
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
 

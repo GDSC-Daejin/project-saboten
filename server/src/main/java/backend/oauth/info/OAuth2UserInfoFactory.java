@@ -1,9 +1,7 @@
 package backend.oauth.info;
 
-import backend.exception.ApiException;
 import backend.oauth.entity.ProviderType;
 import backend.oauth.info.impl.GoogleOAuth2UserInfo;
-import common.message.UserResponseMessage;
 
 import java.util.Map;
 

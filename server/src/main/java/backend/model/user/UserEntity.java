@@ -2,6 +2,7 @@ package backend.model.user;
 
 import backend.model.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
+import backend.oauth.entity.ProviderType;
 import common.model.Gender;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.user.UserInfoResponse;
@@ -22,6 +23,12 @@ public class UserEntity extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(name = "user_social_id")
+    private String socialId;
+
+    @Column(name = "user_provider_type")
+    private ProviderType providerType;
 
     @Column(name = "user_nickname", nullable = false, unique = true, length = 50)
     private String nickname;
