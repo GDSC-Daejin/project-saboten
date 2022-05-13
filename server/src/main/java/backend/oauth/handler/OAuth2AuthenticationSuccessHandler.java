@@ -1,5 +1,6 @@
 package backend.oauth.handler;
 
+import backend.exception.ApiException;
 import backend.jwt.RoleType;
 import backend.jwt.TokenProvider;
 import backend.model.user.RefreshTokenEntity;
@@ -8,9 +9,9 @@ import backend.oauth.entity.ProviderType;
 import backend.oauth.info.OAuth2UserInfo;
 import backend.oauth.info.OAuth2UserInfoFactory;
 import backend.repository.user.RefreshTokenRepository;
-import backend.service.AuthService;
-import backend.service.UserService;
+import backend.repository.user.UserRepository;
 import backend.util.CookieUtil;
+import common.message.UserResponseMessage;
 import common.model.reseponse.auth.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,7 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -35,10 +37,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
-    private final AuthService authService;
+    private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = determineTargetUrl(request, response, authentication);
 
@@ -51,14 +53,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
-                .map(Cookie::getValue);
+//        Optional<String> redirectUri = CookieUtil.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
+//                .map(Cookie::getValue);
 
-        if(redirectUri.isPresent()) {
-            throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
-        }
+//        if(redirectUri.isPresent()) {
+//            throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
+//        }
 
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+//        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        String targetUrl = "http://localhost:3000/oauth2/redirect";
 
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
@@ -81,7 +84,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     }
 
     private JwtTokenResponse createToken(String id) {
-        UserEntity user = userService.findUserEntityByNickname(id);
+        UserEntity user = userRepository.findByNickname(id);
+        if(user == null)
+            throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
+
         JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(id, RoleType.USER);
         // DB 저장
         RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()

@@ -76,10 +76,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .oauth2Login()
                 .userInfoEndpoint()
-                .userService(oAuth2UserService);    // 소셜로그인 성공 시 이후 처리를 담당한 서비스 등록
-//                .and()
-//                .successHandler(oAuth2AuthenticationSuccessHandler);
-
+                .userService(oAuth2UserService)    // 소셜로그인 성공 시 이후 처리를 담당한 서비스 등록
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler);
     }
 
     /*
