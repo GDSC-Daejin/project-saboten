@@ -71,31 +71,47 @@ private fun PostDetailContent(
 
             PostDetailVoteIndicator()
 
+            Spacer(modifier = Modifier.height(34.dp))
+
+            PostDetailDivider()
+
             TextButton(
                 modifier = Modifier.align(Alignment.CenterHorizontally),
                 onClick = { },
                 colors = ButtonDefaults.textButtonColors(
                     contentColor = MaterialTheme.colors.onSurface.copy(
-                        alpha = 0.5f
+                        alpha = 0.8f
                     )
                 )
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
-                        imageVector = Icons.Rounded.ExpandMore,
-                        contentDescription = "expand less"
+                        imageVector = Icons.Rounded.BarChart,
+                        contentDescription = "bar chart"
                     )
+                    
+                    Spacer(modifier = Modifier.width(12.dp))
+                    
                     Text(
                         text = "자세한 득표 결과보기",
                         style = MaterialTheme.typography.caption
                     )
                 }
             }
+
+            PostDetailDivider()
         }
     }
 }
+
+@Composable
+private fun PostDetailDivider() {
+    Divider(
+        thickness = 0.5.dp,
+        color = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)
+    )
+}
+
 
 @Composable
 private fun PostDetailProfile() {
