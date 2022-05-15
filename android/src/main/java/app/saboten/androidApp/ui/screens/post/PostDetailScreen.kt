@@ -179,19 +179,16 @@ private fun PostDetailVoteContent(
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
 
-    Box(
-        modifier = modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(top = 60.dp)
-        ) {
-            Box() {
+    Box(modifier = modifier.fillMaxWidth()) {
+        Row(modifier = Modifier.padding(top = 50.dp)) {
+            Box {
                 Button(
-                    shape = RoundedCornerShape(0.dp),
+                    shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFFA66FEA)),
                     modifier = Modifier
                         .width(screenWidth * 0.5f)
-                        .height(screenWidth * 0.5f),
+                        .height(screenWidth * 0.3f)
+                        .padding(start = 15.dp),
                     onClick = { /*TODO*/ }
                 ) {
                     Text(
@@ -200,34 +197,41 @@ private fun PostDetailVoteContent(
                     )
                 }
 
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = "A",
+                Button(
+                    onClick = {  },
+                    enabled = false,
                     modifier = Modifier
                         .padding(10.dp)
-                        .background(
-                            color = MaterialTheme.colors.primary,
-                            shape = RoundedCornerShape(
-                                topStart = 20.dp,
-                                topEnd = 20.dp,
-                                bottomStart = 20.dp
-                            )
-                        )
-                        .padding(horizontal = 15.dp, vertical = 8.dp)
-                        .align(Alignment.BottomEnd),
-                    color = MaterialTheme.colors.onPrimary
-                )
+                        .align(Alignment.BottomEnd)
+                        .size(28.dp),
+                    shape = RoundedCornerShape(
+                        topStart = 20.dp,
+                        topEnd = 13.dp,
+                        bottomStart = 20.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(disabledBackgroundColor = MaterialTheme.colors.primary),
+                    border = BorderStroke(1.5.dp, Color.White),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        textAlign = TextAlign.Center,
+                        text = "A",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.width(5.dp))
 
-            Box() {
+            Box {
                 Button(
-                    shape = RoundedCornerShape(0.dp),
+                    shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp),
                     colors = ButtonDefaults.buttonColors(Color(0xFF859DFC)),
                     modifier = Modifier
                         .width(screenWidth * 0.5f)
-                        .height(screenWidth * 0.5f),
+                        .height(screenWidth * 0.3f)
+                        .padding(end = 15.dp),
                     onClick = { /*TODO*/ }
                 ) {
                     Text(
@@ -236,23 +240,29 @@ private fun PostDetailVoteContent(
                     )
                 }
 
-                Text(
-                    textAlign = TextAlign.Center,
-                    text = "B",
+                Button(
+                    onClick = {  },
+                    enabled = false,
                     modifier = Modifier
                         .padding(10.dp)
-                        .background(
-                            color = Color(0x80D4D4D4),
-                            shape = RoundedCornerShape(
-                                topStart = 20.dp,
-                                topEnd = 20.dp,
-                                bottomEnd = 20.dp
-                            )
-                        )
-                        .padding(horizontal = 15.dp, vertical = 8.dp)
-                        .align(Alignment.BottomStart),
-                    color = MaterialTheme.colors.onPrimary
-                )
+                        .align(Alignment.BottomStart)
+                        .size(28.dp),
+                    shape = RoundedCornerShape(
+                        topStart = 13.dp,
+                        topEnd = 20.dp,
+                        bottomEnd = 20.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(disabledBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.3f)),
+                    border = BorderStroke(1.5.dp, Color.White),
+                    contentPadding = PaddingValues(0.dp)
+                ) {
+                    Text(
+                        textAlign = TextAlign.Center,
+                        text = "B",
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colors.onPrimary
+                    )
+                }
             }
         }
 
@@ -261,7 +271,8 @@ private fun PostDetailVoteContent(
                 .fillMaxWidth()
                 .height(70.dp)
                 .padding(horizontal = 15.dp),
-            shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
+            shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp, bottomEnd = 10.dp, bottomStart = 10.dp),
+            border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.2f)),
             elevation = 4.dp
         ) {
             Text(
