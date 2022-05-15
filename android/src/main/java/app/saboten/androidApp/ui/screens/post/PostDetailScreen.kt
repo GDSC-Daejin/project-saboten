@@ -108,7 +108,7 @@ private fun PostDetailProfile() {
     ) {
         NetworkImage(
             modifier = Modifier
-                .size(56.dp)
+                .size(25.dp)
                 .clip(CircleShape)
                 .border(
                     border = BorderStroke(width = 2.dp, color = Color(0xFF53654C)),
