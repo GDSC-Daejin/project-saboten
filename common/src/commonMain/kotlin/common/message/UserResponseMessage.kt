@@ -11,6 +11,7 @@ enum class UserResponseMessage(
     USER_DELETED("유저가 삭제되었습니다.", 200),
     USER_LOGIN("유저가 로그인되었습니다.", 200),
     USER_LOGOUT("유저가 로그아웃되었습니다.", 200),
+    USER_MISMATCH_PROVIDER_TYPE("유저의 소셜 로그인 종류가 다릅니다.", 404),
     USER_TOKEN_REISSUE("유저가 토큰을 갱신하였습니다.", 200),
     USER_NOT_FOUND("유저가 존재하지 않습니다.", 404),
 

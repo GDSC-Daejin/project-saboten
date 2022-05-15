@@ -67,7 +67,6 @@ public class AuthService {
         return jwtTokenResponse;
     }
 
-    // TODO : 이미 로그인 상태면 exception 발생 해줘야함.
     @Transactional
     public JwtTokenResponse reissue(TokenReissueRequest tokenReissueRequest) {
         // 1. Refresh Token 검증

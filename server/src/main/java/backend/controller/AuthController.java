@@ -40,12 +40,6 @@ public class AuthController {
         return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 
-    // 소셜로그인 부분
-//    @PostMapping(authUrl + "/login/kakao")
-//    public ApiResponse<JwtToken> loginByKakao(@RequestBody MemberRequestDto memberRequestDto) {
-//
-//    }
-
     @ApiOperation(value = "Access Token 재발급", notes = "Access Token 만료 시 Refresh Token을 가지고 재발급을 합니다.")
     @PostMapping(authUrl + "/reissue")
     public ApiResponse<JwtTokenResponse> reissue(@RequestBody TokenReissueRequest tokenReissueRequest) {

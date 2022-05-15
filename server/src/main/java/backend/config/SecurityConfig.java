@@ -3,6 +3,9 @@ package backend.config;
 import backend.jwt.JwtAccessDeniedHandler;
 import backend.jwt.JwtAuthenticationEntryPoint;
 import backend.jwt.TokenProvider;
+import backend.oauth.handler.OAuth2AuthenticationSuccessHandler;
+import backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
+import backend.oauth.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,6 +22,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+    private final OAuth2UserService oAuth2UserService;
+
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -65,6 +71,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
-                .apply(new JwtSecurityConfig(tokenProvider));
+                .apply(new JwtSecurityConfig(tokenProvider))
+                // Oauth2 소셜로그인 설정
+                .and()
+                .oauth2Login()
+                .authorizationEndpoint()
+                .baseUri("/oauth2/authorization")
+                .authorizationRequestRepository(oAuth2AuthorizationRequestBasedOnCookieRepository())
+                .and()
+                .userInfoEndpoint()
+                .userService(oAuth2UserService)    // 소셜로그인 성공 시 이후 처리를 담당한 서비스 등록
+                .and()
+                .successHandler(oAuth2AuthenticationSuccessHandler);
+    }
+
+    /*
+     * 쿠키 기반 인가 Repository
+     * 소셜 로그인 시 정보를 가져오기 위한 인가 응답을 연계 하고 검증할 때 사용.
+     * */
+    @Bean
+    public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
+        return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
 }
