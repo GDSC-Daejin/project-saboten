@@ -13,4 +13,5 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     List<PostEntity> findAllByPostTextContainingIgnoreCase(String postText);
     PostEntity findByPostText(String postText);
     Page<PostEntity> findAllByUser(UserEntity user, Pageable pageable);
+    PostEntity findByUserAndPostId(UserEntity user, Long id);
 }

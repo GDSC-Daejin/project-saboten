@@ -31,9 +31,9 @@ public class VoteService {
 
     //투표 정보 생성
     @Transactional
-    public List<VoteResponse> saveVotes(PostCreateRequest postCreateRequest, PostEntity postEntity){
+    public List<VoteResponse> saveVotes(List<VoteCreateRequest> voteTopcis, PostEntity postEntity){
         List<VoteResponse> votes = new ArrayList<>();
-        for(VoteCreateRequest vote : postCreateRequest.getVoteTopics()){
+        for(VoteCreateRequest vote : voteTopcis){
             VoteEntity voteEntity = VoteEntity.builder()
                     .post(postEntity)
                     .topic(vote.getTopic())
@@ -43,6 +43,23 @@ public class VoteService {
             voteRepository.save(voteEntity);
             votes.add(voteEntity.toDto());
         }
+        return votes;
+    }
+
+    @Transactional
+    public List<VoteResponse> update(List<VoteCreateRequest> voteTopics, PostEntity postEntity) {
+        List<VoteEntity> voteEntities = voteRepository.findAllByPost(postEntity);
+        List<VoteResponse> votes = new ArrayList<>();
+
+        // TODO : Request List랑 FindVoteEntity 순서가 같다고 가정하고 짠건데 순서가 동일할지 모르겠음.
+        int i = 0;
+        for(VoteEntity voteEntity : voteEntities) {
+            voteEntity.setTopic(voteTopics.get(i).getTopic());
+            voteEntity.setColor(voteTopics.get(i).getColor().name());
+            voteRepository.save(voteEntity);
+            votes.add(voteEntity.toDto());
+        }
+
         return votes;
     }
 }

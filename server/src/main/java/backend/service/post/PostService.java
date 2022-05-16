@@ -6,6 +6,7 @@ import backend.model.user.UserEntity;
 import backend.repository.post.PostRepository;
 import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
+import common.model.request.post.update.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -41,5 +42,21 @@ public class PostService {
     @Transactional
     public Page<PostEntity> getUserPost(UserEntity user, Pageable pageable) {
         return postRepository.findAllByUser(user, pageable);
+    }
+
+    @Transactional
+    public PostEntity isHavingPostByUser(UserEntity userEntity, Long id) {
+        PostEntity postEntity = postRepository.findByUserAndPostId(userEntity, id);
+
+        if(postEntity == null)
+            throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
+
+        return postEntity;
+    }
+
+    @Transactional
+    public void updatePost(PostEntity postEntity, String text) {
+        postEntity.setPostText(text);
+        postRepository.save(postEntity);
     }
 }

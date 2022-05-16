@@ -184,4 +184,31 @@ class PostControllerTest {
                     .andDo(print());
         }
     }
+
+    @Nested
+    @DisplayName("PUT /api/v1/post")    // TODO : 이거 URI 관련고민 post id를 URI에 명시해줄지 body에 명시해줄지
+    class updatePost {
+
+        @Test
+        @WithMockUser(username = "1")
+        public void 게시물_수정_성공() {
+            // given
+
+            // when
+
+            //then
+
+        }
+
+        @Test
+        @WithMockUser(username = "1004")
+        public void 본인_소유가_아닌_게시물_수정() {
+            // given
+
+            // when
+
+            //then
+
+        }
+    }
 }

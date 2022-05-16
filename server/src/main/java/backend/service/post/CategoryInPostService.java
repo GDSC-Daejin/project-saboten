@@ -48,4 +48,14 @@ public class CategoryInPostService {
     public Page<CategoryInPostEntity> findAllCagegoryInPostPage(Pageable pageable) {
         return categoryInPostRepository.findAll(pageable);
     }
+
+    @Transactional
+    public List<CategoryResponse> update(PostEntity post, List<CategoryEntity> categoryEntities) {
+        deleteAllCategoryInPost(post);
+        return saveCagegoriesInPost(categoryEntities, post);
+    }
+
+    private void deleteAllCategoryInPost(PostEntity post) {
+        categoryInPostRepository.deleteAllByPost(post);
+    }
 }
