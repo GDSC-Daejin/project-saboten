@@ -33,7 +33,8 @@ public class CategoryInPostService {
     public List<CategoryResponse> saveCagegoriesInPost(List<CategoryEntity> categoryEntities, PostEntity postEntity){
         List<CategoryResponse> categories = new ArrayList<>();
         for(CategoryEntity categoryEntity : categoryEntities){
-            categoryInPostRepository.save(CategoryInPostEntity.builder().post(postEntity).category(categoryEntity).build());
+            CategoryInPostEntity categoryInPostEntity = CategoryInPostEntity.builder().post(postEntity).category(categoryEntity).build();
+            categoryInPostRepository.save(categoryInPostEntity);
             categories.add(categoryEntity.toDTO());
         }
         return categories;
@@ -51,6 +52,9 @@ public class CategoryInPostService {
 
     @Transactional
     public List<CategoryResponse> update(PostEntity post, List<CategoryEntity> categoryEntities) {
+        List<CategoryInPostEntity> beforeCategiryInPostEntities = categoryInPostRepository.findByPost(post);
+        // TODO : 얘 왜 내용이 null 값임??
+        CategoryEntity wtf = beforeCategiryInPostEntities.get(0).getCategory();
         deleteAllCategoryInPost(post);
         return saveCagegoriesInPost(categoryEntities, post);
     }

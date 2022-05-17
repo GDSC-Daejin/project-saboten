@@ -58,6 +58,7 @@ public class VoteService {
             voteEntity.setColor(voteTopics.get(i).getColor().name());
             voteRepository.save(voteEntity);
             votes.add(voteEntity.toDto());
+            i++;
         }
 
         return votes;
