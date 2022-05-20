@@ -84,12 +84,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 .build().toUriString();
     }
 
-    private JwtTokenResponse createToken(String id) {
-        UserEntity user = userRepository.findBySocialId(id);
+    private JwtTokenResponse createToken(String socialId) {
+        UserEntity user = userRepository.findBySocialId(socialId);
         if(user == null)
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
 
-        JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(id, RoleType.USER);
+        JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(Long.toString(user.getUserId()), RoleType.USER);
         // DB 저장
         RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
                 .user(user)
