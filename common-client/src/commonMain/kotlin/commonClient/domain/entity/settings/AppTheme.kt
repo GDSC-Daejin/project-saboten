@@ -1,4 +1,4 @@
-package commonClient.domain.entity
+package commonClient.domain.entity.settings
 
 enum class AppTheme(val value : String) {
     DARK("dark"),

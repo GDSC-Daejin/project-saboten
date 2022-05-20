@@ -17,7 +17,7 @@ import common.model.reseponse.category.CategoryResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
-import common.model.reseponse.post.read.PostReadedResponse;
+import common.model.reseponse.post.read.PostReadResponse;
 import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -92,11 +92,11 @@ class PostController {
     // 내가 쓴 게시글 조회 API
     @ApiOperation(value = "내가 쓴 게시물 조회", notes = "로그인한 사용자 자기자신의 게시물을 조회합니다.")
     @GetMapping("/post/my")
-    public ApiResponse<Page<PostReadedResponse>> getUserPost(Pageable pageable){
+    public ApiResponse<Page<PostReadResponse>> getUserPost(Pageable pageable){
         UserEntity userEntity = getUser();
         Page<PostEntity> postEntityPage = postService.getUserPost(userEntity, pageable);
-        Page<PostReadedResponse> myPostPage = postEntityPage.map(postEntity ->
-                new PostReadedResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+        Page<PostReadResponse> myPostPage = postEntityPage.map(postEntity ->
+                new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
                         voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString()));
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_USER);
@@ -107,7 +107,7 @@ class PostController {
             notes = "기본적으로는 전체 게시물 리스트를 조회하지만 특정 카테고리에 해당하는 게시물 리스트를 조회할 수도 있습니다.")
     @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다. (필터 역할)")
     @GetMapping("/post")
-    public ApiResponse<Page<PostReadedResponse>> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
+    public ApiResponse<Page<PostReadResponse>> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
         Page<CategoryInPostEntity> categoryInPostEntitiesPage = null;
 
         if(categoryId != null){
@@ -118,9 +118,9 @@ class PostController {
             categoryInPostEntitiesPage = categoryInPostService.findAllCagegoryInPostPage(pageable);
         }
 
-        Page<PostReadedResponse> myPostPage = categoryInPostEntitiesPage.map(categoryInPostEntity -> {
+        Page<PostReadResponse> myPostPage = categoryInPostEntitiesPage.map(categoryInPostEntity -> {
             PostEntity postEntity = categoryInPostEntity.getPost();
-            return new PostReadedResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+            return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
                     voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
         });
 

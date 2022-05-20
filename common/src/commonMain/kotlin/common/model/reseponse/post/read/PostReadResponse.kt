@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 
 //내가 쓴 게시글 DTO
 @Serializable
-data class PostReadedResponse (
+data class PostReadResponse (
     @SerialName("id") val id: Long,
     @SerialName("text") val text: String,
     @SerialName("author") val author: UserResponse,
