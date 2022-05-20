@@ -41,9 +41,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<CategoryEntity> createCategoryInPost(PostCreateRequest postCreateRequest){
+    public List<CategoryEntity> getCategoryInPost(List<Long> categoryIds){
         List<CategoryEntity> categories = new ArrayList<>();
-        for (Long categoryId : postCreateRequest.getCategoryIds()) {
+        for (Long categoryId : categoryIds) {
             CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId);
             categories.add(categoryEntity);
         }

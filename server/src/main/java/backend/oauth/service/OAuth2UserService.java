@@ -18,8 +18,6 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import java.math.BigInteger;
 import java.util.Collections;
 
 @Service
@@ -53,9 +51,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 throw new ApiException(UserResponseMessage.USER_MISMATCH_PROVIDER_TYPE);
             }
         } else {
-            return null;
-            // throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
-            // savedUser = createUser(userInfo, providerType);
+            savedUser = createUser(userInfo, providerType);
         }
 
         String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
@@ -63,5 +59,17 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
         return new DefaultOAuth2User(Collections.singletonList(new SimpleGrantedAuthority(RoleType.USER.toString()))
                 ,user.getAttributes(), userNameAttributeName);
+    }
+
+    // 로직 테스트 못해봄.
+    private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+        // 추후 Entitiy가 변경되어 이메일이나 imageUrl 넣읋수있음 넣기
+        UserEntity user = UserEntity.builder()
+                .socialId(userInfo.getId())
+                .providerType(providerType)
+                .nickname(userInfo.getName())
+                .build();
+
+        return userRepository.save(user);
     }
 }

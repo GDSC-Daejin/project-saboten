@@ -63,7 +63,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 //        }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
-        // String targetUrl = "http://localhost:3000/oauth2/redirect";
 
         OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
         ProviderType providerType = ProviderType.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
