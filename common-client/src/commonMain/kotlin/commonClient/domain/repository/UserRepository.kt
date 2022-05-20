@@ -2,7 +2,6 @@ package commonClient.domain.repository
 
 import common.model.request.user.UserUpdateRequest
 import common.model.reseponse.user.UserInfoResponse
-import commonClient.data.LoadState
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {

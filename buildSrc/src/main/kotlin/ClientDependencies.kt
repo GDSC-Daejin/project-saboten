@@ -47,6 +47,8 @@ object Mokk {
 
 object Utils {
 
+    const val paging = "io.github.kuuuurt:multiplatform-paging:_"
+
     const val kotlinxDateTime = "org.jetbrains.kotlinx:kotlinx-datetime:_"
 
     const val mokoParcel = "dev.icerock.moko:parcelize:_"
