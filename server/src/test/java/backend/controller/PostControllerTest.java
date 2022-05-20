@@ -186,7 +186,7 @@ class PostControllerTest {
     }
 
     @Nested
-    @DisplayName("PUT /api/v1/post")    // TODO : 이거 URI 관련고민 post id를 URI에 명시해줄지 body에 명시해줄지
+    @DisplayName("PUT /api/v1/post")
     class updatePost {
 
         @Test

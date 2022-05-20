@@ -52,6 +52,7 @@ public class VoteService {
         List<VoteResponse> votes = new ArrayList<>();
 
         // TODO : Request List랑 FindVoteEntity 순서가 같다고 가정하고 짠건데 순서가 동일할지 모르겠음.
+        // 일단은 순서가 동일하다
         int i = 0;
         for(VoteEntity voteEntity : voteEntities) {
             voteEntity.setTopic(voteTopics.get(i).getTopic());

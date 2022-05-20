@@ -21,9 +21,9 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public PostEntity create(PostCreateRequest postCreateRequest, UserEntity userEntity) {
+    public PostEntity create(String text, UserEntity userEntity) {
         PostEntity postEntity = PostEntity.builder()
-                .postText(postCreateRequest.getText())
+                .postText(text)
                 .postLikeCount(0)
                 .user(userEntity)
                 .build();

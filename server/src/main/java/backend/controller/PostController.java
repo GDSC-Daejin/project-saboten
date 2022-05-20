@@ -20,7 +20,6 @@ import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
 import common.model.reseponse.post.read.PostReadedResponse;
 import common.model.reseponse.user.UserResponse;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -80,9 +79,9 @@ class PostController {
         UserEntity userEntity = getUser();
         UserResponse user = userEntity.toDto();
 
-        PostEntity postEntity= postService.create(postCreateRequest, userEntity);
+        PostEntity postEntity= postService.create(postCreateRequest.getText(), userEntity);
         List<VoteResponse> votes = voteService.saveVotes(postCreateRequest.getVoteTopics(), postEntity);
-        List<CategoryEntity> categoryEntities = categoryService.createCategoryInPost(postCreateRequest);
+        List<CategoryEntity> categoryEntities = categoryService.getCategories(postCreateRequest.getCategoryIds());
         List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoryEntities, postEntity);
 
         PostCreatedResponse post = new PostCreatedResponse(postEntity.getPostId(),postEntity.getPostText(),
