@@ -31,6 +31,17 @@ public class CategoryService {
         return categories;
     }
 
+
+    @Transactional
+    public List<CategoryEntity> findCategories(List<Long> categoryIds) {
+        List<CategoryEntity> categoryEntities = new ArrayList<>();
+
+        for(Long categoryId : categoryIds) {
+            categoryEntities.add(findCategory(categoryId));
+        }
+        return categoryEntities;
+    }
+
     @Transactional
     public CategoryEntity findCategory(Long id) {
         Optional<CategoryEntity> category = categoryRepository.findById(id);
@@ -41,9 +52,9 @@ public class CategoryService {
     }
 
     @Transactional
-    public List<CategoryEntity> createCategoryInPost(PostCreateRequest postCreateRequest){
+    public List<CategoryEntity> getCategories(List<Long> categoryIds){
         List<CategoryEntity> categories = new ArrayList<>();
-        for (Long categoryId : postCreateRequest.getCategoryIds()) {
+        for (Long categoryId : categoryIds) {
             CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId);
             categories.add(categoryEntity);
         }

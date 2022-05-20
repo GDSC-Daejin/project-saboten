@@ -12,4 +12,5 @@ import java.util.List;
 public interface CategoryInPostRepository extends JpaRepository<CategoryInPostEntity, Long> {
     List<CategoryInPostEntity> findByPost(PostEntity post);
     Page<CategoryInPostEntity> findALLByCategory(CategoryEntity categoryEntity, Pageable pageable);
+    void deleteAllByPost(PostEntity post);
 }

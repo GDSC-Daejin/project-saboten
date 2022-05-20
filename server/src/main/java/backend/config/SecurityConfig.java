@@ -8,6 +8,7 @@ import backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepositor
 import backend.oauth.service.OAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -35,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web.ignoring()
-                .antMatchers("/**/auth/**",
+                .antMatchers(HttpMethod.GET,"/**/auth/**",
                         "/swagger-ui/**", "/v2/api-docs",
                         "/**/category/**", "/**/post"
                         ,"/h2-console/**", "/favicon.ico");
