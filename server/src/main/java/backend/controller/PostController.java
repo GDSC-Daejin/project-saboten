@@ -12,6 +12,7 @@ import backend.service.UserService;
 import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
+import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.category.CategoryResponse;
 import common.model.reseponse.post.PostResponse;
@@ -78,9 +79,9 @@ class PostController {
         UserEntity userEntity = getUser();
         UserResponse user = userEntity.toDto();
 
-        PostEntity postEntity= postService.create(postCreateRequest, userEntity);
-        List<VoteResponse> votes = voteService.saveVotes(postCreateRequest, postEntity);
-        List<CategoryEntity> categoryEntities = categoryService.getCategoryInPost(postCreateRequest.getCategoryIds());
+        PostEntity postEntity= postService.create(postCreateRequest.getText(), userEntity);
+        List<VoteResponse> votes = voteService.saveVotes(postCreateRequest.getVoteTopics(), postEntity);
+        List<CategoryEntity> categoryEntities = categoryService.getCategories(postCreateRequest.getCategoryIds());
         List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoryEntities, postEntity);
 
         PostCreatedResponse post = new PostCreatedResponse(postEntity.getPostId(),postEntity.getPostText(),
@@ -125,5 +126,32 @@ class PostController {
         });
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
+    }
+
+    @PutMapping("/post")
+    public ApiResponse<PostResponse> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
+        UserEntity userEntity = getUser();
+        PostEntity postEntity = postService.isHavingPostByUser(userEntity, postUpdateRequest.getId());
+        if(postEntity != null) {
+            postService.updatePost(postEntity, postUpdateRequest.getText());
+        }
+
+        // post category update
+        List<CategoryEntity> categoryEntities = categoryService.findCategories(postUpdateRequest.getCategoryIds());
+        List<CategoryResponse> categories = categoryInPostService.update(postEntity, categoryEntities);
+
+        // vote update
+        List<VoteResponse> votes = voteService.update(postUpdateRequest.getVoteTopics(), postEntity);
+
+        PostResponse postResponse = new PostResponse(postEntity.getPostId(),
+                postEntity.getPostText(),
+                postEntity.getUser().toDto(),
+                votes,
+                categories,
+                null,
+                null,
+                postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
+
+        return ApiResponse.withMessage(postResponse, PostResponseMessage.POST_UPDATED);
     }
 }

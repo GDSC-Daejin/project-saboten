@@ -184,4 +184,31 @@ class PostControllerTest {
                     .andDo(print());
         }
     }
+
+    @Nested
+    @DisplayName("PUT /api/v1/post")
+    class updatePost {
+
+        @Test
+        @WithMockUser(username = "1")
+        public void 게시물_수정_성공() {
+            // given
+
+            // when
+
+            //then
+
+        }
+
+        @Test
+        @WithMockUser(username = "1004")
+        public void 본인_소유가_아닌_게시물_수정() {
+            // given
+
+            // when
+
+            //then
+
+        }
+    }
 }
