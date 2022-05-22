@@ -1,6 +1,6 @@
 package backend.model.post;
 
-import common.model.VoteColors;
+import common.model.VoteColorsResponse;
 import common.model.reseponse.post.VoteResponse;
 import lombok.*;
 
@@ -26,12 +26,12 @@ public class VoteEntity {
     private String topic;
 
     @Column(name = "color", nullable = false)
-    private String color = VoteColors.WHITE.name();
+    private String color = VoteColorsResponse.WHITE.name();
 
     @Column(name = "count", nullable = false)
     private int count;
 
     public VoteResponse toDto() {
-        return new VoteResponse(this.voteId, this.topic, this.count, VoteColors.valueOf(this.color));
+        return new VoteResponse(this.voteId, this.topic, this.count, VoteColorsResponse.valueOf(this.color));
     }
 }

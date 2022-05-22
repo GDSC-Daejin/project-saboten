@@ -2,7 +2,7 @@ package commonClient.domain.usecase.settings
 
 import commonClient.di.Inject
 import commonClient.di.Singleton
-import commonClient.domain.entity.AppTheme
+import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.repository.AppThemeSettingsRepository
 
 @Singleton

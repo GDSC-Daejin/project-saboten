@@ -6,7 +6,7 @@ import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.coroutines.SuspendSettings
 import commonClient.di.Inject
 import commonClient.di.Singleton
-import commonClient.domain.entity.AppTheme
+import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.logger.ClientLogger
 import kotlinx.coroutines.flow.MutableStateFlow
