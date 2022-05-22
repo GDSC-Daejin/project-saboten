@@ -6,7 +6,7 @@ import kotlin.jvm.JvmStatic
 
 @Serializable
 data class ApiResponse<T>(
-    val data: T,
+    val data: T?,
     val code: String,
     val message: String
 ) {

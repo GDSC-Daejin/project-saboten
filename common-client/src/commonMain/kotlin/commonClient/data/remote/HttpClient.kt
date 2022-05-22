@@ -1,9 +1,15 @@
 package commonClient.data.remote
 
+import common.model.request.auth.TokenReissueRequest
+import common.model.reseponse.auth.JwtTokenResponse
+import commonClient.utils.AuthTokenManager
 import commonClient.utils.ClientProperties
 import io.ktor.client.*
+import io.ktor.client.call.*
 import io.ktor.client.engine.*
 import io.ktor.client.plugins.*
+import io.ktor.client.plugins.auth.*
+import io.ktor.client.plugins.auth.providers.*
 import io.ktor.client.plugins.logging.*
 import io.ktor.client.request.*
 import io.ktor.http.*
@@ -16,6 +22,7 @@ private const val URL = "localhost:8080"
 @Suppress("FunctionName")
 fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     engineFactory: HttpClientEngineFactory<T>,
+    authTokenManager : AuthTokenManager,
     properties: ClientProperties,
     block: HttpClientConfig<T>.() -> Unit = {}
 ) = HttpClient(engineFactory) {
@@ -44,6 +51,31 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
             )
         )
     }
+
+    install(Auth) {
+        bearer {
+            loadTokens {
+                val accessToken = authTokenManager.getAccessToken()
+                val refreshToken = authTokenManager.getRefreshToken()
+                if (accessToken != null && refreshToken != null) BearerTokens(accessToken, refreshToken)
+                else null
+            }
+            refreshTokens {
+                val accessToken = authTokenManager.getAccessToken()
+                val refreshToken = authTokenManager.getRefreshToken()
+                val response = client.post("https://$URL/refresh") {
+                    setBody(TokenReissueRequest(accessToken!!, refreshToken!!))
+                }.body<JwtTokenResponse>()
+                authTokenManager.setToken(response)
+                BearerTokens(
+                    accessToken = response.accessToken,
+                    refreshToken = response.refreshToken
+                )
+            }
+        }
+    }
+
+
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
@@ -53,7 +85,8 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     }
 
     defaultRequest {
-//        header("Authorization", "Bearer ${authenticator.idToken}")
+
+        header(HttpHeaders.ContentType, ContentType.Application.Json)
 
         headers {
             accept(ContentType.Application.Json)

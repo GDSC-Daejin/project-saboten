@@ -1,3 +1,4 @@
+import groovy.sql.Sql
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -6,10 +7,17 @@ plugins {
     kotlin("native.cocoapods")
     kotlin("kapt")
     id("com.android.library")
+    id("com.squareup.sqldelight")
 }
 
 group = "app.saboten"
 version = "1.0.00"
+
+sqldelight {
+    database("SabotenDatabase") {
+        packageName = "app.saboten.commonClient"
+    }
+}
 
 kotlin {
     android()
@@ -49,9 +57,13 @@ kotlin {
                 api(Ktor.client.json)
                 api(Ktor.client.serialization)
                 api(Ktor.client.logging)
+                api(Ktor.client.auth)
                 api(MultiplatformSettings.core)
                 api(MultiplatformSettings.coroutines)
                 api(MultiplatformSettings.serialization)
+                api(KotlinX.datetime)
+                api(Square.SqlDelight.extensions.coroutines)
+                api(Utils.paging)
             }
         }
         val commonTest by getting {
@@ -68,10 +80,12 @@ kotlin {
                 api(Ktor.client.cio)
                 api(MultiplatformSettings.datastore)
                 api(AndroidX.dataStore.preferences)
+                implementation(AndroidX.security.cryptoKtx)
                 kapt(AndroidX.hilt.compiler)
                 kapt(Google.dagger.hilt.compiler)
                 implementation(Google.dagger.hilt.android)
-
+                implementation(Square.SqlDelight.drivers.android)
+                implementation(Square.SqlDelight.extensions.androidPaging3)
                 implementation(project.dependencies.platform(Google.firebase.bom))
                 implementation(Google.firebase.crashlyticsKtx)
             }
@@ -88,6 +102,7 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(Ktor.client.darwin)
+                implementation(Square.SqlDelight.drivers.native)
             }
         }
         val iosTest by getting
@@ -100,6 +115,7 @@ kotlin {
                 implementation(project.dependencies.enforcedPlatform(kotlinw("wrappers-bom:_")))
                 implementation(kotlinw("react"))
                 implementation(kotlinw("redux"))
+                implementation(Square.SqlDelight.drivers.sqlJs)
             }
         }
         val webTest by getting

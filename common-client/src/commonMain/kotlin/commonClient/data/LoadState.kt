@@ -1,5 +1,6 @@
 package commonClient.data
 
+import common.model.reseponse.ApiResponse
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 
@@ -21,11 +22,16 @@ fun <T> LoadState<T>.isFailed(): Boolean {
     return this is LoadState.Failed
 }
 
-sealed interface LoadState<T> {
+@OptIn(ExperimentalContracts::class)
+fun <T> LoadState<T>.isSuccess(): Boolean {
+    contract {
+        returns(true) implies (this@isSuccess is LoadState.Success)
+    }
+    return this is LoadState.Success
+}
 
-//    val isLoading: Boolean get() = this is Loading
-//
-//    val isFailed: Boolean get() = this is Failed
+
+sealed interface LoadState<T> {
 
     fun getDataOrNull(): T? = when (this) {
         is Loading -> null

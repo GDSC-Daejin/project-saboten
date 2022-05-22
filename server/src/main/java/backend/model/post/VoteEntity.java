@@ -1,5 +1,7 @@
 package backend.model.post;
 
+import common.model.VoteColors;
+import common.model.reseponse.post.VoteResponse;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +25,13 @@ public class VoteEntity {
     @Column(name = "topic", length = 24, nullable = false)
     private String topic;
 
+    @Column(name = "color", nullable = false)
+    private String color = VoteColors.WHITE.name();
+
     @Column(name = "count", nullable = false)
     private int count;
+
+    public VoteResponse toDto() {
+        return new VoteResponse(this.voteId, this.topic, this.count, VoteColors.valueOf(this.color));
+    }
 }

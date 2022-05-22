@@ -1,18 +1,17 @@
 package commonClient.domain.repository
 
 import common.model.request.user.UserUpdateRequest
-import common.model.reseponse.user.UserInfo
-import commonClient.data.LoadState
+import common.model.reseponse.user.UserInfoResponse
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    fun getMe(): Flow<LoadState<UserInfo>>
+    fun getMe(): Flow<UserInfoResponse>
 
-    fun observeMe() : Flow<UserInfo?>
+    fun observeMe() : Flow<UserInfoResponse?>
 
-    fun getUser(id: Long): Flow<LoadState<UserInfo>>
+    fun getUser(id: Long): Flow<UserInfoResponse>
 
-    fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : Flow<LoadState<UserInfo>>
+    fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : Flow<UserInfoResponse>
 
 }

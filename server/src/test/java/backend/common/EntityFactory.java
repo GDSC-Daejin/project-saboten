@@ -43,7 +43,7 @@ public class EntityFactory {
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
                 .categoryName("음악")
-                .iconUrl("https://www.google.com")
+                .categoryIconUrl("https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg")
                 .build();
     }
 
@@ -89,6 +89,7 @@ public class EntityFactory {
                 .topic("민초파 찬성")
                 .post(basicPostEntity())
                 .count(20)
+                .color("WHITE")
                 .build();
     }
     public static VoteEntity basicVoteEntityFalse(){
@@ -96,6 +97,7 @@ public class EntityFactory {
                 .topic("민초파 반대")
                 .post(basicPostEntity())
                 .count(10)
+                .color("WHITE")
                 .build();
     }
     public static CategoryInPostEntity basicCategoryInPostEntity(){

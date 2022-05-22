@@ -4,15 +4,14 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
-import androidx.compose.runtime.*
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.lifecycleScope
-import app.saboten.androidUi.provider.CommonProvider
 import app.saboten.androidUi.styles.MainTheme
-import app.saboten.androidUiSamples.ThemeState.*
+import app.saboten.androidUiSamples.ThemeState.Dark
+import app.saboten.androidUiSamples.ThemeState.Light
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import kotlinx.coroutines.flow.*
 
 class UiSamplesActivity : AppCompatActivity() {
 

@@ -1,0 +1,12 @@
+
+CREATE TABLE categoryEntity (
+    id INTEGER AS Long NOT NULL PRIMARY KEY,
+    name TEXT NOT NULL,
+    iconUrl TEXT NOT NULL
+);
+
+insert:
+INSERT INTO categoryEntity(id, name, iconUrl) VALUES ?;
+
+selectAll:
+SELECT * FROM categoryEntity;
