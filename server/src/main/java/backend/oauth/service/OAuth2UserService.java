@@ -68,6 +68,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 .socialId(userInfo.getId())
                 .providerType(providerType)
                 .nickname(userInfo.getName())
+                .email(userInfo.getEmail())
+                .userImage(userInfo.getImageUrl())
                 .build();
 
         return userRepository.save(user);
