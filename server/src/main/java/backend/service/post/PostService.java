@@ -59,4 +59,10 @@ public class PostService {
         postEntity.setPostText(text);
         postRepository.save(postEntity);
     }
+
+    @Transactional
+    public void deletePost(Long id) {
+        findPost(id);
+        postRepository.deleteById(id);
+    }
 }

@@ -154,4 +154,13 @@ class PostController {
 
         return ApiResponse.withMessage(postResponse, PostResponseMessage.POST_UPDATED);
     }
+
+    @DeleteMapping("/post/{id}")
+    public ApiResponse<?> removePost(@PathVariable Long id) {
+        // TODO : Want랑 삭제 관련해서 자식들 영속성 전이 어떻게 할건지 상의
+        // Post만 삭제하면 알아서 Post의 관련된 자식 Entity들 삭제 함.
+        postService.deletePost(id);
+
+        return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
+    }
 }
