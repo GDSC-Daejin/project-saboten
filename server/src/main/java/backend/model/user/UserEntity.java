@@ -3,7 +3,7 @@ package backend.model.user;
 import backend.model.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
 import backend.oauth.entity.ProviderType;
-import common.model.Gender;
+import common.model.GenderResponse;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
@@ -66,9 +66,9 @@ public class UserEntity extends BaseTimeEntity {
 
     //TODO: url, email 테이블에 추가하는 것이 좋을 것 같음. 일단 추가는 해둠. -> panda와 상의필요
     public UserInfoResponse toUserInfoDTO(){
-        Gender gender = null;
-        if(this.gender == 1) gender = Gender.M;
-        else if(this.gender == 2) gender = Gender.F;
+        GenderResponse gender = null;
+        if(this.gender == 1) gender = GenderResponse.M;
+        else if(this.gender == 2) gender = GenderResponse.F;
 
         return new UserInfoResponse(this.userId, this.nickname, this.email ,this.email, this.myPageIntroduction,
                 this.age, gender);

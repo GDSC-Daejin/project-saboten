@@ -4,8 +4,6 @@ import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
-import android.widget.Toast
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,18 +21,12 @@ import app.saboten.androidUi.styles.MainTheme
 import coil.Coil
 import coil.ImageLoader
 import coil.decode.SvgDecoder
-import commonClient.data.isFailed
 import commonClient.data.isLoading
-import commonClient.data.isSuccess
-import commonClient.domain.entity.AppTheme
-import commonClient.logger.ClientLogger
+import commonClient.domain.entity.settings.AppTheme
 import commonClient.presentation.AppViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class AppActivity : AppCompatActivity() {

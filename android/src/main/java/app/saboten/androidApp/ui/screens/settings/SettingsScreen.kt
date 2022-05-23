@@ -2,7 +2,6 @@ package app.saboten.androidApp.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -11,7 +10,7 @@ import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import commonClient.domain.entity.AppTheme
+import commonClient.domain.entity.settings.AppTheme
 import commonClient.presentation.SettingsScreenViewModel
 import commonClient.presentation.SettingsScreenViewModelDelegate
 

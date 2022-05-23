@@ -1,6 +1,6 @@
 package common.model
 
-enum class VoteColors(val value : Int) {
+enum class VoteColorsResponse(val value : Int) {
     WHITE(0),
     RED(1),
     GREEN(2),

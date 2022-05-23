@@ -3,7 +3,7 @@ package commonClient
 import com.russhwolf.settings.ExperimentalSettingsApi
 import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.coroutines.toSuspendSettings
-import common.model.Gender
+import common.model.GenderResponse
 import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.cache.MeCache
 import commonClient.utils.JsName
@@ -37,7 +37,7 @@ class MeCacheTest {
             email = "harry.park@mathpresso.com",
             introduction = "Hello I'm Harry",
             age = 24,
-            gender = Gender.M
+            gender = GenderResponse.M
         )
 
         // When

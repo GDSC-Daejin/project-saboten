@@ -2,7 +2,7 @@ package commonClient.presentation
 
 import commonClient.di.HiltViewModel
 import commonClient.di.Inject
-import commonClient.domain.entity.AppTheme
+import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
 import commonClient.domain.usecase.settings.UpdateAppThemeSettingsUseCase
 import commonClient.presentation.SettingsScreenViewModelDelegate.*

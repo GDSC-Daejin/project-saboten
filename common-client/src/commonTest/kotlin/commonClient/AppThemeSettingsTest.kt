@@ -3,7 +3,7 @@ package commonClient
 import com.russhwolf.settings.MockSettings
 import com.russhwolf.settings.coroutines.toSuspendSettings
 import commonClient.data.repository.AppThemeSettingsRepositoryImp
-import commonClient.domain.entity.AppTheme
+import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
 import commonClient.domain.usecase.settings.UpdateAppThemeSettingsUseCase

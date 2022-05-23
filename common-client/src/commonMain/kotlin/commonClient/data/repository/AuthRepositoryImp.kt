@@ -1,15 +1,12 @@
 package commonClient.data.repository
 
 import common.model.request.auth.TokenReissueRequest
-import common.model.reseponse.auth.JwtTokenResponse
-import commonClient.data.LoadState
 import commonClient.data.remote.endpoints.AuthApi
 import commonClient.di.Inject
 import commonClient.di.Singleton
+import commonClient.domain.entity.auth.JwtToken
 import commonClient.domain.repository.AuthRepository
 import commonClient.utils.AuthTokenManager
-import io.ktor.client.call.*
-import io.ktor.client.plugins.*
 import kotlinx.coroutines.flow.flow
 
 @Singleton
@@ -34,7 +31,14 @@ class AuthRepositoryImp @Inject constructor(
                 accessToken = accessToken,
                 refreshToken = refreshToken
             )
-            emit(requireNotNull(authApi.reissue(refreshTokenRequest).data))
+            emit(authApi.reissue(refreshTokenRequest).data?.run {
+                JwtToken(
+                    grantType = grantType,
+                    accessToken = accessToken,
+                    refreshToken = refreshToken,
+                    accessTokenExpiresIn = accessTokenExpiresIn
+                )
+            })
         } else {
             emit(null)
         }

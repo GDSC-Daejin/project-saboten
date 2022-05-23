@@ -1,6 +1,6 @@
 package commonClient.domain.repository
 
-import commonClient.domain.entity.AppTheme
+import commonClient.domain.entity.settings.AppTheme
 import kotlinx.coroutines.flow.Flow
 
 interface AppThemeSettingsRepository {
