@@ -42,6 +42,12 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "user_gender")
     private Integer gender;
 
+    @Column(name= "user_email", length = 50)
+    private String email;
+
+    @Column(name= "user_profile_image")
+    private String userImage;
+
     @OneToMany(mappedBy = "user")
     private List<PostEntity> posts = new ArrayList<>();
 
@@ -58,13 +64,13 @@ public class UserEntity extends BaseTimeEntity {
         return new UserResponse(this.userId, this.nickname, "url");
     }
 
-    // url, email 수정 필요  //TODO: url, email 테이블에 추가하는 것도 좋은 것 같기도?
+    //TODO: url, email 테이블에 추가하는 것이 좋을 것 같음. 일단 추가는 해둠. -> panda와 상의필요
     public UserInfoResponse toUserInfoDTO(){
         Gender gender = null;
         if(this.gender == 1) gender = Gender.M;
         else if(this.gender == 2) gender = Gender.F;
 
-        return new UserInfoResponse(this.userId, this.nickname, "url","want@email.com",this.myPageIntroduction,
+        return new UserInfoResponse(this.userId, this.nickname, this.email ,this.email, this.myPageIntroduction,
                 this.age, gender);
     }
 }
