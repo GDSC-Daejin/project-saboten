@@ -8,14 +8,12 @@ import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.auth.JwtTokenResponse;
+import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Version1RestController
 @RequiredArgsConstructor
@@ -23,6 +21,16 @@ public class AuthController {
     private final AuthService authService;
 
     private final String authUrl = "/auth";
+
+
+    //이름 고민중. signupUpdate() / userInfoUpdate()
+    @ApiOperation(value = "유저 회원가입 추가정보등록", notes = "소셜로그인 후 추가정보 등록기능을 수행합니다.")
+    @PutMapping(authUrl+"/signupUpdate")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<UserInfoResponse> signupUpdate(@RequestBody UserInfoResponse userInfoResponse){
+        UserInfoResponse userInfo = authService.signupUpdate(userInfoResponse);
+        return ApiResponse.withMessage(userInfoResponse, UserResponseMessage.USER_UPDATED);
+    }
 
     // 현재 auth 기능들은 제대로 된 auth 가 아니라서 추후 소셜로그인 구현이 되면 제대로 구현합시다!
     @ApiOperation(value = "유저 회원가입", notes = "임시 회원가입입니다 추후 소셜로그인 대응해야 합니다.")
@@ -37,6 +45,13 @@ public class AuthController {
     @PostMapping(authUrl + "/login")
     public ApiResponse<JwtTokenResponse> login(@RequestBody UserLoginTestRequest userLoginTestRequest) {
         JwtTokenResponse jwtTokenResponse = authService.login(userLoginTestRequest);
+        return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
+    }
+
+    @ApiOperation(value = "소셜 로그인", notes = "임시 소셜로그인 테스트용 로그인")
+    @PostMapping(authUrl + "/social/login")
+    public ApiResponse<JwtTokenResponse> socialLogin(@RequestBody UserLoginTestRequest userLoginTestRequest) {
+        JwtTokenResponse jwtTokenResponse = authService.socialLogin(userLoginTestRequest);
         return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 
