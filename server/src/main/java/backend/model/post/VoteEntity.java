@@ -3,6 +3,8 @@ package backend.model.post;
 import common.model.VoteColorsResponse;
 import common.model.reseponse.post.VoteResponse;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -19,6 +21,7 @@ public class VoteEntity {
     private Long voteId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="post_id", nullable = false)
     private PostEntity post;
 

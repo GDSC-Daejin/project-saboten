@@ -3,6 +3,8 @@ package backend.model.post;
 import backend.model.common.BaseTimeEntity;
 import backend.model.user.UserEntity;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -18,6 +20,7 @@ public class PostEntity extends BaseTimeEntity {
     private Long postId;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;
 
