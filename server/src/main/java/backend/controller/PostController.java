@@ -132,9 +132,7 @@ class PostController {
     public ApiResponse<PostResponse> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.isHavingPostByUser(userEntity, postUpdateRequest.getId());
-        if(postEntity != null) {
-            postService.updatePost(postEntity, postUpdateRequest.getText());
-        }
+        postService.updatePost(postEntity, postUpdateRequest.getText());
 
         // post category update
         List<CategoryEntity> categoryEntities = categoryService.findCategories(postUpdateRequest.getCategoryIds());
@@ -157,9 +155,11 @@ class PostController {
 
     @DeleteMapping("/post/{id}")
     public ApiResponse<?> removePost(@PathVariable Long id) {
+        UserEntity userEntity = getUser();
+        PostEntity postEntity = postService.isHavingPostByUser(userEntity, id);
         // TODO : Want랑 삭제 관련해서 자식들 영속성 전이 어떻게 할건지 상의
         // Post만 삭제하면 알아서 Post의 관련된 자식 Entity들 삭제 함.
-        postService.deletePost(id);
+        postService.deletePost(postEntity);
 
         return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
     }
