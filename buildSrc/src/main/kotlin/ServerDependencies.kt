@@ -3,6 +3,8 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 object SpringFox {
     // swagger 3.0, swaggerUi 3.0 같이 추가 해줌.
     const val swagger3 = "io.springfox:springfox-boot-starter:_"
+    const val swaggerAnnotations = "io.swagger:swagger-annotations:_"
+    const val swaggerModels = "io.swagger:swagger-models:_"
 }
 
 object Mockk {
@@ -55,6 +57,8 @@ fun DependencyHandler.serverDependency() {
     add("implementation", Postgresql.postgre)
     add("implementation", Lombok.lombok)
     add("implementation", SpringFox.swagger3)
+    add("implementation", SpringFox.swaggerAnnotations)
+    add("implementation", SpringFox.swaggerModels)
     add("implementation", Sentry.sentry)
     add("implementation", Sentry.logback)
 
