@@ -3,6 +3,7 @@ package backend.config;
 import backend.jwt.JwtAccessDeniedHandler;
 import backend.jwt.JwtAuthenticationEntryPoint;
 import backend.jwt.TokenProvider;
+import backend.oauth.handler.OAuth2AuthenticationFailureHandler;
 import backend.oauth.handler.OAuth2AuthenticationSuccessHandler;
 import backend.oauth.repository.OAuth2AuthorizationRequestBasedOnCookieRepository;
 import backend.oauth.service.OAuth2UserService;
@@ -83,7 +84,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .userInfoEndpoint()
                 .userService(oAuth2UserService)    // 소셜로그인 성공 시 이후 처리를 담당한 서비스 등록
                 .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler);
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler());
     }
 
     /*
@@ -94,4 +96,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public OAuth2AuthorizationRequestBasedOnCookieRepository oAuth2AuthorizationRequestBasedOnCookieRepository() {
         return new OAuth2AuthorizationRequestBasedOnCookieRepository();
     }
+
+    /*
+     * Oauth 인증 실패 핸들러
+     * */
+    @Bean
+    public OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler() {
+        return new OAuth2AuthenticationFailureHandler(oAuth2AuthorizationRequestBasedOnCookieRepository());
+    }
+
 }
