@@ -13,8 +13,8 @@ EXTERNAL SOURCES:
     :path: "../common-client"
 
 SPEC CHECKSUMS:
-  common: fbe97a9c6935f61c004da16117fde02b53096701
-  common_client: f0d96eca5592794858961319349842d7bce920e5
+  common: cb659610d3e3837bc04bf6e75a097b61f4e639d5
+  common_client: 90fc020325ad257bae2600e4dd7f6a7d0e31bd14
 
 PODFILE CHECKSUM: 5342129ec57f824153a1523bbd55c0b7060044c3
 
