@@ -3,6 +3,7 @@ package backend.service;
 import backend.exception.ApiException;
 import backend.jwt.RedisUtil;
 import backend.jwt.RoleType;
+import backend.jwt.SecurityUtil;
 import backend.jwt.TokenProvider;
 import backend.model.user.RefreshTokenEntity;
 import backend.model.user.UserEntity;
@@ -13,6 +14,7 @@ import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignUpRequest;
+import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
 import common.model.reseponse.auth.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
@@ -65,6 +67,14 @@ public class AuthService {
 
         // 5. 토큰 발급
         return jwtTokenResponse;
+    }
+
+    @Transactional
+    public JwtTokenResponse socialLogin(UserLoginTestRequest userLoginTestRequest) {
+        //소셜로그인 테스트용
+        Long id = userLoginTestRequest.getId();
+        UserEntity user = userService.findUserEntity(id);
+        return tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
     }
 
     @Transactional
@@ -121,5 +131,20 @@ public class AuthService {
         // 4. Access Token blacklist에 등록하여 만료시키기
         Long expiration = tokenProvider.getExpiration(accessToken);
         redisUtil.setBlackList(accessToken, "access_token", expiration);
+    }
+
+    @Transactional
+    public UserInfoResponse signupUpdate(UserInfoResponse userInfoResponse) {
+        Long id = SecurityUtil.getCurrentUserId();
+        Optional<UserEntity> userEntity = userRepository.findById(id);
+        if(userEntity.isEmpty())
+            throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
+        userEntity.get().setGender(userInfoResponse.getGender().getValue());
+        userEntity.get().setNickname(userInfoResponse.getNickname());
+        userEntity.get().setMyPageIntroduction(userInfoResponse.getIntroduction());
+        userEntity.get().setAge(userInfoResponse.getAge());
+        userEntity.get().setEmail(userInfoResponse.getEmail());
+        userEntity.get().setUserImage(userInfoResponse.getProfilePhotoUrl());
+        return userRepository.save(userEntity.get()).toUserInfoDTO();
     }
 }
