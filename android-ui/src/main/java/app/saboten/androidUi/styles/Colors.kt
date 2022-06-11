@@ -12,24 +12,24 @@ val Colors.surfaceOver
 
 @SuppressLint("ConflictingOnColor")
 internal val lightColors = lightColors(
-    primary = Color(0xFF2EC781),
+    primary = Color(0xFF1AAF41),
     onPrimary = Color.White,
-    primaryVariant = Color(0xFF22A76A),
-    secondary = Color(0xFF2EC781),
-    secondaryVariant = Color(0xFF22A76A),
+    primaryVariant = Color(0xFF1AAF41),
+    secondary = Color(0xFF69CB3A),
+    secondaryVariant = Color(0xFF69CB3A),
     surface = Color.White,
     onSurface = Color.Black,
-    background = Color(0xFFF8F8F8)
+    background = Color.White
 )
 
 @SuppressLint("ConflictingOnColor")
 internal val darkColors = darkColors(
-    primary = Color(0xFF22A76A),
+    primary = Color(0xFF1AAF41),
     onPrimary = Color.White,
-    primaryVariant = Color(0xFF156A43),
-    secondary = Color(0xFF22A76A),
-    secondaryVariant = Color(0xFF156A43),
-    surface = Color(0xFF191919),
+    primaryVariant = Color(0xFF1AAF41),
+    secondary = Color(0xFF69CB3A),
+    secondaryVariant = Color(0xFF69CB3A),
+    surface = Color(0xFF2C2E31),
     onSurface = Color.White,
-    background = Color(0xFF0F0F0F)
+    background = Color(0xFF17191d)
 )

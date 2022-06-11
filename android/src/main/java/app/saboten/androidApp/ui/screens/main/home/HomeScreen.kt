@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -86,9 +87,12 @@ private fun HomeCategoryTab(
 
         }
         is LoadState.Loading -> {
-            Surface(modifier = Modifier.fillMaxWidth().height(56.dp)) {
+            Surface(modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)) {
                 Row(
-                    modifier = Modifier.fillMaxSize()
+                    modifier = Modifier
+                        .fillMaxSize()
                         .horizontalScroll(rememberScrollState(), enabled = false)
                 ) {
                     Spacer(modifier = Modifier.width(20.dp))
@@ -108,7 +112,9 @@ private fun HomeCategoryTab(
         is LoadState.Success -> {
             ScrollableTabRow(
                 edgePadding = 20.dp,
-                modifier = Modifier.fillMaxWidth().height(56.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
                 selectedTabIndex = pagerState.currentPage,
                 indicator = { tabPositions ->
                     Box(
@@ -116,7 +122,10 @@ private fun HomeCategoryTab(
                             .pagerTabIndicatorOffset(pagerState, tabPositions)
                             .fillMaxWidth()
                             .height(4.dp)
-                            .background(MaterialTheme.colors.secondary, shape = RoundedCornerShape(2.dp)),
+                            .background(
+                                MaterialTheme.colors.secondary,
+                                shape = RoundedCornerShape(2.dp)
+                            ),
                     )
                 },
                 divider = {}
@@ -124,7 +133,9 @@ private fun HomeCategoryTab(
                 categoriesState.data.forEachIndexed { index, category ->
                     Tab(
                         pagerState.currentPage == index,
-                        modifier = Modifier.height(48.dp).padding(start = 16.dp, end = 16.dp),
+                        modifier = Modifier
+                            .height(48.dp)
+                            .padding(start = 16.dp, end = 16.dp),
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(index)
