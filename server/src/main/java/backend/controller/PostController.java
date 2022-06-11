@@ -128,13 +128,12 @@ class PostController {
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
+    @ApiOperation(value = "게시물 수정", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
     public ApiResponse<PostResponse> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.isHavingPostByUser(userEntity, postUpdateRequest.getId());
-        if(postEntity != null) {
-            postService.updatePost(postEntity, postUpdateRequest.getText());
-        }
+        postService.updatePost(postEntity, postUpdateRequest.getText());
 
         // post category update
         List<CategoryEntity> categoryEntities = categoryService.findCategories(postUpdateRequest.getCategoryIds());
@@ -153,5 +152,16 @@ class PostController {
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
         return ApiResponse.withMessage(postResponse, PostResponseMessage.POST_UPDATED);
+    }
+
+    @ApiOperation(value = "게시물 삭제", notes = "사용자가 게시물을 삭제합니다.")
+    @DeleteMapping("/post/{id}")
+    public ApiResponse<?> removePost(@PathVariable Long id) {
+        UserEntity userEntity = getUser();
+        PostEntity postEntity = postService.isHavingPostByUser(userEntity, id);
+        // Post만 삭제하면 알아서 Post의 관련된 자식 Entity들 삭제 함.
+        postService.deletePost(postEntity);
+
+        return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
     }
 }

@@ -59,4 +59,9 @@ public class PostService {
         postEntity.setPostText(text);
         postRepository.save(postEntity);
     }
+
+    @Transactional
+    public void deletePost(PostEntity postEntity) {
+        postRepository.delete(postEntity);
+    }
 }

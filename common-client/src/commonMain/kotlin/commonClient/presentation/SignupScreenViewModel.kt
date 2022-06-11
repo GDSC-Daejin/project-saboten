@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.*
 interface SignupScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val userState: LoadState<UserInfoResponse> = LoadState.loading()
+        val userState: LoadState<UserInfoResponse> = LoadState.loading(),
+        val updateUserState: LoadState<UserInfoResponse> = LoadState.loading()
     )
 
     sealed interface Effect
@@ -37,11 +38,15 @@ class SignupScreenViewModel @Inject constructor(
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
     private val userState = MutableStateFlow<LoadState<UserInfoResponse>>(LoadState.loading())
+    private val updateUserState = MutableStateFlow<LoadState<UserInfoResponse>>(LoadState.loading())
 
     override val state: StateFlow<State> = combine (
-        userState, flowOf(true)
-    ) { userState, _ ->
-        State(userState = userState)
+        userState, updateUserState
+    ) { userState, updateUserState ->
+        State(
+            userState = userState,
+            updateUserState = updateUserState
+        )
     }.asStateFlow(State(), platformViewModelScope)
 
     override fun event(e: Event) {
@@ -54,6 +59,9 @@ class SignupScreenViewModel @Inject constructor(
             }
             is Event.SaveUser -> {
                 updateUserInfoUseCase(e.updateUserInfo)
+                    .toLoadState()
+                    .onEach { updateUserState.emit(it) }
+                    .launchIn(platformViewModelScope)
             }
         }
     }

@@ -29,6 +29,7 @@ public class CategoryController {
         return ApiResponse.withMessage(categories, CategoryResponseMessage.CATEGORY_FIND_ALL);
     }
 
+    @ApiOperation(value = "카테고리 특정 조회 API", notes = "특정 카테고리 불러오기")
     @GetMapping("/category/{id}")
     public ApiResponse<CategoryResponse> getCategory(@PathVariable Long id) {
         CategoryEntity categoryEntity = categoryService.findCategory(id);
