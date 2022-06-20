@@ -27,6 +27,7 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import common.model.reseponse.category.CategoryResponse
 import commonClient.data.LoadState
+import commonClient.domain.entity.post.Category
 import commonClient.presentation.HomeScreenViewModel
 import commonClient.presentation.HomeScreenViewModelDelegate
 import kotlinx.coroutines.launch
@@ -79,7 +80,7 @@ fun HomeScreenContent(
 @Composable
 private fun HomeCategoryTab(
     pagerState: PagerState,
-    categoriesState: LoadState<List<CategoryResponse>>
+    categoriesState: LoadState<List<Category>>
 ) {
     val coroutineScope = rememberCoroutineScope()
     when (categoriesState) {
@@ -155,7 +156,7 @@ private fun HomeCategoryTab(
 private fun HomeFeedPage(
     modifier: Modifier,
     pagerState: PagerState,
-    categoriesState: LoadState<List<CategoryResponse>>
+    categoriesState: LoadState<List<Category>>
 ) {
     when (categoriesState) {
         is LoadState.Failed -> {

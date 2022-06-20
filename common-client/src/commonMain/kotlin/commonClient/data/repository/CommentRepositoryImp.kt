@@ -1,7 +1,7 @@
 package commonClient.data.repository
 
 import com.kuuurt.paging.multiplatform.Pager
-import common.model.reseponse.post.Comment
+import commonClient.domain.entity.post.Comment
 import commonClient.di.Inject
 import commonClient.di.Singleton
 import commonClient.domain.repository.CommentRepository

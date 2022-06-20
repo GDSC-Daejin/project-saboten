@@ -8,6 +8,8 @@ import commonClient.data.LoadState
 import commonClient.data.isSuccess
 import commonClient.di.Inject
 import commonClient.di.Singleton
+import commonClient.domain.entity.post.Comment
+import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.GetPostByIdUseCase
 import commonClient.domain.usecase.post.comment.GetPagedCommentForPostUseCase
 import commonClient.presentation.PostDetailScreenViewModelDelegate.*
@@ -21,14 +23,14 @@ interface PostDetailScreenViewModelDelegate :
     UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val postState: LoadState<PostResponse> = LoadState.loading(),
-        val postComments: Flow<PagingData<CommentResponse>> = flowOf()
+        val postState: LoadState<Post> = LoadState.loading(),
+        val postComments: Flow<PagingData<Comment>> = flowOf()
     )
 
     sealed interface Effect
 
     sealed interface Event {
-        class SetPost(val post: PostResponse) : Event
+        class SetPost(val post: Post) : Event
         class LoadPost(val postId: Long) : Event
         object Refresh : Event
     }
@@ -45,7 +47,7 @@ class PostDetailScreenViewModel @Inject constructor(
 
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
-    private val postState = MutableStateFlow<LoadState<PostResponse>>(LoadState.loading())
+    private val postState = MutableStateFlow<LoadState<Post>>(LoadState.loading())
 
     /*
     * 본래는 post 의 id 만 있어도 불러올 수 있으나
