@@ -9,6 +9,6 @@ class GetPagedCommentForPostUseCase @Inject constructor(
     private val commentRepository: CommentRepository
 ) {
 
-    operator fun invoke(postId: Long) = commentRepository.getCommentsPager(postId)
+//    operator fun invoke(postId: Long) = commentRepository.getCommentsPager(postId)
 
 }

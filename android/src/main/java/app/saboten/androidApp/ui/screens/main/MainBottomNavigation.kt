@@ -50,7 +50,8 @@ fun MainBottomNavigation(
     ) {
         BottomNavigation(
             modifier = Modifier.navigationBarsPadding(),
-            backgroundColor = Color.Transparent
+            backgroundColor = Color.Transparent,
+            elevation = 0.dp
         ) {
             mainNavigationBarData.forEach {
                 if (it == null) BottomNavigationItem(false, {}, {}, enabled = false)

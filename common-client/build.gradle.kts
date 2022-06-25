@@ -63,7 +63,6 @@ kotlin {
                 api(MultiplatformSettings.serialization)
                 api(KotlinX.datetime)
                 api(Square.SqlDelight.extensions.coroutines)
-                api(Utils.paging)
             }
         }
         val commonTest by getting {
@@ -88,6 +87,7 @@ kotlin {
                 implementation(Square.SqlDelight.extensions.androidPaging3)
                 implementation(project.dependencies.platform(Google.firebase.bom))
                 implementation(Google.firebase.crashlyticsKtx)
+                implementation(Utils.paging)
             }
         }
         val androidTest by getting {
@@ -103,6 +103,7 @@ kotlin {
             dependencies {
                 implementation(Ktor.client.darwin)
                 implementation(Square.SqlDelight.drivers.native)
+                implementation(Utils.paging)
             }
         }
         val iosTest by getting
