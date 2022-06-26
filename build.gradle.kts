@@ -2,7 +2,7 @@ plugins {
     id("com.android.application") version "7.0.4" apply false
     id("com.android.library") version "7.0.4" apply false
 
-    val kotlinVersion = "1.6.10"
+    val kotlinVersion = "1.6.21"
     kotlin("multiplatform") version kotlinVersion apply false
     kotlin("android") version kotlinVersion apply false
     kotlin("plugin.serialization") version kotlinVersion apply false
@@ -11,7 +11,7 @@ plugins {
 
     id("org.springframework.boot") version "2.5.6" apply false
     id("io.spring.dependency-management") version "1.0.11.RELEASE" apply false
-    id("com.google.devtools.ksp") version "1.6.10-1.0.2" apply false
+    id("com.google.devtools.ksp") version "1.6.21-1.0.6" apply false
 }
 
 buildscript {

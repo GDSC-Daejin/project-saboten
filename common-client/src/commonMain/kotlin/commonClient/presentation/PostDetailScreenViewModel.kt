@@ -1,17 +1,12 @@
 package commonClient.presentation
 
-import com.kuuurt.paging.multiplatform.PagingData
-import com.kuuurt.paging.multiplatform.helpers.cachedIn
-import common.model.reseponse.post.CommentResponse
-import common.model.reseponse.post.PostResponse
 import commonClient.data.LoadState
 import commonClient.data.isSuccess
 import commonClient.di.Inject
 import commonClient.di.Singleton
+import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.GetPostByIdUseCase
-import commonClient.domain.usecase.post.comment.GetPagedCommentForPostUseCase
 import commonClient.presentation.PostDetailScreenViewModelDelegate.*
-import commonClient.utils.onlyAtSuccess
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -21,14 +16,14 @@ interface PostDetailScreenViewModelDelegate :
     UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val postState: LoadState<PostResponse> = LoadState.loading(),
-        val postComments: Flow<PagingData<CommentResponse>> = flowOf()
+        val postState: LoadState<Post> = LoadState.loading(),
+//        val postComments: Flow<PagingData<Comment>> = flowOf()
     )
 
     sealed interface Effect
 
     sealed interface Event {
-        class SetPost(val post: PostResponse) : Event
+        class SetPost(val post: Post) : Event
         class LoadPost(val postId: Long) : Event
         object Refresh : Event
     }
@@ -38,14 +33,14 @@ interface PostDetailScreenViewModelDelegate :
 @Singleton
 class PostDetailScreenViewModel @Inject constructor(
     private val getPostByIdUseCase: GetPostByIdUseCase,
-    private val getCommentForPostUseCase: GetPagedCommentForPostUseCase
+//    private val getCommentForPostUseCase: GetPagedCommentForPostUseCase
 ) : PlatformViewModel(), PostDetailScreenViewModelDelegate {
 
     private val effectChannel = Channel<Effect>(Channel.UNLIMITED)
 
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
-    private val postState = MutableStateFlow<LoadState<PostResponse>>(LoadState.loading())
+    private val postState = MutableStateFlow<LoadState<Post>>(LoadState.loading())
 
     /*
     * 본래는 post 의 id 만 있어도 불러올 수 있으나
@@ -55,19 +50,20 @@ class PostDetailScreenViewModel @Inject constructor(
     * 페이징 관련 정보를 ViewModel 에 캐싱하기 위해 ViewModel 에서 pagingData 를 꺼내고 cachedIn 을 사용하여
     * 현재 페이지, 현재 페이지 로드 상태등이 ViewModel Scope 내에서 저장되도록 함.
     *  */
-    private val postCommentPager = postState
-        .onlyAtSuccess()
-        .map {
-            getCommentForPostUseCase(it.data.id)
-                .pagingData
-                .cachedIn(platformViewModelScope)
-        }
+//    private val postCommentPager = postState
+//        .onlyAtSuccess()
+//        .map {
+//            getCommentForPostUseCase(it.data.id)
+//                .pagingData
+//                .cachedIn(platformViewModelScope)
+//        }
 
     override val state = combine(
         postState,
-        postCommentPager
-    ) { postState, commentPager ->
-        State(postState, commentPager)
+//        postCommentPager
+        flowOf(true)
+    ) { postState, _ ->
+        State(postState)
     }.asStateFlow(State(), platformViewModelScope)
 
     private fun loadPost(postId: Long) {

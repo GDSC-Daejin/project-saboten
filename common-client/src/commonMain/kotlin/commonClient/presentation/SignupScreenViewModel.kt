@@ -5,6 +5,7 @@ import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.LoadState
 import commonClient.di.Inject
 import commonClient.di.Singleton
+import commonClient.domain.entity.user.UserInfo
 import commonClient.domain.usecase.user.GetUserUseCase
 import commonClient.domain.usecase.user.UpdateUserInfoUseCase
 import commonClient.presentation.SignupScreenViewModelDelegate.*
@@ -15,8 +16,8 @@ import kotlinx.coroutines.flow.*
 interface SignupScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, Event> {
 
     data class State(
-        val userState: LoadState<UserInfoResponse> = LoadState.loading(),
-        val updateUserState: LoadState<UserInfoResponse> = LoadState.loading()
+        val userState: LoadState<UserInfo> = LoadState.loading(),
+        val updateUserState: LoadState<UserInfo> = LoadState.loading()
     )
 
     sealed interface Effect
@@ -37,8 +38,8 @@ class SignupScreenViewModel @Inject constructor(
 
     override val effect: Flow<Effect> = effectChannel.receiveAsFlow()
 
-    private val userState = MutableStateFlow<LoadState<UserInfoResponse>>(LoadState.loading())
-    private val updateUserState = MutableStateFlow<LoadState<UserInfoResponse>>(LoadState.loading())
+    private val userState = MutableStateFlow<LoadState<UserInfo>>(LoadState.loading())
+    private val updateUserState = MutableStateFlow<LoadState<UserInfo>>(LoadState.loading())
 
     override val state: StateFlow<State> = combine (
         userState, updateUserState
