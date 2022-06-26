@@ -19,20 +19,22 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
+import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.scaffolds.BasicScaffold
-import app.saboten.androidUi.styles.MainTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
@@ -47,8 +49,6 @@ private val categoryState = listOf("전체", "인기", "연애", "옷차림", "�
 private val selectedCategory = mutableStateOf(categoryState[0])
 private val dropdownMenu = mutableStateOf("추가 옵션")
 private val dropdowmMenuList = listOf("선택 안함", "여성만", "남성만")
-
-private val colorTransparent = Color.Transparent
 
 private val gradientColorList = listOf(
     Color(0xFFCF4B4B),
@@ -87,63 +87,80 @@ fun PostScreen(
     navigator: DestinationsNavigator
 ) {
 
+    PostContent(
+        onBackClicked = { navigator.popBackStack() },
+        onSaveClicked = { }
+    )
+//    BasicScaffold(
+//        topBar = {
+//            BasicTopBar(
+//                title = { Text(text = "새 선택지") },
+//                navigationIcon = {
+//                    ToolbarBackButton {
+//                        navigator.popBackStack()
+//                    }
+//                }
+//            )
+//        },
+//        backgroundColor = MaterialTheme.colors.onPrimary
+//    ) {
+//        PostContent()
+//    }
+}
+
+@Composable
+private fun PostContent(
+    onBackClicked: () -> Unit,
+    onSaveClicked: () -> Unit,
+) {
+
     BasicScaffold(
         topBar = {
             BasicTopBar(
                 title = { Text(text = "새 선택지") },
                 navigationIcon = {
                     ToolbarBackButton {
-                        navigator.popBackStack()
+                        onBackClicked()
                     }
                 }
             )
         },
         backgroundColor = MaterialTheme.colors.onPrimary
     ) {
-        PostContent()
-    }
-}
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier.fillMaxWidth()) {
 
-@Composable
-private fun PostContent() {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Column(modifier = Modifier.fillMaxWidth()) {
+                UserProfile()
 
-            UserProfile()
+                Spacer(modifier = Modifier.height(25.dp))
 
-            Spacer(modifier = Modifier.height(25.dp))
+                VoteContent()
 
-            PostVoteContent()
+                Spacer(modifier = Modifier.height(10.dp))
 
-            Spacer(modifier = Modifier.height(10.dp))
+                CategoryTab()
 
-            CategoryToggleButton()
+                Spacer(modifier = Modifier.height(25.dp))
 
-            Spacer(modifier = Modifier.height(25.dp))
+                DropdownMenu()
+            }
 
-            OptionalDropdownMenu()
-        }
-
-        Button(
-            onClick = { /* TODO(post next button onClick) */ },
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(horizontal = 18.dp)
-                .padding(bottom = 42.dp),
-            enabled = !(postTitle.value.isEmpty() || postOptionA.value.isEmpty() || postOptionB.value.isEmpty())
-        ) {
-            Text(text = "등록하기")
+            FilledButton(
+                onClick = { onSaveClicked() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.BottomCenter)
+                    .padding(horizontal = 18.dp)
+                    .padding(bottom = 42.dp),
+                enabled = !(postTitle.value.isEmpty() || postOptionA.value.isEmpty() || postOptionB.value.isEmpty()),
+                text = "등록하기"
+            )
         }
     }
 }
 
 @Composable
-private fun PostVoteContent(
-    modifier: Modifier = Modifier
-) {
-    val currentScreenWidth = LocalConfiguration.current.screenWidthDp.dp - 35.dp
-    val currentScreenWidthHalf = currentScreenWidth * 0.5f
+private fun VoteContent() {
 
     val backgroundColorOfA by remember { initialBackgroundColorOfA }
     val backgroundColorOfB by remember { initialBackgroundColorOfB }
@@ -156,320 +173,265 @@ private fun PostVoteContent(
     var selectionOfB by remember { mutableStateOf(false) }
 
     Box(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 15.dp)
     ) {
         Row(modifier = Modifier.padding(top = 50.dp)) {
-            Box(modifier = Modifier
-                .clip(
-                    shape = if (!selectionOfA) {
-                        RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-                    } else {
-                        RoundedCornerShape(20.dp)
-                    }
-                )
-                .clickable { if (selectionOfA) selectionOfA = false else selectionOfA = true }
-                .border(
-                    1.dp, if (backgroundColorOfA == colorList[0]) {
-                        MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
-                    } else {
-                        MaterialTheme.colors.onPrimary
-                    },
-                    shape =
-                    if (!selectionOfA) {
-                        RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-                    } else {
-                        RoundedCornerShape(20.dp)
-                    }
-                )
-                .background(
-                    if (backgroundColorOfA == colorList[colorList.lastIndex]) {
-                        Brush.linearGradient(
-                            colors = gradientColorList,
-                            start = Offset.Zero,
-                            end = Offset.Infinite
-                        )
-                    } else {
-                        Brush.linearGradient(
-                            colors = listOf(backgroundColorOfA, backgroundColorOfA),
-                            start = Offset.Zero,
-                            end = Offset.Infinite
-                        )
-                    }
-                )
-                .width(
-                    if (selectionOfA) currentScreenWidth + 5.dp else {
-                        if (selectionOfB) 0.dp else currentScreenWidthHalf
-                    }
-                )
-                .height(currentScreenWidthHalf)
-
-            ) {
-                TextField(
-                    value = optionOfA,
-                    onValueChange = { optionOfA = it },
-                    enabled = selectionOfA,
-                    placeholder = {
-                        Text(
-                            text =
-                            if (!selectionOfA) {
-                                "A 선택지 글쓰기"
-                            } else {
-                                "A 선택지의 제목을 입력해주세요."
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.body1
-                        )
-                    },
-                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-                    colors = TextFieldDefaults.textFieldColors(
-                        textColor = if (backgroundColorOfA == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        backgroundColor = colorTransparent,
-                        cursorColor = MaterialTheme.colors.onSurface,
-                        focusedIndicatorColor = colorTransparent,
-                        unfocusedIndicatorColor = colorTransparent,
-                        disabledIndicatorColor = colorTransparent,
-                        disabledPlaceholderColor = if (backgroundColorOfA == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        placeholderColor = if (backgroundColorOfA == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        disabledTextColor = if (backgroundColorOfA == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        }
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                if (!selectionOfA) {
-                    Button(
-                        onClick = { },
-                        enabled = false,
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .align(Alignment.BottomEnd)
-                            .size(28.dp),
-                        shape = RoundedCornerShape(
-                            topStart = 20.dp,
-                            topEnd = 13.dp,
-                            bottomStart = 20.dp
-                        ),
-                        colors = ButtonDefaults.buttonColors(
-                            disabledBackgroundColor = MaterialTheme.colors.onSurface.copy(
-                                alpha = 0.2f
-                            )
-                        ),
-                        border = BorderStroke(1.5.dp, MaterialTheme.colors.onPrimary),
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = "A",
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                    }
+            VoteSelectionButton(
+                type = "A",
+                mainSelection = selectionOfA,
+                subSelection = selectionOfB,
+                backgroundColor = backgroundColorOfA,
+                option = optionOfA,
+                shape = if (!selectionOfA) {
+                    RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
                 } else {
-                    Box(modifier = Modifier.align(Alignment.BottomEnd)) {
-                        BackgroundColorSelectionButton(writingType = "A")
-                    }
-                }
-            }
+                    RoundedCornerShape(20.dp)
+                },
+                onVoteClicked = { if (selectionOfA) selectionOfA = false else selectionOfA = true },
+                onValueChanged = { optionOfA = it }
+            )
 
             Spacer(modifier = Modifier.width(if (selectionOfA || selectionOfB) 0.dp else 5.dp))
 
-            Box(
-                modifier = Modifier
-                    .clip(
-                        if (!selectionOfB) {
-                            RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
-                        } else {
-                            RoundedCornerShape(20.dp)
-                        }
-                    )
-                    .background(
-                        if (backgroundColorOfB == colorList[colorList.lastIndex]) {
-                            Brush.linearGradient(
-                                colors = gradientColorList,
-                                start = Offset.Zero,
-                                end = Offset.Infinite
-                            )
-                        } else {
-                            Brush.linearGradient(
-                                colors = listOf(backgroundColorOfB, backgroundColorOfB),
-                                start = Offset.Zero,
-                                end = Offset.Infinite
-                            )
-                        }
-                    )
-                    .clickable { if (selectionOfB) selectionOfB = false else selectionOfB = true }
-                    .border(
-                        1.dp, if (backgroundColorOfB == colorList[0]) {
-                            MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
-                        } else {
-                            MaterialTheme.colors.onPrimary
-                        },
-                        shape =
-                        if (!selectionOfB) {
-                            RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
-                        } else {
-                            RoundedCornerShape(20.dp)
-                        }
-                    )
-                    .width(
-                        if (selectionOfB) currentScreenWidth + 5.dp else {
-                            if (selectionOfA) 0.dp else currentScreenWidthHalf
-                        }
-                    )
-                    .height(currentScreenWidthHalf)
-            ) {
-                TextField(
-                    value = optionOfB,
-                    onValueChange = { optionOfB = it },
-                    enabled = selectionOfB,
-                    placeholder = {
-                        Text(
-                            text =
-                            if (!selectionOfB) {
-                                "B 선택지 글쓰기"
-                            } else {
-                                "B 선택지의 제목을 입력해주세요."
-                            },
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.body1
-                        )
-                    },
-                    textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-                    colors = TextFieldDefaults.textFieldColors(
-                        textColor = if (backgroundColorOfB == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        backgroundColor = colorTransparent,
-                        cursorColor = MaterialTheme.colors.onSurface,
-                        focusedIndicatorColor = colorTransparent,
-                        unfocusedIndicatorColor = colorTransparent,
-                        disabledIndicatorColor = colorTransparent,
-                        disabledPlaceholderColor = if (backgroundColorOfB == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        placeholderColor = if (backgroundColorOfB == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        disabledTextColor = if (backgroundColorOfB == colorList[1]) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        }
-                    ),
-                    modifier = Modifier.align(Alignment.Center)
-                )
-
-                if (!selectionOfB) {
-                    Button(
-                        onClick = { },
-                        enabled = false,
-                        modifier = Modifier
-                            .padding(10.dp)
-                            .align(Alignment.BottomStart)
-                            .size(28.dp),
-                        shape = RoundedCornerShape(
-                            topStart = 13.dp,
-                            topEnd = 20.dp,
-                            bottomEnd = 20.dp
-                        ),
-                        colors = ButtonDefaults.buttonColors(
-                            disabledBackgroundColor = MaterialTheme.colors.onSurface.copy(
-                                alpha = 0.2f
-                            )
-                        ),
-                        border = BorderStroke(1.5.dp, MaterialTheme.colors.onPrimary),
-                        contentPadding = PaddingValues(0.dp)
-                    ) {
-                        Text(
-                            textAlign = TextAlign.Center,
-                            text = "B",
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colors.onPrimary
-                        )
-                    }
+            VoteSelectionButton(
+                type = "B",
+                mainSelection = selectionOfB,
+                subSelection = selectionOfA,
+                backgroundColor = backgroundColorOfB,
+                option = optionOfB,
+                shape = if (!selectionOfB) {
+                    RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
                 } else {
-                    Box(modifier = Modifier.align(Alignment.BottomEnd)) {
-                        BackgroundColorSelectionButton(writingType = "B")
-                    }
-                }
-            }
+                    RoundedCornerShape(20.dp)
+                },
+                onValueChanged = { optionOfB = it },
+                onVoteClicked = { if (selectionOfB) selectionOfB = false else selectionOfB = true }
+            )
         }
+        VoteTopic(
+            title = title,
+            onValueChanged = { title = it }
+        )
+    }
+}
 
-        val focusManager = LocalFocusManager.current
+@Composable
+private fun VoteTopic(
+    modifier: Modifier = Modifier,
+    title: String,
+    onValueChanged: (String) -> Unit
+) {
+    val focusManager = LocalFocusManager.current
 
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(70.dp),
-            shape = RoundedCornerShape(
-                topStart = 20.dp,
-                topEnd = 20.dp,
-                bottomEnd = 10.dp,
-                bottomStart = 10.dp
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(70.dp),
+        shape = RoundedCornerShape(
+            topStart = 20.dp,
+            topEnd = 20.dp,
+            bottomEnd = 10.dp,
+            bottomStart = 10.dp
+        ),
+        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.2f)),
+        elevation = 4.dp
+    ) {
+        TextField(
+            value = title,
+            onValueChange = { onValueChanged(it) },
+            placeholder = {
+                Text(
+                    text = "고민중인 이야기를 이곳에 적어보세요.",
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body1
+                )
+            },
+            textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+            colors = TextFieldDefaults.textFieldColors(
+                backgroundColor = Color.Transparent,
+                unfocusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
+                focusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
+                cursorColor = MaterialTheme.colors.onSurface,
             ),
-            border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.2f)),
-            elevation = 4.dp
-        ) {
-            TextField(
-                value = title,
-                onValueChange = { title = it },
-                placeholder = {
-                    Text(
-                        text = "고민중인 이야기를 이곳에 적어보세요.",
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                        style = MaterialTheme.typography.body1
+            singleLine = true,
+            maxLines = 1,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+        )
+    }
+}
+
+@Composable
+private fun VoteSelectionButton(
+    type: String,
+    mainSelection: Boolean,
+    subSelection: Boolean,
+    backgroundColor: Color,
+    option: String,
+    shape: Shape,
+    onValueChanged: (String) -> Unit = {},
+    onVoteClicked: () -> Unit = {},
+) {
+    val currentScreenWidth = LocalConfiguration.current.screenWidthDp.dp - 35.dp
+
+    Box(
+        modifier = Modifier
+            .clip(shape = shape)
+            .clickable { onVoteClicked() }
+            .border(
+                width = 1.dp,
+                color = if (backgroundColor == colorList[0]) {
+                    MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                } else {
+                    MaterialTheme.colors.onPrimary
+                },
+                shape = shape
+            )
+            .background(
+                Brush.linearGradient(
+                    colors = if (backgroundColor == colorList[colorList.lastIndex]) {
+                        gradientColorList
+                    } else {
+                        listOf(backgroundColor, backgroundColor)
+                    },
+                    start = Offset.Zero,
+                    end = Offset.Infinite
+                )
+            )
+            .width(
+                if (mainSelection) currentScreenWidth + 5.dp else {
+                    if (subSelection) 0.dp else currentScreenWidth * 0.5f
+                }
+            )
+            .height(currentScreenWidth * 0.5f)
+    ) {
+        VoteSelectionButtonTextField(
+            type = type,
+            mainSelection = mainSelection,
+            backgroundColor = backgroundColor,
+            option = option,
+            onValueChanged = onValueChanged,
+            modifier = Modifier.align(Alignment.Center)
+        )
+
+        if (!mainSelection) {
+            LabelOfVoteSelectionButton(
+                modifier = Modifier.align( if (type == "A") { Alignment.BottomEnd} else { Alignment.BottomStart }),
+                shape = if (type == "A") {
+                    RoundedCornerShape(
+                        topStart = 20.dp,
+                        topEnd = 13.dp,
+                        bottomStart = 20.dp
+                    )
+                } else {
+                    RoundedCornerShape(
+                        topStart = 13.dp,
+                        topEnd = 20.dp,
+                        bottomEnd = 20.dp
                     )
                 },
-                textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
-                colors = TextFieldDefaults.textFieldColors(
-                    backgroundColor = colorTransparent,
-                    unfocusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
-                    focusedIndicatorColor = MaterialTheme.colors.onSurface.copy(alpha = 0.2f),
-                    cursorColor = MaterialTheme.colors.onSurface,
-                ),
-                singleLine = true,
-                maxLines = 1,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+                labelOfSelectButton = type
             )
+        } else {
+            Box(modifier = Modifier.align(Alignment.BottomEnd)) {
+                BackgroundColorSelectionButton(type = type)
+            }
         }
     }
 }
 
 @Composable
-private fun CategoryToggleButton() {
+private fun VoteSelectionButtonTextField(
+    type: String,
+    mainSelection: Boolean,
+    backgroundColor: Color,
+    modifier: Modifier = Modifier,
+    option: String,
+    onValueChanged: (String) -> Unit
+) {
+    TextField(
+        modifier = modifier,
+        value = option,
+        onValueChange = { onValueChanged(it) },
+        enabled = mainSelection,
+        placeholder = {
+            Text(
+                text =
+                if (!mainSelection) {
+                    "$type 선택지 글쓰기"
+                } else {
+                    "$type 선택지의 제목을 입력해주세요."
+                },
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body1
+            )
+        },
+        textStyle = LocalTextStyle.current.copy(textAlign = TextAlign.Center),
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = if (backgroundColor == colorList[1]) {
+                MaterialTheme.colors.onPrimary
+            } else {
+                MaterialTheme.colors.onSurface
+            },
+            backgroundColor = Color.Transparent,
+            cursorColor = MaterialTheme.colors.onSurface,
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent,
+            disabledIndicatorColor = Color.Transparent,
+            disabledPlaceholderColor = if (backgroundColor == colorList[1]) {
+                MaterialTheme.colors.onPrimary
+            } else {
+                MaterialTheme.colors.onSurface
+            },
+            placeholderColor = if (backgroundColor == colorList[1]) {
+                MaterialTheme.colors.onPrimary
+            } else {
+                MaterialTheme.colors.onSurface
+            },
+            disabledTextColor = if (backgroundColor == colorList[1]) {
+                MaterialTheme.colors.onPrimary
+            } else {
+                MaterialTheme.colors.onSurface
+            }
+        )
+    )
+}
 
-    var selectedCategory by remember { selectedCategory }
-
-    val onSelectionChange = { category: String ->
-        selectedCategory = category
+@Composable
+private fun LabelOfVoteSelectionButton(
+    modifier: Modifier = Modifier,
+    shape: Shape,
+    labelOfSelectButton: String
+) {
+    Button(
+        onClick = { },
+        enabled = false,
+        modifier = modifier
+            .padding(10.dp)
+            .size(28.dp),
+        shape = shape,
+        border = BorderStroke(1.5.dp, MaterialTheme.colors.onPrimary),
+        colors = ButtonDefaults.buttonColors(
+            disabledBackgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.2f)
+        ),
+        contentPadding = PaddingValues(0.dp)
+    ) {
+        Text(
+            textAlign = TextAlign.Center,
+            text = labelOfSelectButton,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colors.onPrimary
+        )
     }
+}
+
+@Composable
+private fun CategoryTab() {
+    var selectedCategory by remember { selectedCategory }
 
     val scrollState = rememberScrollState()
 
@@ -483,45 +445,53 @@ private fun CategoryToggleButton() {
 
         Spacer(modifier = Modifier.height(10.dp))
 
-        Surface(modifier = Modifier.fillMaxWidth()) {
-            Row(
-                modifier = Modifier
-                    .horizontalScroll(scrollState)
-                    .padding(horizontal = 28.dp)
-            ) {
-                categoryState.forEach { category ->
-                    val isSelected: Boolean = selectedCategory == category
-                    Text(
-                        text = category,
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable { onSelectionChange(category) }
-                            .background(
-                                if (isSelected) {
-                                    MaterialTheme.colors.primary
-                                } else {
-                                    MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
-                                }
-                            )
-                            .padding(vertical = 4.dp, horizontal = 22.dp),
-                        color = if (isSelected) {
-                            MaterialTheme.colors.onPrimary
-                        } else {
-                            MaterialTheme.colors.onSurface
-                        },
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.width(10.dp))
-                }
+        Row(
+            modifier = Modifier
+                .horizontalScroll(scrollState)
+                .padding(horizontal = 28.dp)
+        ) {
+            categoryState.forEach { category ->
+                CategoryToggleButton(
+                    category = category,
+                    onSelectionChange = { selectedCategory = it },
+                    isSelected = selectedCategory == category
+                )
+                Spacer(modifier = Modifier.width(10.dp))
             }
         }
     }
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun OptionalDropdownMenu() {
+private fun CategoryToggleButton(
+    category: String,
+    onSelectionChange: (String) -> Unit,
+    isSelected: Boolean = true
+) {
+    Text(
+        text = category,
+        modifier = Modifier
+            .clip(RoundedCornerShape(10.dp))
+            .clickable { onSelectionChange(category) }
+            .background(
+                if (isSelected) {
+                    MaterialTheme.colors.primary
+                } else {
+                    MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                }
+            )
+            .padding(vertical = 4.dp, horizontal = 22.dp),
+        color = if (isSelected) {
+            MaterialTheme.colors.onPrimary
+        } else {
+            MaterialTheme.colors.onSurface
+        },
+        textAlign = TextAlign.Center
+    )
+}
 
+@Composable
+private fun DropdownMenu() {
     var isExpanded by remember { mutableStateOf(false) }
 
     var dropdownText by remember { dropdownMenu }
@@ -572,13 +542,12 @@ private fun OptionalDropdownMenu() {
 
 @Composable
 private fun BackgroundColorSelectionButton(
-    writingType: String
+    type: String
 ) {
-
     val colorListScrollState = rememberLazyListState()
 
     var selectedColorChip by remember {
-        if (writingType == "A") initialBackgroundColorOfA
+        if (type == "A") initialBackgroundColorOfA
         else initialBackgroundColorOfB
     }
 
@@ -601,7 +570,7 @@ private fun BackgroundColorSelectionButton(
             itemsIndexed(colorList) { index, color ->
                 if (index == colorList.lastIndex) {
                     Surface(
-                        color = colorTransparent,
+                        color = Color.Transparent,
                         shape = CircleShape,
                         modifier = Modifier
                             .padding(end = 10.dp)
@@ -619,7 +588,7 @@ private fun BackgroundColorSelectionButton(
                     ) { }
                 } else {
                     Surface(
-                        color = color as Color,
+                        color = color,
                         shape = CircleShape,
                         modifier = Modifier
                             .padding(end = 10.dp)
@@ -631,7 +600,6 @@ private fun BackgroundColorSelectionButton(
                 }
             }
         }
-
 
         Button(
             onClick = { },
@@ -648,7 +616,7 @@ private fun BackgroundColorSelectionButton(
             colors = ButtonDefaults.buttonColors(disabledBackgroundColor = MaterialTheme.colors.onPrimary),
             contentPadding = PaddingValues(0.dp)
         ) {
-            if (selectedColorChip == colorTransparent) {
+            if (selectedColorChip == Color.Transparent) {
                 Surface(
                     modifier = Modifier
                         .size(21.dp)
@@ -669,19 +637,9 @@ private fun BackgroundColorSelectionButton(
                     shape = CircleShape
                 ) { }
             }
-
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun PostVoteContentPreview() {
-    MainTheme {
-        PostVoteContent()
-    }
-}
-
 
 @Composable
 private fun UserProfile() {
@@ -727,13 +685,5 @@ private fun UserProfile() {
                 modifier = Modifier.padding(top = 5.dp)
             )
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PostContentPreview() {
-    MainTheme {
-        PostContent()
     }
 }
