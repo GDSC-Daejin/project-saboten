@@ -1,5 +1,6 @@
-package backend.model.post;
+package backend.model.comment;
 
+import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;

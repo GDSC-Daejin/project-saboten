@@ -2,7 +2,7 @@ package backend.common;
 
 import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
-import backend.model.post.CommentEntity;
+import backend.model.comment.CommentEntity;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
 import backend.model.post.PostLikeEntity;

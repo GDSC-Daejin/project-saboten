@@ -1,19 +1,12 @@
 package backend.common;
 
-import backend.model.post.PostEntity;
-import backend.model.user.UserEntity;
-import backend.repository.post.CommentRepository;
+import backend.repository.comment.CommentRepository;
 import backend.repository.post.PostRepository;
 import backend.repository.user.UserRepository;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional

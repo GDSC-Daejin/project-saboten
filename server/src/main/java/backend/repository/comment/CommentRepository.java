@@ -1,6 +1,6 @@
-package backend.repository.post;
+package backend.repository.comment;
 
-import backend.model.post.CommentEntity;
+import backend.model.comment.CommentEntity;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

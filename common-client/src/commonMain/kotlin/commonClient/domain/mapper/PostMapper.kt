@@ -2,7 +2,7 @@ package commonClient.domain.mapper
 
 import common.model.VoteColorsResponse
 import common.model.reseponse.category.CategoryResponse
-import common.model.reseponse.post.CommentResponse
+import common.model.reseponse.comment.CommentResponse
 import common.model.reseponse.post.PostResponse
 import common.model.reseponse.post.VoteResponse
 import commonClient.domain.entity.post.*
