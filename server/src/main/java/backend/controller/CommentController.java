@@ -16,11 +16,11 @@ import common.model.reseponse.comment.CommentResponse;
 import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Version1RestController
 @RequiredArgsConstructor
@@ -54,4 +54,29 @@ public class CommentController {
                 userResponse, voteSelectEntity, comment.getCommentRegistDate().toString());
         return ApiResponse.withMessage(commentResponse, CommentResponseMessage.COMMENT_CREATED);
     }
+
+    @ApiOperation(value = "포스트별 댓글조회 API", notes = "특정 포스트에 달린 댓글을 모두 조회하는 API입니다.")
+    @GetMapping("post/{postId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<Page<CommentResponse>> getAllCommentsByPost(@PathVariable Long postId, @PageableDefault Pageable pageable){
+        PostEntity postEntity = postService.findPost(postId);
+        Page<CommentEntity> commentEntities = commentService.getAllCommentsByPost(postEntity,pageable);
+        Page<CommentResponse> commentResponses = commentEntities.map(commentEntity ->
+                new CommentResponse(commentEntity.getCommentId(),commentEntity.getCommentText(),commentEntity.getUser().toDto(),
+                        voteSelectService.findVoteSelectResult(commentEntity.getUser(),postEntity),commentEntity.getCommentRegistDate().toString()));
+        return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_ALL);
+    }
+
+    @ApiOperation(value = "유저별 댓글조회 API", notes = "로그인 된 유저가 단 댓글들을 모두 조회하는 API입니다.")
+    @GetMapping("post/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<Page<CommentResponse>> getAllCommentsByUser(@PageableDefault Pageable pageable){
+        UserEntity userEntity = getUser();
+        Page<CommentEntity> commentEntities = commentService.getAllCommentsByUser(userEntity,pageable);
+        Page<CommentResponse> commentResponses = commentEntities.map(commentEntity ->
+                new CommentResponse(commentEntity.getCommentId(),commentEntity.getCommentText(),commentEntity.getUser().toDto(),
+                        voteSelectService.findVoteSelectResult(commentEntity.getUser(),commentEntity.getPost()),commentEntity.getCommentRegistDate().toString()));
+        return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_USER);
+    }
+
 }

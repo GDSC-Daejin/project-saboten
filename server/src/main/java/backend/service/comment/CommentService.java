@@ -5,6 +5,8 @@ import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.repository.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,5 +28,15 @@ public class CommentService {
                 .build();
         commentEntity = commentRepository.save(commentEntity);
         return commentEntity;
+    }
+
+    @Transactional
+    public Page<CommentEntity> getAllCommentsByPost(PostEntity postEntity, Pageable pageable) {
+        return commentRepository.findAllByPost(postEntity, pageable);
+    }
+
+    @Transactional
+    public Page<CommentEntity> getAllCommentsByUser(UserEntity userEntity, Pageable pageable) {
+        return commentRepository.findAllByUser(userEntity, pageable);
     }
 }
