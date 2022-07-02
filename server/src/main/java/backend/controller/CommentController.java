@@ -79,4 +79,13 @@ public class CommentController {
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_USER);
     }
 
+    @ApiOperation(value = "댓글 삭제 API", notes = "본인 댓글을 삭제 합니다.")
+    @DeleteMapping("post/{postId}/comment/{commentId}")
+    @ResponseStatus(HttpStatus.OK)
+    public ApiResponse<Page<CommentResponse>> deleteComment(@PathVariable Long postId, @PathVariable Long commentId){
+        UserEntity userEntity = getUser();
+        commentService.deleteComment(commentId, postId, userEntity);
+        return ApiResponse.withMessage(null,CommentResponseMessage.COMMENT_DELETED);
+    }
+
 }
