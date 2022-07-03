@@ -1,6 +1,8 @@
-package backend.model.post;
+package backend.model.comment;
 
+import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
+import common.model.reseponse.comment.CommentResponse;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -41,5 +43,9 @@ public class CommentEntity {
     @Builder.Default
     @Column(name = "comment_regist_date", nullable = false)
     private LocalDateTime commentRegistDate = LocalDateTime.now();
+
+    public CommentResponse toDto(){
+       return new CommentResponse(this.getCommentId(), this.getCommentText(), this.getUser().toDto(),null, this.getCommentRegistDate().toString());
+    }
 
 }

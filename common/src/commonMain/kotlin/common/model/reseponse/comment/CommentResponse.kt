@@ -1,4 +1,4 @@
-package common.model.reseponse.post
+package common.model.reseponse.comment
 
 import common.model.reseponse.user.UserResponse
 import kotlinx.serialization.SerialName
@@ -9,6 +9,6 @@ data class CommentResponse(
     @SerialName("id") val id: Long,
     @SerialName("text") val text: String,
     @SerialName("author") val author: UserResponse,
-    @SerialName("selected_vote") val selectedVote: Long?,
+    @SerialName("selected_vote") val selectedVote: Int?,
     @SerialName("created_at") val createdAt: String,
 )

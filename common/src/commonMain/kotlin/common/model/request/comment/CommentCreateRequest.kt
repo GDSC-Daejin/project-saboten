@@ -1,4 +1,4 @@
-package common.model.request.post
+package common.model.request.comment
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
