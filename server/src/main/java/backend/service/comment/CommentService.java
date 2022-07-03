@@ -5,13 +5,16 @@ import backend.model.comment.CommentEntity;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.repository.comment.CommentRepository;
+import backend.repository.post.PostRepository;
 import common.message.CommentResponseMessage;
+import common.message.PostResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -19,9 +22,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CommentService {
     private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
 
     @Transactional
     public CommentEntity create(UserEntity userEntity, PostEntity postEntity, String text) {
+        Optional<PostEntity> postCheck = postRepository.findById(postEntity.getPostId());
+
+        if(text.isEmpty()) throw new ApiException(CommentResponseMessage.COMMENT_IS_NULL);
+        else if(postCheck.isEmpty()) throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
+
         CommentEntity commentEntity = CommentEntity.builder()
                 .post(postEntity)
                 .user(userEntity)
@@ -29,8 +38,7 @@ public class CommentService {
                 .commentLikeCount(0L)
                 .commentRegistDate(LocalDateTime.now())
                 .build();
-        commentEntity = commentRepository.save(commentEntity);
-        return commentEntity;
+        return commentRepository.save(commentEntity);
     }
 
     @Transactional
