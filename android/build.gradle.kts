@@ -183,7 +183,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.ui)
+        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.compiler)
     }
 
     applicationVariants.all {

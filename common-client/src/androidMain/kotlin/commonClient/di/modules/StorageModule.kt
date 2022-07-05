@@ -35,13 +35,4 @@ class StorageModule {
     fun provideEncryptedSettings(@ApplicationContext context: Context): Settings =
         EncryptedSettingsHolder.newInstance(context).settings
 
-    @Provides
-    @Singleton
-    fun provideDbDriver(@ApplicationContext context: Context): SqlDriver =
-        AndroidSqliteDriver(SabotenDatabase.Schema, context, name = "saboten-database.db")
-
-    @Provides
-    @Singleton
-    fun provideDb(dbDriver: SqlDriver): SabotenDatabase = SabotenDatabase(dbDriver)
-
 }

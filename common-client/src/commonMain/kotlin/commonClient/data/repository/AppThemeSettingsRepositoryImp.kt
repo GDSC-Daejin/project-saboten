@@ -20,7 +20,7 @@ class AppThemeSettingsRepositoryImp @Inject constructor(
     private val appThemeFlow = MutableStateFlow<AppTheme?>(null)
 
     override fun getTheme() = appThemeFlow.mapNotNull {
-        val theme = it ?: when (settings.getString(KEY_APP_THEME)) {
+        val theme = it ?: when (settings.getStringOrNull(KEY_APP_THEME)) {
             AppTheme.LIGHT.value -> AppTheme.LIGHT
             AppTheme.DARK.value -> AppTheme.DARK
             AppTheme.SYSTEM.value -> AppTheme.SYSTEM

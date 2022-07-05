@@ -17,6 +17,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import javax.inject.Singleton
 
@@ -31,7 +32,7 @@ interface DataModule {
         fun provideHttpClient(
             properties: ClientProperties,
             authTokenManager: AuthTokenManager
-        ) = SabotenApiHttpClient(
+        ) : HttpClient  = SabotenApiHttpClient(
             CIO,
             authTokenManager,
             properties
