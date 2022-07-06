@@ -21,11 +21,7 @@ import org.koin.dsl.module
 fun dataModule() = module {
 
     single {
-        SabotenApiHttpClient(
-            get<HttpClientEngineFactory<*>>(),
-            get(),
-            get()
-        )
+        SabotenApiHttpClient(get<HttpClientEngineFactory<*>>())
     }
 
     single<UserApi> { UserApiImp(get()) }

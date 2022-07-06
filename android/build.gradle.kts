@@ -34,6 +34,9 @@ dependencies {
     implementation(project(":common-client"))
     implementation(project(":android-ui"))
 
+    implementation(AndroidX.lifecycle.viewModelKtx)
+    implementation(AndroidX.lifecycle.viewModelCompose)
+
     implementation(AndroidX.activity.ktx)
     implementation(Google.android.material)
     implementation(AndroidX.paging.compose)
@@ -72,9 +75,9 @@ dependencies {
     implementation(AndroidX.core.splashscreen)
     implementation(JakeWharton.timber)
 
-    kapt(AndroidX.paging.runtimeKtx)
-    kapt(AndroidX.navigation.runtimeKtx)
-    kapt(AndroidX.hilt.compiler)
+    implementation(AndroidX.paging.runtimeKtx)
+    implementation(AndroidX.navigation.runtimeKtx)
+
     kapt(Google.dagger.hilt.compiler)
     implementation(Google.dagger.hilt.android)
     implementation(AndroidX.hilt.navigationCompose)

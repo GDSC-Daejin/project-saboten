@@ -1,4 +1,3 @@
-import groovy.sql.Sql
 import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
@@ -80,9 +79,14 @@ kotlin {
                 api(MultiplatformSettings.datastore)
                 api(AndroidX.dataStore.preferences)
                 implementation(AndroidX.security.cryptoKtx)
-                kapt(AndroidX.hilt.compiler)
+
+                implementation(AndroidX.lifecycle.viewModelKtx)
+                implementation(AndroidX.lifecycle.viewModelCompose)
+
                 kapt(Google.dagger.hilt.compiler)
+                kapt(Google.dagger.compiler)
                 implementation(Google.dagger.hilt.android)
+
                 implementation(Square.SqlDelight.drivers.android)
                 implementation(Square.SqlDelight.extensions.androidPaging3)
                 implementation(project.dependencies.platform(Google.firebase.bom))

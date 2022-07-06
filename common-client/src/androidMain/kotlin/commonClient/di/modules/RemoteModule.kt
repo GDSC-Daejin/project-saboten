@@ -10,8 +10,6 @@ import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.domain.repository.AuthRepository
 import commonClient.domain.repository.CategoryRepository
 import commonClient.domain.repository.UserRepository
-import commonClient.utils.AuthTokenManager
-import commonClient.utils.ClientProperties
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -23,47 +21,34 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-interface DataModule {
+abstract class DataModule {
 
     companion object {
-
         @Provides
         @Singleton
-        fun provideHttpClient(
-            properties: ClientProperties,
-            authTokenManager: AuthTokenManager
-        ) : HttpClient  = SabotenApiHttpClient(
-            CIO,
-            authTokenManager,
-            properties
-        )
-
+        fun provideHttpClient(): HttpClient = SabotenApiHttpClient(CIO)
     }
 
     /* API */
-    @get:[Binds]
-    val UserApiImp.userApi: UserApi
-
-    @get:[Binds]
-    val PostApiImp.postApi: PostApi
-
-    @get:[Binds]
-    val AuthApiImp.authApi: AuthApi
-
-    @get:[Binds]
-    val CategoryApiImp.categoryApi: CategoryApi
+    @Binds
+    abstract fun provideUserApi(imp : UserApiImp): UserApi
+    @Binds
+    abstract fun providePostApi(imp : PostApiImp): PostApi
+    @Binds
+    abstract fun provideAuthApi(imp : AuthApiImp): AuthApi
+    @Binds
+    abstract fun provideCategoryApi(imp : CategoryApiImp): CategoryApi
 
     /* Repositories */
-    @get:[Binds]
-    val UserRepositoryImp.userRepository: UserRepository
+    @Binds
+    abstract fun provideUserRepository(imp : UserRepositoryImp): UserRepository
 
-    @get:[Binds]
-    val CategoryRepositoryImp.categoryRepository: CategoryRepository
+    @Binds
+    abstract fun provideCategoryRepository(imp : CategoryRepositoryImp): CategoryRepository
+    @Binds
+    abstract fun provideAppThemeSettingsRepository(imp : AppThemeSettingsRepositoryImp): AppThemeSettingsRepository
 
-    @get:[Binds]
-    val AppThemeSettingsRepositoryImp.appThemeSettingsRepository: AppThemeSettingsRepository
-
-    @get:[Binds]
-    val AuthRepositoryImp.authRepository: AuthRepository
+    @Binds
+    abstract fun provideAuthRepository(imp : AuthRepositoryImp): AuthRepository
 
 }
