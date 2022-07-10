@@ -1,7 +1,5 @@
 package commonClient.data.repository
 
-import common.model.reseponse.category.CategoryResponse
-import commonClient.data.LoadState
 import commonClient.data.remote.endpoints.CategoryApi
 import commonClient.di.Inject
 import commonClient.di.Singleton

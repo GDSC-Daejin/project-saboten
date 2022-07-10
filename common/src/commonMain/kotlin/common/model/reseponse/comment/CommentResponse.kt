@@ -9,6 +9,6 @@ data class CommentResponse(
     @SerialName("id") val id: Long,
     @SerialName("text") val text: String,
     @SerialName("author") val author: UserResponse,
-    @SerialName("selected_vote") val selectedVote: Int?,
+    @SerialName("selected_vote") val selectedVote: Long?,
     @SerialName("created_at") val createdAt: String,
 )
