@@ -57,8 +57,8 @@ class VoteResponseSelectRepositoryTest {
     @DisplayName("조회")
     class Read {
         // 일단은 VoteSelect 1, 2 로 가정을 합니다!
-        private boolean is1Or2(int voteSelect) {
-            if(voteSelect == 1 || voteSelect == 2)
+        private boolean is1Or2(Long voteSelect) {
+            if(voteSelect == 1L || voteSelect == 2L)
                 return true;
 
             return false;

@@ -80,7 +80,7 @@ public class EntityFactory {
         return VoteSelectEntity.builder()
                 .user(basicUserEntity())
                 .post(basicPostEntity())
-                .voteResult(1)  // 1번 Topic 2번 Topic 이라고 가정!
+                .voteResult(1L)  // 1번 Topic 2번 Topic 이라고 가정!
                 .build();
     }
 

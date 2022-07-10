@@ -14,9 +14,9 @@ public class VoteSelectService {
     private final VoteSelectRepository voteSelectRepository;
 
     @Transactional
-    public Integer findVoteSelectResult(UserEntity userEntity, PostEntity postEntity) {
+    public Long findVoteSelectResult(UserEntity userEntity, PostEntity postEntity) {
         VoteSelectEntity voteSelectEntity = voteSelectRepository.findByUserAndPost(userEntity, postEntity);
-        Integer voteResult = null;
+        Long voteResult = null;
         if(voteSelectEntity != null)
             voteResult = voteSelectEntity.getVoteResult();
 

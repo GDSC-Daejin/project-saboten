@@ -47,7 +47,7 @@ public class CommentController {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.findPost(postId);
         UserResponse userResponse = new UserResponse(userEntity.getUserId(), userEntity.getNickname(), userEntity.getUserImage());
-        Integer voteSelectEntity = voteSelectService.findVoteSelectResult(userEntity,postEntity);
+        Long voteSelectEntity = voteSelectService.findVoteSelectResult(userEntity,postEntity);
         String text = commentCreateRequest.getText();
         CommentEntity comment = commentService.create(userEntity, postEntity,text);
         CommentResponse commentResponse = new CommentResponse(comment.getCommentId(), comment.getCommentText(),
