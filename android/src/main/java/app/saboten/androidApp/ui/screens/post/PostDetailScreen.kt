@@ -29,10 +29,13 @@ import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.styles.MainTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.domain.entity.post.Post
+import commonClient.domain.entity.user.User
 
 @Composable
 @Destination
 fun PostDetailScreen(
+    post: Post,
     navigator: DestinationsNavigator
 ) {
     BasicScaffold(
@@ -49,7 +52,7 @@ fun PostDetailScreen(
             )
         }
     ) {
-        PostDetailContent()
+        PostDetailContent(post)
     }
 }
 
@@ -57,12 +60,15 @@ fun PostDetailScreen(
 @Composable
 fun PostDetailScreenPreview() {
     MainTheme {
-        PostDetailContent()
+//        PostDetailContent(
+//            Post()
+//        )
     }
 }
 
 @Composable
 private fun PostDetailContent(
+    post: Post,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -70,7 +76,7 @@ private fun PostDetailContent(
     ) {
         Column {
 
-            PostDetailProfile()
+            PostDetailProfile(post.author)
 
             Spacer(modifier = Modifier.height(25.dp))
 
@@ -123,7 +129,7 @@ private fun PostDetailDivider() {
 
 
 @Composable
-private fun PostDetailProfile() {
+private fun PostDetailProfile(author: User) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -149,17 +155,11 @@ private fun PostDetailProfile() {
                 .align(Alignment.CenterVertically)
                 .weight(1f)
         ) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(
-                    text = "안 드루이드",
-                    style = MaterialTheme.typography.caption
-                )
-                Text(
-                    text = "(Android)",
-                    fontSize = 7.sp,
-                    modifier = Modifier.padding(start = 5.dp)
-                )
-            }
+
+            Text(
+                text = author.nickname,
+                style = MaterialTheme.typography.caption
+            )
 
             Text(
                 text = "24분전",

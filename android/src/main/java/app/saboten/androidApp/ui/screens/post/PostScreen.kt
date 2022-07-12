@@ -37,6 +37,7 @@ import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.domain.entity.post.Post
 
 private val initialBackgroundColorOfA = mutableStateOf(Color(0xFFC2C2C2))
 private val initialBackgroundColorOfB = mutableStateOf(Color(0xFFC2C2C2))
@@ -84,6 +85,7 @@ private val colorList = listOf(
 @Composable
 @Destination
 fun PostScreen(
+    post : Post? = null,
     navigator: DestinationsNavigator
 ) {
 
@@ -110,6 +112,7 @@ fun PostScreen(
 
 @Composable
 private fun PostContent(
+    post: Post?,
     onBackClicked: () -> Unit,
     onSaveClicked: () -> Unit,
 ) {
