@@ -45,10 +45,18 @@ jobs:
       - name: Move to DockerFile Directory
         run: cd server
 
-      - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-          usedocker: true
+      - name: Docker build
+        run: docker login --username=_ --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+  # Push the Docker image to Heroku Container Registry
+      - name: Publish
+        run: |
+          heroku container:push web -a ${{ secrets.HEROKU_APP_NAME }}
+          heroku container:release web -a ${{ secrets.HEROKU_APP_NAME }}
+
+#      - name: Deploy to Heroku
+#        uses: akhileshns/heroku-deploy@v3.12.12
+#        with:
+#          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+#          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+#          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
+#          usedocker: true
