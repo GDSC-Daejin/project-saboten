@@ -44,14 +44,14 @@ jobs:
 
       - name: Move to DockerFile Directory
         run: cd server
-
-      - name: Docker Build and Push
-        run: |
-          docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
-          docker build --tag registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web server
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-      
-      - name: "Deploy the web dyno"
+#
+#      - name: Docker Build and Push
+#        run: |
+#          docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+#          docker build --tag registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web server
+#          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+#
+      - name: "Deploy"
         uses: "akhileshns/heroku-deploy@v3.12.12"
         with:
           docker_heroku_process_type: web
@@ -61,14 +61,14 @@ jobs:
           dockerfile_directory: server
           justlogin: true
 
-        - name: "Login to heroku registry"
-          run: heroku container:login
+      - name: "Login to heroku registry"
+        run: heroku container:login
 
-        - name: "Build and push to heroku registry"
-          run: heroku container:push web --app email-service-web
+      - name: "Build and push to heroku registry"
+        run: heroku container:push web --app $heroku_app_name
 
-        - name: "Releases the container"
-          run: heroku container:release web --app email-service-web
+      - name: "Releases the container"
+        run: heroku container:release web --app $heroku_app_name
 
 
 #      # Push the Docker image to Heroku Container Registry
