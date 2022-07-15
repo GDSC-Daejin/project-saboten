@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Version1RestController
 @RequiredArgsConstructor
-public class CommentController {
+public class  CommentController {
 
     private final UserService userService;
     private final PostService postService;

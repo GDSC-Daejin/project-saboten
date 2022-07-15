@@ -4,13 +4,6 @@ on:
   push:
     branches: [ release-server/* ]
 
-env:
-  OCI_CLI_USER: ${{ secrets.OCI_USER_OCID }}
-  OCI_CLI_TENANCY: ${{ secrets.OCI_TENANCY }}
-  OCI_CLI_FINGERPRINT: ${{ secrets.OCI_FINGERPRINT }}
-  OCI_CLI_KEY_CONTENT: ${{ secrets.OCI_PRIVKEY_FILE }}
-  OCI_CLI_REGION: ${{ secrets.OCI_REGION }}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -49,22 +42,9 @@ jobs:
         run: |
           ./gradlew clean :server:build -Pprofile=dev      
 
-      # Build the Docker image
-      - name: Build
-        run: |-
-          docker build --tag saboten/api
-      # Push the Docker image to Google Container Registry
-      - name: Publish
-        run: |-
-          docker push saboten/api
-
-      - name: executing remote ssh commands
-        uses: appleboy/ssh-action@master
+      - name: Deploy to Heroku
+        uses: AkhilesNS/heroku-deploy@v3.12.12
         with:
-          host: ${{ secrets.OCI_REMOTE_IP }}
-          username: ${{ secrets.OCI_REMOTE_SSH_ID }}
-          key: ${{ secrets.OCI_REMOTE_SSH_KEY }}
-          port: ${{ secrets.OCI_REMOTE_SSH_PORT }}
-          script: |
-            docker pull saboten/api
-            docker run --name saboten-api -p 8080:8080 saboten/api
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
