@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.extensions.extract
 import app.saboten.androidApp.ui.destinations.PostDetailScreenDestination
@@ -20,7 +22,6 @@ import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.utils.shimmer
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -113,39 +114,41 @@ private fun HomeCategoryTab(
         }
         is LoadState.Success -> {
             ScrollableTabRow(
+                backgroundColor = Color.Transparent,
                 edgePadding = 20.dp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 selectedTabIndex = pagerState.currentPage,
-                indicator = { tabPositions ->
-                    Box(
-                        Modifier
-                            .pagerTabIndicatorOffset(pagerState, tabPositions)
-                            .fillMaxWidth()
-                            .height(4.dp)
-                            .background(
-                                MaterialTheme.colors.secondary,
-                                shape = RoundedCornerShape(2.dp)
-                            ),
-                    )
-                },
+                indicator = {},
                 divider = {}
             ) {
                 categoriesState.data.forEachIndexed { index, category ->
+                    val selected = pagerState.currentPage == index
                     Tab(
-                        pagerState.currentPage == index,
+                        selected,
                         modifier = Modifier
-                            .height(48.dp)
-                            .padding(start = 16.dp, end = 16.dp),
+                            .height(36.dp)
+                            .width(100.dp)
+                            .padding(end = 10.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                            .background( if (selected) {
+                                MaterialTheme.colors.primary
+                            } else {
+                                MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                            }),
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(index)
                             }
                         },
-                        selectedContentColor = MaterialTheme.colors.onSurface
+                        selectedContentColor = MaterialTheme.colors.onPrimary,
+                        unselectedContentColor = MaterialTheme.colors.onSurface
                     ) {
-                        Text(category.name)
+                        Text(
+                            text = category.name,
+                            style = MaterialTheme.typography.caption
+                        )
                     }
                 }
             }
