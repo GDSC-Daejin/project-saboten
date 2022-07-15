@@ -52,9 +52,13 @@ jobs:
 
   # Push the Docker image to Heroku Container Registry
       - name: Publish
+        env:
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          heroku container:push api -a ${{ secrets.HEROKU_APP_NAME }}
-          heroku container:release api -a ${{ secrets.HEROKU_APP_NAME }}
+          heroku container:push api -a $HEROKU_APP_NAME
+          heroku container:release api -a $HEROKU_APP_NAME
 
 #      - name: Deploy to Heroku
 #        uses: akhileshns/heroku-deploy@v3.12.12
