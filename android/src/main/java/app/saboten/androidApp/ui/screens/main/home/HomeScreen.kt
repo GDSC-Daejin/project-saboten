@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.extensions.extract
+import app.saboten.androidApp.ui.destinations.PostDetailScreenDestination
 import app.saboten.androidApp.ui.list.PostSelectItem
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
@@ -35,13 +36,15 @@ fun HomeScreen(
 ) {
     HomeScreenContent(
 //        hiltViewModel<HomeScreenViewModel>()
-        fakeHomeScreenViewModel()
+        fakeHomeScreenViewModel(),
+        navigator = navigator
     )
 }
 
 @Composable
 fun HomeScreenContent(
-    vm: HomeScreenViewModelDelegate
+    vm: HomeScreenViewModelDelegate,
+    navigator: DestinationsNavigator
 ) {
 
     val (state, effect, event) = vm.extract()
@@ -67,7 +70,8 @@ fun HomeScreenContent(
         HomeFeedPage(
             modifier = Modifier.padding(it),
             pagerState = pagerState,
-            categoriesState = state.categoriesState
+            categoriesState = state.categoriesState,
+            navigator = navigator
         )
 
     }
@@ -153,7 +157,8 @@ private fun HomeCategoryTab(
 private fun HomeFeedPage(
     modifier: Modifier,
     pagerState: PagerState,
-    categoriesState: LoadState<List<Category>>
+    categoriesState: LoadState<List<Category>>,
+    navigator: DestinationsNavigator
 ) {
     when (categoriesState) {
         is LoadState.Failed -> {
@@ -172,7 +177,10 @@ private fun HomeFeedPage(
                 LazyColumn {
 
                     items(10) {
-                        PostSelectItem(text = "무인도에 떨어졌는데 둘 중 하나만 먹을 수 있다면?")
+                        PostSelectItem(
+                            text = "무인도에 떨어졌는데 둘 중 하나만 먹을 수 있다면?",
+                            onClicked = { navigator.navigate(PostDetailScreenDestination) }
+                        )
                     }
 
                     item {

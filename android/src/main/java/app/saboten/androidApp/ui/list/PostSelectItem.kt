@@ -28,12 +28,14 @@ import app.saboten.androidUi.styles.MainTheme
 @Composable
 fun PostSelectItem(
     modifier: Modifier = Modifier,
-    text: String
+    text: String,
+    onClicked: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = 4.dp,
         modifier = modifier.padding(20.dp)
+            .clickable { onClicked() }
     ) {
         Box(
             modifier = Modifier
@@ -241,13 +243,5 @@ private fun PostSelectItemCategory(
             modifier = Modifier.padding(start = 20.dp, top = 5.dp, end = 20.dp, bottom = 5.dp),
             style = MaterialTheme.typography.caption
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PostSelectItemPreview() {
-    MainTheme {
-        PostSelectItem(text = "무인도에 떨어졌는데 둘 중 하나만 먹을 수 있다면?")
     }
 }
