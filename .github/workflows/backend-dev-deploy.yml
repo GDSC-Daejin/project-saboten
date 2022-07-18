@@ -54,26 +54,6 @@ jobs:
         run: |
           docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
 
-#      - name: "Deploy"
-#        uses: "akhileshns/heroku-deploy@v3.12.12"
-#        with:
-#          docker_heroku_process_type: web
-#          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-#          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-#          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-#          dockerfile_directory: server
-#          justlogin: true
-#
-#      - name: "Login to heroku registry"
-#        run: heroku container:login
-#
-#      - name: "Build and push to heroku registry"
-#        run: heroku container:push web --app $heroku_app_name
-#
-#      - name: "Releases the container"
-#        run: heroku container:release web --app $heroku_app_name
-
-
       # Push the Docker image to Heroku Container Registry
       - name: Publish
         env:
@@ -85,11 +65,3 @@ jobs:
           cd $DOCKERFILE_DIRECTORY
           heroku container:push web -a $HEROKU_APP_NAME
           heroku container:release web -a $HEROKU_APP_NAME
-
-#      - name: Deploy to Heroku
-#        uses: akhileshns/heroku-deploy@v3.12.12
-#        with:
-#          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-#          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-#          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
-#          usedocker: true
