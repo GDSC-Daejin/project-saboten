@@ -2,7 +2,7 @@ name: Backend Dev Deploy to GCE
 
 on:
   push:
-    branches: [ release-server/* ]
+    branches: [ testtesttest/* ]
 
 env:
   PROJECT_ID: ${{ secrets.GCE_PROJECT_ID }}
