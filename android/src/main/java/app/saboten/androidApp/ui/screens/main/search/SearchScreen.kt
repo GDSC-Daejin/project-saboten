@@ -18,6 +18,10 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.list.CategoryItem
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidApp.ui.list.KeywordItem
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.MainAxisAlignment
+import com.google.accompanist.flowlayout.SizeMode
 import com.ramcosta.composedestinations.annotation.Destination
 import common.model.reseponse.category.CategoryResponse
 
@@ -29,9 +33,9 @@ fun SearchScreen(
     SearchScreenContent()
 }
 
-val keywordList = listOf("공부", "ENFP", "무인도", "도시락")
+private val keywordList = listOf("공부", "ENFP", "무인도", "옷", "도서", "음식", "옷", "데이트코스", "공부", "ENFP", "무인도", "옷", "도서", "음식", "옷", "데이트코스")
 
-val categoryMock: List<CategoryResponse> = listOf(
+private val categoryMock: List<CategoryResponse> = listOf(
     CategoryResponse(id = 0L, "고민", "https://user-images.githubusercontent.com/52291662/179352847-8762c8c3-5f95-45fa-9fcd-8a314a39ad10.png"),
     CategoryResponse(id = 1L, "연애", "https://user-images.githubusercontent.com/52291662/179352865-d818a5b2-a757-4deb-9973-02b5a6b34a46.png"),
     CategoryResponse(id = 2L, "패션", "https://user-images.githubusercontent.com/52291662/179352877-e242d211-d7e5-403b-b868-04820314f142.png"),
@@ -160,7 +164,13 @@ private fun KeywordTab(
 
             Spacer(modifier = Modifier.height(15.dp))
 
-            Row(modifier = Modifier.fillMaxWidth()) {
+            FlowRow(
+                modifier = Modifier.padding(end = 5.dp),
+                mainAxisAlignment = MainAxisAlignment.Start,
+                mainAxisSize = SizeMode.Expand,
+                crossAxisSpacing = 8.dp,
+                lastLineMainAxisAlignment = FlowMainAxisAlignment.Start
+            ) {
                 keywords.forEachIndexed { index, keyword ->
                     KeywordItem(onClick = { onClick(keyword) }, keyword = keyword)
 

@@ -27,7 +27,8 @@ fun KeywordItem(
             Text(
                 text = keyword,
                 modifier = Modifier.padding(horizontal = 15.dp, vertical = 5.dp),
-                color = MaterialTheme.colors.primary
+                color = MaterialTheme.colors.primary,
+                maxLines = 1
             )
         }
     }
