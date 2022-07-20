@@ -24,9 +24,7 @@ interface UserApi : Api {
 }
 
 @Singleton
-class UserApiImp @Inject constructor(
-    override val httpClient: HttpClient
-) : UserApi {
+class UserApiImp @Inject constructor() : UserApi {
 
     override suspend fun getMe() = responseGet<UserInfoResponse>("me")
 

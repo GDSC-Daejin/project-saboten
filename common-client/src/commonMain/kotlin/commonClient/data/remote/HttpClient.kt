@@ -20,15 +20,14 @@ import kotlinx.serialization.json.Json
 // TODO Change URL
 private const val URL = "localhost:8080"
 
+expect fun getHttpClient(): HttpClient
+
 @Suppress("FunctionName")
-fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
+internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     engineFactory: HttpClientEngineFactory<T>,
-    authTokenManager : AuthTokenManager,
-    properties: ClientProperties,
     block: HttpClientConfig<T>.() -> Unit = {}
 ) = HttpClient(engineFactory) {
 
-    developmentMode = properties.isDebug
     expectSuccess = false
 
     install(HttpTimeout) {
@@ -56,18 +55,20 @@ fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     install(Auth) {
         bearer {
             loadTokens {
-                val accessToken = authTokenManager.getAccessToken()
-                val refreshToken = authTokenManager.getRefreshToken()
+                val token = AuthTokenManager.tokenStorage.lastOrNull()
+                val accessToken = token?.accessToken
+                val refreshToken = token?.refreshToken
                 if (accessToken != null && refreshToken != null) BearerTokens(accessToken, refreshToken)
                 else null
             }
             refreshTokens {
-                val accessToken = authTokenManager.getAccessToken()
-                val refreshToken = authTokenManager.getRefreshToken()
+                val token = AuthTokenManager.tokenStorage.lastOrNull()
+                val accessToken = token?.accessToken
+                val refreshToken = token?.refreshToken
                 val response = client.post("https://$URL/refresh") {
                     setBody(TokenReissueRequest(accessToken!!, refreshToken!!))
                 }.body<JwtTokenResponse>()
-                authTokenManager.setToken(response)
+                AuthTokenManager.addToken(response)
                 BearerTokens(
                     accessToken = response.accessToken,
                     refreshToken = response.refreshToken

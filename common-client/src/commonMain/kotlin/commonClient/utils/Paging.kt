@@ -3,13 +3,11 @@ package commonClient.utils
 import com.kuuurt.paging.multiplatform.Pager
 import com.kuuurt.paging.multiplatform.PagingConfig
 import com.kuuurt.paging.multiplatform.PagingResult
-import com.kuuurt.paging.multiplatform.helpers.dispatcher
-import common.model.reseponse.PagingData
+import common.model.reseponse.PagingResponse
 import commonClient.presentation.PlatformViewModel
-import kotlinx.coroutines.CoroutineScope
 
-fun <T, R> PagingData<T>.map(mapper: (T) -> R): PagingData<R> {
-    return PagingData(
+fun <T, R> PagingResponse<T>.map(mapper: (T) -> R): PagingResponse<R> {
+    return PagingResponse(
         data.map(mapper),
         nextKey, count
     )

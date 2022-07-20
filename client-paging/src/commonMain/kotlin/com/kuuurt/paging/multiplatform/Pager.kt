@@ -12,8 +12,6 @@ import kotlinx.coroutines.flow.Flow
  * @since 06/11/2020
  */
 
-@FlowPreview
-@ExperimentalCoroutinesApi
 expect class Pager<K: Any, V: Any>(
     clientScope: CoroutineScope,
     config: PagingConfig,

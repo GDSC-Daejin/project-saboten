@@ -3,7 +3,7 @@ package commonClient.data.remote.endpoints
 import common.model.request.post.create.PostCreateRequest
 import common.model.request.post.update.PostUpdateRequest
 import common.model.reseponse.ApiResponse
-import common.model.reseponse.PagingData
+import common.model.reseponse.PagingResponse
 import common.model.reseponse.post.PostResponse
 import commonClient.data.remote.*
 import commonClient.di.Inject
@@ -23,12 +23,12 @@ interface PostApi : Api {
 
     suspend fun getPost(postId: Int): ApiResponse<PostResponse>
 
-    suspend fun getPagedPosts(categoryId: Long?): ApiResponse<PagingData<PostResponse>>
+    suspend fun getPagedPosts(categoryId: Long?): ApiResponse<PagingResponse<PostResponse>>
 
 }
 
 @Singleton
-class PostApiImp @Inject constructor(override val httpClient: HttpClient) : PostApi {
+class PostApiImp @Inject constructor() : PostApi {
 
     override suspend fun createPost(request: PostCreateRequest) =
         responsePost<PostResponse> { setBody(request) }
@@ -42,7 +42,7 @@ class PostApiImp @Inject constructor(override val httpClient: HttpClient) : Post
     override suspend fun getPost(postId: Int) =
         responseGet<PostResponse>(postId)
 
-    override suspend fun getPagedPosts(categoryId: Long?) = responseGet<PagingData<PostResponse>> {
+    override suspend fun getPagedPosts(categoryId: Long?) = responseGet<PagingResponse<PostResponse>> {
         parameter("category_id", categoryId)
     }
 

@@ -24,21 +24,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface DataModule {
 
-    companion object {
-
-        @Provides
-        @Singleton
-        fun provideHttpClient(
-            properties: ClientProperties,
-            authTokenManager: AuthTokenManager
-        ) = SabotenApiHttpClient(
-            CIO,
-            authTokenManager,
-            properties
-        )
-
-    }
-
     /* API */
     @get:[Binds]
     val UserApiImp.userApi: UserApi

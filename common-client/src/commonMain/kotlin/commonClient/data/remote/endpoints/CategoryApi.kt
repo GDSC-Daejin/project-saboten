@@ -19,7 +19,7 @@ interface CategoryApi : Api {
 }
 
 @Singleton
-class CategoryApiImp @Inject constructor(override val httpClient: HttpClient) : CategoryApi {
+class CategoryApiImp @Inject constructor() : CategoryApi {
 
     override suspend fun getCategories() = responseGet<List<CategoryResponse>>()
 
