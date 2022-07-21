@@ -58,7 +58,7 @@ class PostController {
         PostEntity postEntity = postService.findPost(id);
         List<VoteResponse> votes = voteService.findVotes(postEntity);
         List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
-        Integer voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
+        Long voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
         boolean isLike = postLikeService.findPostIsLike(userEntity, postEntity);
 
         PostResponse post = new PostResponse(postEntity.getPostId(),

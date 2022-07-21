@@ -70,7 +70,7 @@ public class UserEntity extends BaseTimeEntity {
         if(this.gender == 1) gender = GenderResponse.M;
         else if(this.gender == 2) gender = GenderResponse.F;
 
-        return new UserInfoResponse(this.userId, this.nickname, this.email ,this.email, this.myPageIntroduction,
+        return new UserInfoResponse(this.userId, this.nickname, userImage ,this.email, this.myPageIntroduction,
                 this.age, gender);
     }
 }

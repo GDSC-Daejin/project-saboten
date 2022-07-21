@@ -11,15 +11,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.extensions.extract
+import app.saboten.androidApp.ui.destinations.PostDetailScreenDestination
 import app.saboten.androidApp.ui.list.PostSelectItem
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.utils.shimmer
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
-import com.google.accompanist.pager.pagerTabIndicatorOffset
 import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -35,13 +37,15 @@ fun HomeScreen(
 ) {
     HomeScreenContent(
 //        hiltViewModel<HomeScreenViewModel>()
-        fakeHomeScreenViewModel()
+        fakeHomeScreenViewModel(),
+        navigator = navigator
     )
 }
 
 @Composable
 fun HomeScreenContent(
-    vm: HomeScreenViewModelDelegate
+    vm: HomeScreenViewModelDelegate,
+    navigator: DestinationsNavigator
 ) {
 
     val (state, effect, event) = vm.extract()
@@ -67,7 +71,8 @@ fun HomeScreenContent(
         HomeFeedPage(
             modifier = Modifier.padding(it),
             pagerState = pagerState,
-            categoriesState = state.categoriesState
+            categoriesState = state.categoriesState,
+            navigator = navigator
         )
 
     }
@@ -109,39 +114,41 @@ private fun HomeCategoryTab(
         }
         is LoadState.Success -> {
             ScrollableTabRow(
+                backgroundColor = Color.Transparent,
                 edgePadding = 20.dp,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
                 selectedTabIndex = pagerState.currentPage,
-                indicator = { tabPositions ->
-                    Box(
-                        Modifier
-                            .pagerTabIndicatorOffset(pagerState, tabPositions)
-                            .fillMaxWidth()
-                            .height(4.dp)
-                            .background(
-                                MaterialTheme.colors.secondary,
-                                shape = RoundedCornerShape(2.dp)
-                            ),
-                    )
-                },
+                indicator = {},
                 divider = {}
             ) {
                 categoriesState.data.forEachIndexed { index, category ->
+                    val selected = pagerState.currentPage == index
                     Tab(
-                        pagerState.currentPage == index,
+                        selected,
                         modifier = Modifier
-                            .height(48.dp)
-                            .padding(start = 16.dp, end = 16.dp),
+                            .height(36.dp)
+                            .width(100.dp)
+                            .padding(end = 10.dp)
+                            .clip(RoundedCornerShape(100.dp))
+                            .background( if (selected) {
+                                MaterialTheme.colors.primary
+                            } else {
+                                MaterialTheme.colors.onSurface.copy(alpha = 0.1f)
+                            }),
                         onClick = {
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(index)
                             }
                         },
-                        selectedContentColor = MaterialTheme.colors.onSurface
+                        selectedContentColor = MaterialTheme.colors.onPrimary,
+                        unselectedContentColor = MaterialTheme.colors.onSurface
                     ) {
-                        Text(category.name)
+                        Text(
+                            text = category.name,
+                            style = MaterialTheme.typography.caption
+                        )
                     }
                 }
             }
@@ -153,7 +160,8 @@ private fun HomeCategoryTab(
 private fun HomeFeedPage(
     modifier: Modifier,
     pagerState: PagerState,
-    categoriesState: LoadState<List<Category>>
+    categoriesState: LoadState<List<Category>>,
+    navigator: DestinationsNavigator
 ) {
     when (categoriesState) {
         is LoadState.Failed -> {
@@ -172,7 +180,10 @@ private fun HomeFeedPage(
                 LazyColumn {
 
                     items(10) {
-                        PostSelectItem(text = "무인도에 떨어졌는데 둘 중 하나만 먹을 수 있다면?")
+                        PostSelectItem(
+                            text = "무인도에 떨어졌는데 둘 중 하나만 먹을 수 있다면?",
+                            onClicked = { navigator.navigate(PostDetailScreenDestination) }
+                        )
                     }
 
                     item {

@@ -30,11 +30,13 @@ import commonClient.domain.entity.post.Post
 fun PostSelectItem(
     modifier: Modifier = Modifier,
     post: Post,
+    onClicked: () -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
         elevation = 4.dp,
         modifier = modifier.padding(20.dp)
+            .clickable { onClicked() }
     ) {
         Box(
             modifier = Modifier
@@ -242,13 +244,5 @@ private fun PostSelectItemCategory(
             modifier = Modifier.padding(start = 20.dp, top = 5.dp, end = 20.dp, bottom = 5.dp),
             style = MaterialTheme.typography.caption
         )
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PostSelectItemPreview() {
-    MainTheme {
-
     }
 }

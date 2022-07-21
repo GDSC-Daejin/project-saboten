@@ -29,5 +29,5 @@ public class VoteSelectEntity {
     public UserEntity user;
 
     @Column(name = "vote_result", nullable = false)
-    private int voteResult;
+    private Long voteResult;
 }
