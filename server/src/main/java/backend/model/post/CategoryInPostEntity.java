@@ -16,13 +16,13 @@ import javax.persistence.*;
 @Table(name = "TB_CategoryInPost")
 public class CategoryInPostEntity {
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
     @Id
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;

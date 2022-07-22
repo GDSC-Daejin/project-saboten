@@ -8,6 +8,7 @@ import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class PostService {
         return postEntity;
     }
 
+    @Cacheable(value = "post", key = "#id")
     @Transactional
     public PostEntity findPost(Long id) {
         Optional<PostEntity> postEntity = postRepository.findById(id);

@@ -3,7 +3,6 @@ package backend.service.post;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
 import backend.repository.post.VoteRepository;
-import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.create.VoteCreateRequest;
 import common.model.reseponse.post.VoteResponse;
 import lombok.RequiredArgsConstructor;

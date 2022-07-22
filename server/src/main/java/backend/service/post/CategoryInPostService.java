@@ -6,6 +6,7 @@ import backend.model.post.PostEntity;
 import backend.repository.post.CategoryInPostRepository;
 import common.model.reseponse.category.CategoryResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
