@@ -6,6 +6,7 @@ import backend.repository.post.VoteRepository;
 import common.model.request.post.create.VoteCreateRequest;
 import common.model.reseponse.post.VoteResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +46,7 @@ public class VoteService {
         return votes;
     }
 
+    @CacheEvict(value = "postVotes", key = "#postEntity.postId")
     @Transactional
     public List<VoteResponse> update(List<VoteCreateRequest> voteTopics, PostEntity postEntity) {
         List<VoteEntity> voteEntities = voteRepository.findAllByPost(postEntity);
