@@ -50,7 +50,7 @@ class PostControllerTest {
         @WithMockUser(username = "1")
         public void 로그인시_조회() throws Exception {
             // given
-            int postId = 5;
+            int postId = 85;
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ONE;
             // when then
             // 단순히 data가 들어오는걸로 테스트를 진행해야 될지 상세한 값들도 다 조회해야 할지 의문
@@ -66,7 +66,7 @@ class PostControllerTest {
         @WithAnonymousUser
         public void 비로그인시_조회() throws Exception {
             // given
-            int postId = 5;
+            int postId = 85;
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ONE;
             // when then
             mockMvc.perform(get(baseUrl + "/" + postId))
