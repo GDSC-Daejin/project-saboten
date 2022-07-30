@@ -8,6 +8,9 @@ import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class PostService {
         return postEntity;
     }
 
+    @Cacheable(value = "post", key = "#id")
     @Transactional
     public PostEntity findPost(Long id) {
         Optional<PostEntity> postEntity = postRepository.findById(id);
@@ -54,12 +58,18 @@ public class PostService {
         return postEntity;
     }
 
+    @CacheEvict(value = "post", key = "#postEntity.postId")
     @Transactional
     public void updatePost(PostEntity postEntity, String text) {
         postEntity.setPostText(text);
         postRepository.save(postEntity);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = "post", key = "#postEntity.postId"),
+            @CacheEvict(value = "postInCategories", key = "#postEntity.postId"),
+            @CacheEvict(value = "postVotes", key = "#postEntity.postId")
+    })
     @Transactional
     public void deletePost(PostEntity postEntity) {
         postRepository.delete(postEntity);

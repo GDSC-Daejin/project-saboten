@@ -23,6 +23,7 @@ import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -69,6 +70,7 @@ class PostController {
                 voteResult,
                 isLike,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
+
         return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
     }
 

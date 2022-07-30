@@ -2,6 +2,8 @@ package backend.model.post;
 
 import backend.model.common.BaseTimeEntity;
 import backend.model.user.UserEntity;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -19,7 +21,7 @@ public class PostEntity extends BaseTimeEntity {
     @Column(name = "post_id", nullable = false)
     private Long postId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="user_id", nullable = false)
     private UserEntity user;

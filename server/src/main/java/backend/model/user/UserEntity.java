@@ -3,6 +3,7 @@ package backend.model.user;
 import backend.model.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
 import backend.oauth.entity.ProviderType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import common.model.GenderResponse;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.user.UserInfoResponse;
@@ -48,6 +49,7 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name= "user_profile_image")
     private String userImage;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<PostEntity> posts = new ArrayList<>();
 
