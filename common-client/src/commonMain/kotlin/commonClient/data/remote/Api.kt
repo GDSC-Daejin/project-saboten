@@ -10,7 +10,7 @@ import io.ktor.http.*
 
 interface Api {
 
-    val httpClient: HttpClient
+    val httpClient: HttpClient get() = getHttpClient()
     val prefixUrl: String
 
 }

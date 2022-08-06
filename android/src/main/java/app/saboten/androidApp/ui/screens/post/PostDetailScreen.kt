@@ -31,10 +31,13 @@ import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.domain.entity.post.Post
+import commonClient.domain.entity.user.User
 
 @Composable
 @Destination
 fun PostDetailScreen(
+    post: Post,
     navigator: DestinationsNavigator
 ) {
     val context = LocalContext.current
@@ -52,24 +55,34 @@ fun PostDetailScreen(
             )
         },
         bottomBar = {
-            BottomCommentContent( onSavedClick = {
+            BottomCommentContent(onSavedClick = {
                 Toast.makeText(context, it, Toast.LENGTH_LONG).show()
-            } )
+            })
         }
     ) { innerPadding ->
-        PostDetailContent(
+        PostDetailContent(post,
             modifier = Modifier.padding(innerPadding),
             onFavoriteClicked = {},
             onMoreClicked = {},
             onVoteClicked = {},
             onRefreshClicked = {},
-            onDetailClicked = {}
-        )
+            onDetailClicked = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PostDetailScreenPreview() {
+    MainTheme {
+//        PostDetailContent(
+//            Post()
+//        )
     }
 }
 
 @Composable
 private fun PostDetailContent(
+    post: Post,
     modifier: Modifier = Modifier,
     onFavoriteClicked: () -> Unit,
     onMoreClicked: () -> Unit,
@@ -87,6 +100,7 @@ private fun PostDetailContent(
                 .verticalScroll(viewScroll)
         ) {
             PostDetailProfile(
+                post.author,
                 onFavoriteClicked = onFavoriteClicked,
                 onMoreClicked = onMoreClicked
             )
@@ -143,6 +157,7 @@ private fun ViewDivider() {
 
 @Composable
 private fun PostDetailProfile(
+    author: User,
     onFavoriteClicked: () -> Unit,
     onMoreClicked: () -> Unit
 ) {
@@ -171,17 +186,11 @@ private fun PostDetailProfile(
                 .align(Alignment.CenterVertically)
                 .weight(1f)
         ) {
-            Row(verticalAlignment = Alignment.Bottom) {
-                Text(
-                    text = "안 드루이드",
-                    style = MaterialTheme.typography.caption
-                )
-                Text(
-                    text = "(Android)",
-                    fontSize = 7.sp,
-                    modifier = Modifier.padding(start = 5.dp)
-                )
-            }
+
+            Text(
+                text = author.nickname,
+                style = MaterialTheme.typography.caption
+            )
 
             Text(
                 text = "24분전",
@@ -418,7 +427,8 @@ private fun CommentList(
                 if (it % 2 == 0) {
                     CommentItem(
                         type = false,
-                        text = "짧은 댓글")
+                        text = "짧은 댓글"
+                    )
                 } else {
                     CommentItem(
                         type = true,
@@ -485,8 +495,11 @@ private fun BottomCommentContent(
                 focusManager.clearFocus()
                 onSavedClick(commentText)
                 commentText = ""
-                      },
-            modifier = Modifier.background(color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f), CircleShape)
+            },
+            modifier = Modifier.background(
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
+                CircleShape
+            )
         ) {
             Icon(imageVector = Icons.Rounded.Send, contentDescription = "create comment")
         }

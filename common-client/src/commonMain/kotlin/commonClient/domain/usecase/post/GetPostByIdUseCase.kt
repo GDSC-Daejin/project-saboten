@@ -9,6 +9,6 @@ class GetPostByIdUseCase @Inject constructor(
     private val postRepository: PostRepository
 ) {
 
-    operator fun invoke(id: Long) = postRepository.getPost(id)
+    operator fun invoke(id: Long) = postRepository.postsById(id)
 
 }

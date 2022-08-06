@@ -24,7 +24,7 @@ interface AuthApi : Api {
 }
 
 @Singleton
-class AuthApiImp @Inject constructor(override val httpClient: HttpClient) : AuthApi {
+class AuthApiImp @Inject constructor() : AuthApi {
 
     override suspend fun signup(userSignInRequest: UserSignUpRequest): ApiResponse<String> = responsePost("/signup") {
         setBody(userSignInRequest)

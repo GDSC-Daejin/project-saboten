@@ -29,7 +29,7 @@ interface HomeScreenViewModelDelegate : UnidirectionalViewModelDelegate<State, E
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
-    getCategoriesUseCase: GetCategoriesUseCase
+    getCategoriesUseCase: GetCategoriesUseCase,
 ) : PlatformViewModel(), HomeScreenViewModelDelegate {
 
     private val effectChannel = Channel<Effect>(Channel.UNLIMITED)

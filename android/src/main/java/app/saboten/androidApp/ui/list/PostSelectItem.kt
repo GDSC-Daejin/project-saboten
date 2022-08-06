@@ -24,11 +24,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.MainTheme
+import commonClient.domain.entity.post.Post
 
 @Composable
 fun PostSelectItem(
     modifier: Modifier = Modifier,
-    text: String,
+    post: Post,
     onClicked: () -> Unit
 ) {
     Card(
@@ -85,7 +86,7 @@ fun PostSelectItem(
                 Spacer(modifier = Modifier.height(15.dp))
 
                 Text(
-                    text = text,
+                    text = post.text,
                     style = MaterialTheme.typography.subtitle2
                 )
 
