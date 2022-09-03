@@ -38,8 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers(HttpMethod.GET,"/**/auth/**",
-                        "/swagger-ui/**", "/v2/api-docs",
-                        "/**/category/**"
+                        "/swagger-ui/**", "/v2/api-docs"
                         ,"/h2-console/**", "/favicon.ico");
     }
 
@@ -68,8 +67,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/**/auth/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
-                .antMatchers(HttpMethod.GET,  "/**/post", "/**/post/{id}", "/**/post/**").permitAll()
-                .anyRequest().authenticated()   // 나머지 API 는 전부 인증 필요
+                .antMatchers(HttpMethod.POST, "/**/post", "/**/post/{postId}/comment").authenticated()
+                .antMatchers(HttpMethod.PUT, "/**/post").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/**/post/{id}",
+                        "/**/post/{postId}/comment/{commentId}").authenticated()
+                .antMatchers(HttpMethod.GET, "/**/userInfo", "/**/post/comment", "/**/post/my").authenticated()
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
