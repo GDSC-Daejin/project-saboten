@@ -20,9 +20,9 @@ import org.koin.dsl.module
 
 fun dataModule() = module {
 
-    single<UserApi> { UserApiImp(get()) }
-    single<CategoryApi> { CategoryApiImp(get()) }
-    single<AuthApi> { AuthApiImp(get()) }
+    single<UserApi> { UserApiImp() }
+    single<CategoryApi> { CategoryApiImp() }
+    single<AuthApi> { AuthApiImp() }
 
     single { MeCache(get()) }
 

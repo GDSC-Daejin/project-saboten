@@ -21,14 +21,15 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.saboten.androidApp.ui.list.CommentItem
-import app.saboten.androidApp.ui.list.PostSelectItemIconButton
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.scaffolds.BasicScaffold
+import app.saboten.androidUi.styles.MainTheme
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import commonClient.domain.entity.post.Post
@@ -199,17 +200,6 @@ private fun PostDetailProfile(
             )
         }
 
-        PostSelectItemIconButton(
-            onClicked = { onFavoriteClicked() },
-            icon = Icons.Rounded.FavoriteBorder,
-            iconDescription = "favorite post"
-        )
-
-        PostSelectItemIconButton(
-            onClicked = { onMoreClicked() },
-            icon = Icons.Rounded.MoreHoriz,
-            iconDescription = "more action"
-        )
     }
 }
 

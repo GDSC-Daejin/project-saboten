@@ -73,7 +73,7 @@ private fun MainDestinationScaffold(
         destination != null && destination in listOf(
             HomeScreenDestination,
             ProfileScreenDestination,
-            SearchScreenDestination,
+            CategoryScreenDestination,
             LikedScreenDestination
         )
     }
@@ -94,21 +94,6 @@ private fun MainDestinationScaffold(
                 exit = slideOutVertically { it }
             ) {
                 MainBottomNavigation(navController, destination)
-            }
-        },
-        isFloatingActionButtonDocked = true,
-        floatingActionButtonPosition = FabPosition.Center,
-        floatingActionButton = {
-            AnimatedVisibility(
-                isBottomBarVisible,
-                enter = fadeIn() + scaleIn(),
-                exit = scaleOut() + fadeOut(),
-            ) {
-                FloatingActionButton({
-                    navController.navigate(PostScreenDestination.route)
-                }) {
-                    Icon(Icons.Rounded.Add, null)
-                }
             }
         }
     ) {

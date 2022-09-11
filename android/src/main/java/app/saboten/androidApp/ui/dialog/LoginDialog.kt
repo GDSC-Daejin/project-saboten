@@ -12,7 +12,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import app.saboten.androidApp.ui.buttons.EmailLoginButton
+import app.saboten.androidApp.ui.buttons.GoogleLoginButton
+import app.saboten.androidApp.ui.buttons.KakaoLoginButton
 import app.saboten.androidUi.buttons.FilledButton
+import app.saboten.androidUi.styles.surfaceOver
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
@@ -54,43 +58,40 @@ fun LoginDialogContent() {
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = "잠깐! 댓글 쓰기는 로그인 시에 사용이 가능해요.",
+                text = "로그인하시면 더 많은 기능 이용이 가능해요.",
                 style = MaterialTheme.typography.body2
             )
 
             Spacer(modifier = Modifier.height(25.dp))
 
-            LoginDialogButton({}, loginButtonText = "네이버로 로그인")
+            GoogleLoginButton {
 
-            Spacer(modifier = Modifier.height(20.dp))
-
-            LoginDialogButton({}, loginButtonText = "카카오톡으로 로그인")
-
-            Spacer(modifier = Modifier.height(20.dp))
-
-            LoginDialogButton({}, loginButtonText = "이메일로 로그인")
-
-            Spacer(modifier = Modifier.height(26.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(text = "아직 선인장을 시작하지 않으셨나요?")
-
-                Spacer(modifier = Modifier.width(18.dp))
-
-                ClickableText(
-                    text = AnnotatedString(
-                        text = "회원가입",
-                        spanStyle = SpanStyle(
-                            color = Color.Blue,
-                            textDecoration = TextDecoration.Underline
-                        )
-                    ),
-                    onClick = { }
-                )
             }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            KakaoLoginButton {
+
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            EmailLoginButton {
+
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+
+            FilledButton(
+                modifier = Modifier.fillMaxWidth(),
+                text = "가입 없이 둘러보기",
+                backgroundColor = MaterialTheme.colors.surfaceOver,
+                onClick = {
+
+                }
+            )
+
         }
     }
 }

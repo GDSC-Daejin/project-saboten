@@ -6,6 +6,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -37,7 +38,11 @@ fun BasicTopBar(
             title,
             modifier.statusBarsPadding(),
             navigationIcon,
-            actions,
+            {
+                CompositionLocalProvider(LocalContentAlpha provides 0.3f) {
+                    actions()
+                }
+            },
             Color.Transparent,
             elevation = elevation
         )

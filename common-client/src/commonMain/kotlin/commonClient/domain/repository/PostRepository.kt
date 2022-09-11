@@ -8,6 +8,6 @@ interface PostRepository {
 
     fun postsById(postId: Long): Flow<Post>
 
-    suspend fun getPagedPost(categoryId : Long?) : PagingResponse<Post>
+    suspend fun getPagedPost(categoryId : Long?, nextKey : Long?) : PagingResponse<Post>
 
 }

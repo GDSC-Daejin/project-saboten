@@ -1,24 +1,12 @@
 package commonClient.di.modules
 
-import commonClient.data.remote.SabotenApiHttpClient
 import commonClient.data.remote.endpoints.*
-import commonClient.data.repository.AppThemeSettingsRepositoryImp
-import commonClient.data.repository.AuthRepositoryImp
-import commonClient.data.repository.CategoryRepositoryImp
-import commonClient.data.repository.UserRepositoryImp
-import commonClient.domain.repository.AppThemeSettingsRepository
-import commonClient.domain.repository.AuthRepository
-import commonClient.domain.repository.CategoryRepository
-import commonClient.domain.repository.UserRepository
-import commonClient.utils.AuthTokenManager
-import commonClient.utils.ClientProperties
+import commonClient.data.repository.*
+import commonClient.domain.repository.*
 import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.ktor.client.engine.cio.*
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -49,5 +37,8 @@ interface DataModule {
 
     @get:[Binds]
     val AuthRepositoryImp.authRepository: AuthRepository
+
+    @get:[Binds]
+    val PostRepositoryImp.postRepository : PostRepository
 
 }

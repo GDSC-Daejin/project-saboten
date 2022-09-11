@@ -23,7 +23,7 @@ interface PostApi : Api {
 
     suspend fun getPost(postId: Int): ApiResponse<PostResponse>
 
-    suspend fun getPagedPosts(categoryId: Long?): ApiResponse<PagingResponse<PostResponse>>
+    suspend fun getPagedPosts(categoryId: Long?, nextKey : Long?): ApiResponse<PagingResponse<PostResponse>>
 
 }
 
@@ -42,8 +42,9 @@ class PostApiImp @Inject constructor() : PostApi {
     override suspend fun getPost(postId: Int) =
         responseGet<PostResponse>(postId)
 
-    override suspend fun getPagedPosts(categoryId: Long?) = responseGet<PagingResponse<PostResponse>> {
-        parameter("category_id", categoryId)
-    }
+    override suspend fun getPagedPosts(categoryId: Long?, nextKey: Long?) =
+        responseGet<PagingResponse<PostResponse>> {
+            parameter("category_id", categoryId)
+        }
 
 }

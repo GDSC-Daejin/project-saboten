@@ -17,9 +17,10 @@ internal val lightColors = lightColors(
     primaryVariant = Color(0xFF1AAF41),
     secondary = Color(0xFF69CB3A),
     secondaryVariant = Color(0xFF69CB3A),
+    onSecondary = Color.White,
     surface = Color.White,
     onSurface = Color.Black,
-    background = Color.White
+    background = Color(0xFFF8F8F8)
 )
 
 @SuppressLint("ConflictingOnColor")
@@ -29,7 +30,7 @@ internal val darkColors = darkColors(
     primaryVariant = Color(0xFF1AAF41),
     secondary = Color(0xFF69CB3A),
     secondaryVariant = Color(0xFF69CB3A),
-    surface = Color(0xFF2C2E31),
+    surface = Color(0xFF191C20),
     onSurface = Color.White,
-    background = Color(0xFF17191d)
+    background = Color(0xFF0F1013)
 )

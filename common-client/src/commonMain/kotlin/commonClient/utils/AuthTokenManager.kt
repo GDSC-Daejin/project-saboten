@@ -31,18 +31,10 @@ class AuthTokenManager @Inject constructor(
         addToken(jwtTokenResponse)
     }
 
-    fun getAccessToken(): String? {
-        return settings.getStringOrNull(KEY_ACCESS_TOKEN)
-    }
-
-    fun getRefreshToken(): String? {
-        return settings.getStringOrNull(KEY_REFRESH_TOKEN)
-    }
-
-    private val accessToken: String?
+    val accessToken: String?
         get() = settings.getStringOrNull(KEY_ACCESS_TOKEN)
 
-    private val refreshToken: String?
+    val refreshToken: String?
         get() = settings.getStringOrNull(KEY_REFRESH_TOKEN)
 
     fun isTokenExpired() = (settings.getLongOrNull(KEY_EXPIRES_IN) ?: 0L) < Clock.System.now().toEpochMilliseconds()

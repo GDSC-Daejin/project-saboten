@@ -19,8 +19,8 @@ import androidx.paging.Pager as AndroidXPager
 actual class Pager<K : Any, V : Any> actual constructor(
     clientScope: CoroutineScope,
     config: PagingConfig,
-    initialKey: K,
-    getItems: suspend (K, Int) -> PagingResult<K, V>
+    initialKey: K?,
+    getItems: suspend (K?, Int) -> PagingResult<K, V>
 ) {
     actual val pagingData: Flow<PagingData<V>> = AndroidXPager(
         config = config,
@@ -33,8 +33,8 @@ actual class Pager<K : Any, V : Any> actual constructor(
     ).flow
 
     class PagingSource<K : Any, V : Any>(
-        private val initialKey: K,
-        private val getItems: suspend (K, Int) -> PagingResult<K, V>
+        private val initialKey: K?,
+        private val getItems: suspend (K?, Int) -> PagingResult<K, V>
     ) : androidx.paging.PagingSource<K, V>() {
 
         override val jumpingSupported: Boolean

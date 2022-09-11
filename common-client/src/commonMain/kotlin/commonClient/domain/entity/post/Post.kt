@@ -8,7 +8,7 @@ data class Post(
     val author: User,
     val voteResponses: List<Vote>,
     val categories: List<Category>,
-    val selectedVote: Int?,
+    val selectedVote: Long?,
     val isLiked: Boolean?,
     val createdAt: String,
     val updatedAt: String?
