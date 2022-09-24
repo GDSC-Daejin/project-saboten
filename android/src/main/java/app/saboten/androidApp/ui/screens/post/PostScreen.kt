@@ -85,11 +85,12 @@ private val colorList = listOf(
 @Composable
 @Destination
 fun PostScreen(
-    post : Post? = null,
+    post: Post? = null,
     navigator: DestinationsNavigator
 ) {
 
     PostContent(
+        post = post,
         onBackClicked = { navigator.popBackStack() },
         onSaveClicked = { }
     )
@@ -322,7 +323,13 @@ private fun VoteSelectionButton(
 
         if (!mainSelection) {
             LabelOfVoteSelectionButton(
-                modifier = Modifier.align( if (type == "A") { Alignment.BottomEnd} else { Alignment.BottomStart }),
+                modifier = Modifier.align(
+                    if (type == "A") {
+                        Alignment.BottomEnd
+                    } else {
+                        Alignment.BottomStart
+                    }
+                ),
                 shape = if (type == "A") {
                     RoundedCornerShape(
                         topStart = 20.dp,

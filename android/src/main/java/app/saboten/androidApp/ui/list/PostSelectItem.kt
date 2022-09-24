@@ -2,28 +2,22 @@ package app.saboten.androidApp.ui.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Chat
-import androidx.compose.material.icons.rounded.FavoriteBorder
-import androidx.compose.material.icons.rounded.MoreHoriz
+import androidx.compose.material.Card
+import androidx.compose.material.LinearProgressIndicator
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import app.saboten.androidUi.image.NetworkImage
-import app.saboten.androidUi.styles.MainTheme
+import com.google.accompanist.flowlayout.FlowRow
 import commonClient.domain.entity.post.Post
 
 @Composable
@@ -34,215 +28,209 @@ fun PostSelectItem(
 ) {
     Card(
         shape = RoundedCornerShape(20.dp),
-        elevation = 4.dp,
-        modifier = modifier.padding(20.dp)
-            .clickable { onClicked() }
+        elevation = 0.dp,
+        modifier = modifier.fillMaxWidth(),
+        onClick = onClicked
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp)
-        ) {
-            Column {
-                Row(modifier = Modifier.fillMaxWidth()) {
-                    NetworkImage(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .border(
-                                border = BorderStroke(width = 2.dp, color = Color(0xFF53654C)),
-                                shape = CircleShape
-                            ),
-                        "https://picsum.photos/200"
-                    )
+        Column(modifier = Modifier.padding(20.dp)) {
 
-                    Spacer(modifier = Modifier.width(15.dp))
+            Row(verticalAlignment = Alignment.CenterVertically) {
 
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically)
-                            .weight(1f)
-                    ) {
-                        Row(verticalAlignment = Alignment.Bottom) {
-                            Text(
-                                text = "헤르만 헤세",
-                                style = MaterialTheme.typography.caption
-                            )
-                            Text(
-                                text = "(Herman Hesse)",
-                                fontSize = 7.sp,
-                                modifier = Modifier.padding(start = 5.dp)
-                            )
-                        }
-
-                        Text(
-                            text = "24분전",
-                            fontSize = 9.sp,
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(15.dp))
-
-                Text(
-                    text = post.text,
-                    style = MaterialTheme.typography.subtitle2
+                NetworkImage(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape),
+                    post.author.profilePhotoUrl
                 )
 
-                Spacer(modifier = Modifier.height(15.dp))
+                Spacer(modifier = Modifier.width(10.dp))
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(115.dp)
-                        .clip(RoundedCornerShape(20.dp))
-                ) {
-                    PostSelectItemLeftSelection(
-                        topic = "하와이안 피자",
-                        count = 35
-                    )
+                Text(post.author.nickname, style = MaterialTheme.typography.body1)
 
-                    Spacer(modifier = Modifier.width(5.dp))
+            }
 
-                    PostSelectItemRightSelection(
-                        topic = "민트초코 아이스크림",
-                        count = 65
-                    )
-                }
+            Spacer(modifier = Modifier.height(20.dp))
 
-                Spacer(modifier = Modifier.height(15.dp))
+            Text(post.text, style = MaterialTheme.typography.h4)
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row {
-                        PostSelectItemCategory(category = "음식")
+            Spacer(modifier = Modifier.height(20.dp))
 
-                        Spacer(modifier = Modifier.width(10.dp))
-
-                        PostSelectItemCategory(category = "취향")
-                    }
-
-                    Row {
-                        PostSelectItemIconButton(
-                            onClicked = { /*TODO*/ },
-                            icon = Icons.Rounded.FavoriteBorder,
-                            iconDescription = "Favorite"
-                        )
-                        PostSelectItemIconButton(
-                            onClicked = { /*TODO*/ },
-                            icon = Icons.Rounded.Chat,
-                            iconDescription = "Chat"
-                        )
-                        PostSelectItemIconButton(
-                            onClicked = { /*TODO*/ },
-                            icon = Icons.Rounded.MoreHoriz,
-                            iconDescription = "More Horiz"
+            FlowRow(
+                crossAxisSpacing = 6.dp,
+                mainAxisSpacing = 6.dp,
+            ) {
+                post.categories.forEach {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colors.onSurface.copy(0.05f),
+                                shape = RoundedCornerShape(100.dp)
+                            )
+                            .padding(10.dp, 6.dp)
+                    ) {
+                        Text(
+                            text = "#${it.name}",
+                            style = MaterialTheme.typography.caption,
+                            color = MaterialTheme.colors.onSurface.copy(0.5f)
                         )
                     }
                 }
             }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            val sum = remember(post) { post.voteResponses.sumOf { it.count } }
+
+            post.voteResponses.sortedByDescending { it.count }
+                .forEachIndexed { index, voteResponse ->
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = voteResponse.topic,
+                            style = MaterialTheme.typography.body1,
+                            color = if (index == 0) MaterialTheme.colors.primary
+                            else MaterialTheme.colors.onSurface.copy(0.5f)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        LinearProgressIndicator(
+                            progress = voteResponse.count.toFloat() / sum,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .weight(1f),
+                            color = if (index == 0) MaterialTheme.colors.primary
+                            else MaterialTheme.colors.onSurface.copy(0.1f),
+                            backgroundColor = MaterialTheme.colors.onSurface.copy(0.05f),
+                        )
+
+                        Text(
+                            text = "${
+                                String.format(
+                                    "%.2f",
+                                    (voteResponse.count.toFloat() / sum * 100)
+                                )
+                            }%",
+                            modifier = Modifier.width(50.dp),
+                            style = MaterialTheme.typography.caption,
+                            color = if (index == 0) MaterialTheme.colors.primary
+                            else MaterialTheme.colors.onSurface.copy(0.5f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                }
+
         }
+
     }
 }
 
-@Composable
-private fun PostSelectItemLeftSelection(topic: String, count: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth(0.35f)
-            .fillMaxHeight()
-            .background(
-                color = Color(0xFFA66FEA),
-                shape = RoundedCornerShape(topStart = 20.dp, bottomStart = 20.dp)
-            )
-            .clickable { /*TODO*/ }
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = topic,
-            color = Color.White,
-            textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.body1
-        )
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Text(
-            text = "${count}%",
-            color = Color.White,
-            style = MaterialTheme.typography.body2
-        )
-    }
-}
 
 @Composable
-private fun PostSelectItemRightSelection(topic: String, count: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .background(
-                color = Color(0xFF8DA4FF),
-                shape = RoundedCornerShape(topEnd = 20.dp, bottomEnd = 20.dp)
-            )
-            .clickable { /*TODO*/ }
-            .padding(10.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = topic,
-            textAlign = TextAlign.Center,
-            color = Color.White,
-            style = MaterialTheme.typography.body1
-        )
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Text(
-            text = "${count}%",
-            color = Color.White,
-            style = MaterialTheme.typography.body2
-        )
-    }
-}
-
-@Composable
-fun PostSelectItemIconButton(
-    onClicked: () -> Unit,
-    icon: ImageVector,
-    iconDescription: String
+fun PostFeedListItem(
+    modifier: Modifier = Modifier,
+    post: Post,
+    onClicked: () -> Unit
 ) {
-    IconButton(
-        onClick = { onClicked },
-        modifier = Modifier.then(Modifier.size(36.dp))
+    Card(
+        shape = RoundedCornerShape(20.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(0.05f)),
+        elevation = 0.dp,
+        modifier = modifier
+            .width(300.dp)
+            .heightIn(min = 200.dp),
+        onClick = onClicked
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = iconDescription,
-            tint = Color(0xFF969696)
-        )
-    }
-}
+        Column(modifier = Modifier.padding(20.dp)) {
 
-@Composable
-private fun PostSelectItemCategory(
-    category: String
-) {
-    Surface(
-        color = MaterialTheme.colors.onSurface.copy(alpha = 0.1f),
-        shape = RoundedCornerShape(10.dp)
-    ) {
-        Text(
-            text = "#${category}",
-            modifier = Modifier.padding(start = 20.dp, top = 5.dp, end = 20.dp, bottom = 5.dp),
-            style = MaterialTheme.typography.caption
-        )
+
+            Row(verticalAlignment = Alignment.CenterVertically) {
+
+                NetworkImage(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape),
+                    post.author.profilePhotoUrl
+                )
+
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Text(post.author.nickname, style = MaterialTheme.typography.body1)
+
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Text(post.text, style = MaterialTheme.typography.h4)
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            FlowRow(
+                crossAxisSpacing = 6.dp,
+                mainAxisSpacing = 6.dp,
+            ) {
+                post.categories.forEach {
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colors.onSurface.copy(0.05f),
+                                shape = RoundedCornerShape(100.dp)
+                            )
+                            .padding(10.dp, 6.dp)
+                    ) {
+                        Text(
+                            text = "#${it.name}",
+                            style = MaterialTheme.typography.caption,
+                            color = MaterialTheme.colors.onSurface.copy(0.5f)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            val sum = remember(post) { post.voteResponses.sumOf { it.count } }
+
+            post.voteResponses.sortedByDescending { it.count }
+                .forEachIndexed { index, voteResponse ->
+
+                    Row(modifier = Modifier.fillMaxWidth()) {
+                        Text(
+                            text = voteResponse.topic,
+                            style = MaterialTheme.typography.body1,
+                            color = if (index == 0) MaterialTheme.colors.primary
+                            else MaterialTheme.colors.onSurface.copy(0.5f)
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
+                        LinearProgressIndicator(
+                            progress = voteResponse.count.toFloat() / sum,
+                            modifier = Modifier
+                                .padding(10.dp)
+                                .weight(1f),
+                            color = if (index == 0) MaterialTheme.colors.primary
+                            else MaterialTheme.colors.onSurface.copy(0.1f),
+                            backgroundColor = MaterialTheme.colors.onSurface.copy(0.05f),
+                        )
+
+                        Text(
+                            text = "${
+                                String.format(
+                                    "%.2f",
+                                    (voteResponse.count.toFloat() / sum * 100)
+                                )
+                            }%",
+                            modifier = Modifier.width(50.dp),
+                            style = MaterialTheme.typography.caption,
+                            color = if (index == 0) MaterialTheme.colors.primary
+                            else MaterialTheme.colors.onSurface.copy(0.5f)
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                }
+
+        }
+
     }
 }

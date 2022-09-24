@@ -12,12 +12,13 @@ import kotlinx.coroutines.flow.Flow
 class PostRepositoryImp @Inject constructor(
     private val postApi: PostApi
 ) : PostRepository {
+
     override fun postsById(postId: Long): Flow<Post> {
         TODO("Not yet implemented")
     }
 
-    override suspend fun getPagedPost(categoryId: Long?): PagingResponse<Post> {
-        val response = postApi.getPagedPosts(categoryId).data!!
+    override suspend fun getPagedPost(categoryId: Long?, nextKey : Long?): PagingResponse<Post> {
+        val response = postApi.getPagedPosts(categoryId, nextKey).data!!
         return response.map { it.toDomain() }
     }
 }

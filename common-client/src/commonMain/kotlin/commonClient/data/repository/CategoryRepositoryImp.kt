@@ -13,7 +13,14 @@ class CategoryRepositoryImp @Inject constructor(
     private val categoryApi: CategoryApi
 ) : CategoryRepository {
 
-    private var memoryCachedCategories: List<Category>? = null
+    //    private var memoryCachedCategories: List<Category>? = null
+    private var memoryCachedCategories: List<Category>? = listOf(
+        Category(0, "전체", ""),
+        Category(0, "MBTI", ""),
+        Category(0, "연애", ""),
+        Category(0, "먹을거", ""),
+        Category(0, "쇼핑", ""),
+    )
 
     override fun getCategories() = flow {
         if (memoryCachedCategories.isNullOrEmpty()) {

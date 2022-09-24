@@ -17,9 +17,8 @@ class AuthRepositoryImp @Inject constructor(
 
     override fun refreshToken(forceRefresh: Boolean) = flow {
 
-        val accessToken = authTokenManager.getAccessToken()
-        val refreshToken =
-            authTokenManager.getRefreshToken()
+        val accessToken = authTokenManager.accessToken
+        val refreshToken = authTokenManager.refreshToken
 
         if (accessToken == null || refreshToken == null) {
             emit(null)
