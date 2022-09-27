@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.swagger.response.*;
 import backend.jwt.SecurityUtil;
 import backend.model.comment.CommentEntity;
 import backend.model.post.PostEntity;
@@ -15,6 +16,7 @@ import common.model.reseponse.ApiResponse;
 import common.model.reseponse.comment.CommentResponse;
 import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +44,11 @@ public class  CommentController {
 
     @ApiOperation(value = "댓글작성 API", notes = "특정 포스트에 댓글을 작성하는 API입니다.")
     @PostMapping("post/{postId}/comment")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 400, message = "", response = CommentIsNullResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class)
+    })
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CommentCreateRequest commentCreateRequest){
         UserEntity userEntity = getUser();
@@ -56,8 +63,10 @@ public class  CommentController {
     }
 
     @ApiOperation(value = "포스트별 댓글조회 API", notes = "특정 포스트에 달린 댓글을 모두 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class)
+    })
     @GetMapping("post/{postId}/comment")
-    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Page<CommentResponse>> getAllCommentsByPost(@PathVariable Long postId, @PageableDefault Pageable pageable){
         PostEntity postEntity = postService.findPost(postId);
         Page<CommentEntity> commentEntities = commentService.getAllCommentsByPost(postEntity,pageable);
@@ -68,8 +77,10 @@ public class  CommentController {
     }
 
     @ApiOperation(value = "유저별 댓글조회 API", notes = "로그인 된 유저가 단 댓글들을 모두 조회하는 API입니다.")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class)
+    })
     @GetMapping("post/comment")
-    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<Page<CommentResponse>> getAllCommentsByUser(@PageableDefault Pageable pageable){
         UserEntity userEntity = getUser();
         Page<CommentEntity> commentEntities = commentService.getAllCommentsByUser(userEntity,pageable);
@@ -81,11 +92,14 @@ public class  CommentController {
 
     @ApiOperation(value = "댓글 삭제 API", notes = "본인 댓글을 삭제 합니다.")
     @DeleteMapping("post/{postId}/comment/{commentId}")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = CommentNotFoundResponse.class)
+    })
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Page<CommentResponse>> deleteComment(@PathVariable Long postId, @PathVariable Long commentId){
         UserEntity userEntity = getUser();
         commentService.deleteComment(commentId, postId, userEntity);
         return ApiResponse.withMessage(null,CommentResponseMessage.COMMENT_DELETED);
     }
-
 }
