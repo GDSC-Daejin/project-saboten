@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
-		4A22BB4427EC2C6100EC0CBF /* LoadState+Boolean.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A22BB4327EC2C6100EC0CBF /* LoadState+Boolean.swift */; };
 		4AFB124E27940F0500AFD8A8 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB124D27940F0500AFD8A8 /* HomeView.swift */; };
 		4AFB125027940F1B00AFD8A8 /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB124F27940F1B00AFD8A8 /* MenuView.swift */; };
 		4AFB125227940F2C00AFD8A8 /* NotificationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AFB125127940F2C00AFD8A8 /* NotificationView.swift */; };
@@ -20,7 +19,6 @@
 
 /* Begin PBXFileReference section */
 		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		4A22BB4327EC2C6100EC0CBF /* LoadState+Boolean.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LoadState+Boolean.swift"; sourceTree = "<group>"; };
 		4AFB124D27940F0500AFD8A8 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		4AFB124F27940F1B00AFD8A8 /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
 		4AFB125127940F2C00AFD8A8 /* NotificationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationView.swift; sourceTree = "<group>"; };
@@ -58,7 +56,6 @@
 		4A22BB4227EC2C2700EC0CBF /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				4A22BB4327EC2C6100EC0CBF /* LoadState+Boolean.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -249,7 +246,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4A22BB4427EC2C6100EC0CBF /* LoadState+Boolean.swift in Sources */,
 				4AFB124E27940F0500AFD8A8 /* HomeView.swift in Sources */,
 				4AFB125027940F1B00AFD8A8 /* MenuView.swift in Sources */,
 				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
