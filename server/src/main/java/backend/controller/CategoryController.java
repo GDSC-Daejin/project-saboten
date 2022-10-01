@@ -1,12 +1,15 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.swagger.response.CategoryNotFoundResponse;
+import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.model.category.CategoryEntity;
 import backend.service.CategoryService;
 import common.message.CategoryResponseMessage;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.category.CategoryResponse;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +33,9 @@ public class CategoryController {
     }
 
     @ApiOperation(value = "카테고리 특정 조회 API", notes = "특정 카테고리 불러오기")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = CategoryNotFoundResponse.class)
+    })
     @GetMapping("/category/{id}")
     public ApiResponse<CategoryResponse> getCategory(@PathVariable Long id) {
         CategoryEntity categoryEntity = categoryService.findCategory(id);
