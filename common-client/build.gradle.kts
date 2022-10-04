@@ -7,17 +7,10 @@ plugins {
     kotlin("native.cocoapods")
     kotlin("kapt")
     id("com.android.library")
-    id("com.squareup.sqldelight")
 }
 
 group = "app.saboten"
 version = "1.0.00"
-
-sqldelight {
-    database("SabotenDatabase") {
-        packageName = "app.saboten.commonClient"
-    }
-}
 
 kotlin {
     android()
@@ -63,7 +56,6 @@ kotlin {
                 api(MultiplatformSettings.coroutines)
                 api(MultiplatformSettings.serialization)
                 api(KotlinX.datetime)
-                api(Square.SqlDelight.extensions.coroutines)
             }
         }
         val commonTest by getting {
@@ -84,8 +76,6 @@ kotlin {
                 kapt(AndroidX.hilt.compiler)
                 kapt(Google.dagger.hilt.compiler)
                 implementation(Google.dagger.hilt.android)
-                implementation(Square.SqlDelight.drivers.android)
-                implementation(Square.SqlDelight.extensions.androidPaging3)
                 implementation(project.dependencies.platform(Google.firebase.bom))
                 implementation(Google.firebase.crashlyticsKtx)
 //                implementation(Utils.paging)
@@ -103,7 +93,6 @@ kotlin {
         val iosMain by getting {
             dependencies {
                 implementation(Ktor.client.darwin)
-                implementation(Square.SqlDelight.drivers.native)
                 implementation(Utils.paging)
             }
         }

@@ -74,7 +74,7 @@ private fun MainDestinationScaffold(
             HomeScreenDestination,
             ProfileScreenDestination,
             CategoryScreenDestination,
-            LikedScreenDestination
+            NotificationScreenDestination
         )
     }
 

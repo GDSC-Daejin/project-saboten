@@ -1,4 +1,4 @@
-package app.saboten.androidApp.ui.screens.main.liked
+package app.saboten.androidApp.ui.screens.main.notification
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,7 +14,7 @@ import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 
 @Composable
 @Destination
-fun LikedScreen(
+fun NotificationScreen(
     navigator: DestinationsNavigator
 ) {
 
@@ -22,29 +22,10 @@ fun LikedScreen(
     BasicScaffold(
         topBar = {
             BasicTopBar(title = {
-                Text("Liked")
+                Text("Notification")
             })
         }
     ) {
-
-        LazyColumn(modifier = Modifier.padding(it)) {
-            items(100) {
-                BasicListItem(
-                    title = "Item $it",
-                    subtitle = "Subtitle $it",
-                    leftSideUi = {
-                        Text("🌵")
-                    }
-                ) {
-
-                }
-            }
-
-            item {
-                Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
-                Spacer(modifier = Modifier.height(20.dp))
-            }
-        }
 
 
     }
