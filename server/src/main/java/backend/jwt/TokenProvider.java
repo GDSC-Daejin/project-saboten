@@ -34,7 +34,7 @@ public class TokenProvider {
     private final Key key;
 
     @Autowired
-    // properties 에서 secrekey 가지고 옴
+    // properties 에서 secret key 가지고 옴
     public TokenProvider(@Value("${jwt.secret}") String secretKey, RedisUtil redisUtil) {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);

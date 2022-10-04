@@ -74,6 +74,7 @@ class PostController {
         return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
     }
 
+
     @ApiOperation(value = "게시물 등록", notes = "사용자가 게시물 작성하여 등록합니다.")
     @PostMapping("/post")
     @ResponseStatus(HttpStatus.CREATED)
@@ -129,6 +130,21 @@ class PostController {
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
+
+    // 게시글 검색
+    @GetMapping("/post")
+    public ApiResponse<Page<PostReadResponse>> getSearchPost( String searchText, @PageableDefault Pageable pageable) {
+        Page<PostEntity> postEntityPage = null;
+
+        Page<PostReadResponse> myPostPage = postEntityPage.map(postEntity -> {
+            PostEntity searchPostEntity = postService.searchPost(searchText);
+            return new PostReadResponse(searchPostEntity.getPostId(), searchPostEntity.getPostText(), searchPostEntity.getUser().toDto(),
+                    voteService.findVotes(postEntity),searchPostEntity.getRegistDate().toString(),searchPostEntity.getModifyDate().toString());
+        });
+
+
+    }
+
 
     @ApiOperation(value = "게시물 수정", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
