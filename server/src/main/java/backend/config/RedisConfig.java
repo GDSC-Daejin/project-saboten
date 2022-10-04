@@ -48,17 +48,4 @@ public class RedisConfig extends CachingConfigurerSupport {
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;
     }
-
-    @Bean
-    @Override
-    public CacheManager cacheManager() {
-        RedisCacheManager.RedisCacheManagerBuilder builder = RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory(redisConnectionFactory());
-        RedisCacheConfiguration configuration = RedisCacheConfiguration.defaultCacheConfig()
-                .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new GenericJackson2JsonRedisSerializer())) // value Serializer 변경
-                .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer())) // key Serializer 변경
-                .prefixCacheNameWith("Saboten:") // Key Prefix로 "Saboten:"를 앞에 붙여 저장
-                .entryTtl(Duration.ofMinutes(30)); // TTL 30분
-        builder.cacheDefaults(configuration);
-        return builder.build();
-    }
 }

@@ -31,4 +31,7 @@ public class PostEntity extends BaseTimeEntity {
 
     @Column(name = "post_like_count", nullable = false)
     private Integer postLikeCount;
+
+    @Column(name = "view", nullable = false, columnDefinition = "integer default 0")
+    private Integer view;
 }
