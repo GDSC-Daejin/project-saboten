@@ -132,8 +132,8 @@ class PostController {
     }
 
     // 게시글 검색
-    @GetMapping("/post")
-    public ApiResponse<Page<PostReadResponse>> getSearchPost( String searchText, @PageableDefault Pageable pageable) {
+    @GetMapping("/post/{searchText}")
+    public ApiResponse<Page<PostReadResponse>> getSearchPost(@PathVariable("searchText") String searchText, @PageableDefault Pageable pageable) {
         Page<PostEntity> postEntityPage = null;
 
         Page<PostReadResponse> myPostPage = postEntityPage.map(postEntity -> {
@@ -142,7 +142,7 @@ class PostController {
                     voteService.findVotes(postEntity),searchPostEntity.getRegistDate().toString(),searchPostEntity.getModifyDate().toString());
         });
 
-
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
 
