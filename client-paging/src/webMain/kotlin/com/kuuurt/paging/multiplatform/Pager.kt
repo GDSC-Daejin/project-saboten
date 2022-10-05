@@ -18,8 +18,8 @@ import kotlinx.coroutines.launch
 actual class Pager<K : Any, V : Any> actual constructor(
     private val clientScope: CoroutineScope,
     private val config: PagingConfig,
-    private val initialKey: K,
-    private val getItems: suspend (K, Int) -> PagingResult<K, V>
+    private val initialKey: K?,
+    private val getItems: suspend (K?, Int) -> PagingResult<K, V>
 ) {
 
     private val _pagingData = MutableStateFlow<PagingData<V>?>(null)
