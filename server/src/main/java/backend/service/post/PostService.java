@@ -44,8 +44,8 @@ public class PostService {
     }
 
     @Transactional
-    public PostEntity<PostEntity> searchPost(String postText) {
-        return postRepository.findByPostTextContaining(postText);
+    public Page<PostEntity> searchPost(String searchText, Pageable pageable) {
+        return postRepository.findByPostTextContaining(searchText, pageable);
     }
 
     @Transactional
