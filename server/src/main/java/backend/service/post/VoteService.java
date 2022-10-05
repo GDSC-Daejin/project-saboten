@@ -46,7 +46,6 @@ public class VoteService {
         return votes;
     }
 
-    @CacheEvict(value = "postVotes", key = "#postEntity.postId")
     @Transactional
     public List<VoteResponse> update(List<VoteCreateRequest> voteTopics, PostEntity postEntity) {
         List<VoteEntity> voteEntities = voteRepository.findAllByPost(postEntity);

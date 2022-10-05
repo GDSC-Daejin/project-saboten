@@ -62,6 +62,7 @@ class PostController {
     public ApiResponse<PostResponse> getPost(@PathVariable Long id) {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.findPost(id);
+        postService.updateView(postEntity.getPostId());
         List<VoteResponse> votes = voteService.findVotes(postEntity);
         List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
         Long voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
@@ -73,6 +74,7 @@ class PostController {
                 votes,
                 categories,
                 voteResult,
+                postEntity.getView() + 1,
                 isLike,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
@@ -166,6 +168,7 @@ class PostController {
                 votes,
                 categories,
                 null,
+                postEntity.getView(),
                 null,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 

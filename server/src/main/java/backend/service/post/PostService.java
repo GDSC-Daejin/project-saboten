@@ -34,13 +34,17 @@ public class PostService {
         return postEntity;
     }
 
-    @Cacheable(value = "post", key = "#id")
     @Transactional
     public PostEntity findPost(Long id) {
         Optional<PostEntity> postEntity = postRepository.findById(id);
         if(postEntity.isEmpty())
             throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
         return postEntity.get();
+    }
+
+    @Transactional
+    public Integer updateView(Long id) {
+        return postRepository.upateView(id);
     }
 
     @Transactional
@@ -58,18 +62,12 @@ public class PostService {
         return postEntity;
     }
 
-    @CacheEvict(value = "post", key = "#postEntity.postId")
     @Transactional
     public void updatePost(PostEntity postEntity, String text) {
         postEntity.setPostText(text);
         postRepository.save(postEntity);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "post", key = "#postEntity.postId"),
-            @CacheEvict(value = "postInCategories", key = "#postEntity.postId"),
-            @CacheEvict(value = "postVotes", key = "#postEntity.postId")
-    })
     @Transactional
     public void deletePost(PostEntity postEntity) {
         postRepository.delete(postEntity);
