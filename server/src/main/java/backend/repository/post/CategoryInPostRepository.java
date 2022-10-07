@@ -12,9 +12,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface CategoryInPostRepository extends JpaRepository<CategoryInPostEntity, Long> {
-    @Cacheable(value = "postInCategories", key = "#post.postId")
     List<CategoryInPostEntity> findByPost(PostEntity post);
     Page<CategoryInPostEntity> findALLByCategory(CategoryEntity categoryEntity, Pageable pageable);
-    @CacheEvict(value = "postInCategories", key = "#post.postId")
     void deleteAllByPost(PostEntity post);
 }

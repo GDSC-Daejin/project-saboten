@@ -35,8 +35,8 @@ private val mainNavigationBarData = listOf(
     NavigationData(PostScreenDestination) {
         Icon(if (it) Icons.Rounded.Add else Icons.Outlined.Add, null)
     },
-    NavigationData(LikedScreenDestination) {
-        Icon(if (it) Icons.Rounded.Favorite else Icons.Outlined.FavoriteBorder, null)
+    NavigationData(NotificationScreenDestination) {
+        Icon(if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications, null)
     },
     NavigationData(ProfileScreenDestination) {
         Icon(if (it) Icons.Rounded.Person else Icons.Outlined.Person, null)
