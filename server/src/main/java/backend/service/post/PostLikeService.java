@@ -22,4 +22,17 @@ public class PostLikeService {
 
         return isLike;
     }
+
+    @Transactional
+    public boolean triggerPostLike(UserEntity userEntity, PostEntity postEntity) {
+        if(findPostIsLike(userEntity, postEntity)) {
+            postLikeRepository.deleteByUserAndPost(userEntity, postEntity);
+            return false;
+        }
+        else {
+            PostLikeEntity postLikeEntity = new PostLikeEntity(postEntity, userEntity);
+            postLikeRepository.save(postLikeEntity);
+            return true;
+        }
+    }
 }

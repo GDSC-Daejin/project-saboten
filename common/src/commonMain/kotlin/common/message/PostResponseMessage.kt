@@ -11,4 +11,7 @@ enum class PostResponseMessage(
     POST_FIND_USER("해당 유저가 쓴 게시글들이 조회되었습니다.",200),
     POST_FIND_ALL("게시글들이 조회되었습니다.", 200),
     POST_NOT_FOUND("게시글이 존재하지 않습니다.", 404),
+    POST_LIKE_SUCCESS("좋아요를 하였습니다.", 200),
+    POST_UNLIKE_SUCCESS("좋아요를 취소하였습니다.", 200),
+
 }

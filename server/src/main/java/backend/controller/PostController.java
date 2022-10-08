@@ -17,6 +17,7 @@ import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.category.CategoryResponse;
+import common.model.reseponse.post.PostLikeResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
@@ -204,5 +205,26 @@ class PostController {
         postService.deletePost(postEntity);
 
         return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
+    }
+
+    @ApiOperation(value = "게시물 좋아요 등록", notes = "사용자가 게시물 좋아요 합니다.")
+    @PostMapping("/post/{id}/like")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
+    })
+    public ApiResponse<PostLikeResponse> postLike(@PathVariable Long id) {
+        UserEntity userEntity = getUser();
+        PostEntity postEntity = postService.findPost(id);
+
+        boolean isLike = postLikeService.triggerPostLike(userEntity, postEntity);
+        PostLikeResponse postLikeResponse = new PostLikeResponse(isLike);
+
+        if(isLike) {
+            return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_LIKE_SUCCESS);
+        }
+        else {
+            return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_UNLIKE_SUCCESS);
+        }
     }
 }
