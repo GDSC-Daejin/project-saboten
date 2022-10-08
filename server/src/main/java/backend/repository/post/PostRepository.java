@@ -20,6 +20,14 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     Page<PostEntity> findByPostTextContaining(String postText, Pageable pageable);
 
     @Modifying
+    @Query("update PostEntity post set post.postLikeCount = post.postLikeCount + 1 where post.postId = :id")
+    Integer increaseLikeCount(Long id);
+
+    @Modifying
+    @Query("update PostEntity post set post.postLikeCount = post.postLikeCount - 1 where post.postId = :id")
+    Integer decreaseLikeCount(Long id);
+
+    @Modifying
     @Query("update PostEntity post set post.view = post.view + 1 where post.postId = :id")
     Integer upateView(Long id);
 }

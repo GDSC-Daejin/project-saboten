@@ -77,4 +77,14 @@ public class PostService {
     public void deletePost(PostEntity postEntity) {
         postRepository.delete(postEntity);
     }
+
+    @Transactional
+    public void increasePostLike(Long id) {
+        postRepository.increaseLikeCount(id);
+    }
+
+    @Transactional
+    public void decreasePostLike(Long id) {
+        postRepository.decreaseLikeCount(id);
+    }
 }
