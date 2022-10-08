@@ -21,7 +21,6 @@ buildscript {
     dependencies {
         classpath(Google.dagger.hilt.android.gradlePlugin)
         classpath(Google.playServicesGradlePlugin)
-        classpath(Square.sqlDelight.gradlePlugin)
         classpath(Google.firebase.appDistributionGradlePlugin)
         classpath(Google.firebase.crashlyticsGradlePlugin)
         classpath(Google.firebase.performanceMonitoringGradlePlugin)

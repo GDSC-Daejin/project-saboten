@@ -1,6 +1,8 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.swagger.response.PostNotFoundResponse;
+import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
 import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
@@ -22,8 +24,8 @@ import common.model.reseponse.post.read.PostReadResponse;
 import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -53,10 +55,14 @@ class PostController {
     }
 
     @ApiOperation(value = "특정 게시물 조회", notes = "특정 게시물을 조회하여 모든 정보를 Response로 얻습니다.")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class)
+    })
     @GetMapping("/post/{id}")
     public ApiResponse<PostResponse> getPost(@PathVariable Long id) {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.findPost(id);
+        postService.updateView(postEntity.getPostId());
         List<VoteResponse> votes = voteService.findVotes(postEntity);
         List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
         Long voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
@@ -68,15 +74,19 @@ class PostController {
                 votes,
                 categories,
                 voteResult,
+                postEntity.getView() + 1,
                 isLike,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
         return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
     }
 
-
+    // TODO : 없는 카테고리로 등록할 때 예외처리 필요
     @ApiOperation(value = "게시물 등록", notes = "사용자가 게시물 작성하여 등록합니다.")
     @PostMapping("/post")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+    })
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PostCreatedResponse> createPost(@RequestBody PostCreateRequest postCreateRequest) {
         UserEntity userEntity = getUser();
@@ -96,6 +106,9 @@ class PostController {
     // 내가 쓴 게시글 조회 API
     @ApiOperation(value = "내가 쓴 게시물 조회", notes = "로그인한 사용자 자기자신의 게시물을 조회합니다.")
     @GetMapping("/post/my")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+    })
     public ApiResponse<Page<PostReadResponse>> getUserPost(Pageable pageable){
         UserEntity userEntity = getUser();
         Page<PostEntity> postEntityPage = postService.getUserPost(userEntity, pageable);
@@ -149,6 +162,10 @@ class PostController {
 
     @ApiOperation(value = "게시물 수정", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
+    })
     public ApiResponse<PostResponse> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.isHavingPostByUser(userEntity, postUpdateRequest.getId());
@@ -167,6 +184,7 @@ class PostController {
                 votes,
                 categories,
                 null,
+                postEntity.getView(),
                 null,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
@@ -174,6 +192,10 @@ class PostController {
     }
 
     @ApiOperation(value = "게시물 삭제", notes = "사용자가 게시물을 삭제합니다.")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
+    })
     @DeleteMapping("/post/{id}")
     public ApiResponse<?> removePost(@PathVariable Long id) {
         UserEntity userEntity = getUser();

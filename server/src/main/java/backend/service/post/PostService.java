@@ -34,7 +34,6 @@ public class PostService {
         return postEntity;
     }
 
-    @Cacheable(value = "post", key = "#id")
     @Transactional
     public PostEntity findPost(Long id) {
         Optional<PostEntity> postEntity = postRepository.findById(id);
@@ -46,6 +45,11 @@ public class PostService {
     @Transactional
     public Page<PostEntity> searchPost(String searchText, Pageable pageable) {
         return postRepository.findByPostTextContaining(searchText, pageable);
+    }
+    
+    @Transactional
+    public Integer updateView(Long id) {
+        return postRepository.upateView(id);
     }
 
     @Transactional
@@ -63,18 +67,12 @@ public class PostService {
         return postEntity;
     }
 
-    @CacheEvict(value = "post", key = "#postEntity.postId")
     @Transactional
     public void updatePost(PostEntity postEntity, String text) {
         postEntity.setPostText(text);
         postRepository.save(postEntity);
     }
 
-    @Caching(evict = {
-            @CacheEvict(value = "post", key = "#postEntity.postId"),
-            @CacheEvict(value = "postInCategories", key = "#postEntity.postId"),
-            @CacheEvict(value = "postVotes", key = "#postEntity.postId")
-    })
     @Transactional
     public void deletePost(PostEntity postEntity) {
         postRepository.delete(postEntity);
