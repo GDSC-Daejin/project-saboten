@@ -17,4 +17,6 @@ data class PostResponse(
     @SerialName("is_liked") val isLiked: Boolean?,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String?
-)
+) {
+
+}

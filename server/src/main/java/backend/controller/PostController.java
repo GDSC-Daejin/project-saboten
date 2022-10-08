@@ -144,6 +144,22 @@ class PostController {
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
+    // 게시글 검색
+    @ApiOperation(value = "게시물 검색",
+            notes = "사용자가 검색어를 입력하면, 검색어가 들어간 게시물을 조회할 수 있습니다.")
+    @GetMapping("/post/search/{searchText}")
+    public ApiResponse<Page<PostReadResponse>> getSearchPost(@PathVariable("searchText") String searchText, @PageableDefault Pageable pageable) {
+
+        Page<PostEntity> postEntityPage = postService.searchPost(searchText, pageable);
+        Page<PostReadResponse> myPostPage = postEntityPage.map(searchPostEntity -> {
+            return new PostReadResponse(searchPostEntity.getPostId(), searchPostEntity.getPostText(), searchPostEntity.getUser().toDto(),
+                    voteService.findVotes(searchPostEntity),searchPostEntity.getRegistDate().toString(),searchPostEntity.getModifyDate().toString());
+        });
+
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
+    }
+
+
     @ApiOperation(value = "게시물 수정", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
     @ApiResponses({

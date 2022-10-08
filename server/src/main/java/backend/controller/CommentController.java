@@ -53,12 +53,16 @@ public class  CommentController {
     public ApiResponse<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CommentCreateRequest commentCreateRequest){
         UserEntity userEntity = getUser();
         PostEntity postEntity = postService.findPost(postId);
+
         UserResponse userResponse = new UserResponse(userEntity.getUserId(), userEntity.getNickname(), userEntity.getUserImage());
         Long voteSelectEntity = voteSelectService.findVoteSelectResult(userEntity,postEntity);
+
         String text = commentCreateRequest.getText();
+
         CommentEntity comment = commentService.create(userEntity, postEntity,text);
         CommentResponse commentResponse = new CommentResponse(comment.getCommentId(), comment.getCommentText(),
                 userResponse, voteSelectEntity, comment.getCommentRegistDate().toString());
+
         return ApiResponse.withMessage(commentResponse, CommentResponseMessage.COMMENT_CREATED);
     }
 
@@ -70,9 +74,11 @@ public class  CommentController {
     public ApiResponse<Page<CommentResponse>> getAllCommentsByPost(@PathVariable Long postId, @PageableDefault Pageable pageable){
         PostEntity postEntity = postService.findPost(postId);
         Page<CommentEntity> commentEntities = commentService.getAllCommentsByPost(postEntity,pageable);
+
         Page<CommentResponse> commentResponses = commentEntities.map(commentEntity ->
                 new CommentResponse(commentEntity.getCommentId(),commentEntity.getCommentText(),commentEntity.getUser().toDto(),
                         voteSelectService.findVoteSelectResult(commentEntity.getUser(),postEntity),commentEntity.getCommentRegistDate().toString()));
+
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_ALL);
     }
 

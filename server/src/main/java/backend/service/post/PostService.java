@@ -43,6 +43,11 @@ public class PostService {
     }
 
     @Transactional
+    public Page<PostEntity> searchPost(String searchText, Pageable pageable) {
+        return postRepository.findByPostTextContaining(searchText, pageable);
+    }
+    
+    @Transactional
     public Integer updateView(Long id) {
         return postRepository.upateView(id);
     }
