@@ -14,6 +14,7 @@ data class PostResponse(
     @SerialName("categories") val categories: List<CategoryResponse>,
     @SerialName("selected_vote") val selectedVote: Long?,
     @SerialName("view") val view: Int,
+    @SerialName("like_count") val likeCount: Int,
     @SerialName("is_liked") val isLiked: Boolean?,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String?

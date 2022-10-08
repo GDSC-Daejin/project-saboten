@@ -76,6 +76,7 @@ class PostController {
                 categories,
                 voteResult,
                 postEntity.getView() + 1,
+                postEntity.getPostLikeCount(),
                 isLike,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
@@ -186,6 +187,7 @@ class PostController {
                 categories,
                 null,
                 postEntity.getView(),
+                postEntity.getPostLikeCount(),
                 null,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
@@ -221,9 +223,11 @@ class PostController {
         PostLikeResponse postLikeResponse = new PostLikeResponse(isLike);
 
         if(isLike) {
+            postService.increasePostLike(id);
             return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_LIKE_SUCCESS);
         }
         else {
+            postService.decreasePostLike(id);
             return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_UNLIKE_SUCCESS);
         }
     }
