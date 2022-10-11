@@ -87,4 +87,8 @@ public class PostService {
     public void decreasePostLike(Long id) {
         postRepository.decreaseLikeCount(id);
     }
+
+    public Page<PostEntity> findAllHotPost(Pageable pageable) {
+        return postRepository.findAllHostPost(pageable);
+    }
 }
