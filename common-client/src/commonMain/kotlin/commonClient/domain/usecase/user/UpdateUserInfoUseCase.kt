@@ -1,12 +1,11 @@
 package commonClient.domain.usecase.user
 
 import common.model.request.user.UserUpdateRequest
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.UserRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class UpdateUserInfoUseCase @Inject constructor(
+@Single
+class UpdateUserInfoUseCase(
     private val userRepository: UserRepository
 )  {
 

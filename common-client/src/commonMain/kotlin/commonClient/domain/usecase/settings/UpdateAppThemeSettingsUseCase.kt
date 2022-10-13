@@ -1,12 +1,11 @@
 package commonClient.domain.usecase.settings
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.repository.AppThemeSettingsRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class UpdateAppThemeSettingsUseCase @Inject constructor(
+@Single
+class UpdateAppThemeSettingsUseCase(
     private val appThemeSettingsRepository: AppThemeSettingsRepository
 ) {
     suspend operator fun invoke(appTheme: AppTheme) {

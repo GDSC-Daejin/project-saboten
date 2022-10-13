@@ -1,11 +1,5 @@
 @file:Suppress("unused", "UnstableApiUsage")
 
-object Koin {
-
-    const val core = "io.insert-koin:koin-core:_"
-
-}
-
 object MultiplatformSettings {
     const val core = "com.russhwolf:multiplatform-settings:_"
 
@@ -23,14 +17,16 @@ object Multiplatform {
     const val firestore = "dev.gitlive:firebase-firestore:_"
 }
 
-val Ktor.Client.contentNegotiation get() = "io.ktor:ktor-client-content-negotiation:_"
+val AndroidX.DataStore.coreOkio get() = "androidx.datastore:datastore-core-okio:_"
+val Koin.annotation get() = "io.insert-koin:koin-annotations:1.0.3"
+val Koin.kspCompiler get() = "io.insert-koin:koin-ksp-compiler:1.0.3"
+
 val Ktor.serializationKotlinx get() = "io.ktor:ktor-serialization-kotlinx:_"
 
 val Firebase.multiplatform get() = Multiplatform
 
 val AndroidX.glanceAppWidget get() = "androidx.glance:glance-appwidget:_"
 
-val Google.Android.maps get() = "com.google.maps.android:maps-ktx:_"
 val Google.Android.mapsUtils get() = "com.google.maps.android:maps-utils-ktx:_"
 val Google.Accompanist.navigation get() = Navigation
 val Google.Accompanist.placeholderMaterial get() = "com.google.accompanist:accompanist-placeholder-material:_"

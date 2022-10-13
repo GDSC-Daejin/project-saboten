@@ -28,7 +28,6 @@ include(":common-client")
 include(":client-paging")
 
 include(":android")
-include(":web")
 include(":server")
 include(":android-ui")
 include(":android-ui-samples")

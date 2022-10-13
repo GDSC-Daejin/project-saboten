@@ -2,14 +2,15 @@ package commonClient.data.repository
 
 import common.model.reseponse.PagingResponse
 import commonClient.data.remote.endpoints.PostApi
-import commonClient.di.Inject
 import commonClient.domain.entity.post.Post
 import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.PostRepository
 import commonClient.utils.map
 import kotlinx.coroutines.flow.Flow
+import org.koin.core.annotation.Single
 
-class PostRepositoryImp @Inject constructor(
+@Single(binds = [PostRepository::class])
+class PostRepositoryImp(
     private val postApi: PostApi
 ) : PostRepository {
 

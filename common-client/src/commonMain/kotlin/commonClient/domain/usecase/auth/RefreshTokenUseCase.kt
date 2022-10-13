@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.auth
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.AuthRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class RefreshTokenUseCase @Inject constructor(
+@Single
+class RefreshTokenUseCase(
     private val authRepository: AuthRepository
 ) {
 

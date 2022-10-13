@@ -6,10 +6,8 @@ import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePatch
-import commonClient.di.Inject
-import commonClient.di.Singleton
-import io.ktor.client.*
-import io.ktor.client.request.*
+import io.ktor.client.request.setBody
+import org.koin.core.annotation.Single
 
 interface UserApi : Api {
 
@@ -23,8 +21,8 @@ interface UserApi : Api {
 
 }
 
-@Singleton
-class UserApiImp @Inject constructor() : UserApi {
+@Single(binds = [UserApi::class])
+class UserApiImp : UserApi {
 
     override suspend fun getMe() = responseGet<UserInfoResponse>("me")
 

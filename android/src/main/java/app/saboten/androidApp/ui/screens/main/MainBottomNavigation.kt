@@ -32,9 +32,6 @@ private val mainNavigationBarData = listOf(
     NavigationData(CategoryScreenDestination) {
         Icon(if (it) Icons.Rounded.Category else Icons.Outlined.Category, null)
     },
-    NavigationData(PostScreenDestination) {
-        Icon(if (it) Icons.Rounded.Add else Icons.Outlined.Add, null)
-    },
     NavigationData(NotificationScreenDestination) {
         Icon(if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications, null)
     },
@@ -61,7 +58,8 @@ fun MainBottomNavigation(
             elevation = 0.dp
         ) {
             mainNavigationBarData.forEach {
-                if (it.direction == PostScreenDestination) {
+//                if (it.direction == PostScreenDestination) {
+                if (false) {
                     BottomNavigationItem(
                         unselectedContentColor = MaterialTheme.colors.onSecondary,
                         selectedContentColor = MaterialTheme.colors.onSecondary,

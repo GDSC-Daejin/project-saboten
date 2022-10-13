@@ -5,8 +5,6 @@ import Properties as AppProperties
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("kapt")
-    id("dagger.hilt.android.plugin")
     id("com.google.gms.google-services")
     id("com.google.firebase.appdistribution")
     id("com.google.firebase.crashlytics")
@@ -72,12 +70,14 @@ dependencies {
     implementation(AndroidX.core.splashscreen)
     implementation(JakeWharton.timber)
 
-    kapt(AndroidX.paging.runtimeKtx)
-    kapt(AndroidX.navigation.runtimeKtx)
-    kapt(AndroidX.hilt.compiler)
-    kapt(Google.dagger.hilt.compiler)
-    implementation(Google.dagger.hilt.android)
-    implementation(AndroidX.hilt.navigationCompose)
+    implementation(AndroidX.paging.runtimeKtx)
+    implementation(AndroidX.navigation.runtimeKtx)
+
+    implementation(Koin.android)
+    implementation(Koin.annotation)
+//    implementation(Koin.compose)
+    implementation("io.insert-koin:koin-androidx-compose:3.2.1")
+    ksp(Koin.kspCompiler)
 
     implementation(ComposeDestination.core)
     implementation(ComposeDestination.animationsCore)
@@ -88,17 +88,6 @@ dependencies {
     testImplementation(platform(Testing.junit.bom))
     testImplementation(Testing.junit.jupiter.api)
     testImplementation(Testing.junit.jupiter.params)
-}
-
-kotlin {
-    sourceSets {
-        debug {
-            kotlin.srcDir("build/generated/ksp/debug/kotlin")
-        }
-        release {
-            kotlin.srcDir("build/generated/ksp/release/kotlin")
-        }
-    }
 }
 
 android {
@@ -192,6 +181,12 @@ android {
                     .replace("app-release", "saboten-android-${AppProperties.androidAppVersionName}")
                     .replace("app-debug", "saboten-android-${AppProperties.androidAppVersionName}")
         }
+//        val variantName = name
+//        sourceSets {
+//            getByName("main") {
+//                java.srcDir(File("build/generated/ksp/$variantName/kotlin"))
+//            }
+//        }
     }
 
     compileOptions {

@@ -4,8 +4,6 @@ import common.coroutines.PlatformDispatchers
 import commonClient.data.LoadState
 import commonClient.data.isFailed
 import commonClient.data.map
-import commonClient.di.HiltViewModel
-import commonClient.di.Inject
 import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.entity.user.UserInfo
 import commonClient.domain.usecase.auth.RefreshTokenUseCase
@@ -36,8 +34,7 @@ interface AppViewModelDelegate : UnidirectionalViewModelDelegate<State, Effect, 
 
 }
 
-@HiltViewModel
-class AppViewModel @Inject constructor(
+class AppViewModel(
     observeMeUseCase: ObserveMeUseCase,
     observeAppThemeSettingsUseCase: ObserveAppThemeSettingsUseCase,
     private val refreshTokenUseCase: RefreshTokenUseCase

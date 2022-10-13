@@ -2,23 +2,22 @@ package commonClient.data.repository
 
 import common.model.request.auth.TokenReissueRequest
 import commonClient.data.remote.endpoints.AuthApi
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.entity.auth.JwtToken
 import commonClient.domain.repository.AuthRepository
 import commonClient.utils.AuthTokenManager
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 
-@Singleton
-class AuthRepositoryImp @Inject constructor(
+@Single(binds = [AuthRepository::class])
+class AuthRepositoryImp constructor(
     private val authApi: AuthApi,
-    private val authTokenManager: AuthTokenManager
+    private val authTokenManager: AuthTokenManager,
 ) : AuthRepository {
 
     override fun refreshToken(forceRefresh: Boolean) = flow {
 
-        val accessToken = authTokenManager.accessToken
-        val refreshToken = authTokenManager.refreshToken
+        val accessToken = authTokenManager.accessToken()
+        val refreshToken = authTokenManager.refreshToken()
 
         if (accessToken == null || refreshToken == null) {
             emit(null)

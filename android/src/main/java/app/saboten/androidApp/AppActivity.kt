@@ -24,15 +24,13 @@ import coil.decode.SvgDecoder
 import commonClient.data.isLoading
 import commonClient.domain.entity.settings.AppTheme
 import commonClient.presentation.AppViewModel
-import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-@AndroidEntryPoint
 class AppActivity : AppCompatActivity() {
 
-    private val appViewModel by viewModels<AppViewModel>()
-
+    private val appViewModel by viewModel<AppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
