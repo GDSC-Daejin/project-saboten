@@ -1,53 +1,69 @@
 package commonClient.utils
 
-import com.russhwolf.settings.Settings
-import common.model.request.auth.TokenReissueRequest
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import common.model.reseponse.auth.JwtTokenResponse
-import commonClient.data.remote.endpoints.AuthApi
-import commonClient.di.Inject
-import commonClient.di.Named
-import commonClient.di.Singleton
-import commonClient.logger.ClientLogger
-import io.ktor.client.plugins.auth.providers.*
+import io.ktor.client.plugins.auth.providers.BearerTokens
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
+import org.koin.core.annotation.Single
 
-@Singleton
-class AuthTokenManager @Inject constructor(
-    @Named("encrypted") private val settings: Settings
+@Single
+class AuthTokenManager(
+    private val settings: DataStore<Preferences>,
 ) {
 
     init {
-        val accessToken = accessToken
-        val refreshToken = refreshToken
-        if (accessToken != null && refreshToken != null) {
-            _tokenStorage.add(BearerTokens(accessToken, refreshToken))
+        CoroutineScope(Dispatchers.Default).launch {
+            val accessToken = accessToken()
+            val refreshToken = refreshToken()
+            if (accessToken != null && refreshToken != null) {
+                _tokenStorage.add(BearerTokens(accessToken, refreshToken))
+            }
         }
     }
 
-    fun setToken(jwtTokenResponse: JwtTokenResponse) {
-        settings.putString(KEY_ACCESS_TOKEN, jwtTokenResponse.accessToken)
-        settings.putString(KEY_REFRESH_TOKEN, jwtTokenResponse.refreshToken)
-        settings.putLong(KEY_EXPIRES_IN, jwtTokenResponse.accessTokenExpiresIn)
+    suspend fun setToken(jwtTokenResponse: JwtTokenResponse) {
+        settings.edit {
+            it[KEY_ACCESS_TOKEN] = jwtTokenResponse.accessToken
+            it[KEY_REFRESH_TOKEN] = jwtTokenResponse.refreshToken
+            it[KEY_EXPIRES_IN] = jwtTokenResponse.accessTokenExpiresIn
+        }
         addToken(jwtTokenResponse)
     }
 
-    val accessToken: String?
-        get() = settings.getStringOrNull(KEY_ACCESS_TOKEN)
+    suspend fun accessToken() : String? {
+        return settings.data.map { it[KEY_ACCESS_TOKEN] }.firstOrNull()
+    }
 
-    val refreshToken: String?
-        get() = settings.getStringOrNull(KEY_REFRESH_TOKEN)
+    suspend fun refreshToken() : String? {
+        return settings.data.map { it[KEY_REFRESH_TOKEN] }.firstOrNull()
+    }
 
-    fun isTokenExpired() = (settings.getLongOrNull(KEY_EXPIRES_IN) ?: 0L) < Clock.System.now().toEpochMilliseconds()
+    suspend fun isTokenExpired(): Boolean {
+        val expiresIn = settings.data.map { it[KEY_EXPIRES_IN] }.firstOrNull() ?: 0L
+        return expiresIn < Clock.System.now().toEpochMilliseconds()
+    }
 
-    fun clear() {
-        settings.remove(KEY_ACCESS_TOKEN)
-        settings.remove(KEY_REFRESH_TOKEN)
-        settings.remove(KEY_EXPIRES_IN)
+    suspend fun clear() {
+        settings.edit {
+            it.remove(KEY_ACCESS_TOKEN)
+            it.remove(KEY_REFRESH_TOKEN)
+            it.remove(KEY_EXPIRES_IN)
+        }
         _tokenStorage.clear()
     }
 
     companion object {
 
+        @Suppress("ObjectPropertyName")
         private val _tokenStorage = mutableListOf<BearerTokens>()
         val tokenStorage: List<BearerTokens>
             get() = _tokenStorage
@@ -56,8 +72,8 @@ class AuthTokenManager @Inject constructor(
             _tokenStorage.add(BearerTokens(token.accessToken, token.refreshToken))
         }
 
-        const val KEY_ACCESS_TOKEN = "access_token"
-        const val KEY_REFRESH_TOKEN = "refresh_token"
-        const val KEY_EXPIRES_IN = "expires_in"
+        val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        val KEY_EXPIRES_IN = longPreferencesKey("expires_in")
     }
 }

@@ -1,18 +1,28 @@
 package app.saboten.androidApp
 
 import android.app.Application
+import app.saboten.androidApp.di.androidAppModule
+import commonClient.di.sharedModule
 import commonClient.logger.ClientLogger
 import commonClient.utils.ClientProperties
-import dagger.hilt.android.HiltAndroidApp
-import javax.inject.Inject
+import org.koin.android.ext.android.inject
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-@HiltAndroidApp
 class AndroidApp : Application() {
 
-    @Inject lateinit var clientProperties: ClientProperties
+    private val clientProperties by inject<ClientProperties>()
 
     override fun onCreate() {
         super.onCreate()
+        startKoin {
+            androidContext(this@AndroidApp)
+            modules(
+                androidAppModule,
+                sharedModule()
+            )
+        }
+
         ClientLogger.init(clientProperties)
     }
 

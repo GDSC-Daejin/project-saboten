@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.user
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.UserRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class GetMeUseCase @Inject constructor(
+@Single
+class GetMeUseCase(
     private val userRepository: UserRepository
 ) {
 

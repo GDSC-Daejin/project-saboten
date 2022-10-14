@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.post
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.PostRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class GetPostByIdUseCase @Inject constructor(
+@Single
+class GetPostByIdUseCase(
     private val postRepository: PostRepository
 ) {
 

@@ -1,15 +1,14 @@
 package commonClient.data.repository
 
 import commonClient.data.remote.endpoints.CategoryApi
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.entity.post.Category
 import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.flow
+import org.koin.core.annotation.Single
 
-@Singleton
-class CategoryRepositoryImp @Inject constructor(
+@Single(binds = [CategoryRepository::class])
+class CategoryRepositoryImp(
     private val categoryApi: CategoryApi
 ) : CategoryRepository {
 

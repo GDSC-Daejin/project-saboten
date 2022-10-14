@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.settings
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.AppThemeSettingsRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class ObserveAppThemeSettingsUseCase @Inject constructor(
+@Single
+class ObserveAppThemeSettingsUseCase(
     appThemeSettingsRepository: AppThemeSettingsRepository
 ) {
     private val themeFlow = appThemeSettingsRepository.getTheme()

@@ -4,9 +4,7 @@ import common.model.reseponse.ApiResponse
 import common.model.reseponse.category.CategoryResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
-import commonClient.di.Inject
-import commonClient.di.Singleton
-import io.ktor.client.*
+import org.koin.core.annotation.Single
 
 interface CategoryApi : Api {
 
@@ -18,8 +16,8 @@ interface CategoryApi : Api {
 
 }
 
-@Singleton
-class CategoryApiImp @Inject constructor() : CategoryApi {
+@Single(binds = [CategoryApi::class])
+class CategoryApiImp: CategoryApi {
 
     override suspend fun getCategories() = responseGet<List<CategoryResponse>>()
 

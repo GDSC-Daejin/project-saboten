@@ -6,10 +6,8 @@ import common.model.reseponse.ApiResponse
 import common.model.reseponse.auth.JwtTokenResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responsePost
-import commonClient.di.Inject
-import commonClient.di.Singleton
-import io.ktor.client.*
-import io.ktor.client.request.*
+import io.ktor.client.request.setBody
+import org.koin.core.annotation.Single
 
 interface AuthApi : Api {
 
@@ -23,8 +21,8 @@ interface AuthApi : Api {
 
 }
 
-@Singleton
-class AuthApiImp @Inject constructor() : AuthApi {
+@Single(binds = [AuthApi::class])
+class AuthApiImp() : AuthApi {
 
     override suspend fun signup(userSignInRequest: UserSignUpRequest): ApiResponse<String> = responsePost("/signup") {
         setBody(userSignInRequest)

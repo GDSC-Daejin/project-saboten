@@ -26,12 +26,12 @@ dependencies {
 
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)
-    implementation(Google.accompanist.systemuicontroller)
-    implementation(Google.accompanist.swiperefresh)
+    implementation(Google.accompanist.systemUiController)
+    implementation(Google.accompanist.swipeRefresh)
     implementation(Google.accompanist.placeholderMaterial)
     implementation(Google.accompanist.navigation.animation)
     implementation(Google.accompanist.navigation.material)
-    implementation(Google.accompanist.flowlayout)
+    implementation(Google.accompanist.flowLayout)
 
     implementation(COIL.compose)
 }

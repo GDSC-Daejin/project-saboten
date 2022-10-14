@@ -5,11 +5,14 @@ import common.model.request.post.update.PostUpdateRequest
 import common.model.reseponse.ApiResponse
 import common.model.reseponse.PagingResponse
 import common.model.reseponse.post.PostResponse
-import commonClient.data.remote.*
-import commonClient.di.Inject
-import commonClient.di.Singleton
-import io.ktor.client.*
-import io.ktor.client.request.*
+import commonClient.data.remote.Api
+import commonClient.data.remote.responseDelete
+import commonClient.data.remote.responseGet
+import commonClient.data.remote.responsePatch
+import commonClient.data.remote.responsePost
+import io.ktor.client.request.parameter
+import io.ktor.client.request.setBody
+import org.koin.core.annotation.Single
 
 interface PostApi : Api {
 
@@ -27,8 +30,8 @@ interface PostApi : Api {
 
 }
 
-@Singleton
-class PostApiImp @Inject constructor() : PostApi {
+@Single(binds = [PostApi::class])
+class PostApiImp : PostApi {
 
     override suspend fun createPost(request: PostCreateRequest) =
         responsePost<PostResponse> { setBody(request) }

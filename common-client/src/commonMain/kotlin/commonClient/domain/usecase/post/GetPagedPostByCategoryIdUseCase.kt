@@ -1,17 +1,16 @@
 package commonClient.domain.usecase.post
 
 import common.model.reseponse.PagingResponse
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
 import commonClient.domain.entity.post.Vote
 import commonClient.domain.entity.post.VoteColors
 import commonClient.domain.entity.user.User
 import commonClient.domain.repository.PostRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class GetPagedPostByCategoryIdUseCase @Inject constructor(
+@Single
+class GetPagedPostByCategoryIdUseCase(
     private val postRepository: PostRepository
 ) {
 
