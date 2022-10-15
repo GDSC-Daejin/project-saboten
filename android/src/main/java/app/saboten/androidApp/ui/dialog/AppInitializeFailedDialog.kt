@@ -14,14 +14,13 @@ import app.saboten.androidUi.styles.surfaceOver
 import app.saboten.androidUi.utils.getActivity
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import commonClient.presentation.AppViewModel
-import commonClient.presentation.AppViewModelDelegate
+import commonClient.presentation.GlobalAppViewModel
 
 @Composable
 @Destination
 fun AppInitializeFailedDialog(
     navigator: DestinationsNavigator,
-    appViewModel: AppViewModel
+    globalAppViewModel: GlobalAppViewModel
 ) {
 
     val activity = LocalContext.current.getActivity()
@@ -40,7 +39,7 @@ fun AppInitializeFailedDialog(
                 FilledButton(
                     modifier = Modifier.fillMaxWidth(),
                     onClick = {
-                        appViewModel.event(AppViewModelDelegate.Event.Retry)
+                        globalAppViewModel.retry()
                         navigator.popBackStack()
                     },
                     text = "확인"

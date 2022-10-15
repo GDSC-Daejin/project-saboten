@@ -55,6 +55,10 @@ dependencies {
     implementation(COIL.composeBase)
     implementation(COIL.svg)
 
+    implementation(Orbit.core)
+    implementation(Orbit.compose)
+    implementation(Orbit.viewmodel)
+
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)
     implementation(Google.accompanist.systemUiController)
