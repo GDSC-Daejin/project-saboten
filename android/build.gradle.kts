@@ -29,7 +29,9 @@ fun createDebugReleaseNote(): String {
 }
 
 dependencies {
+    implementation(project(":common"))
     implementation(project(":common-client"))
+    implementation(project(":client-paging"))
     implementation(project(":android-ui"))
 
     implementation(AndroidX.activity.ktx)

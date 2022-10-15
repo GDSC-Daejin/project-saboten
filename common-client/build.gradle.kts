@@ -38,11 +38,11 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":common"))
-                api(project(":client-paging"))
+                implementation(project(":common"))
+                implementation(project(":client-paging"))
 
-                api(Koin.core)
-                api(Koin.annotation)
+                implementation(Koin.core)
+                implementation(Koin.annotation)
 
                 implementation(Ktor.client.core)
                 implementation(Ktor.client.auth)
@@ -55,8 +55,8 @@ kotlin {
                 implementation(KotlinX.coroutines.core)
                 implementation(KotlinX.datetime)
 
-                api(AndroidX.dataStore.coreOkio)
-                api(AndroidX.dataStore.preferences.core)
+                implementation(AndroidX.dataStore.coreOkio)
+                implementation(AndroidX.dataStore.preferences.core)
             }
             kotlin.srcDirs("build/generated/ksp/commonMain/kotlin")
         }
@@ -71,7 +71,7 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api(Ktor.client.cio)
+                implementation(Ktor.client.cio)
                 implementation(Koin.android)
                 implementation(AndroidX.security.cryptoKtx)
                 implementation(AndroidX.paging.commonKtx)

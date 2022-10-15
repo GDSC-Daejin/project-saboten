@@ -20,16 +20,10 @@ tasks {
 
 kotlin {
     android()
-
     jvm("server")
-
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
-        else -> ::iosX64
-    }
-
-    iosTarget("ios") {}
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     cocoapods {
         summary = "Saboten Common Module"
@@ -40,11 +34,6 @@ kotlin {
             isStatic = false
         }
         podfile = project.file("../ios/Podfile")
-    }
-
-    js("web", IR) {
-        useCommonJs()
-        browser()
     }
 
     sourceSets {
@@ -74,16 +63,28 @@ kotlin {
             }
         }
         val serverTest by getting
-        val iosMain by getting {
+
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
             }
         }
-        val iosTest by getting
-        val webMain by getting {
-            dependencies {
-            }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
         }
-        val webTest by getting
     }
 }
 
