@@ -1,5 +1,6 @@
 package backend.model.post;
 
+import backend.model.compositekey.PostScrapPK;
 import backend.model.user.UserEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
+@Entity @IdClass(PostScrapPK.class)
 @Table(name = "TB_PostScrap")
 public class PostScrapEntity {
 
