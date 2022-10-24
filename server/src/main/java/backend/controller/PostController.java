@@ -68,6 +68,8 @@ class PostController {
         List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
         Long voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
         boolean isLike = postLikeService.findPostIsLike(userEntity, postEntity);
+        boolean isScrap = postScrapService.findPostIsLike(userEntity, postEntity);
+
 
         PostResponse post = new PostResponse(postEntity.getPostId(),
                 postEntity.getPostText(),
@@ -77,8 +79,24 @@ class PostController {
                 voteResult,
                 postEntity.getView() + 1,
                 postEntity.getPostLikeCount(),
+                postEntity.getPostScrapCount(),
                 isLike,
+                isScrap,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
+
+        /**    @SerialName("id") val id: Long,
+         @SerialName("text") val text: String,
+         @SerialName("author") val author: UserResponse,
+         @SerialName("votes") val voteResponses: List<VoteResponse>,
+         @SerialName("categories") val categories: List<CategoryResponse>,
+         @SerialName("selected_vote") val selectedVote: Long?,
+         @SerialName("view") val view: Int,
+         @SerialName("like_count") val likeCount: Int,
+         @SerialName("scrap_count") val scrapCount: Int,
+         @SerialName("is_liked") val isLiked: Boolean?,
+         @SerialName("is_scraped") val isScraped: Boolean?,
+         @SerialName("created_at") val createdAt: String,
+         @SerialName("updated_at") val updatedAt: String?*/
 
         return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
     }
@@ -188,6 +206,8 @@ class PostController {
                 null,
                 postEntity.getView(),
                 postEntity.getPostLikeCount(),
+                postEntity.getPostScrapCount(),
+                null,
                 null,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
@@ -231,4 +251,5 @@ class PostController {
             return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_UNLIKE_SUCCESS);
         }
     }
+
 }
