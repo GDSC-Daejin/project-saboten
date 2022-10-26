@@ -295,4 +295,18 @@ class PostController {
 
         return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
     }
+    
+    @ApiOperation(value = "Hot 게시판 조회", notes = "추천수가 높은 게시물들을 조회합니다.")
+    @GetMapping("/post/hot")
+    public ApiResponse<Page<PostReadResponse>> getHotPostList(@PageableDefault Pageable pageable) {
+        Page<PostEntity> postEntityPage = null;
+        postEntityPage = postService.findAllHotPost(pageable);
+
+        Page<PostReadResponse> myHotPostPage = postEntityPage.map(postEntity -> {
+            return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+                    voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
+        });
+
+        return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
+    }
 }

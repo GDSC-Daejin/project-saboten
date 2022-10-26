@@ -3,15 +3,14 @@ package commonClient.data.repository
 import common.model.request.user.UserUpdateRequest
 import commonClient.data.cache.MeCache
 import commonClient.data.remote.endpoints.UserApi
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.UserRepository
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
-@Singleton
-class UserRepositoryImp @Inject constructor(
+@Single(binds = [UserRepository::class])
+class UserRepositoryImp(
     private val userApi: UserApi,
     private val meCache: MeCache
 ) : UserRepository {

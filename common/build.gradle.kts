@@ -3,12 +3,8 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
-    kotlin("plugin.spring")
     kotlin("native.cocoapods")
-    kotlin("kapt")
     id("com.android.library")
-    id("org.springframework.boot")
-    id("io.spring.dependency-management")
 }
 
 group = "app.saboten"
@@ -24,16 +20,10 @@ tasks {
 
 kotlin {
     android()
-
     jvm("server")
-
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
-        else -> ::iosX64
-    }
-
-    iosTarget("ios") {}
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     cocoapods {
         summary = "Saboten Common Module"
@@ -41,46 +31,31 @@ kotlin {
         ios.deploymentTarget = "14.0"
         framework {
             baseName = "common"
+            isStatic = false
         }
         podfile = project.file("../ios/Podfile")
-    }
-
-    js("web", IR) {
-        useCommonJs()
-        browser()
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(KotlinX.serialization.core)
-                api(KotlinX.serialization.json)
                 implementation(KotlinX.coroutines.core)
+                implementation(KotlinX.serialization.core)
             }
         }
         val commonTest by getting {
             dependencies {
-                implementation(Kotlin.Test.common)
-                implementation(Kotlin.Test.annotationsCommon)
             }
         }
         val androidMain by getting {
             dependencies {
-                api(AndroidX.appCompat)
                 api(AndroidX.core.ktx)
                 api(AndroidX.lifecycle.viewModelKtx)
                 api(JakeWharton.timber)
-
-                api(AndroidX.compose.compiler)
-                api(AndroidX.compose.runtime)
             }
         }
         val androidTest by getting {
             dependencies {
-                implementation(Kotlin.Test.junit5)
-                implementation(project.dependencies.platform(Testing.junit.bom))
-                implementation(Testing.junit.jupiter.api)
-                implementation(Testing.junit.jupiter.params)
             }
         }
         val serverMain by getting {
@@ -88,16 +63,28 @@ kotlin {
             }
         }
         val serverTest by getting
-        val iosMain by getting {
+
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
             }
         }
-        val iosTest by getting
-        val webMain by getting {
-            dependencies {
-            }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
         }
-        val webTest by getting
     }
 }
 
@@ -108,15 +95,4 @@ android {
         minSdk = Properties.androidMinSDK
         targetSdk = Properties.androidTargetSDK
     }
-}
-
-
-kotlin {
-
-    targets.withType(KotlinNativeTarget::class.java) {
-        binaries.all {
-            binaryOptions["memoryModel"] = "experimental"
-        }
-    }
-
 }

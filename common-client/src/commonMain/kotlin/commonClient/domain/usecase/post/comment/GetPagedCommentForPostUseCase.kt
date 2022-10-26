@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.post.comment
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.CommentRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class GetPagedCommentForPostUseCase @Inject constructor(
+@Single
+class GetPagedCommentForPostUseCase(
     private val commentRepository: CommentRepository
 ) {
 

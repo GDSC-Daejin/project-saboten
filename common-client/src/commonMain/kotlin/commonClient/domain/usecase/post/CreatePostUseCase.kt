@@ -1,9 +1,8 @@
 package commonClient.domain.usecase.post
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
+import org.koin.core.annotation.Single
 
-@Singleton
-class CreatePostUseCase @Inject constructor() {
+@Single
+class CreatePostUseCase() {
 
 }

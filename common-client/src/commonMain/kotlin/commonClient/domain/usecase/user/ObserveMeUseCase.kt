@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.user
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.UserRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class ObserveMeUseCase @Inject constructor(private val userRepository: UserRepository) {
+@Single
+class ObserveMeUseCase(private val userRepository: UserRepository) {
 
     operator fun invoke() = userRepository.observeMe()
 

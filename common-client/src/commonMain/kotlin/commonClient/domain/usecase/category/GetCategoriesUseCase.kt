@@ -1,11 +1,10 @@
 package commonClient.domain.usecase.category
 
-import commonClient.di.Inject
-import commonClient.di.Singleton
 import commonClient.domain.repository.CategoryRepository
+import org.koin.core.annotation.Single
 
-@Singleton
-class GetCategoriesUseCase @Inject constructor(
+@Single
+class GetCategoriesUseCase(
     private val categoryRepository: CategoryRepository
 ) {
 

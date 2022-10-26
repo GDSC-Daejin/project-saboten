@@ -1,27 +1,28 @@
-import groovy.sql.Sql
-import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
-
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     kotlin("native.cocoapods")
-    kotlin("kapt")
     id("com.android.library")
+    id("com.google.devtools.ksp")
 }
 
 group = "app.saboten"
 version = "1.0.00"
 
+tasks {
+    withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = "11"
+            languageVersion = "1.7"
+        }
+    }
+}
+
 kotlin {
     android()
-
-    val iosTarget: (String, KotlinNativeTarget.() -> Unit) -> KotlinNativeTarget = when {
-        System.getenv("SDK_NAME")?.startsWith("iphoneos") == true -> ::iosArm64
-        System.getenv("NATIVE_ARCH")?.startsWith("arm") == true -> ::iosSimulatorArm64
-        else -> ::iosX64
-    }
-
-    iosTarget("ios") {}
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
     cocoapods {
         summary = "Saboten Common Client Module"
@@ -29,34 +30,35 @@ kotlin {
         ios.deploymentTarget = "14.0"
         framework {
             baseName = "common_client"
+            isStatic = false
         }
         podfile = project.file("../ios/Podfile")
-    }
-
-    js("web", IR) {
-        useCommonJs()
-        browser()
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(project(":common"))
-                api(project(":client-paging"))
-                api(KotlinX.coroutines.core)
-                api(Koin.core)
-                api(Ktor.serializationKotlinx)
-                api(Ktor.client.core)
-                api(Ktor.client.contentNegotiation)
-                api(Ktor.client.json)
-                api(Ktor.client.serialization)
-                api(Ktor.client.logging)
-                api(Ktor.client.auth)
-                api(MultiplatformSettings.core)
-                api(MultiplatformSettings.coroutines)
-                api(MultiplatformSettings.serialization)
-                api(KotlinX.datetime)
+                implementation(project(":common"))
+                implementation(project(":client-paging"))
+
+                implementation(Koin.core)
+                implementation(Koin.annotation)
+
+                implementation(Ktor.client.core)
+                implementation(Ktor.client.auth)
+                implementation(Ktor.client.serialization)
+                implementation(Ktor.serializationKotlinx)
+                implementation(Ktor.client.contentNegotiation)
+                implementation(Ktor.client.json)
+                implementation(Ktor.client.logging)
+
+                implementation(KotlinX.coroutines.core)
+                implementation(KotlinX.datetime)
+
+                implementation(AndroidX.dataStore.coreOkio)
+                implementation(AndroidX.dataStore.preferences.core)
             }
+            kotlin.srcDirs("build/generated/ksp/commonMain/kotlin")
         }
         val commonTest by getting {
             dependencies {
@@ -69,16 +71,12 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                api(Ktor.client.cio)
-                api(MultiplatformSettings.datastore)
-                api(AndroidX.dataStore.preferences)
+                implementation(Ktor.client.cio)
+                implementation(Koin.android)
                 implementation(AndroidX.security.cryptoKtx)
-                kapt(AndroidX.hilt.compiler)
-                kapt(Google.dagger.hilt.compiler)
-                implementation(Google.dagger.hilt.android)
+                implementation(AndroidX.paging.commonKtx)
                 implementation(project.dependencies.platform(Google.firebase.bom))
                 implementation(Google.firebase.crashlyticsKtx)
-//                implementation(Utils.paging)
             }
         }
         val androidTest by getting {
@@ -90,26 +88,29 @@ kotlin {
                 implementation(Testing.junit.jupiter.params)
             }
         }
-        val iosMain by getting {
+
+        val iosX64Main by getting
+        val iosArm64Main by getting
+        val iosSimulatorArm64Main by getting
+
+        val iosMain by creating {
+            dependsOn(commonMain)
+            iosX64Main.dependsOn(this)
+            iosArm64Main.dependsOn(this)
+            iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(Ktor.client.darwin)
-                implementation(Utils.paging)
             }
         }
-        val iosTest by getting
-        val webMain by getting {
-
-            fun kotlinw(target: String): String =
-                "org.jetbrains.kotlin-wrappers:kotlin-$target"
-
-            dependencies {
-                implementation(project.dependencies.enforcedPlatform(kotlinw("wrappers-bom:_")))
-                implementation(kotlinw("react"))
-                implementation(kotlinw("redux"))
-                implementation(Square.SqlDelight.drivers.sqlJs)
-            }
+        val iosX64Test by getting
+        val iosArm64Test by getting
+        val iosSimulatorArm64Test by getting
+        val iosTest by creating {
+            dependsOn(commonTest)
+            iosX64Test.dependsOn(this)
+            iosArm64Test.dependsOn(this)
+            iosSimulatorArm64Test.dependsOn(this)
         }
-        val webTest by getting
     }
 }
 
@@ -120,16 +121,13 @@ android {
         minSdk = Properties.androidMinSDK
         targetSdk = Properties.androidTargetSDK
     }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
 }
 
 kotlin {
-
-    targets.withType(KotlinNativeTarget::class.java) {
-        binaries.all {
-            binaryOptions["memoryModel"] = "experimental"
-        }
-    }
-
     targets.all {
         compilations.all {
             kotlinOptions {
@@ -160,4 +158,12 @@ kotlin {
             }
         }
     }
+}
+
+dependencies {
+    add("kspCommonMainMetadata", Koin.kspCompiler)
+    add("kspAndroid", Koin.kspCompiler)
+    add("kspIosArm64", Koin.kspCompiler)
+    add("kspIosX64", Koin.kspCompiler)
+    add("kspIosSimulatorArm64", Koin.kspCompiler)
 }

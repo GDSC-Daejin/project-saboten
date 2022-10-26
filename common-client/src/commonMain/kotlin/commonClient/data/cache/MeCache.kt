@@ -1,16 +1,17 @@
 package commonClient.data.cache
 
-import com.russhwolf.settings.Settings
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import common.model.reseponse.user.UserInfoResponse
-import commonClient.di.Inject
-import commonClient.di.Named
-import commonClient.di.Singleton
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.json.Json
+import org.koin.core.annotation.Single
 
-@Singleton
-class MeCache @Inject constructor(
-    @Named("encrypted") private val settings: Settings
+@Single
+class MeCache(
+    private val settings: DataStore<Preferences>,
 ) : Cache<UserInfoResponse> {
 
     private val _me: MutableStateFlow<UserInfoResponse?> = MutableStateFlow(null)
@@ -18,18 +19,18 @@ class MeCache @Inject constructor(
 
     override suspend fun save(value: UserInfoResponse) {
         _me.emit(value)
-        settings.putString(KEY_CACHE_USER_ME, Json.encodeToString(UserInfoResponse.serializer(), value))
+        settings.edit { it[KEY_CACHE_USER_ME] = Json.encodeToString(UserInfoResponse.serializer(), value) }
     }
 
     suspend fun getMe() =
-        settings.getStringOrNull(KEY_CACHE_USER_ME)?.let { Json.decodeFromString(UserInfoResponse.serializer(), it) }
+        settings.data.map { it[KEY_CACHE_USER_ME] }.firstOrNull()?.let { Json.decodeFromString(UserInfoResponse.serializer(), it) }
 
     suspend fun flush() {
-        settings.remove(KEY_CACHE_USER_ME)
+        settings.edit { it.remove(KEY_CACHE_USER_ME) }
         _me.emit(null)
     }
 
     companion object {
-        private const val KEY_CACHE_USER_ME = "CACHE_USER_ME"
+        private val KEY_CACHE_USER_ME = stringPreferencesKey("CACHE_USER_ME")
     }
 }

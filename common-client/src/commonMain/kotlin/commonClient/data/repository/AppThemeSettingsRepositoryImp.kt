@@ -1,42 +1,39 @@
-@file:OptIn(ExperimentalSettingsApi::class)
-
 package commonClient.data.repository
 
-import com.russhwolf.settings.ExperimentalSettingsApi
-import com.russhwolf.settings.coroutines.SuspendSettings
-import commonClient.di.Inject
-import commonClient.di.Singleton
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.stringPreferencesKey
 import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.repository.AppThemeSettingsRepository
 import commonClient.logger.ClientLogger
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.mapNotNull
+import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
-@Singleton
-class AppThemeSettingsRepositoryImp @Inject constructor(
-    private val settings: SuspendSettings
+@Single
+class AppThemeSettingsRepositoryImp constructor(
+    private val settings: DataStore<Preferences>,
 ) : AppThemeSettingsRepository {
 
-    private val appThemeFlow = MutableStateFlow<AppTheme?>(null)
-
-    override fun getTheme() = appThemeFlow.mapNotNull {
-        val theme = it ?: when (settings.getString(KEY_APP_THEME)) {
-            AppTheme.LIGHT.value -> AppTheme.LIGHT
-            AppTheme.DARK.value -> AppTheme.DARK
-            AppTheme.SYSTEM.value -> AppTheme.SYSTEM
-            else -> AppTheme.SYSTEM
+    override fun getTheme() = settings.data
+        .map { it[KEY_APP_THEME] }
+        .map {
+            val theme = when (it) {
+                AppTheme.LIGHT.value -> AppTheme.LIGHT
+                AppTheme.DARK.value -> AppTheme.DARK
+                AppTheme.SYSTEM.value -> AppTheme.SYSTEM
+                else -> AppTheme.SYSTEM
+            }
+            ClientLogger.d("AppThemeSettingsRepositoryImp | theme: $theme")
+            theme
         }
-        ClientLogger.d("AppThemeSettingsRepositoryImp | theme: $theme")
-        theme
-    }
 
     override suspend fun updateTheme(appTheme: AppTheme) {
         ClientLogger.d("AppThemeSettingsRepositoryImp | theme updated: $appTheme")
-        settings.putString(KEY_APP_THEME, appTheme.value)
-        appThemeFlow.emit(appTheme)
+        settings.edit { it[KEY_APP_THEME] = appTheme.value }
     }
 
     companion object {
-        private const val KEY_APP_THEME = "app_theme"
+        private val KEY_APP_THEME = stringPreferencesKey("app_theme")
     }
 }
