@@ -14,5 +14,7 @@ enum class PostResponseMessage(
     POST_NOT_FOUND("게시글이 존재하지 않습니다.", 404),
     POST_LIKE_SUCCESS("좋아요를 하였습니다.", 200),
     POST_UNLIKE_SUCCESS("좋아요를 취소하였습니다.", 200),
-
+    POST_SCRAP_SUCCESS("게시글을 스크랩 하였습니다.", 200),
+    POST_CANCEL_SCRAP_SUCCESS("스크랩을 취소 하였습니다.", 200),
+    POST_SCRAP_FIND_SUCCESS("스크랩 게시물들을 조회하였습니다.", 200)
 }

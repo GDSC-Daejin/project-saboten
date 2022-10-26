@@ -7,6 +7,7 @@ import backend.jwt.SecurityUtil;
 import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
 import backend.model.post.PostEntity;
+import backend.model.post.PostScrapEntity;
 import backend.model.user.UserEntity;
 import backend.service.CategoryService;
 import backend.service.post.*;
@@ -19,6 +20,7 @@ import common.model.reseponse.ApiResponse;
 import common.model.reseponse.category.CategoryResponse;
 import common.model.reseponse.post.PostLikeResponse;
 import common.model.reseponse.post.PostResponse;
+import common.model.reseponse.post.PostScrapResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
 import common.model.reseponse.post.read.PostReadResponse;
@@ -37,6 +39,7 @@ import java.util.List;
 
 @Version1RestController
 @RequiredArgsConstructor
+// TODO : PostController에 너무 많은 기능들이 들어있다고 생각함. 따라서 다른 Controller 생성을 하여 분리가 필요.
 class PostController {
     private final PostService postService;
     private final UserService userService;
@@ -45,6 +48,8 @@ class PostController {
     private final CategoryService categoryService;
     private final CategoryInPostService categoryInPostService;
     private final PostLikeService postLikeService;
+    private final PostScrapService postScrapService;
+
 
     // 로그인 안된 사용자면 null 반환
     private UserEntity getUser() {
@@ -68,6 +73,7 @@ class PostController {
         List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
         Long voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
         boolean isLike = postLikeService.findPostIsLike(userEntity, postEntity);
+        boolean isScrap = postScrapService.findPostIsScrap(userEntity, postEntity);
 
         PostResponse post = new PostResponse(postEntity.getPostId(),
                 postEntity.getPostText(),
@@ -77,8 +83,24 @@ class PostController {
                 voteResult,
                 postEntity.getView() + 1,
                 postEntity.getPostLikeCount(),
+                postEntity.getPostScrapCount(),
                 isLike,
+                isScrap,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
+
+        /**    @SerialName("id") val id: Long,
+         @SerialName("text") val text: String,
+         @SerialName("author") val author: UserResponse,
+         @SerialName("votes") val voteResponses: List<VoteResponse>,
+         @SerialName("categories") val categories: List<CategoryResponse>,
+         @SerialName("selected_vote") val selectedVote: Long?,
+         @SerialName("view") val view: Int,
+         @SerialName("like_count") val likeCount: Int,
+         @SerialName("scrap_count") val scrapCount: Int,
+         @SerialName("is_liked") val isLiked: Boolean?,
+         @SerialName("is_scraped") val isScraped: Boolean?,
+         @SerialName("created_at") val createdAt: String,
+         @SerialName("updated_at") val updatedAt: String?*/
 
         return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
     }
@@ -188,6 +210,8 @@ class PostController {
                 null,
                 postEntity.getView(),
                 postEntity.getPostLikeCount(),
+                postEntity.getPostScrapCount(),
+                null,
                 null,
                 postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
 
@@ -209,7 +233,7 @@ class PostController {
         return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
     }
 
-    @ApiOperation(value = "게시물 좋아요 등록", notes = "사용자가 게시물 좋아요 합니다.")
+    @ApiOperation(value = "게시물 좋아요 등록", notes = "사용자가 게시물을 좋아요 합니다.")
     @PostMapping("/post/{id}/like")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -232,6 +256,46 @@ class PostController {
         }
     }
 
+    @ApiOperation(value = "게시물 스크랩 등록 및 취소", notes = "사용자가 게시물을 스크랩 등록 및 취소합니다.")
+    @PostMapping("/post/{id}/scrap")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
+    })
+    public ApiResponse<PostScrapResponse> postScrap(@PathVariable Long id) {
+        UserEntity userEntity = getUser();
+        PostEntity postEntity = postService.findPost(id);
+
+        boolean isScrap = postScrapService.triggerPostScrap(userEntity, postEntity);
+        PostScrapResponse postScrapResponse = new PostScrapResponse(isScrap);
+
+        if(isScrap) {
+            return ApiResponse.withMessage(postScrapResponse, PostResponseMessage.POST_SCRAP_SUCCESS);
+        }
+        else {
+            return ApiResponse.withMessage(postScrapResponse, PostResponseMessage.POST_CANCEL_SCRAP_SUCCESS);
+        }
+    }
+
+    @ApiOperation(value = "게시물 스크랩 조회", notes = "사용자가 스크랩한 게시물들을 조회합니다.")
+    @GetMapping("/post/my/scrap")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+    })
+    public ApiResponse<List<PostReadResponse>> getPostScrap() {
+        UserEntity userEntity = getUser();
+
+        List<PostScrapEntity> postScrapEntities = postScrapService.getUserScrap(userEntity);
+        List<PostReadResponse> myPostScrap = postScrapEntities.stream().map(postScrapEntity -> {
+                PostEntity postEntity = postScrapEntity.getPost();
+                return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+                        voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
+            }
+        ).toList();
+
+        return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
+    }
+    
     @ApiOperation(value = "Hot 게시판 조회", notes = "추천수가 높은 게시물들을 조회합니다.")
     @GetMapping("/post/hot")
     public ApiResponse<Page<PostReadResponse>> getHotPostList(@PageableDefault Pageable pageable) {

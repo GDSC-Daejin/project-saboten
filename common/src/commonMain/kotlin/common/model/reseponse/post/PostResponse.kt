@@ -15,9 +15,9 @@ data class PostResponse(
     @SerialName("selected_vote") val selectedVote: Long?,
     @SerialName("view") val view: Int,
     @SerialName("like_count") val likeCount: Int,
+    @SerialName("scrap_count") val scrapCount: Int,
     @SerialName("is_liked") val isLiked: Boolean?,
+    @SerialName("is_scraped") val isScraped: Boolean?,
     @SerialName("created_at") val createdAt: String,
     @SerialName("updated_at") val updatedAt: String?
-) {
-
-}
+)
