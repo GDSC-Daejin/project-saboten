@@ -50,7 +50,7 @@ class PostControllerTest {
         @WithMockUser(username = "1")
         public void 로그인시_조회() throws Exception {
             // given
-            int postId = 85;
+            int postId = 86;
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ONE;
             // when then
             // 단순히 data가 들어오는걸로 테스트를 진행해야 될지 상세한 값들도 다 조회해야 할지 의문
@@ -66,19 +66,19 @@ class PostControllerTest {
         @WithAnonymousUser
         public void 비로그인시_조회() throws Exception {
             // given
-            int postId = 85;
+            int postId = 86;
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ONE;
             // when then
             mockMvc.perform(get(baseUrl + "/" + postId))
                     .andExpect(jsonPath("$.data.id").value(postId))
                     .andExpect(jsonPath("$.data.text").isNotEmpty())
                     .andExpect(jsonPath("$.data.author").exists())
-                    .andExpect(jsonPath("$.data.votes").isArray())
-                    .andExpect(jsonPath("$.data.votes").isNotEmpty())
+                    .andExpect(jsonPath("$.data.voteResponses").isArray())
+                    .andExpect(jsonPath("$.data.voteResponses").isNotEmpty())
                     .andExpect(jsonPath("$.data.categories").isArray())
                     .andExpect(jsonPath("$.data.categories").isNotEmpty())
                     .andExpect(jsonPath("$.data.selected_vote").doesNotExist())
-                    .andExpect(jsonPath("$.data.is_liked").value(false))
+                    .andExpect(jsonPath("$.data.liked").value(false))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
