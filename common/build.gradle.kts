@@ -40,7 +40,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(KotlinX.coroutines.core)
-                implementation(KotlinX.serialization.core)
+                api(KotlinX.serialization.core)
+                api(KotlinX.serialization.json)
             }
         }
         val commonTest by getting {
