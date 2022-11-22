@@ -10,8 +10,8 @@ import backend.model.post.PostEntity;
 import backend.model.post.PostScrapEntity;
 import backend.model.user.UserEntity;
 import backend.service.CategoryService;
-import backend.service.post.*;
 import backend.service.UserService;
+import backend.service.post.*;
 import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
 import common.model.request.post.create.PostCreateRequest;
@@ -36,6 +36,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Version1RestController
 @RequiredArgsConstructor
@@ -291,7 +292,7 @@ class PostController {
                 return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
                         voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
             }
-        ).toList();
+        ).collect(Collectors.toList());
 
         return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
     }
