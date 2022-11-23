@@ -117,9 +117,9 @@ class PostController {
         UserEntity userEntity = getUser();
         UserResponse user = userEntity.toDto();
 
+        List<CategoryEntity> categoryEntities = categoryService.getCategories(postCreateRequest.getCategoryIds());
         PostEntity postEntity= postService.create(postCreateRequest.getText(), userEntity);
         List<VoteResponse> votes = voteService.saveVotes(postCreateRequest.getVoteTopics(), postEntity);
-        List<CategoryEntity> categoryEntities = categoryService.getCategories(postCreateRequest.getCategoryIds());
         List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoryEntities, postEntity);
 
         PostCreatedResponse post = new PostCreatedResponse(postEntity.getPostId(),postEntity.getPostText(),

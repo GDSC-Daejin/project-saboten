@@ -97,7 +97,7 @@ class CategoryResponseControllerTest {
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.id").value(id))
                     .andExpect(jsonPath("$.data.name").value(categoryName))
-                    .andExpect(jsonPath("$.data.iconUrl").value(iconUrl))
+                    .andExpect(jsonPath("$.data.icon_url").value(iconUrl))
                     .andExpect(jsonPath("$.code").value(message.toString()))
                     .andExpect(jsonPath("$.message").value(message.getMessage()))
                     .andDo(print());
