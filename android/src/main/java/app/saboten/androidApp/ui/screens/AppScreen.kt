@@ -3,9 +3,24 @@
 package app.saboten.androidApp.ui.screens
 
 import androidx.compose.animation.*
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.FloatingActionButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import app.saboten.androidApp.extensions.collectInLaunchedEffect
@@ -25,6 +40,7 @@ import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultA
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
+import com.ramcosta.composedestinations.navigation.navigate
 import commonClient.presentation.AppViewModel
 import commonClient.presentation.AppViewModelDelegate
 
@@ -80,6 +96,36 @@ private fun MainDestinationScaffold(
     }
 
     BasicScaffold(
+        floatingActionButtonPosition = FabPosition.Center,
+        isFloatingActionButtonDocked = true,
+        floatingActionButton = {
+            AnimatedVisibility(
+                isBottomBarVisible,
+                enter = scaleIn(),
+                exit = scaleOut()
+            ) {
+                FloatingActionButton(
+                    modifier = Modifier
+                        .size(50.dp)
+                        .border(
+                            2.dp,
+                            color = Color.White,
+                            shape = CircleShape
+                        ).shadow(
+                            20.dp,
+                            shape = CircleShape,
+                            ambientColor = Color.Black.copy(0.1f),
+                            spotColor = Color.Black.copy(0.1f)
+                        ),
+                    elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
+                    onClick = {
+
+                    }
+                ) {
+                    Icon(imageVector = Icons.Rounded.Add, contentDescription = null, modifier = Modifier.size(30.dp))
+                }
+            }
+        },
         bottomBar = {
             AnimatedVisibility(
                 isBottomBarVisible,

@@ -1,11 +1,14 @@
 package app.saboten.androidApp.ui.screens.main
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -16,27 +19,30 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import app.saboten.androidApp.ui.destinations.*
+import app.saboten.androidUi.styles.SabotenColors
+import app.saboten.androidUi.styles.SabotenColors.green500
 import com.ramcosta.composedestinations.navigation.navigate
 import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
 
 private data class NavigationData(
     val direction: Direction,
-    val icon: @Composable (Boolean) -> Unit
+    val icon: @Composable (Boolean) -> Unit,
 )
 
 private val mainNavigationBarData = listOf(
     NavigationData(HomeScreenDestination) {
-        Icon(if (it) Icons.Rounded.Home else Icons.Outlined.Home, null)
+        Icon(if (it) Icons.Rounded.Home else Icons.Rounded.Home, null, modifier = Modifier.size(30.dp))
     },
     NavigationData(CategoryScreenDestination) {
-        Icon(if (it) Icons.Rounded.Category else Icons.Outlined.Category, null)
+        Icon(if (it) Icons.Rounded.Dashboard else Icons.Rounded.Dashboard, null, modifier = Modifier.size(30.dp))
     },
+    null,
     NavigationData(NotificationScreenDestination) {
-        Icon(if (it) Icons.Rounded.Notifications else Icons.Outlined.Notifications, null)
+        Icon(if (it) Icons.Rounded.Notifications else Icons.Rounded.Notifications, null, modifier = Modifier.size(30.dp))
     },
     NavigationData(ProfileScreenDestination) {
-        Icon(if (it) Icons.Rounded.Person else Icons.Outlined.Person, null)
+        Icon(if (it) Icons.Rounded.Person else Icons.Rounded.Person, null, modifier = Modifier.size(30.dp))
     },
 )
 
@@ -48,8 +54,7 @@ fun MainBottomNavigation(
 
     Column(
         modifier = Modifier
-            .height(80.dp)
-            .background(MaterialTheme.colors.surface),
+            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
     ) {
         Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.05f))
         BottomNavigation(
@@ -58,47 +63,13 @@ fun MainBottomNavigation(
             elevation = 0.dp
         ) {
             mainNavigationBarData.forEach {
-//                if (it.direction == PostScreenDestination) {
-                if (false) {
-                    BottomNavigationItem(
-                        unselectedContentColor = MaterialTheme.colors.onSecondary,
-                        selectedContentColor = MaterialTheme.colors.onSecondary,
-                        icon = {
-                            FloatingActionButton(
-                                modifier = Modifier.size(36.dp),
-                                elevation = FloatingActionButtonDefaults.elevation(
-                                    0.dp,
-                                    0.dp,
-                                    0.dp,
-                                    0.dp
-                                ),
-                                onClick = {
-                                    navController.navigatorProvider
-                                    navController.navigate(it.direction) {
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                }
-                            ) {
-                                it.icon(destination == it.direction)
-                            }
-                        },
-                        selected = destination == it.direction,
-                        onClick = {
-                            navController.navigatorProvider
-                            navController.navigate(it.direction) {
-                                launchSingleTop = true
-                                restoreState = true
-                            }
-                        }
-                    )
-                } else BottomNavigationItem(
-                    unselectedContentColor = MaterialTheme.colors.onBackground.copy(0.2f),
-                    selectedContentColor = MaterialTheme.colors.onBackground,
+                if (it == null) Spacer(modifier = Modifier)
+                else BottomNavigationItem(
+                    unselectedContentColor = SabotenColors.grey200,
+                    selectedContentColor = MaterialTheme.colors.primary,
                     icon = { it.icon(destination == it.direction) },
                     selected = destination == it.direction,
                     onClick = {
-                        navController.navigatorProvider
                         navController.navigate(it.direction) {
                             launchSingleTop = true
                             restoreState = true
