@@ -15,6 +15,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -54,16 +55,18 @@ fun MainBottomNavigation(
 
     Column(
         modifier = Modifier
-            .background(MaterialTheme.colors.surface, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
+            .background(
+                MaterialTheme.colors.surface,
+                shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+            ),
     ) {
-        Divider(color = MaterialTheme.colors.onSurface.copy(alpha = 0.05f))
         BottomNavigation(
             modifier = Modifier.navigationBarsPadding(),
             backgroundColor = Color.Transparent,
             elevation = 0.dp
         ) {
             mainNavigationBarData.forEach {
-                if (it == null) Spacer(modifier = Modifier)
+                if (it == null) Spacer(modifier = Modifier.weight(1f))
                 else BottomNavigationItem(
                     unselectedContentColor = SabotenColors.grey200,
                     selectedContentColor = MaterialTheme.colors.primary,

@@ -112,9 +112,9 @@ private fun MainDestinationScaffold(
                             color = Color.White,
                             shape = CircleShape
                         ).shadow(
-                            20.dp,
+                            10.dp,
                             shape = CircleShape,
-                            ambientColor = Color.Black.copy(0.1f),
+                            ambientColor = Color.Black,
                             spotColor = Color.Black.copy(0.1f)
                         ),
                     elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
