@@ -10,13 +10,22 @@ import androidx.compose.ui.graphics.compositeOver
 val Colors.surfaceOver
     get() = onSurface.copy(alpha = if (isLight) 0.03f else 0.1f).compositeOver(background)
 
+object SabotenColors {
+
+    val green500 = Color(0xFF00C064)
+
+
+    val grey200 = Color(0xFFC6C6C6)
+
+}
+
 @SuppressLint("ConflictingOnColor")
 internal val lightColors = lightColors(
-    primary = Color(0xFF1AAF41),
+    primary = SabotenColors.green500,
     onPrimary = Color.White,
-    primaryVariant = Color(0xFF1AAF41),
-    secondary = Color(0xFF69CB3A),
-    secondaryVariant = Color(0xFF69CB3A),
+    primaryVariant = SabotenColors.green500,
+    secondary = SabotenColors.green500,
+    secondaryVariant = SabotenColors.green500,
     onSecondary = Color.White,
     surface = Color.White,
     onSurface = Color.Black,
@@ -25,11 +34,11 @@ internal val lightColors = lightColors(
 
 @SuppressLint("ConflictingOnColor")
 internal val darkColors = darkColors(
-    primary = Color(0xFF1AAF41),
+    primary = SabotenColors.green500,
     onPrimary = Color.White,
-    primaryVariant = Color(0xFF1AAF41),
-    secondary = Color(0xFF69CB3A),
-    secondaryVariant = Color(0xFF69CB3A),
+    primaryVariant = SabotenColors.green500,
+    secondary = SabotenColors.green500,
+    secondaryVariant = SabotenColors.green500,
     surface = Color(0xFF191C20),
     onSurface = Color.White,
     background = Color(0xFF0F1013)
