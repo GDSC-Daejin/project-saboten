@@ -14,7 +14,10 @@ import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.styles.SabotenColors
 
 @Composable
-fun MainTopBar() {
+fun MainTopBar(
+    onNotificationClicked: () -> Unit = {},
+    onSearchClicked: () -> Unit = {},
+) {
 
     BasicTopBar(
         title = {
@@ -25,7 +28,7 @@ fun MainTopBar() {
             )
         },
         actions = {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onNotificationClicked() }) {
                 Icon(
                     imageVector = Icons.Rounded.Notifications,
                     contentDescription = "알림",
@@ -34,7 +37,7 @@ fun MainTopBar() {
                 )
 
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { onSearchClicked() }) {
                 Icon(
                     imageVector = Icons.Rounded.Search,
                     contentDescription = "검색",
