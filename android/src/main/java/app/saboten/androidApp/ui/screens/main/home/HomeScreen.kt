@@ -30,6 +30,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.list.PostFeedListItem
+import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
@@ -46,6 +47,7 @@ import commonClient.domain.entity.user.User
 fun HomeScreen(
     navigator: DestinationsNavigator
 ) {
+
     HomeScreenContent(
         navigator = navigator
     )
@@ -58,144 +60,13 @@ fun HomeScreenContent(
 
     BasicScaffold(
         topBar = {
+            MainTopBar()
         }
     ) {
 
         LazyColumn(modifier = Modifier.padding(it)) {
 
-            item {
-
-                BasicTopBar(
-                    title = {
-                        Text(text = "선인장")
-                    },
-                    actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            BadgedBox(badge = {
-                                Badge()
-                            }) {
-                                Icon(Icons.Rounded.Notifications, null)
-                            }
-                        }
-                    }
-                )
-
-                Box(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(MaterialTheme.colors.surface)
-                        .padding(horizontal = 20.dp)
-                ) {
-                    Row(
-                        Modifier
-                            .fillMaxWidth()
-                            .background(
-                                color = MaterialTheme.colors.onSurface.copy(0.03f),
-                                shape = RoundedCornerShape(100.dp)
-                            )
-                            .padding(15.dp)
-                            .clickable {
-
-                            },
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(
-                            Icons.Rounded.Search,
-                            null,
-                            tint = MaterialTheme.colors.onSurface.copy(0.2f)
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
-                        Text(
-                            text = "찾아보기",
-                            style = MaterialTheme.typography.body1,
-                            color = MaterialTheme.colors.onSurface.copy(0.5f)
-                        )
-                    }
-                }
-            }
-
-            item {
-                HeaderBar(
-                    "주간 베스트 고민거리",
-                    "더보기"
-                ) {
-
-                }
-                LazyRow(
-                    modifier = Modifier.background(MaterialTheme.colors.surface),
-                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 30.dp)
-                ) {
-                    item {
-                        repeat(5) {
-                            PostFeedListItem(
-                                post = Post(
-                                    0,
-                                    "탕수육 먹을때 찍먹 vs 부먹",
-                                    User(0, "Harry", "https://picsum.photos/200/200"),
-                                    listOf(
-                                        Vote(0, "찍먹", 10, VoteColors.BLUE),
-                                        Vote(1, "부먹", 1, VoteColors.RED),
-                                    ),
-                                    listOf(
-                                        Category(0, "호불호", ""),
-                                        Category(0, "먹을거", ""),
-                                    ),
-                                    0,
-                                    null,
-                                    "",
-                                    null
-                                )
-                            ) {
-
-                            }
-                            Spacer(modifier = Modifier.width(20.dp))
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-
-            item {
-                HeaderBar(
-                    "실시간 베스트 고민거리",
-                    "더보기"
-                ) {
-
-                }
-                LazyRow(
-                    modifier = Modifier.background(MaterialTheme.colors.surface),
-                    contentPadding = PaddingValues(start = 20.dp, end = 20.dp, bottom = 30.dp)
-                ) {
-                    item {
-                        repeat(5) {
-                            PostFeedListItem(
-                                post = Post(
-                                    0,
-                                    "탕수육 먹을때 찍먹 vs 부먹",
-                                    User(0, "Harry", "https://picsum.photos/200/200"),
-                                    listOf(
-                                        Vote(0, "찍먹", 10, VoteColors.BLUE),
-                                        Vote(1, "부먹", 1, VoteColors.RED),
-                                    ),
-                                    listOf(
-                                        Category(0, "호불호", ""),
-                                        Category(0, "먹을거", ""),
-                                    ),
-                                    0,
-                                    null,
-                                    "",
-                                    null
-                                )
-                            ) {
-
-                            }
-                            Spacer(modifier = Modifier.width(20.dp))
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-            }
+            item { HomeScreenTrendingCategories() }
 
             item {
                 Spacer(modifier = Modifier.height(20.dp))
