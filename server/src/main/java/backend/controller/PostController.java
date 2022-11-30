@@ -2,6 +2,7 @@ package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
 import backend.controller.swagger.response.PostNotFoundResponse;
+import backend.controller.swagger.response.PostVoteNotFound;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
 import backend.model.category.CategoryEntity;
@@ -14,6 +15,7 @@ import backend.service.UserService;
 import backend.service.post.*;
 import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
+import common.model.request.post.VoteSelectRequest;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
@@ -309,5 +311,40 @@ class PostController {
         });
 
         return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
+    }
+
+    @ApiOperation(value = "게시물 투표", notes = "사용자가 게시물을 투표합니다.")
+    @PostMapping("/post/{id}/vote")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
+            @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostVoteNotFound.class),
+    })
+    public ApiResponse<?> votePost(@RequestBody VoteSelectRequest voteSelectRequest, @PathVariable Long id) {
+        UserEntity userEntity = getUser();
+
+        PostEntity postEntity = postService.findPost(id);
+        voteService.findVote(voteSelectRequest.getId());
+        voteSelectService.saveVoteSelect(postEntity, userEntity, voteSelectRequest.getId());
+
+        return ApiResponse.withMessage(null, PostResponseMessage.POST_VOTE_SUCCESS);
+    }
+
+    @ApiOperation(value = "자기가 투표한 게시물 조회", notes = "사용자가 투표했던 게시물들을 조회합니다.")
+    @GetMapping("/post/my/voted")
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
+    })
+    public ApiResponse<List<PostReadResponse>> getPostVoted() {
+        UserEntity userEntity = getUser();
+
+        List<PostEntity> postEntities = voteSelectService.findPostVoted(userEntity);
+        List<PostReadResponse> myPostVoted = postEntities.stream().map(postEntity -> {
+                    return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
+                            voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
+                }
+        ).collect(Collectors.toList());
+
+        return ApiResponse.withMessage(myPostVoted, PostResponseMessage.POST_VOTED_FIND_SUCCESS);
     }
 }
