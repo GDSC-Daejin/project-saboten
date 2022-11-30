@@ -56,8 +56,13 @@ public class CategoryService {
         List<CategoryEntity> categories = new ArrayList<>();
         for (Long categoryId : categoryIds) {
             CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId);
+
+            if(categoryEntity == null)
+                throw new ApiException(CategoryResponseMessage.CATEGORY_NOT_FOUND);
+
             categories.add(categoryEntity);
         }
+
         return categories;
     }
 }

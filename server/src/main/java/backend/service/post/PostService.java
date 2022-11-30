@@ -29,6 +29,8 @@ public class PostService {
                 .postText(text)
                 .postLikeCount(0)
                 .user(userEntity)
+                .postScrapCount(0)
+                .view(0)
                 .build();
         postEntity = postRepository.save(postEntity);
         return postEntity;

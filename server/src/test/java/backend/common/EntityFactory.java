@@ -37,12 +37,14 @@ public class EntityFactory {
                 .postLikeCount(0)
                 .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
                 .user(authorUserEntity())
+                .postScrapCount(0)
+                .view(0)
                 .build();
     }
 
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
-                .categoryName("음악")
+                .categoryName("음식")
                 .categoryIconUrl("https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg")
                 .build();
     }

@@ -83,6 +83,8 @@ class VoteResponseSelectRepositoryTest {
                     .postLikeCount(0)
                     .postText("내일 수업 듣는다 vs 안듣는다")
                     .user(author)
+                    .view(0)
+                    .postScrapCount(0)
                     .build();
             // when
             postRepository.save(otherPost);
