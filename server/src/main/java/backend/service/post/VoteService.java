@@ -1,8 +1,10 @@
 package backend.service.post;
 
+import backend.exception.ApiException;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
 import backend.repository.post.VoteRepository;
+import common.message.PostResponseMessage;
 import common.model.request.post.create.VoteCreateRequest;
 import common.model.reseponse.post.VoteResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -63,5 +66,15 @@ public class VoteService {
         }
 
         return votes;
+    }
+
+    public VoteEntity findVote(long id) {
+        Optional<VoteEntity> optionalVoteEntity = voteRepository.findById(id);
+
+        if(optionalVoteEntity.isEmpty()) {
+            throw new ApiException(PostResponseMessage.POST_VOTE_NOT_FOUND);
+        }
+
+        return optionalVoteEntity.get();
     }
 }

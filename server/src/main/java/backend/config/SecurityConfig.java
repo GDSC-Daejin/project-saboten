@@ -68,12 +68,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/**/auth/**", "/swagger-ui/**", "/swagger-resources/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/**/post", "/**/post/{postId}/comment",
-                        "/**/post/{id}/like", "/**/post/{id}/scrap").authenticated()
+                        "/**/post/{id}/like", "/**/post/{id}/scrap", "/**/post/{id}/vote").authenticated()
                 .antMatchers(HttpMethod.PUT, "/**/post").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/**/post/{id}",
                         "/**/post/{postId}/comment/{commentId}").authenticated()
                 .antMatchers(HttpMethod.GET, "/**/userInfo", "/**/post/comment",
-                        "/**/post/my", "/**/post/my/scrap").authenticated()
+                        "/**/post/my", "/**/post/my/scrap", "/**/post/my/voted").authenticated()
 
                 // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
                 .and()
