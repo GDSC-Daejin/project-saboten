@@ -18,12 +18,25 @@ public class VoteSelectService {
 
     @Transactional
     public void saveVoteSelect(PostEntity postEntity , UserEntity userEntity, Long voteResult) {
+        VoteSelectEntity votedSelectEntity = findVoteSelect(userEntity, postEntity);
+        if(votedSelectEntity != null) {
+            deleteVoteSelect(votedSelectEntity);
+        }
+
         VoteSelectEntity voteSelectEntity = new VoteSelectEntity(postEntity, userEntity, voteResult);
         voteSelectRepository.save(voteSelectEntity);
     }
 
+    private void deleteVoteSelect(VoteSelectEntity voteSelectEntity) {
+        voteSelectRepository.delete(voteSelectEntity);
+    }
+
+    private VoteSelectEntity findVoteSelect(UserEntity userEntity, PostEntity postEntity) {
+        return voteSelectRepository.findByUserAndPost(userEntity, postEntity);
+    }
+
     public Long findVoteSelectResult(UserEntity userEntity, PostEntity postEntity) {
-        VoteSelectEntity voteSelectEntity = voteSelectRepository.findByUserAndPost(userEntity, postEntity);
+        VoteSelectEntity voteSelectEntity = findVoteSelect(userEntity, postEntity);
         Long voteResult = null;
         if(voteSelectEntity != null)
             voteResult = voteSelectEntity.getVoteResult();
