@@ -47,7 +47,7 @@ jobs:
 
       - name: Docker Build
         run: |
-          docker login --username=peonypeonypeony --password=${{ secrets.PEONY_PW }} peonypeonypeony/saboten
+          docker login --username=peonypeonypeony --password=${{ secrets.PEONY_PW }}
           docker build --tag peonypeonypeony/saboten:$GITHUB_SHA server
 
       - name: Docker Push
