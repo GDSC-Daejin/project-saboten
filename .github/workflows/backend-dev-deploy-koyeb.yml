@@ -1,4 +1,4 @@
-name: Backend Dev Deploy to GCE
+name: Backend Dev Deploy to Koyeb
 
 on:
   push:
@@ -44,24 +44,12 @@ jobs:
 
       - name: Move to DockerFile Directory
         run: cd server
-#
+      #
       - name: Docker Build
         run: |
-          docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
-          docker build --tag registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web server
+#          docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+          docker build --tag peonypeonypeony/saboten:$GITHUB_SHA server
 
       - name: Docker Push
         run: |
-          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
-
-      # Push the Docker image to Heroku Container Registry
-      - name: Publish
-        env:
-          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
-          DOCKERFILE_DIRECTORY: "./server"
-        run: |
-          cd $DOCKERFILE_DIRECTORY
-          heroku container:push web -a $HEROKU_APP_NAME
-          heroku container:release web -a $HEROKU_APP_NAME
+          docker push peonypeonypeony/saboten:$GITHUB_SHA

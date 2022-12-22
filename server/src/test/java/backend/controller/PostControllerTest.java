@@ -77,8 +77,8 @@ class PostControllerTest {
                     .andExpect(jsonPath("$.data.votes").isNotEmpty())
                     .andExpect(jsonPath("$.data.categories").isArray())
                     .andExpect(jsonPath("$.data.categories").isNotEmpty())
-                    .andExpect(jsonPath("$.data.selected_vote").doesNotExist())
-                    .andExpect(jsonPath("$.data.is_liked").value(false))
+                    .andExpect(jsonPath("$.data.selectedVote").doesNotExist())
+                    .andExpect(jsonPath("$.data.isLiked").value(false))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());

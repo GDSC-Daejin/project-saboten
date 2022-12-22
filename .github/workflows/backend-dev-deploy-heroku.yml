@@ -1,0 +1,67 @@
+name: Backend Dev Deploy to Heroku
+
+on:
+  push:
+    branches: [ release-server/heroku ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # application-dev.properties 생성
+      - name: Create Spring Properties
+        run: |
+          touch server/src/main/resources/application-dev.properties
+          echo "$DEV_SPRING_PROPERTIES" > application-dev.properties.b64
+          base64 -d -i application-dev.properties.b64 > server/src/main/resources/application-dev.properties
+        env:
+          DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean :server:build -Pprofile=dev    
+
+      - name: Move to DockerFile Directory
+        run: cd server
+#
+      - name: Docker Build
+        run: |
+          docker login --username=${{ secrets.HEROKU_EMAIL }} --password=${{ secrets.HEROKU_API_KEY }} registry.heroku.com
+          docker build --tag registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web server
+
+      - name: Docker Push
+        run: |
+          docker push registry.heroku.com/${{ secrets.HEROKU_APP_NAME }}/web
+
+      # Push the Docker image to Heroku Container Registry
+      - name: Publish
+        env:
+          HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+          DOCKERFILE_DIRECTORY: "./server"
+        run: |
+          cd $DOCKERFILE_DIRECTORY
+          heroku container:push web -a $HEROKU_APP_NAME
+          heroku container:release web -a $HEROKU_APP_NAME
