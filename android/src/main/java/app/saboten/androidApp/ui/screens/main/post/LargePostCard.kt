@@ -98,9 +98,7 @@ fun LargePostCard(
                         },
                     imageVector = Icons.Rounded.Bookmark,
                     tint =
-                    post.isScraped?.let { isScraped ->
-                        if (isScraped) SabotenColors.green500 else SabotenColors.grey200
-                    } ?: SabotenColors.grey200,
+                    if (post.isScraped == true) SabotenColors.green500 else SabotenColors.grey200,
                     contentDescription = "스크랩"
                 )
             }
@@ -175,9 +173,8 @@ fun LargePostCard(
                         imageVector = Icons.Rounded.Favorite,
                         contentDescription = "하트",
                         tint =
-                        post.isLiked?.let { isLiked ->
-                            if (isLiked) SabotenColors.green500 else SabotenColors.grey200
-                        } ?: SabotenColors.grey200
+                        if (post.isLiked == true) SabotenColors.green500 else SabotenColors.grey200
+
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 6.dp))
                     Icon(
