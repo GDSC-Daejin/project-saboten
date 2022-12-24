@@ -16,5 +16,8 @@ enum class PostResponseMessage(
     POST_UNLIKE_SUCCESS("좋아요를 취소하였습니다.", 200),
     POST_SCRAP_SUCCESS("게시글을 스크랩 하였습니다.", 200),
     POST_CANCEL_SCRAP_SUCCESS("스크랩을 취소 하였습니다.", 200),
-    POST_SCRAP_FIND_SUCCESS("스크랩 게시물들을 조회하였습니다.", 200)
+    POST_SCRAP_FIND_SUCCESS("스크랩 게시물들을 조회하였습니다.", 200),
+    POST_VOTE_SUCCESS("게시물 투표에 성공하였습니다.", 201),
+    POST_VOTE_NOT_FOUND("게시물 투표 정보를 찾지 못하였습니다.", 404),
+    POST_VOTED_FIND_SUCCESS("투표한 게시물들을 조회하였습니다.", 200)
 }
