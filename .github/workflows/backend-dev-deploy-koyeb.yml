@@ -53,3 +53,11 @@ jobs:
       - name: Docker Push
         run: |
           docker push peonypeonypeony/saboten:$GITHUB_SHA
+
+      - name: Install and configure the Koyeb CLI
+        uses: koyeb-community/install-koyeb-cli@v2
+        with:
+          api_token: ${{ secrets.KOYEB_TOKEN }}
+
+      - name: Deploy to Koyeb
+        run: koyeb service redeploy saboten/saboten
