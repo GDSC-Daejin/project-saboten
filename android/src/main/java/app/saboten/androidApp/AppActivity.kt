@@ -56,12 +56,11 @@ class AppActivity : AppCompatActivity() {
         setContent {
             val (state) = appViewModel.extract()
             MainTheme(
-//                isDarkTheme = when (state.appTheme) {
-//                    AppTheme.DARK -> true
-//                    AppTheme.LIGHT -> false
-//                    else -> isSystemInDarkTheme()
-//                }
-                false
+                isDarkTheme = when (state.appTheme) {
+                    AppTheme.DARK -> true
+                    AppTheme.LIGHT -> false
+                    else -> isSystemInDarkTheme()
+                }
             ) {
                 ProvideMeInfo(state.me) {
                     AppScreen(appViewModel)
