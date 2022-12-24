@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -48,7 +49,7 @@ fun HomeScreenContent(
 
     val isHeaderScrolled by remember {
         derivedStateOf {
-            (lazyListState.firstVisibleItemIndex == 0 && lazyListState.firstVisibleItemScrollOffset >= 100.dp.value) || lazyListState.firstVisibleItemIndex != 0
+            lazyListState.firstVisibleItemScrollOffset > 0
         }
     }
 
@@ -70,6 +71,15 @@ fun HomeScreenContent(
             color = Color.Transparent,
             darkIcons = isStatusBarIconColorDark
         )
+    }
+
+    DisposableEffect(true) {
+        onDispose {
+            systemUiController.setStatusBarColor(
+                color = Color.Transparent,
+                darkIcons = isLight
+            )
+        }
     }
 
     BasicScaffold {
