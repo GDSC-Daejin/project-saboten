@@ -18,6 +18,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Bookmark
+import androidx.compose.material.icons.rounded.Favorite
+import androidx.compose.material.icons.rounded.Forum
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,10 +36,6 @@ import androidx.compose.ui.unit.sp
 import app.saboten.androidApp.ui.screens.main.post.vote.SelectedVoteItem
 import app.saboten.androidApp.ui.screens.main.post.vote.UnSelectedVoteItem
 import app.saboten.androidUi.image.NetworkImage
-import app.saboten.androidUi.image.SabotenIconPack
-import app.saboten.androidUi.image.sabotenIconPack.CommentIcon
-import app.saboten.androidUi.image.sabotenIconPack.HeartIcon
-import app.saboten.androidUi.image.sabotenIconPack.ScrapIcon
 import app.saboten.androidUi.styles.SabotenColors
 import commonClient.domain.entity.post.Post
 
@@ -92,11 +92,11 @@ fun LargePostCard(
 
                 Icon(
                     modifier = Modifier
-                        .size(19.dp, 25.dp)
+                        .size(34.dp)
                         .clickable {
                             onScrapClicked()
                         },
-                    imageVector = SabotenIconPack.ScrapIcon,
+                    imageVector = Icons.Rounded.Bookmark,
                     tint =
                     post.isScraped?.let { isScraped ->
                         if (isScraped) SabotenColors.green500 else SabotenColors.grey200
@@ -172,7 +172,7 @@ fun LargePostCard(
                             .clickable {
                                 onLikeClicked()
                             },
-                        imageVector = SabotenIconPack.HeartIcon,
+                        imageVector = Icons.Rounded.Favorite,
                         contentDescription = "하트",
                         tint =
                         post.isLiked?.let { isLiked ->
@@ -187,7 +187,7 @@ fun LargePostCard(
                             .clickable {
                                 onCommentClicked()
                             },
-                        imageVector = SabotenIconPack.CommentIcon,
+                        imageVector = Icons.Rounded.Forum,
                         contentDescription = "댓글",
                         tint = SabotenColors.grey200
                     )

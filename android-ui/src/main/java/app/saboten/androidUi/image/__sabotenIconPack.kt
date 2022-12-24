@@ -1,11 +1,8 @@
-package app.saboten.androidUi.image // ktlint-disable filename
+package app.saboten.androidUi.image
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.saboten.androidUi.image.sabotenIconPack.ABIcon
-import app.saboten.androidUi.image.sabotenIconPack.CommentIcon
-import app.saboten.androidUi.image.sabotenIconPack.HeartIcon
 import app.saboten.androidUi.image.sabotenIconPack.SabotenLogo
-import app.saboten.androidUi.image.sabotenIconPack.ScrapIcon
 import kotlin.collections.List as ____KtList
 
 object SabotenIconPack
@@ -18,6 +15,6 @@ val SabotenIconPack.AllIcons: ____KtList<ImageVector>
             return __AllIcons!!
         }
         __AllIcons =
-            listOf(HeartIcon, ScrapIcon, ABIcon, CommentIcon, SabotenLogo)
+            listOf(ABIcon, SabotenLogo)
         return __AllIcons!!
     }
