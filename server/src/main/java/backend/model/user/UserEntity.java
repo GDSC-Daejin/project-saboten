@@ -1,5 +1,6 @@
 package backend.model.user;
 
+import backend.controller.dto.UserDto;
 import backend.model.common.BaseTimeEntity;
 import backend.model.post.PostEntity;
 import backend.oauth.entity.ProviderType;
@@ -62,17 +63,30 @@ public class UserEntity extends BaseTimeEntity {
     }
 
     // url 수정 필요
-    public UserResponse toDto() {
-        return new UserResponse(this.userId, this.nickname, "url");
+//    public UserResponse toDto() {
+//        return new UserResponse(this.userId, this.nickname, "url");
+//    }
+
+    public UserDto toDto() {
+        return UserDto.builder()
+                .userId(userId)
+                .socialId(socialId)
+                .providerType(providerType)
+                .nickname(nickname)
+                .age(age)
+                .myPageIntroduction(myPageIntroduction)
+                .gender(gender)
+                .email(email)
+                .userImage(userImage)
+                .build();
     }
 
-    //TODO: url, email 테이블에 추가하는 것이 좋을 것 같음. 일단 추가는 해둠. -> panda와 상의필요
-    public UserInfoResponse toUserInfoDTO(){
-        GenderResponse gender = null;
-        if(this.gender == 1) gender = GenderResponse.M;
-        else if(this.gender == 2) gender = GenderResponse.F;
-
-        return new UserInfoResponse(this.userId, this.nickname, userImage ,this.email, this.myPageIntroduction,
-                this.age, gender);
-    }
+//    public UserInfoResponse toUserInfoDTO(){
+//        GenderResponse gender = null;
+//        if(this.gender == 1) gender = GenderResponse.M;
+//        else if(this.gender == 2) gender = GenderResponse.F;
+//
+//        return new UserInfoResponse(this.userId, this.nickname, userImage ,this.email, this.myPageIntroduction,
+//                this.age, gender);
+//    }
 }

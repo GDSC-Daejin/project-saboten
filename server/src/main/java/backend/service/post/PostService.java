@@ -1,5 +1,6 @@
 package backend.service.post;
 
+import backend.controller.dto.PostDto;
 import backend.exception.ApiException;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
@@ -37,11 +38,11 @@ public class PostService {
     }
 
     @Transactional
-    public PostEntity findPost(Long id) {
+    public PostDto findPost(Long id) {
         Optional<PostEntity> postEntity = postRepository.findById(id);
         if(postEntity.isEmpty())
             throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
-        return postEntity.get();
+        return postEntity.get().toDto();
     }
 
     @Transactional

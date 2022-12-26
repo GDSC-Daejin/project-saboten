@@ -1,5 +1,6 @@
 package backend.model.category;
 
+import backend.controller.dto.CategoryDto;
 import common.model.reseponse.category.CategoryResponse;
 import lombok.*;
 
@@ -22,7 +23,15 @@ public class CategoryEntity {
     @Column(name = "category_icon_url", nullable = false)
     private String categoryIconUrl;
 
-    public CategoryResponse toDTO() {
-        return new CategoryResponse(this.categoryId, this.categoryName, this.categoryIconUrl);
+//    public CategoryResponse toDTO() {
+//        return new CategoryResponse(this.categoryId, this.categoryName, this.categoryIconUrl);
+//    }
+
+    public CategoryDto toDto() {
+        return CategoryDto.builder()
+                .categoryId(categoryId)
+                .categoryName(categoryName)
+                .categoryIconUrl(categoryIconUrl)
+                .build();
     }
 }

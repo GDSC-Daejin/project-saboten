@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+// TODO : 불필요한 API 제거하기.
 @Version1RestController
 @RequiredArgsConstructor
 public class AuthController {

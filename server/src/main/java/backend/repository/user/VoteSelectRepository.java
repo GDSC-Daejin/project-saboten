@@ -4,11 +4,17 @@ import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.model.user.VoteSelectEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
 public interface VoteSelectRepository extends JpaRepository<VoteSelectEntity, Long> {
     List<VoteSelectEntity> findByUser(UserEntity user);
-    VoteSelectEntity findByUserAndPost(UserEntity user, PostEntity post);
+
+//    VoteSelectEntity findByUserAndPost(UserEntity user, PostEntity post);
+    @Query("select voteSelect from VoteSelectEntity voteSelect " +
+            "where voteSelect.user.userId = :userId and voteSelect.post.postId = :postId")
+    VoteSelectEntity findByUserIdAndPostId(Long userId, Long postId);
+
     void deleteByUserAndPost(UserEntity user, PostEntity post);
 }

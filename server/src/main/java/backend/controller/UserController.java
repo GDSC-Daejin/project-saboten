@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.dto.UserDto;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.controller.swagger.response.UserNotFoundResponse;
 import backend.jwt.SecurityUtil;
@@ -21,8 +22,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 class UserController {
     private final UserService userService;
 
-    private UserEntity getUserEntity() {
+    // TODO : UserService든 util로 뺴버리기
+    private UserDto getUserEntity() {
         Long userId = SecurityUtil.getCurrentUserId();
+
         if(userId != null)
             return userService.findUserEntity(userId);
 
@@ -35,8 +38,8 @@ class UserController {
     })
     @GetMapping("/userInfo")
     public ApiResponse<UserInfoResponse> getUserInfo() {
-        UserEntity userEntity = getUserEntity();
-        return ApiResponse.withMessage(userEntity.toUserInfoDTO(),UserResponseMessage.USER_READ);
+        UserDto userDto = getUserEntity();
+        return ApiResponse.withMessage(userDto.toUserInfoDTO(),UserResponseMessage.USER_READ);
     }
 
     @ApiOperation(value = "특정 사용자 프로필 조회", notes = "특정 사용자 프로필을 조회합니다.")
@@ -45,7 +48,7 @@ class UserController {
     })
     @GetMapping("/userInfo/{id}")
     public ApiResponse<UserInfoResponse> getOtherUserInfo(@PathVariable Long id) {
-        UserEntity userEntity = userService.findUserEntity(id);
-        return ApiResponse.withMessage(userEntity.toUserInfoDTO(),UserResponseMessage.USER_READ);
+        UserDto userDto= userService.findUserEntity(id);
+        return ApiResponse.withMessage(userDto.toUserInfoDTO(),UserResponseMessage.USER_READ);
     }
 }

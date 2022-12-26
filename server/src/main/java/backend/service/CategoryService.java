@@ -1,5 +1,6 @@
 package backend.service;
 
+import backend.controller.dto.CategoryDto;
 import backend.exception.ApiException;
 import backend.model.category.CategoryEntity;
 import backend.repository.category.CategoryRepository;
@@ -20,38 +21,34 @@ public class CategoryService {
     @Autowired
     public CategoryService(CategoryRepository categoryRepository) { this.categoryRepository = categoryRepository; }
 
-    @Transactional
     public List<CategoryResponse> findCategories() {
         List<CategoryEntity> categoryEntities = categoryRepository.findAll();
         List<CategoryResponse> categories = new ArrayList<>();
+
         for(CategoryEntity categoryEntity : categoryEntities) {
-            categories.add(categoryEntity.toDTO());
+            categories.add(categoryEntity.toDto().toCategoryResponse());
         }
 
         return categories;
     }
 
-
-    @Transactional
-    public List<CategoryEntity> findCategories(List<Long> categoryIds) {
-        List<CategoryEntity> categoryEntities = new ArrayList<>();
+    public List<CategoryDto> findCategories(List<Long> categoryIds) {
+        List<CategoryDto> categories = new ArrayList<>();
 
         for(Long categoryId : categoryIds) {
-            categoryEntities.add(findCategory(categoryId));
+            categories.add(findCategory(categoryId));
         }
-        return categoryEntities;
+        return categories;
     }
 
-    @Transactional
-    public CategoryEntity findCategory(Long id) {
+    public CategoryDto findCategory(Long id) {
         Optional<CategoryEntity> category = categoryRepository.findById(id);
         if(category.isEmpty())
             throw new ApiException(CategoryResponseMessage.CATEGORY_NOT_FOUND);
         else
-            return category.get();
+            return category.get().toDto();
     }
 
-    @Transactional
     public List<CategoryEntity> getCategories(List<Long> categoryIds){
         List<CategoryEntity> categories = new ArrayList<>();
         for (Long categoryId : categoryIds) {

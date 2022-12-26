@@ -1,6 +1,9 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.dto.CommentDto;
+import backend.controller.dto.PostDto;
+import backend.controller.dto.UserDto;
 import backend.controller.swagger.response.*;
 import backend.jwt.SecurityUtil;
 import backend.model.comment.CommentEntity;
@@ -34,7 +37,7 @@ public class  CommentController {
     private final VoteSelectService voteSelectService;
 
     // 로그인 안된 사용자면 null 반환
-    private UserEntity getUser() {
+    private UserDto getUser() {
         Long userId = SecurityUtil.getCurrentUserId();
         if(userId != null)
             return userService.findUserEntity(userId);
@@ -51,19 +54,16 @@ public class  CommentController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CommentCreateRequest commentCreateRequest){
-        UserEntity userEntity = getUser();
-        PostEntity postEntity = postService.findPost(postId);
+        UserDto userDto = getUser();
+        PostDto postDto = postService.findPost(postId);
 
-        UserResponse userResponse = new UserResponse(userEntity.getUserId(), userEntity.getNickname(), userEntity.getUserImage());
-        Long voteSelectEntity = voteSelectService.findVoteSelectResult(userEntity,postEntity);
-
+        Long voteSelectResult = voteSelectService.findVoteSelectResult(userDto.getUserId(), postDto.getPostId());
         String text = commentCreateRequest.getText();
 
-        CommentEntity comment = commentService.create(userEntity, postEntity,text);
-        CommentResponse commentResponse = new CommentResponse(comment.getCommentId(), comment.getCommentText(),
-                userResponse, voteSelectEntity, comment.getCommentRegistDate().toString());
+        CommentDto commentDto = commentService.create(userDto, postDto, text);
 
-        return ApiResponse.withMessage(commentResponse, CommentResponseMessage.COMMENT_CREATED);
+        return ApiResponse.withMessage(commentDto.toCommentResponse(userDto, voteSelectResult),
+                CommentResponseMessage.COMMENT_CREATED);
     }
 
     @ApiOperation(value = "포스트별 댓글조회 API", notes = "특정 포스트에 달린 댓글을 모두 조회하는 API입니다.")
@@ -72,12 +72,13 @@ public class  CommentController {
     })
     @GetMapping("post/{postId}/comment")
     public ApiResponse<Page<CommentResponse>> getAllCommentsByPost(@PathVariable Long postId, @PageableDefault Pageable pageable){
-        PostEntity postEntity = postService.findPost(postId);
-        Page<CommentEntity> commentEntities = commentService.getAllCommentsByPost(postEntity,pageable);
+        PostDto postDto = postService.findPost(postId);
+        Page<CommentDto> commentPage = commentService.getAllCommentsByPost(postDto.getPostId(), pageable);
 
-        Page<CommentResponse> commentResponses = commentEntities.map(commentEntity ->
-                new CommentResponse(commentEntity.getCommentId(),commentEntity.getCommentText(),commentEntity.getUser().toDto(),
-                        voteSelectService.findVoteSelectResult(commentEntity.getUser(),postEntity),commentEntity.getCommentRegistDate().toString()));
+        Page<CommentResponse> commentResponses = commentPage.map(commentDto ->
+                commentDto.toCommentResponse(commentDto.getUser(),
+                        voteSelectService.findVoteSelectResult(commentDto.getUser().getUserId(), postDto.getPostId()))
+        );
 
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_ALL);
     }
@@ -88,11 +89,13 @@ public class  CommentController {
     })
     @GetMapping("post/comment")
     public ApiResponse<Page<CommentResponse>> getAllCommentsByUser(@PageableDefault Pageable pageable){
-        UserEntity userEntity = getUser();
-        Page<CommentEntity> commentEntities = commentService.getAllCommentsByUser(userEntity,pageable);
-        Page<CommentResponse> commentResponses = commentEntities.map(commentEntity ->
-                new CommentResponse(commentEntity.getCommentId(),commentEntity.getCommentText(),commentEntity.getUser().toDto(),
-                        voteSelectService.findVoteSelectResult(commentEntity.getUser(),commentEntity.getPost()),commentEntity.getCommentRegistDate().toString()));
+        UserDto userDto = getUser();
+        Page<CommentDto> commentPage = commentService.getAllCommentsByUser(userDto.getUserId(), pageable);
+
+        Page<CommentResponse> commentResponses = commentPage.map(commentDto ->
+                commentDto.toCommentResponse(commentDto.getUser(),
+                        voteSelectService.findVoteSelectResult(commentDto.getUser().getUserId(), commentDto.getPost().getPostId()))
+        );
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_USER);
     }
 
@@ -104,8 +107,8 @@ public class  CommentController {
     })
     @ResponseStatus(HttpStatus.OK)
     public ApiResponse<Page<CommentResponse>> deleteComment(@PathVariable Long postId, @PathVariable Long commentId){
-        UserEntity userEntity = getUser();
-        commentService.deleteComment(commentId, postId, userEntity);
+        UserDto userDto = getUser();
+        commentService.deleteComment(commentId, postId, userDto);
         return ApiResponse.withMessage(null,CommentResponseMessage.COMMENT_DELETED);
     }
 }

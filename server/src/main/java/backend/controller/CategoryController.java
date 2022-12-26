@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.dto.CategoryDto;
 import backend.controller.swagger.response.CategoryNotFoundResponse;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.model.category.CategoryEntity;
@@ -38,8 +39,9 @@ public class CategoryController {
     })
     @GetMapping("/category/{id}")
     public ApiResponse<CategoryResponse> getCategory(@PathVariable Long id) {
-        CategoryEntity categoryEntity = categoryService.findCategory(id);
-        CategoryResponse categoryResponse = categoryEntity.toDTO();
+        CategoryDto categoryDto = categoryService.findCategory(id);
+
+        CategoryResponse categoryResponse = categoryDto.toCategoryResponse();
         return ApiResponse.withMessage(categoryResponse, CategoryResponseMessage.CATEGORY_FIND_ONE);
     }
 }

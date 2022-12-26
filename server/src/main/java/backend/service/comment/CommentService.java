@@ -1,5 +1,8 @@
 package backend.service.comment;
 
+import backend.controller.dto.CommentDto;
+import backend.controller.dto.PostDto;
+import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.model.comment.CommentEntity;
 import backend.model.post.PostEntity;
@@ -25,34 +28,32 @@ public class CommentService {
     private final PostRepository postRepository;
 
     @Transactional
-    public CommentEntity create(UserEntity userEntity, PostEntity postEntity, String text) {
-        Optional<PostEntity> postCheck = postRepository.findById(postEntity.getPostId());
-
+    public CommentDto create(UserDto userDto, PostDto postDto, String text) {
         if(text.isEmpty()) throw new ApiException(CommentResponseMessage.COMMENT_IS_NULL);
-        else if(postCheck.isEmpty()) throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
 
         CommentEntity commentEntity = CommentEntity.builder()
-                .post(postEntity)
-                .user(userEntity)
+                .post(postDto.toEntity())
+                .user(userDto.toEntity())
                 .commentText(text)
                 .commentLikeCount(0L)
                 .commentRegistDate(LocalDateTime.now())
                 .build();
-        return commentRepository.save(commentEntity);
+
+        return commentRepository.save(commentEntity).toDto();
+    }
+
+    public Page<CommentDto> getAllCommentsByPost(Long postId, Pageable pageable) {
+        Page<CommentEntity> commetPage = commentRepository.findAllByPostId(postId, pageable);
+        return commetPage.map(CommentEntity::toDto);
+    }
+
+    public Page<CommentDto> getAllCommentsByUser(Long userId, Pageable pageable) {
+        Page<CommentEntity> commentPage = commentRepository.findAllByUserId(userId, pageable);
+        return commentPage.map(CommentEntity::toDto);
     }
 
     @Transactional
-    public Page<CommentEntity> getAllCommentsByPost(PostEntity postEntity, Pageable pageable) {
-        return commentRepository.findAllByPost(postEntity, pageable);
-    }
-
-    @Transactional
-    public Page<CommentEntity> getAllCommentsByUser(UserEntity userEntity, Pageable pageable) {
-        return commentRepository.findAllByUser(userEntity, pageable);
-    }
-
-    @Transactional
-    public void deleteComment(Long commentId, Long postId ,UserEntity userEntity) {
+    public void deleteComment(Long commentId, Long postId ,UserDto userDto) {
         Optional<CommentEntity> commentCheck = commentRepository.findById(commentId);
 
         if(commentCheck.isEmpty()) {
@@ -63,12 +64,12 @@ public class CommentService {
            if(commentEntity.getPost().getPostId() != postId) {
                throw new ApiException(CommentResponseMessage.COMMENT_NOT_FOUND);
            }
-           if(commentEntity.getUser().getUserId() != userEntity.getUserId()) {
+           if(commentEntity.getUser().getUserId() != userDto.getUserId()) {
                throw new ApiException(CommentResponseMessage.COMMENT_NOT_FOUND);
            }
         }
 
-        commentRepository.deleteByCommentIdAndUser(commentId, userEntity);
+        commentRepository.deleteByCommentIdAndUser(commentId, userDto.toEntity());
     }
 
 }
