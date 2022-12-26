@@ -41,7 +41,7 @@ public class AuthService {
         }
 
         UserEntity user = new UserEntity(userSignInRequest);
-        return userRepository.save(user).toDto().toUserResponse();
+        return userRepository.save(user).toDto().toResponse();
     }
 
     @Transactional
@@ -149,6 +149,6 @@ public class AuthService {
         userEntity.get().setEmail(userInfoResponse.getEmail());
         userEntity.get().setUserImage(userInfoResponse.getProfilePhotoUrl());
 
-        return userRepository.save(userEntity.get()).toDto().toUserInfoDTO();
+        return userRepository.save(userEntity.get()).toDto().toInfoResponse();
     }
 }

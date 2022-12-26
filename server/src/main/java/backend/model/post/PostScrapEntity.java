@@ -1,5 +1,6 @@
 package backend.model.post;
 
+import backend.controller.dto.PostScrapDto;
 import backend.model.compositekey.PostScrapPK;
 import backend.model.user.UserEntity;
 import lombok.AllArgsConstructor;
@@ -30,4 +31,11 @@ public class PostScrapEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="user_id", nullable = false)
     public UserEntity user;
+
+    public PostScrapDto toDto() {
+        return PostScrapDto.builder()
+                .post(post.toDto())
+                .user(user.toDto())
+                .build();
+    }
 }

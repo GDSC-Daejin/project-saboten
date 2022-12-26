@@ -1,5 +1,7 @@
 package backend.service.post;
 
+import backend.controller.dto.PostDto;
+import backend.controller.dto.UserDto;
 import backend.model.post.PostEntity;
 import backend.model.post.PostLikeEntity;
 import backend.model.user.UserEntity;
@@ -13,9 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
 
-    @Transactional
-    public boolean findPostIsLike(UserEntity userEntity, PostEntity postEntity) {
-        PostLikeEntity postLikeEntity = postLikeRepository.findByUserAndPost(userEntity, postEntity);
+    public boolean findPostIsLike(final Long userId, final Long postId) {
+        PostLikeEntity postLikeEntity = postLikeRepository.findByUserIdAndPostId(userId, postId);
         boolean isLike = false;
         if(postLikeEntity != null)
             isLike = true;
@@ -24,13 +25,13 @@ public class PostLikeService {
     }
 
     @Transactional
-    public boolean triggerPostLike(UserEntity userEntity, PostEntity postEntity) {
-        if(findPostIsLike(userEntity, postEntity)) {
-            postLikeRepository.deleteByUserAndPost(userEntity, postEntity);
+    public boolean triggerPostLike(final UserDto userDto, final PostDto postDto) {
+        if(findPostIsLike(userDto.getUserId(), postDto.getPostId())) {
+            postLikeRepository.deleteByUserAndPost(userDto.toEntity(), postDto.toEntity());
             return false;
         }
         else {
-            PostLikeEntity postLikeEntity = new PostLikeEntity(postEntity, userEntity);
+            PostLikeEntity postLikeEntity = new PostLikeEntity(postDto.toEntity(), userDto.toEntity());
             postLikeRepository.save(postLikeEntity);
             return true;
         }

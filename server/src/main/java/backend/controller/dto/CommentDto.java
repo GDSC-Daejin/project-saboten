@@ -25,7 +25,7 @@ public class CommentDto {
         return new CommentResponse(
                 commentId,
                 commentText,
-                userDto.toUserResponse(),
+                userDto.toResponse(),
                 voteSelectResult,
                 commentRegistDate.toString());
     }

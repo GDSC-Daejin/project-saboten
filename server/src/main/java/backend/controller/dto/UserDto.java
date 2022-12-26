@@ -47,7 +47,7 @@ public class UserDto {
     }
 
 
-    public UserInfoResponse toUserInfoDTO(){
+    public UserInfoResponse toInfoResponse(){
         GenderResponse gender = null;
         if(this.gender == 1) gender = GenderResponse.M;
         else if(this.gender == 2) gender = GenderResponse.F;
@@ -56,7 +56,7 @@ public class UserDto {
                 this.age, gender);
     }
 
-    public UserResponse toUserResponse() {
+    public UserResponse toResponse() {
         return new UserResponse(userId, nickname, userImage);
     }
 

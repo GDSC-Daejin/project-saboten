@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.dto.*;
 import backend.controller.swagger.response.PostNotFoundResponse;
 import backend.controller.swagger.response.PostVoteNotFound;
 import backend.controller.swagger.response.UnauthorizedResponse;
@@ -39,7 +40,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Version1RestController
 @RequiredArgsConstructor
@@ -56,7 +56,7 @@ class PostController {
 
 
     // 로그인 안된 사용자면 null 반환
-    private UserEntity getUser() {
+    private UserDto getUser() {
         Long userId = SecurityUtil.getCurrentUserId();
         if(userId != null)
             return userService.findUserEntity(userId);
@@ -70,43 +70,22 @@ class PostController {
     })
     @GetMapping("/post/{id}")
     public ApiResponse<PostResponse> getPost(@PathVariable Long id) {
-        UserEntity userEntity = getUser();
-        PostEntity postEntity = postService.findPost(id);
-        postService.updateView(postEntity.getPostId());
-        List<VoteResponse> votes = voteService.findVotes(postEntity);
-        List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postEntity);
-        Long voteResult = voteSelectService.findVoteSelectResult(userEntity, postEntity);
-        boolean isLike = postLikeService.findPostIsLike(userEntity, postEntity);
-        boolean isScrap = postScrapService.findPostIsScrap(userEntity, postEntity);
+        UserDto userDto = getUser();
+        PostDto postDto = postService.findPost(id);
+        postService.updateView(postDto.getPostId());
 
-        PostResponse post = new PostResponse(postEntity.getPostId(),
-                postEntity.getPostText(),
-                postEntity.getUser().toDto(),
-                votes,
-                categories,
-                voteResult,
-                postEntity.getView() + 1,
-                postEntity.getPostLikeCount(),
-                postEntity.getPostScrapCount(),
-                isLike,
-                isScrap,
-                postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
+        List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
+        List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postDto.getPostId());
+        Long voteResult = voteSelectService.findVoteSelectResult(userDto.getUserId(), postDto.getPostId());
+        boolean isLike = postLikeService.findPostIsLike(userDto.getUserId(), postDto.getPostId());
+        boolean isScrap = postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId());
 
-        /**    @SerialName("id") val id: Long,
-         @SerialName("text") val text: String,
-         @SerialName("author") val author: UserResponse,
-         @SerialName("votes") val voteResponses: List<VoteResponse>,
-         @SerialName("categories") val categories: List<CategoryResponse>,
-         @SerialName("selected_vote") val selectedVote: Long?,
-         @SerialName("view") val view: Int,
-         @SerialName("like_count") val likeCount: Int,
-         @SerialName("scrap_count") val scrapCount: Int,
-         @SerialName("is_liked") val isLiked: Boolean?,
-         @SerialName("is_scraped") val isScraped: Boolean?,
-         @SerialName("created_at") val createdAt: String,
-         @SerialName("updated_at") val updatedAt: String?*/
-
-        return ApiResponse.withMessage(post, PostResponseMessage.POST_FIND_ONE);
+        // TODO : 매개변수가 5개나 넣어지는데 어떻게 못줄이나....
+        // 방법 1 : 외부 테이블 정보들을 그냥 post 테이블 정보로 저장함. (다른 프로젝트보면 이런식으로 되어있는듯?)
+        // 방법 2 : 그냥 이대로 씀
+        // 방법 3 : 클린코드 알려줘요 ~~
+        PostResponse response = postDto.toResponse(votes, categories, voteResult, isLike, isScrap);
+        return ApiResponse.withMessage(response, PostResponseMessage.POST_FIND_ONE);
     }
 
     // TODO : 없는 카테고리로 등록할 때 예외처리 필요
@@ -117,18 +96,15 @@ class PostController {
     })
     @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<PostCreatedResponse> createPost(@RequestBody PostCreateRequest postCreateRequest) {
-        UserEntity userEntity = getUser();
-        UserResponse user = userEntity.toDto();
+        UserDto userDto = getUser();
 
-        List<CategoryEntity> categoryEntities = categoryService.getCategories(postCreateRequest.getCategoryIds());
-        PostEntity postEntity= postService.create(postCreateRequest.getText(), userEntity);
-        List<VoteResponse> votes = voteService.saveVotes(postCreateRequest.getVoteTopics(), postEntity);
-        List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoryEntities, postEntity);
+        List<CategoryDto> categoriesDto = categoryService.getCategories(postCreateRequest.getCategoryIds());
+        PostDto postDto= postService.create(postCreateRequest.getText(), userDto);
+        List<VoteResponse> votes = voteService.saveVotes(postCreateRequest.getVoteTopics(), postDto);
+        List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoriesDto, postDto);
 
-        PostCreatedResponse post = new PostCreatedResponse(postEntity.getPostId(),postEntity.getPostText(),
-                user,votes,categories, postEntity.getRegistDate().toString());
-
-        return ApiResponse.withMessage(post, PostResponseMessage.POST_CREATED);
+        PostCreatedResponse response = postDto.toCreatedResponse(votes, categories);
+        return ApiResponse.withMessage(response, PostResponseMessage.POST_CREATED);
     }
 
     // 내가 쓴 게시글 조회 API
@@ -138,11 +114,11 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
     })
     public ApiResponse<Page<PostReadResponse>> getUserPost(Pageable pageable){
-        UserEntity userEntity = getUser();
-        Page<PostEntity> postEntityPage = postService.getUserPost(userEntity, pageable);
-        Page<PostReadResponse> myPostPage = postEntityPage.map(postEntity ->
-                new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
-                        voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString()));
+        UserDto userDto = getUser();
+        Page<PostDto> postPage = postService.getUserPost(userDto.getUserId(), pageable);
+        Page<PostReadResponse> myPostPage = postPage.map(postDto ->
+                postDto.toReadResponse(voteService.findVotes(postDto.getPostId()))
+        );
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_USER);
     }
@@ -153,20 +129,19 @@ class PostController {
     @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다. (필터 역할)")
     @GetMapping("/post")
     public ApiResponse<Page<PostReadResponse>> getPostList(@RequestParam(required = false) Long categoryId, @PageableDefault Pageable pageable){
-        Page<CategoryInPostEntity> categoryInPostEntitiesPage = null;
+        Page<CategoryInPostDto> categoryInPostPage = null;
 
         if(categoryId != null){
-            CategoryEntity categoryEntity = categoryService.findCategory(categoryId);
-            categoryInPostEntitiesPage = categoryInPostService.findCategoryInPostPageByCategoryId(categoryEntity, pageable);
+            CategoryDto categoryDto = categoryService.findCategory(categoryId);
+            categoryInPostPage = categoryInPostService.findCategoryInPostPageByCategoryId(categoryDto.getCategoryId(), pageable);
         }
         else {
-            categoryInPostEntitiesPage = categoryInPostService.findAllCagegoryInPostPage(pageable);
+            categoryInPostPage = categoryInPostService.findAllCagegoryInPostPage(pageable);
         }
 
-        Page<PostReadResponse> myPostPage = categoryInPostEntitiesPage.map(categoryInPostEntity -> {
-            PostEntity postEntity = categoryInPostEntity.getPost();
-            return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
-                    voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
+        Page<PostReadResponse> myPostPage = categoryInPostPage.map(categoryInPostDto -> {
+            PostDto postDto = categoryInPostDto.getPost();
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
         });
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
@@ -178,10 +153,9 @@ class PostController {
     @GetMapping("/post/search/{searchText}")
     public ApiResponse<Page<PostReadResponse>> getSearchPost(@PathVariable("searchText") String searchText, @PageableDefault Pageable pageable) {
 
-        Page<PostEntity> postEntityPage = postService.searchPost(searchText, pageable);
-        Page<PostReadResponse> myPostPage = postEntityPage.map(searchPostEntity -> {
-            return new PostReadResponse(searchPostEntity.getPostId(), searchPostEntity.getPostText(), searchPostEntity.getUser().toDto(),
-                    voteService.findVotes(searchPostEntity),searchPostEntity.getRegistDate().toString(),searchPostEntity.getModifyDate().toString());
+        Page<PostDto> postPage = postService.searchPost(searchText, pageable);
+        Page<PostReadResponse> myPostPage = postPage.map(searchPostDto -> {
+            return searchPostDto.toReadResponse(voteService.findVotes(searchPostDto.getPostId()));
         });
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
@@ -195,31 +169,19 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
     })
     public ApiResponse<PostResponse> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
-        UserEntity userEntity = getUser();
-        PostEntity postEntity = postService.isHavingPostByUser(userEntity, postUpdateRequest.getId());
-        postService.updatePost(postEntity, postUpdateRequest.getText());
+        UserDto userDto = getUser();
+        PostDto postDto = postService.isHavingPostByUser(userDto.getUserId(), postUpdateRequest.getId());
+        postService.updatePost(postDto, postUpdateRequest.getText());
 
         // post category update
-        List<CategoryEntity> categoryEntities = categoryService.findCategories(postUpdateRequest.getCategoryIds());
-        List<CategoryResponse> categories = categoryInPostService.update(postEntity, categoryEntities);
+        List<CategoryDto> categoriesDto = categoryService.findCategories(postUpdateRequest.getCategoryIds());
+        List<CategoryResponse> categories = categoryInPostService.update(postDto, categoriesDto);
 
         // vote update
-        List<VoteResponse> votes = voteService.update(postUpdateRequest.getVoteTopics(), postEntity);
+        List<VoteResponse> votes = voteService.update(postUpdateRequest.getVoteTopics(), postDto.getPostId());
 
-        PostResponse postResponse = new PostResponse(postEntity.getPostId(),
-                postEntity.getPostText(),
-                postEntity.getUser().toDto(),
-                votes,
-                categories,
-                null,
-                postEntity.getView(),
-                postEntity.getPostLikeCount(),
-                postEntity.getPostScrapCount(),
-                null,
-                null,
-                postEntity.getRegistDate().toString(), postEntity.getModifyDate().toString());
-
-        return ApiResponse.withMessage(postResponse, PostResponseMessage.POST_UPDATED);
+        PostResponse response = postDto.toResponse(votes, categories, null, null, null);
+        return ApiResponse.withMessage(response, PostResponseMessage.POST_UPDATED);
     }
 
     @ApiOperation(value = "게시물 삭제", notes = "사용자가 게시물을 삭제합니다.")
@@ -229,10 +191,10 @@ class PostController {
     })
     @DeleteMapping("/post/{id}")
     public ApiResponse<?> removePost(@PathVariable Long id) {
-        UserEntity userEntity = getUser();
-        PostEntity postEntity = postService.isHavingPostByUser(userEntity, id);
+        UserDto userDto = getUser();
+        PostDto postDto = postService.isHavingPostByUser(userDto.getUserId(), id);
         // Post만 삭제하면 알아서 Post의 관련된 자식 Entity들 삭제 함.
-        postService.deletePost(postEntity);
+        postService.deletePost(postDto);
 
         return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
     }
@@ -244,10 +206,10 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
     })
     public ApiResponse<PostLikeResponse> postLike(@PathVariable Long id) {
-        UserEntity userEntity = getUser();
-        PostEntity postEntity = postService.findPost(id);
+        UserDto userDto = getUser();
+        PostDto postDto = postService.findPost(id);
 
-        boolean isLike = postLikeService.triggerPostLike(userEntity, postEntity);
+        boolean isLike = postLikeService.triggerPostLike(userDto, postDto);
         PostLikeResponse postLikeResponse = new PostLikeResponse(isLike);
 
         if(isLike) {
@@ -267,10 +229,10 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
     })
     public ApiResponse<PostScrapResponse> postScrap(@PathVariable Long id) {
-        UserEntity userEntity = getUser();
-        PostEntity postEntity = postService.findPost(id);
+        UserDto userDto = getUser();
+        PostDto postDto = postService.findPost(id);
 
-        boolean isScrap = postScrapService.triggerPostScrap(userEntity, postEntity);
+        boolean isScrap = postScrapService.triggerPostScrap(userDto, postDto);
         PostScrapResponse postScrapResponse = new PostScrapResponse(isScrap);
 
         if(isScrap) {
@@ -287,15 +249,13 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
     })
     public ApiResponse<List<PostReadResponse>> getPostScrap() {
-        UserEntity userEntity = getUser();
+        UserDto userDto = getUser();
 
-        List<PostScrapEntity> postScrapEntities = postScrapService.getUserScrap(userEntity);
-        List<PostReadResponse> myPostScrap = postScrapEntities.stream().map(postScrapEntity -> {
-                PostEntity postEntity = postScrapEntity.getPost();
-                return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
-                        voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
-            }
-        ).collect(Collectors.toList());
+        List<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userDto.getUserId());
+        List<PostReadResponse> myPostScrap = postScrapesDto.stream().map(postScrapDto -> {
+                PostDto postDto = postScrapDto.getPost();
+                return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
+        }).collect(Collectors.toList());
 
         return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
     }
@@ -303,12 +263,11 @@ class PostController {
     @ApiOperation(value = "Hot 게시판 조회", notes = "추천수가 높은 게시물들을 조회합니다.")
     @GetMapping("/post/hot")
     public ApiResponse<Page<PostReadResponse>> getHotPostList(@PageableDefault Pageable pageable) {
-        Page<PostEntity> postEntityPage = null;
-        postEntityPage = postService.findAllHotPost(pageable);
+        Page<PostDto> postPage = null;
+        postPage = postService.findAllHotPost(pageable);
 
-        Page<PostReadResponse> myHotPostPage = postEntityPage.map(postEntity -> {
-            return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
-                    voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
+        Page<PostReadResponse> myHotPostPage = postPage.map(postDto -> {
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
         });
 
         return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
@@ -322,11 +281,11 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostVoteNotFound.class),
     })
     public ApiResponse<?> votePost(@RequestBody VoteSelectRequest voteSelectRequest, @PathVariable Long id) {
-        UserEntity userEntity = getUser();
+        UserDto userDto = getUser();
 
-        PostEntity postEntity = postService.findPost(id);
+        PostDto postDto = postService.findPost(id);
         voteService.findVote(voteSelectRequest.getId());
-        voteSelectService.saveVoteSelect(postEntity, userEntity, voteSelectRequest.getId());
+        voteSelectService.saveVoteSelect(postDto, userDto, voteSelectRequest.getId());
 
         return ApiResponse.withMessage(null, PostResponseMessage.POST_VOTE_SUCCESS);
     }
@@ -337,14 +296,12 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
     })
     public ApiResponse<List<PostReadResponse>> getPostVoted() {
-        UserEntity userEntity = getUser();
+        UserDto userDto = getUser();
 
-        List<PostEntity> postEntities = voteSelectService.findPostVoted(userEntity);
-        List<PostReadResponse> myPostVoted = postEntities.stream().map(postEntity -> {
-                    return new PostReadResponse(postEntity.getPostId(), postEntity.getPostText(), postEntity.getUser().toDto(),
-                            voteService.findVotes(postEntity),postEntity.getRegistDate().toString(),postEntity.getModifyDate().toString());
-                }
-        ).collect(Collectors.toList());
+        List<PostDto> postsDto = voteSelectService.findPostVoted(userDto.getUserId());
+        List<PostReadResponse> myPostVoted = postsDto.stream().map(postDto -> {
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
+        }).collect(Collectors.toList());
 
         return ApiResponse.withMessage(myPostVoted, PostResponseMessage.POST_VOTED_FIND_SUCCESS);
     }

@@ -23,7 +23,7 @@ public class CategoryEntity {
     @Column(name = "category_icon_url", nullable = false)
     private String categoryIconUrl;
 
-//    public CategoryResponse toDTO() {
+//    public CategoryResponse toCategoryResponse() {
 //        return new CategoryResponse(this.categoryId, this.categoryName, this.categoryIconUrl);
 //    }
 
@@ -34,4 +34,5 @@ public class CategoryEntity {
                 .categoryIconUrl(categoryIconUrl)
                 .build();
     }
+
 }

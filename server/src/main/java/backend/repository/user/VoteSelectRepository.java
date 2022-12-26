@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VoteSelectRepository extends JpaRepository<VoteSelectEntity, Long> {
-    List<VoteSelectEntity> findByUser(UserEntity user);
+
+    @Query("select voteSelect from VoteSelectEntity voteSelect where voteSelect.user.userId = :userId")
+    List<VoteSelectEntity> findByUserId(Long userId);
 
 //    VoteSelectEntity findByUserAndPost(UserEntity user, PostEntity post);
     @Query("select voteSelect from VoteSelectEntity voteSelect " +

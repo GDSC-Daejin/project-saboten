@@ -5,10 +5,8 @@ import backend.controller.dto.UserDto;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.controller.swagger.response.UserNotFoundResponse;
 import backend.jwt.SecurityUtil;
-import backend.model.user.UserEntity;
 import backend.service.UserService;
 import common.model.reseponse.user.UserInfoResponse;
-import common.model.reseponse.user.UserResponse;
 import common.model.reseponse.ApiResponse;
 import common.message.UserResponseMessage;
 import io.swagger.annotations.ApiOperation;
@@ -39,7 +37,7 @@ class UserController {
     @GetMapping("/userInfo")
     public ApiResponse<UserInfoResponse> getUserInfo() {
         UserDto userDto = getUserEntity();
-        return ApiResponse.withMessage(userDto.toUserInfoDTO(),UserResponseMessage.USER_READ);
+        return ApiResponse.withMessage(userDto.toInfoResponse(),UserResponseMessage.USER_READ);
     }
 
     @ApiOperation(value = "특정 사용자 프로필 조회", notes = "특정 사용자 프로필을 조회합니다.")
@@ -49,6 +47,6 @@ class UserController {
     @GetMapping("/userInfo/{id}")
     public ApiResponse<UserInfoResponse> getOtherUserInfo(@PathVariable Long id) {
         UserDto userDto= userService.findUserEntity(id);
-        return ApiResponse.withMessage(userDto.toUserInfoDTO(),UserResponseMessage.USER_READ);
+        return ApiResponse.withMessage(userDto.toInfoResponse(),UserResponseMessage.USER_READ);
     }
 }

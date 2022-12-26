@@ -14,8 +14,12 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     PostEntity findByPostId(Long postId);
     List<PostEntity> findAllByPostTextContainingIgnoreCase(String postText);
     PostEntity findByPostText(String postText);
-    Page<PostEntity> findAllByUser(UserEntity user, Pageable pageable);
-    PostEntity findByUserAndPostId(UserEntity user, Long id);
+
+    @Query("select post from PostEntity post where post.user.userId = :userId")
+    Page<PostEntity> findAllByUserId(Long userId, Pageable pageable);
+
+    @Query("select post from PostEntity post where post.user.userId = :userId and post.postId = :postId")
+    PostEntity findByUserIdAndPostId(Long userId, Long postId);
 
     Page<PostEntity> findByPostTextContaining(String postText, Pageable pageable);
 

@@ -1,5 +1,8 @@
 package backend.service.post;
 
+import backend.controller.dto.PostDto;
+import backend.controller.dto.PostScrapDto;
+import backend.controller.dto.UserDto;
 import backend.model.post.PostEntity;
 import backend.model.post.PostLikeEntity;
 import backend.model.post.PostScrapEntity;
@@ -10,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,28 +21,29 @@ public class PostScrapService {
 
     private final PostScrapRepository postScrapRepository;
 
-    @Transactional
-    public boolean findPostIsScrap(UserEntity userEntity, PostEntity postEntity) {
-        PostScrapEntity postScrapEntity = postScrapRepository.findByUserAndPost(userEntity, postEntity);
+    public boolean findPostIsScrap(final Long userId, final Long postId) {
+        PostScrapEntity postScrapEntity = postScrapRepository.findByUserIdAndPostId(userId, postId);
         boolean isScrap = false;
         if(postScrapEntity != null) isScrap = true;
         return isScrap;
     }
 
     @Transactional
-    public boolean triggerPostScrap(UserEntity userEntity, PostEntity postEntity) {
-        if(findPostIsScrap(userEntity, postEntity)) {
-            postScrapRepository.deleteByUserAndPost(userEntity, postEntity);
+    public boolean triggerPostScrap(final UserDto userDto, final PostDto postDto) {
+        if(findPostIsScrap(userDto.getUserId(), postDto.getPostId())) {
+            postScrapRepository.deleteByUserAndPost(userDto.toEntity(), postDto.toEntity());
             return false;
         }
         else {
-            PostScrapEntity postScrapEntity = new PostScrapEntity(postEntity, userEntity);
+            PostScrapEntity postScrapEntity = new PostScrapEntity(postDto.toEntity(), userDto.toEntity());
             postScrapRepository.save(postScrapEntity);
             return true;
         }
     }
 
-    public List<PostScrapEntity> getUserScrap(UserEntity userEntity) {
-        return postScrapRepository.findAllByUser(userEntity);
+    public List<PostScrapDto> getUserScrap(Long userId) {
+        return postScrapRepository.findAllByUserId(userId)
+                .stream().map(PostScrapEntity::toDto)
+                .collect(Collectors.toList());
     }
 }

@@ -47,6 +47,8 @@ public class PostEntity extends BaseTimeEntity {
                 .postLikeCount(postLikeCount)
                 .postScrapCount(postScrapCount)
                 .view(view)
+                .registDate(getRegistDate())
+                .modifyDate(getModifyDate())
                 .build();
     }
 }

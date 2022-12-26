@@ -33,11 +33,11 @@ public class VoteSelectService {
         voteSelectRepository.delete(voteSelectEntity);
     }
 
-    private VoteSelectEntity findVoteSelect(Long userId, Long postId) {
+    private VoteSelectEntity findVoteSelect(final Long userId, final Long postId) {
         return voteSelectRepository.findByUserIdAndPostId(userId, postId);
     }
 
-    public Long findVoteSelectResult(Long userId, Long postId) {
+    public Long findVoteSelectResult(final Long userId, final Long postId) {
         VoteSelectEntity voteSelectEntity = findVoteSelect(userId, postId);
         Long voteResult = null;
         if(voteSelectEntity != null)
@@ -46,9 +46,12 @@ public class VoteSelectService {
         return voteResult;
     }
 
-    public List<PostEntity> findPostVoted(UserEntity userEntity) {
-        List<VoteSelectEntity> voteSelectEntities = voteSelectRepository.findByUser(userEntity);
+    public List<PostDto> findPostVoted(final Long userId) {
+        List<VoteSelectEntity> voteSelectEntities = voteSelectRepository.findByUserId(userId);
 
-        return voteSelectEntities.stream().map(VoteSelectEntity::getPost).collect(Collectors.toList());
+        return voteSelectEntities.stream()
+                .map(VoteSelectEntity::getPost)
+                .map(PostEntity::toDto)
+                .collect(Collectors.toList());
     }
 }

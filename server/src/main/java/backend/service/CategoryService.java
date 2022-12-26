@@ -49,15 +49,15 @@ public class CategoryService {
             return category.get().toDto();
     }
 
-    public List<CategoryEntity> getCategories(List<Long> categoryIds){
-        List<CategoryEntity> categories = new ArrayList<>();
+    public List<CategoryDto> getCategories(final List<Long> categoryIds){
+        List<CategoryDto> categories = new ArrayList<>();
         for (Long categoryId : categoryIds) {
             CategoryEntity categoryEntity = categoryRepository.findByCategoryId(categoryId);
 
             if(categoryEntity == null)
                 throw new ApiException(CategoryResponseMessage.CATEGORY_NOT_FOUND);
 
-            categories.add(categoryEntity);
+            categories.add(categoryEntity.toDto());
         }
 
         return categories;
