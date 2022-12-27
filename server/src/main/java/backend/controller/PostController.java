@@ -6,11 +6,6 @@ import backend.controller.swagger.response.PostNotFoundResponse;
 import backend.controller.swagger.response.PostVoteNotFound;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
-import backend.model.category.CategoryEntity;
-import backend.model.post.CategoryInPostEntity;
-import backend.model.post.PostEntity;
-import backend.model.post.PostScrapEntity;
-import backend.model.user.UserEntity;
 import backend.service.CategoryService;
 import backend.service.UserService;
 import backend.service.post.*;
@@ -27,7 +22,6 @@ import common.model.reseponse.post.PostScrapResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
 import common.model.reseponse.post.read.PostReadResponse;
-import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
@@ -75,7 +69,7 @@ class PostController {
         postService.updateView(postDto.getPostId());
 
         List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
-        List<CategoryResponse> categories = categoryInPostService.findCagegoriesInPost(postDto.getPostId());
+        List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
         Long voteResult = voteSelectService.findVoteSelectResult(userDto.getUserId(), postDto.getPostId());
         boolean isLike = postLikeService.findPostIsLike(userDto.getUserId(), postDto.getPostId());
         boolean isScrap = postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId());
@@ -101,7 +95,7 @@ class PostController {
         List<CategoryDto> categoriesDto = categoryService.getCategories(postCreateRequest.getCategoryIds());
         PostDto postDto= postService.create(postCreateRequest.getText(), userDto);
         List<VoteResponse> votes = voteService.saveVotes(postCreateRequest.getVoteTopics(), postDto);
-        List<CategoryResponse> categories = categoryInPostService.saveCagegoriesInPost(categoriesDto, postDto);
+        List<CategoryResponse> categories = categoryInPostService.saveCategoriesInPost(categoriesDto, postDto);
 
         PostCreatedResponse response = postDto.toCreatedResponse(votes, categories);
         return ApiResponse.withMessage(response, PostResponseMessage.POST_CREATED);

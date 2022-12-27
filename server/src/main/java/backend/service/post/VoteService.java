@@ -35,9 +35,9 @@ public class VoteService {
 
     //투표 정보 생성
     @Transactional
-    public List<VoteResponse> saveVotes(final List<VoteCreateRequest> voteTopcis, final PostDto postDto){
+    public List<VoteResponse> saveVotes(final List<VoteCreateRequest> voteTopics, final PostDto postDto){
         List<VoteResponse> votes = new ArrayList<>();
-        for(VoteCreateRequest vote : voteTopcis){
+        for(VoteCreateRequest vote : voteTopics){
             VoteEntity voteEntity = VoteEntity.builder()
                     .post(postDto.toEntity())
                     .topic(vote.getTopic())

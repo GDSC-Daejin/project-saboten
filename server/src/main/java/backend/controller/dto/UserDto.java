@@ -29,8 +29,6 @@ public class UserDto {
 
     private String userImage;
 
-    // PostDto를 하든 아예 없애든
-//    private List<PostEntity> posts = new ArrayList<>();
 
     public UserEntity toEntity() {
         return UserEntity.builder()

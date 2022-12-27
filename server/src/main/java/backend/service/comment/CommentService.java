@@ -11,6 +11,7 @@ import backend.repository.comment.CommentRepository;
 import backend.repository.post.PostRepository;
 import common.message.CommentResponseMessage;
 import common.message.PostResponseMessage;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -61,10 +62,10 @@ public class CommentService {
         }
         else {
            CommentEntity commentEntity = commentCheck.get();
-           if(commentEntity.getPost().getPostId() != postId) {
+           if(!Objects.equals(commentEntity.getPost().getPostId(), postId)) {
                throw new ApiException(CommentResponseMessage.COMMENT_NOT_FOUND);
            }
-           if(commentEntity.getUser().getUserId() != userDto.getUserId()) {
+           if(!Objects.equals(commentEntity.getUser().getUserId(), userDto.getUserId())) {
                throw new ApiException(CommentResponseMessage.COMMENT_NOT_FOUND);
            }
         }

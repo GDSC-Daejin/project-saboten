@@ -19,7 +19,6 @@ import java.util.List;
 public class PostDto {
     private Long postId;
 
-    // 이걸 없앨까? 아니면 Dto로?.. 흐음
     private UserDto user;
 
     private String postText;

@@ -9,7 +9,6 @@ import backend.model.post.PostEntity;
 import backend.repository.post.CategoryInPostRepository;
 import common.model.reseponse.category.CategoryResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ import java.util.List;
 public class CategoryInPostService {
     private final CategoryInPostRepository categoryInPostRepository;
 
-    public List<CategoryResponse> findCagegoriesInPost(Long postId) {
+    public List<CategoryResponse> findCategoriesInPost(Long postId) {
         List<CategoryInPostEntity> categoryEntities = categoryInPostRepository.findByPostId(postId);
         List<CategoryResponse> categories = new ArrayList<>();
         for(CategoryInPostEntity categoryInPostEntity : categoryEntities) {
@@ -33,7 +32,7 @@ public class CategoryInPostService {
     }
 
     @Transactional
-    public List<CategoryResponse>  saveCagegoriesInPost(final List<CategoryDto> categoryEntities, final PostDto postDto){
+    public List<CategoryResponse> saveCategoriesInPost(final List<CategoryDto> categoryEntities, final PostDto postDto){
         List<CategoryResponse> categories = new ArrayList<>();
         for(CategoryDto categoryDto : categoryEntities){
             CategoryInPostEntity categoryInPostEntity = CategoryInPostEntity.builder()
@@ -56,11 +55,11 @@ public class CategoryInPostService {
 
     @Transactional
     public List<CategoryResponse> update(PostDto postDto, List<CategoryDto> categoriesDto) {
-        List<CategoryInPostEntity> beforeCategiryInPostEntities = categoryInPostRepository.findByPostId(postDto.getPostId());
+        List<CategoryInPostEntity> beforeCategoryInPostEntities = categoryInPostRepository.findByPostId(postDto.getPostId());
         // TODO : 얘 왜 내용이 null 값임??
-        CategoryEntity wtf = beforeCategiryInPostEntities.get(0).getCategory();
+        CategoryEntity wtf = beforeCategoryInPostEntities.get(0).getCategory();
         deleteAllCategoryInPost(postDto.toEntity());
-        return saveCagegoriesInPost(categoriesDto, postDto);
+        return saveCategoriesInPost(categoriesDto, postDto);
     }
 
     private void deleteAllCategoryInPost(PostEntity post) {
