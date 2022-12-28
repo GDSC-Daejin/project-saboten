@@ -1,5 +1,7 @@
 package backend.model.post;
 
+import backend.controller.dto.CategoryDto;
+import backend.controller.dto.CategoryInPostDto;
 import backend.model.category.CategoryEntity;
 import backend.model.compositekey.CategoryInPostPK;
 import lombok.*;
@@ -26,4 +28,11 @@ public class CategoryInPostEntity {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "category_id", nullable = false)
     private CategoryEntity category;
+
+    public CategoryInPostDto toDto() {
+        return CategoryInPostDto.builder()
+                .post(post.toDto())
+                .category(category.toDto())
+                .build();
+    }
 }

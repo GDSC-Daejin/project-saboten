@@ -1,5 +1,7 @@
 package backend.service.post;
 
+import backend.controller.dto.PostDto;
+import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
@@ -24,44 +26,41 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public PostEntity create(String text, UserEntity userEntity) {
+    public PostDto create(final String text, final UserDto userDto) {
         PostEntity postEntity = PostEntity.builder()
                 .postText(text)
                 .postLikeCount(0)
-                .user(userEntity)
+                .user(userDto.toEntity())
                 .postScrapCount(0)
                 .view(0)
                 .build();
         postEntity = postRepository.save(postEntity);
-        return postEntity;
+        return postEntity.toDto();
     }
 
     @Transactional
-    public PostEntity findPost(Long id) {
+    public PostDto findPost(Long id) {
         Optional<PostEntity> postEntity = postRepository.findById(id);
         if(postEntity.isEmpty())
             throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
-        return postEntity.get();
+        return postEntity.get().toDto();
     }
 
-    @Transactional
-    public Page<PostEntity> searchPost(String searchText, Pageable pageable) {
-        return postRepository.findByPostTextContaining(searchText, pageable);
+    public Page<PostDto> searchPost(final String searchText, final Pageable pageable) {
+        return postRepository.findByPostTextContaining(searchText, pageable).map(PostEntity::toDto);
     }
     
     @Transactional
-    public Integer updateView(Long id) {
+    public Integer updateView(final Long id) {
         return postRepository.upateView(id);
     }
 
-    @Transactional
-    public Page<PostEntity> getUserPost(UserEntity user, Pageable pageable) {
-        return postRepository.findAllByUser(user, pageable);
+    public Page<PostDto> getUserPost(final Long userId, final Pageable pageable) {
+        return postRepository.findAllByUserId(userId, pageable).map(PostEntity::toDto);
     }
 
-    @Transactional
-    public PostEntity isHavingPostByUser(UserEntity userEntity, Long id) {
-        PostEntity postEntity = postRepository.findByUserAndPostId(userEntity, id);
+    private PostEntity isHavingPostByUser(final Long userId, final Long postId) {
+        PostEntity postEntity = postRepository.findByUserIdAndPostId(userId, postId);
 
         if(postEntity == null)
             throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
@@ -70,27 +69,30 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost(PostEntity postEntity, String text) {
+    public PostDto updatePost(Long userId, Long postId, final String text) {
+        PostEntity postEntity = isHavingPostByUser(userId, postId);
         postEntity.setPostText(text);
         postRepository.save(postEntity);
+        return postEntity.toDto();
     }
 
     @Transactional
-    public void deletePost(PostEntity postEntity) {
+    public void deletePost(Long userId, Long postId) {
+        PostEntity postEntity = isHavingPostByUser(userId, postId);
         postRepository.delete(postEntity);
     }
 
     @Transactional
-    public void increasePostLike(Long id) {
+    public void increasePostLike(final Long id) {
         postRepository.increaseLikeCount(id);
     }
 
     @Transactional
-    public void decreasePostLike(Long id) {
+    public void decreasePostLike(final Long id) {
         postRepository.decreaseLikeCount(id);
     }
 
-    public Page<PostEntity> findAllHotPost(Pageable pageable) {
-        return postRepository.findAllHostPost(pageable);
+    public Page<PostDto> findAllHotPost(final Pageable pageable) {
+        return postRepository.findAllHostPost(pageable).map(PostEntity::toDto);
     }
 }

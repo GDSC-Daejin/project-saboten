@@ -1,5 +1,6 @@
 package backend.model.post;
 
+import backend.controller.dto.PostDto;
 import backend.model.common.BaseTimeEntity;
 import backend.model.user.UserEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -37,4 +38,17 @@ public class PostEntity extends BaseTimeEntity {
 
     @Column(name = "view", nullable = false, columnDefinition = "integer default 0")
     private Integer view;
+
+    public PostDto toDto() {
+        return PostDto.builder()
+                .postId(postId)
+                .postText(postText)
+                .user(user.toDto())
+                .postLikeCount(postLikeCount)
+                .postScrapCount(postScrapCount)
+                .view(view)
+                .registDate(getRegistDate())
+                .modifyDate(getModifyDate())
+                .build();
+    }
 }

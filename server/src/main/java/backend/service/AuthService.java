@@ -1,5 +1,6 @@
 package backend.service;
 
+import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.jwt.RedisUtil;
 import backend.jwt.RoleType;
@@ -40,7 +41,7 @@ public class AuthService {
         }
 
         UserEntity user = new UserEntity(userSignInRequest);
-        return userRepository.save(user).toDto();
+        return userRepository.save(user).toDto().toResponse();
     }
 
     @Transactional
@@ -51,8 +52,11 @@ public class AuthService {
         // 보류 이유 : 소셜로그인 기반이라 필요없음 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
         // 보류 이유 : 소셜로그인 기반이라 필요없음 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
 
+        // 서비스가 타 서비스의 기능을 이용하는건 적합하지 않은 것 같음
+//        UserDto user = userService.findUserEntity(id);
+
         // 해당 유저가 있는지 검증
-        UserEntity user = userService.findUserEntity(id);
+        UserEntity user = userRepository.findByUserId(id);
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
@@ -73,7 +77,7 @@ public class AuthService {
     public JwtTokenResponse socialLogin(UserLoginTestRequest userLoginTestRequest) {
         //소셜로그인 테스트용
         Long id = userLoginTestRequest.getId();
-        UserEntity user = userService.findUserEntity(id);
+        UserDto user = userService.findUserEntity(id);
         return tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
     }
 
@@ -137,14 +141,17 @@ public class AuthService {
     public UserInfoResponse signupUpdate(UserInfoResponse userInfoResponse) {
         Long id = SecurityUtil.getCurrentUserId();
         Optional<UserEntity> userEntity = userRepository.findById(id);
+
         if(userEntity.isEmpty())
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
+
         userEntity.get().setGender(userInfoResponse.getGender().getValue());
         userEntity.get().setNickname(userInfoResponse.getNickname());
         userEntity.get().setMyPageIntroduction(userInfoResponse.getIntroduction());
         userEntity.get().setAge(userInfoResponse.getAge());
         userEntity.get().setEmail(userInfoResponse.getEmail());
         userEntity.get().setUserImage(userInfoResponse.getProfilePhotoUrl());
-        return userRepository.save(userEntity.get()).toUserInfoDTO();
+
+        return userRepository.save(userEntity.get()).toDto().toInfoResponse();
     }
 }

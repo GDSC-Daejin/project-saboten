@@ -1,5 +1,6 @@
 package backend.model.comment;
 
+import backend.controller.dto.CommentDto;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import common.model.reseponse.comment.CommentResponse;
@@ -23,7 +24,6 @@ public class CommentEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
 
-
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "post_id", nullable = false)
@@ -44,8 +44,19 @@ public class CommentEntity {
     @Column(name = "comment_regist_date", nullable = false)
     private LocalDateTime commentRegistDate = LocalDateTime.now();
 
-    public CommentResponse toDto(){
-       return new CommentResponse(this.getCommentId(), this.getCommentText(), this.getUser().toDto(),null, this.getCommentRegistDate().toString());
+//    public CommentResponse toDto(){
+//       return new CommentResponse(this.getCommentId(), this.getCommentText(), this.getUser().toDto(),null, this.getCommentRegistDate().toString());
+//    }
+
+    public CommentDto toDto() {
+        return CommentDto.builder()
+                .commentId(commentId)
+                .post(post.toDto())
+                .user(user.toDto())
+                .commentText(commentText)
+                .commentLikeCount(commentLikeCount)
+                .commentRegistDate(commentRegistDate)
+                .build();
     }
 
 }

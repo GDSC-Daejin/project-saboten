@@ -1,5 +1,7 @@
 package backend.service.user;
 
+import backend.controller.dto.PostDto;
+import backend.controller.dto.UserDto;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
 import backend.model.user.VoteSelectEntity;
@@ -17,13 +19,13 @@ public class VoteSelectService {
     private final VoteSelectRepository voteSelectRepository;
 
     @Transactional
-    public void saveVoteSelect(PostEntity postEntity , UserEntity userEntity, Long voteResult) {
-        VoteSelectEntity votedSelectEntity = findVoteSelect(userEntity, postEntity);
+    public void saveVoteSelect(PostDto postDto , UserDto userDto, Long voteResult) {
+        VoteSelectEntity votedSelectEntity = findVoteSelect(userDto.getUserId(), postDto.getPostId());
         if(votedSelectEntity != null) {
             deleteVoteSelect(votedSelectEntity);
         }
 
-        VoteSelectEntity voteSelectEntity = new VoteSelectEntity(postEntity, userEntity, voteResult);
+        VoteSelectEntity voteSelectEntity = new VoteSelectEntity(postDto.toEntity(), userDto.toEntity(), voteResult);
         voteSelectRepository.save(voteSelectEntity);
     }
 
@@ -31,12 +33,12 @@ public class VoteSelectService {
         voteSelectRepository.delete(voteSelectEntity);
     }
 
-    private VoteSelectEntity findVoteSelect(UserEntity userEntity, PostEntity postEntity) {
-        return voteSelectRepository.findByUserAndPost(userEntity, postEntity);
+    private VoteSelectEntity findVoteSelect(final Long userId, final Long postId) {
+        return voteSelectRepository.findByUserIdAndPostId(userId, postId);
     }
 
-    public Long findVoteSelectResult(UserEntity userEntity, PostEntity postEntity) {
-        VoteSelectEntity voteSelectEntity = findVoteSelect(userEntity, postEntity);
+    public Long findVoteSelectResult(final Long userId, final Long postId) {
+        VoteSelectEntity voteSelectEntity = findVoteSelect(userId, postId);
         Long voteResult = null;
         if(voteSelectEntity != null)
             voteResult = voteSelectEntity.getVoteResult();
@@ -44,9 +46,12 @@ public class VoteSelectService {
         return voteResult;
     }
 
-    public List<PostEntity> findPostVoted(UserEntity userEntity) {
-        List<VoteSelectEntity> voteSelectEntities = voteSelectRepository.findByUser(userEntity);
+    public List<PostDto> findPostVoted(final Long userId) {
+        List<VoteSelectEntity> voteSelectEntities = voteSelectRepository.findByUserId(userId);
 
-        return voteSelectEntities.stream().map(VoteSelectEntity::getPost).collect(Collectors.toList());
+        return voteSelectEntities.stream()
+                .map(VoteSelectEntity::getPost)
+                .map(PostEntity::toDto)
+                .collect(Collectors.toList());
     }
 }
