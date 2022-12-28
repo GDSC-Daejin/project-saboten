@@ -59,24 +59,27 @@ public class PostService {
         return postRepository.findAllByUserId(userId, pageable).map(PostEntity::toDto);
     }
 
-    public PostDto isHavingPostByUser(final Long userId, final Long postId) {
+    private PostEntity isHavingPostByUser(final Long userId, final Long postId) {
         PostEntity postEntity = postRepository.findByUserIdAndPostId(userId, postId);
 
         if(postEntity == null)
             throw new ApiException(PostResponseMessage.POST_NOT_FOUND);
 
+        return postEntity;
+    }
+
+    @Transactional
+    public PostDto updatePost(Long userId, Long postId, final String text) {
+        PostEntity postEntity = isHavingPostByUser(userId, postId);
+        postEntity.setPostText(text);
+        postRepository.save(postEntity);
         return postEntity.toDto();
     }
 
     @Transactional
-    public void updatePost(PostDto postDto, final String text) {
-        postDto.setPostText(text);
-        postRepository.save(postDto.toEntity());
-    }
-
-    @Transactional
-    public void deletePost(PostDto postDto) {
-        postRepository.delete(postDto.toEntity());
+    public void deletePost(Long userId, Long postId) {
+        PostEntity postEntity = isHavingPostByUser(userId, postId);
+        postRepository.delete(postEntity);
     }
 
     @Transactional

@@ -8,6 +8,8 @@ import common.model.reseponse.user.UserResponse;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Builder
 @Getter
 public class UserDto {
@@ -29,6 +31,9 @@ public class UserDto {
 
     private String userImage;
 
+    private LocalDateTime registDate;
+
+    private LocalDateTime modifyDate;
 
     public UserEntity toEntity() {
         return UserEntity.builder()

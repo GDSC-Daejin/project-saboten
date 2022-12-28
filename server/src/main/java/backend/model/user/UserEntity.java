@@ -78,6 +78,8 @@ public class UserEntity extends BaseTimeEntity {
                 .gender(gender)
                 .email(email)
                 .userImage(userImage)
+                .registDate(getRegistDate())
+                .modifyDate(getModifyDate())
                 .build();
     }
 

@@ -70,9 +70,11 @@ class PostController {
 
         List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
         List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-        Long voteResult = voteSelectService.findVoteSelectResult(userDto.getUserId(), postDto.getPostId());
-        boolean isLike = postLikeService.findPostIsLike(userDto.getUserId(), postDto.getPostId());
-        boolean isScrap = postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId());
+
+        Long userId = userDto != null ? userDto.getUserId() : null;
+        Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
+        boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
+        boolean isScrap = postScrapService.findPostIsScrap(userId, postDto.getPostId());
 
         // TODO : 매개변수가 5개나 넣어지는데 어떻게 못줄이나....
         // 방법 1 : 외부 테이블 정보들을 그냥 post 테이블 정보로 저장함. (다른 프로젝트보면 이런식으로 되어있는듯?)
@@ -109,7 +111,8 @@ class PostController {
     })
     public ApiResponse<Page<PostReadResponse>> getUserPost(Pageable pageable){
         UserDto userDto = getUser();
-        Page<PostDto> postPage = postService.getUserPost(userDto.getUserId(), pageable);
+        Long userId = userDto != null ? userDto.getUserId() : null;
+        Page<PostDto> postPage = postService.getUserPost(userId, pageable);
         Page<PostReadResponse> myPostPage = postPage.map(postDto ->
                 postDto.toReadResponse(voteService.findVotes(postDto.getPostId()))
         );
@@ -164,8 +167,8 @@ class PostController {
     })
     public ApiResponse<PostResponse> updatePost(@RequestBody PostUpdateRequest postUpdateRequest) {
         UserDto userDto = getUser();
-        PostDto postDto = postService.isHavingPostByUser(userDto.getUserId(), postUpdateRequest.getId());
-        postService.updatePost(postDto, postUpdateRequest.getText());
+        Long userId = userDto != null ? userDto.getUserId() : null;
+        PostDto postDto = postService.updatePost(userId, postUpdateRequest.getId(), postUpdateRequest.getText());
 
         // post category update
         List<CategoryDto> categoriesDto = categoryService.findCategories(postUpdateRequest.getCategoryIds());
@@ -186,9 +189,9 @@ class PostController {
     @DeleteMapping("/post/{id}")
     public ApiResponse<?> removePost(@PathVariable Long id) {
         UserDto userDto = getUser();
-        PostDto postDto = postService.isHavingPostByUser(userDto.getUserId(), id);
+        Long userId = userDto != null ? userDto.getUserId() : null;
         // Post만 삭제하면 알아서 Post의 관련된 자식 Entity들 삭제 함.
-        postService.deletePost(postDto);
+        postService.deletePost(userId, id);
 
         return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
     }
@@ -244,8 +247,9 @@ class PostController {
     })
     public ApiResponse<List<PostReadResponse>> getPostScrap() {
         UserDto userDto = getUser();
+        Long userId = userDto != null ? userDto.getUserId() : null;
 
-        List<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userDto.getUserId());
+        List<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userId);
         List<PostReadResponse> myPostScrap = postScrapesDto.stream().map(postScrapDto -> {
                 PostDto postDto = postScrapDto.getPost();
                 return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
@@ -291,8 +295,9 @@ class PostController {
     })
     public ApiResponse<List<PostReadResponse>> getPostVoted() {
         UserDto userDto = getUser();
+        Long userId = userDto != null ? userDto.getUserId() : null;
 
-        List<PostDto> postsDto = voteSelectService.findPostVoted(userDto.getUserId());
+        List<PostDto> postsDto = voteSelectService.findPostVoted(userId);
         List<PostReadResponse> myPostVoted = postsDto.stream().map(postDto -> {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
         }).collect(Collectors.toList());
