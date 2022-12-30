@@ -48,8 +48,8 @@ public class PostService {
         return postRepository.findByPostTextContaining(searchText, pageable).map(PostEntity::toDto);
     }
 
-    public Page<PostDto> findAllOrderedBySortItemPageable(String sortItem, final Pageable pageable) {
-        return postRepository.findAll(Sort.by(Direction.DESC, sortItem), pageable).map(PostEntity::toDto);
+    public Page<PostDto> findAllPageable(final Pageable pageable) {
+        return postRepository.findAll(pageable).map(PostEntity::toDto);
     }
 
     public List<PostDto> findAllOrderedBySortItemList(String sortItem) {

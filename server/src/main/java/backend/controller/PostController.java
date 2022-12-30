@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -145,18 +146,17 @@ class PostController {
     //TODO : 최신순으로 조회
     //게시물을 좋아요 순으로 조회
     @GetMapping("/post/liked")
-    public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByLikedCount(@PageableDefault Pageable pageable) {
-        Page<PostDto> postPage = postService.findAllOrderedBySortItemPageable("post_like_count", pageable);
-        Page<PostReadResponse> myPostPage = postPage.map(postDto -> {
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
-        });
+    public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByLikedCount(
+            @PageableDefault(size = 10, sort = "postLikeCount", direction = Direction.DESC) Pageable pageable) {
+        Page<PostDto> postPage = postService.findAllPageable(pageable);
+        Page<PostReadResponse> myPostPage = postPage.map(postDto -> postDto.toReadResponse(voteService.findVotes(postDto.getPostId())));
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_LIKED_COUNT);
     }
 
     //TODO : 매핑 주소 맘에 안들어요.. 고쳐주세요..
-    @GetMapping("/post/lieked/list")
+    @GetMapping("/post/liked/list")
     public ApiResponse<List<PostReadResponse>> getPostListOrderedByLikedCount() {
-        List<PostDto> postDtoList = postService.findAllOrderedBySortItemList("post_like_count");
+        List<PostDto> postDtoList = postService.findAllOrderedBySortItemList("postLikeCount");
         List<PostReadResponse> myPostList = postDtoList.stream().map(postDto -> {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
         }).limit(5).toList();
