@@ -143,7 +143,8 @@ class PostController {
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
-    //TODO : 최신순으로 조회
+    //최신순으로 조회
+    @ApiOperation(value = "전체 게시물 조회(최신순)")
     @GetMapping("/post/recent")
     public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByRegistDate(
             @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable) {
@@ -152,6 +153,7 @@ class PostController {
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_REGIST_DATE);
     }
     //게시물을 좋아요 순으로 조회
+    @ApiOperation(value = "전체 게시물 조회(좋아요순)")
     @GetMapping("/post/liked")
     public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByLikedCount(
             @PageableDefault(sort = "postLikeCount", direction = Direction.DESC) Pageable pageable) {
@@ -161,6 +163,7 @@ class PostController {
     }
 
     //TODO : 매핑 주소 맘에 안들어요.. 고쳐주세요..
+    @ApiOperation(value = "전체 게시물 조회(좋아요순 5개)")
     @GetMapping("/post/liked/list")
     public ApiResponse<List<PostReadResponse>> getPostListOrderedByLikedCount() {
         List<PostDto> postDtoList = postService.findAllOrderedBySortItemList("postLikeCount");
