@@ -4,17 +4,15 @@ import backend.controller.dto.PostDto;
 import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.model.post.PostEntity;
-import backend.model.user.UserEntity;
 import backend.repository.post.PostRepository;
 import common.message.PostResponseMessage;
-import common.model.request.post.create.PostCreateRequest;
-import common.model.request.post.update.PostUpdateRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +46,16 @@ public class PostService {
 
     public Page<PostDto> searchPost(final String searchText, final Pageable pageable) {
         return postRepository.findByPostTextContaining(searchText, pageable).map(PostEntity::toDto);
+    }
+
+    public Page<PostDto> findAllPageable(final Pageable pageable) {
+        return postRepository.findAll(pageable).map(PostEntity::toDto);
+    }
+
+    public List<PostDto> findAllOrderedBySortItemList(String sortItem) {
+        return postRepository.findAll(Sort.by(Direction.DESC, sortItem))
+                .stream().map(PostEntity::toDto)
+                .collect(Collectors.toList());
     }
     
     @Transactional

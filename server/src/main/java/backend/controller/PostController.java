@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -84,7 +85,6 @@ class PostController {
         return ApiResponse.withMessage(response, PostResponseMessage.POST_FIND_ONE);
     }
 
-    // TODO : 없는 카테고리로 등록할 때 예외처리 필요
     @ApiOperation(value = "게시물 등록", notes = "사용자가 게시물 작성하여 등록합니다.")
     @PostMapping("/post")
     @ApiResponses({
@@ -143,7 +143,35 @@ class PostController {
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
+    //최신순으로 조회
+    @ApiOperation(value = "전체 게시물 조회(최신순)")
+    @GetMapping("/post/recent")
+    public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByRegistDate(
+            @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable) {
+        Page<PostDto> postPage = postService.findAllPageable(pageable);
+        Page<PostReadResponse> myPostPage = postPage.map(postDto -> postDto.toReadResponse(voteService.findVotes(postDto.getPostId())));
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_REGIST_DATE);
+    }
+    //게시물을 좋아요 순으로 조회
+    @ApiOperation(value = "전체 게시물 조회(좋아요순)")
+    @GetMapping("/post/liked")
+    public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByLikedCount(
+            @PageableDefault(sort = "postLikeCount", direction = Direction.DESC) Pageable pageable) {
+        Page<PostDto> postPage = postService.findAllPageable(pageable);
+        Page<PostReadResponse> myPostPage = postPage.map(postDto -> postDto.toReadResponse(voteService.findVotes(postDto.getPostId())));
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_LIKED_COUNT);
+    }
 
+    //TODO : 매핑 주소 맘에 안들어요.. 고쳐주세요..
+    @ApiOperation(value = "전체 게시물 조회(좋아요순 5개)")
+    @GetMapping("/post/liked/list")
+    public ApiResponse<List<PostReadResponse>> getPostListOrderedByLikedCount() {
+        List<PostDto> postDtoList = postService.findAllOrderedBySortItemList("postLikeCount");
+        List<PostReadResponse> myPostList = postDtoList.stream().map(postDto -> {
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()));
+        }).limit(5).toList();
+        return ApiResponse.withMessage(myPostList, PostResponseMessage.POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT);
+    }
     // 게시글 검색
     @ApiOperation(value = "게시물 검색",
             notes = "사용자가 검색어를 입력하면, 검색어가 들어간 게시물을 조회할 수 있습니다.")
