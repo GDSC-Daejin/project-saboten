@@ -144,10 +144,17 @@ class PostController {
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
     //TODO : 최신순으로 조회
+    @GetMapping("/post/recent")
+    public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByRegistDate(
+            @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable) {
+        Page<PostDto> postPage = postService.findAllPageable(pageable);
+        Page<PostReadResponse> myPostPage = postPage.map(postDto -> postDto.toReadResponse(voteService.findVotes(postDto.getPostId())));
+        return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_REGIST_DATE);
+    }
     //게시물을 좋아요 순으로 조회
     @GetMapping("/post/liked")
     public ApiResponse<Page<PostReadResponse>> getPostPageOrderedByLikedCount(
-            @PageableDefault(size = 10, sort = "postLikeCount", direction = Direction.DESC) Pageable pageable) {
+            @PageableDefault(sort = "postLikeCount", direction = Direction.DESC) Pageable pageable) {
         Page<PostDto> postPage = postService.findAllPageable(pageable);
         Page<PostReadResponse> myPostPage = postPage.map(postDto -> postDto.toReadResponse(voteService.findVotes(postDto.getPostId())));
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_LIKED_COUNT);
