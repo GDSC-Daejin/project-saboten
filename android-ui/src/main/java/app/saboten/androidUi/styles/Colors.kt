@@ -15,7 +15,10 @@ object SabotenColors {
     val green500 = Color(0xFF00C064)
 
 
+    val grey100 = Color(0xFFECECEC)
     val grey200 = Color(0xFFC6C6C6)
+
+    val grey1000 = Color(0xFF111111)
 
 }
 
