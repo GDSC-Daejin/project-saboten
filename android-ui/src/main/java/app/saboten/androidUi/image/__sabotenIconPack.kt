@@ -2,7 +2,6 @@ package app.saboten.androidUi.image
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.saboten.androidUi.image.sabotenIconPack.ABIcon
-import app.saboten.androidUi.image.sabotenIconPack.SabotenLogo
 import kotlin.collections.List as ____KtList
 
 object SabotenIconPack
@@ -15,6 +14,6 @@ val SabotenIconPack.AllIcons: ____KtList<ImageVector>
             return __AllIcons!!
         }
         __AllIcons =
-            listOf(ABIcon, SabotenLogo)
+            listOf(ABIcon)
         return __AllIcons!!
     }

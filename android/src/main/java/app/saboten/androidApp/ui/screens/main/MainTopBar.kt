@@ -15,10 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.bars.BasicTopBar
-import app.saboten.androidUi.image.SabotenIconPack
-import app.saboten.androidUi.image.sabotenIconPack.SabotenLogo
+import app.saboten.androidUi.image.sabotenlogo.MainLogo
+import app.saboten.androidUi.image.sabotenlogo.SabotenIcons
 import app.saboten.androidUi.styles.MainTheme
-import app.saboten.androidUi.styles.SabotenColors
 
 @Composable
 fun MainTopBar(
@@ -32,15 +31,16 @@ fun MainTopBar(
         backgroundColor = backgroundColor,
         contentColor = contentColor,
         title = {
-            Icon(
-                imageVector = SabotenIconPack.SabotenLogo,
-                tint = SabotenColors.green500,
-                contentDescription = "선인장 로고"
-            )
+            CompositionLocalProvider(LocalContentAlpha provides 1f) {
+                Icon(
+                    imageVector = SabotenIcons.MainLogo,
+                    contentDescription = "선인장 로고"
+                )
+            }
+
         },
         actions = {
             CompositionLocalProvider(LocalContentAlpha provides 1f) {
-
                 IconButton(onClick = { onSearchClicked() }) {
                     Icon(
                         imageVector = Icons.Rounded.Search,
@@ -48,7 +48,6 @@ fun MainTopBar(
                         modifier = Modifier.size(26.dp)
                     )
                 }
-
             }
         }
     )
