@@ -25,13 +25,14 @@ class GetPagedPostByCategoryIdUseCase(
                 User(0, "Harry", "https://picsum.photos/200/200"),
                 listOf(
                     Vote(0, "찍먹", 10, VoteColors.BLUE),
-                    Vote(1, "부먹", 1, VoteColors.RED),
+                    Vote(1, "부먹", 1, VoteColors.RED)
                 ),
                 listOf(
                     Category(0, "호불호", ""),
-                    Category(0, "먹을거", ""),
+                    Category(0, "먹을거", "")
                 ),
                 0,
+                null,
                 null,
                 "",
                 null
@@ -40,5 +41,4 @@ class GetPagedPostByCategoryIdUseCase(
         nextKey = 10,
         count = 20
     )
-
 }
