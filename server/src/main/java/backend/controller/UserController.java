@@ -40,6 +40,7 @@ class UserController {
         return ApiResponse.withMessage(userDto.toInfoResponse(),UserResponseMessage.USER_READ);
     }
 
+    // TODO : 사용자 인증이 필요할지?? (일단 현재는 제공안하는 API 이긴한데 흠..)
     @ApiOperation(value = "특정 사용자 프로필 조회", notes = "특정 사용자 프로필을 조회합니다.")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = UserNotFoundResponse.class)

@@ -83,6 +83,7 @@ public class  CommentController {
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_ALL);
     }
 
+    // TODO : URL이 /post/my/comment 가 어울리지 않는지?
     @ApiOperation(value = "유저별 댓글조회 API", notes = "로그인 된 유저가 단 댓글들을 모두 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class)
