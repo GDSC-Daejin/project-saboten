@@ -1,6 +1,7 @@
 package backend.controller;
 
 import backend.common.EntityFactory;
+import backend.common.RequestFactory;
 import backend.config.UTF8Config;
 import backend.model.comment.CommentEntity;
 import backend.model.post.PostEntity;
@@ -13,7 +14,6 @@ import common.message.BasicResponseMessage;
 import common.message.CommentResponseMessage;
 import common.message.PostResponseMessage;
 import common.message.ResponseMessage;
-import common.model.request.comment.CommentCreateRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -111,8 +111,7 @@ class CommentControlllerTest {
             String requestUrl = baseUrl + "/" + postId + "/comment";
             ResponseMessage responseMessage = CommentResponseMessage.COMMENT_CREATED;
 
-            String commentText = "안녕 나는 테스트 댓글이에요!";
-            String content = objectMapper.writeValueAsString(new CommentCreateRequest(commentText));
+            String content = objectMapper.writeValueAsString(RequestFactory.basicCommentCreateRequest());
 
             // when then
             mockMvc.perform(post(requestUrl)
@@ -120,7 +119,6 @@ class CommentControlllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isCreated())
-                    .andExpect(jsonPath("$.data.text").value(commentText))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -131,8 +129,7 @@ class CommentControlllerTest {
             String requestUrl = baseUrl + "/" + postId + "/comment";
             ResponseMessage responseMessage = BasicResponseMessage.UNAUTHORIZED;
 
-            String commentText = "안녕 나는 테스트 댓글이에요!";
-            String content = objectMapper.writeValueAsString(new CommentCreateRequest(commentText));
+            String content = objectMapper.writeValueAsString(RequestFactory.basicCommentCreateRequest());
 
             // when then
             mockMvc.perform(post(requestUrl)

@@ -45,7 +45,7 @@ public class EntityFactory {
 
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
-                .categoryName("음식")
+                .categoryName("애완동물")
                 .categoryIconUrl("https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg")
                 .build();
     }
@@ -101,10 +101,10 @@ public class EntityFactory {
                 .color("WHITE")
                 .build();
     }
-    public static CategoryInPostEntity basicCategoryInPostEntity(PostEntity post){
+    public static CategoryInPostEntity basicCategoryInPostEntity(PostEntity post, CategoryEntity category){
         return CategoryInPostEntity.builder()
                 .post(post)
-                .category(basicCategoryEntity())
+                .category(category)
                 .build();
     }
 

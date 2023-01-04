@@ -32,7 +32,6 @@ class CategoryResponseControllerTest {
     @Autowired
     private CategoryRepository categoryRepository;
 
-
     @Nested
     @DisplayName("GET /api/v1/category")
     class GetCategoryResponse {
