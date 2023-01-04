@@ -7,7 +7,6 @@ import androidx.compose.material.LocalContentAlpha
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -27,20 +26,21 @@ fun MainTopBar(
     contentColor: Color = contentColorFor(backgroundColor),
     onSearchClicked: () -> Unit = {},
 ) {
-
     BasicTopBar(
         modifier = modifier,
         backgroundColor = backgroundColor,
         contentColor = contentColor,
         title = {
-            Icon(
-                imageVector = SabotenIcons.MainLogo,
-                contentDescription = "선인장 로고"
-            )
+            CompositionLocalProvider(LocalContentAlpha provides 1f) {
+                Icon(
+                    imageVector = SabotenIcons.MainLogo,
+                    contentDescription = "선인장 로고"
+                )
+            }
+
         },
         actions = {
             CompositionLocalProvider(LocalContentAlpha provides 1f) {
-
                 IconButton(onClick = { onSearchClicked() }) {
                     Icon(
                         imageVector = Icons.Rounded.Search,
@@ -48,7 +48,6 @@ fun MainTopBar(
                         modifier = Modifier.size(26.dp)
                     )
                 }
-
             }
         }
     )

@@ -12,12 +12,11 @@ val Colors.surfaceOver
 
 object SabotenColors {
 
+    val green200 = Color(0xFFAAE6C9)
     val green500 = Color(0xFF00C064)
-
-
+    val selectedGreen = Color(0xFF087E46)
     val grey100 = Color(0xFFECECEC)
     val grey200 = Color(0xFFC6C6C6)
-
     val grey1000 = Color(0xFF111111)
 
 }
