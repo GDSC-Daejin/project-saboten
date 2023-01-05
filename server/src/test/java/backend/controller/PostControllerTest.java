@@ -452,4 +452,126 @@ class PostControllerTest {
                         .andDo(print());
             }
     }
+
+    //TODO : @GetMapping("/post/recent")
+    @Nested
+    @DisplayName("GET /api/v1/post/정렬기준")
+    class GetRecentPost {
+        @Test
+        public void 전체_조회_최신순() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL_ORDERED_BY_REGIST_DATE;
+            //when, then
+            mockMvc.perform(get(baseUrl + "/recent"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+    @Nested
+    @DisplayName("GET /api/v1/post/liked")
+    class GetLikedPost {
+        @Test
+        public void 전체_조회_좋아요순() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL_ORDERED_BY_LIKED_COUNT;
+            //when, then
+            mockMvc.perform(get(baseUrl + "/liked"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /api/v1/post/liked/list")
+    class GetLikedFivePost {
+        @Test
+        public void 전체_조회_좋아요순_5개() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT;
+            //when, then
+            mockMvc.perform(get(baseUrl + "/liked/list"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /post/search/{searchText}")
+    class GetSerchPost{
+        @Test
+        public void 게시물_검색() throws Exception {
+            //given
+            String searchText = "테스트";
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
+            //when
+            // then
+            mockMvc.perform(get(baseUrl + "/search/" + searchText))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+        @Test
+        public void 검색된_게시글이_없는_경우() throws Exception {
+            //given
+            String searchText = "게시글";
+            ResponseMessage responseMessage = PostResponseMessage.POST_NOT_FOUND;
+            //when
+            // then
+            mockMvc.perform(get(baseUrl + "/search/" + searchText))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /post/{id}/like")
+    class PostLike {
+        @Test
+        @WithMockUser(username = "1")
+        public void 게시물_좋아요_등록() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_LIKE_SUCCESS;
+            //when
+            String id = "86";
+            //then
+            mockMvc.perform(get(baseUrl + id + "/like"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+    //TODO : @PostMapping("/post/{id}/scrap")
+
+    //TODO : @GetMapping("/post/my/scrap")
+    //TODO : @GetMapping("/post/hot")
+
+    //TODO : @PostMapping("/post/{id}/vote")
+
+    //TODO : @GetMapping("/post/my/voted")
+
 }
