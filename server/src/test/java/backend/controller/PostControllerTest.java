@@ -552,10 +552,134 @@ class PostControllerTest {
         public void 게시물_좋아요_등록() throws Exception {
             //given
             ResponseMessage responseMessage = PostResponseMessage.POST_LIKE_SUCCESS;
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
             //when
             String id = "86";
             //then
-            mockMvc.perform(get(baseUrl + id + "/like"))
+            mockMvc.perform(post(baseUrl + "/" + id + "/like")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.data.like").value(true))
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+        @Test
+        @WithMockUser(username = "1")
+        public void 게시물_좋아요_취소() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_UNLIKE_SUCCESS;
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            String id = "86";
+            //when
+            mockMvc.perform(post(baseUrl + "/" + id + "/like")
+                    .content(content)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+            //then
+            mockMvc.perform(post(baseUrl + "/" + id + "/like")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.data.like").value(false))
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("POST /post/{id}/scrap")
+    @WithMockUser(username = "1")
+    class PostScrap {
+        @Test
+        public void 게시물_스크랩_등록() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_SCRAP_SUCCESS;
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            //when
+            String id = "86";
+            //then
+            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.data.scrap").value(true))
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+        @Test
+        public void 게시물_스크랩_취소() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_CANCEL_SCRAP_SUCCESS;
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            String id = "86";
+            //when
+            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+            //then
+            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.data.scrap").value(false))
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /post/my/scrap")
+    class GetMyScrap {
+        @Test
+        @WithMockUser(username = "1")
+        public void 내가_스크랩한_게시글_불러오기() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_SCRAP_FIND_SUCCESS;
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            String id = "86";
+            //when
+            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+            //then
+            mockMvc.perform(get(baseUrl + "/my/scrap"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+
+        }
+    }
+    //TODO : 현재 핫게시글이 좋아요 몇개 기준인데 그 기준을 충족하는 것이 없을 땐.. 어떡하죠
+    @Nested
+    @DisplayName("GET /post/hot")
+    class GetHotPost {
+        @Test
+        public void 핫게시글_조회() throws Exception {
+            // given
+            ResponseMessage responseMessage = PostResponseMessage.POST_HOT_FIND_ALL;
+
+            // when then
+            mockMvc.perform(get(baseUrl + "/hot"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.content").isArray())
                     .andExpect(jsonPath("$.data.content").isNotEmpty())
@@ -565,10 +689,6 @@ class PostControllerTest {
                     .andDo(print());
         }
     }
-    //TODO : @PostMapping("/post/{id}/scrap")
-
-    //TODO : @GetMapping("/post/my/scrap")
-    //TODO : @GetMapping("/post/hot")
 
     //TODO : @PostMapping("/post/{id}/vote")
 
