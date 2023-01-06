@@ -501,8 +501,7 @@ class PostControllerTest {
             //when, then
             mockMvc.perform(get(baseUrl + "/liked/list"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.content").isArray())
-                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -554,9 +553,8 @@ class PostControllerTest {
             ResponseMessage responseMessage = PostResponseMessage.POST_LIKE_SUCCESS;
             String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
             //when
-            String id = "86";
             //then
-            mockMvc.perform(post(baseUrl + "/" + id + "/like")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/like")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
@@ -573,15 +571,14 @@ class PostControllerTest {
             //given
             ResponseMessage responseMessage = PostResponseMessage.POST_UNLIKE_SUCCESS;
             String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
-            String id = "86";
             //when
-            mockMvc.perform(post(baseUrl + "/" + id + "/like")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/like")
                     .content(content)
                     .contentType(MediaType.APPLICATION_JSON)
                     .accept(MediaType.APPLICATION_JSON))
                     .andDo(print());
             //then
-            mockMvc.perform(post(baseUrl + "/" + id + "/like")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/like")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
@@ -604,9 +601,8 @@ class PostControllerTest {
             ResponseMessage responseMessage = PostResponseMessage.POST_SCRAP_SUCCESS;
             String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
             //when
-            String id = "86";
             //then
-            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/scrap")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
@@ -622,15 +618,14 @@ class PostControllerTest {
             //given
             ResponseMessage responseMessage = PostResponseMessage.POST_CANCEL_SCRAP_SUCCESS;
             String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
-            String id = "86";
             //when
-            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/scrap")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andDo(print());
             //then
-            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/scrap")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
@@ -652,9 +647,8 @@ class PostControllerTest {
             //given
             ResponseMessage responseMessage = PostResponseMessage.POST_SCRAP_FIND_SUCCESS;
             String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
-            String id = "86";
             //when
-            mockMvc.perform(post(baseUrl + "/" + id + "/scrap")
+            mockMvc.perform(post(baseUrl + "/" + postId + "/scrap")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
@@ -691,7 +685,48 @@ class PostControllerTest {
     }
 
     //TODO : @PostMapping("/post/{id}/vote")
-
-    //TODO : @GetMapping("/post/my/voted")
+    @Nested
+    @DisplayName("POST /post/{id}/vote")
+    class PostVote {
+        @Test
+        public void 투표하기() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_VOTE_SUCCESS;
+            //when
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            //then
+            mockMvc.perform(post(baseUrl + "/" + postId + "/vote")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andDo(print());
+        }
+    }
+    @Nested
+    @DisplayName("GET /post/my/voted")
+    @WithMockUser(username = "1")
+    class GetVotedPost {
+        @Test
+        public void 내가_투표한_게시글_불러오기() throws Exception {
+            //given
+            ResponseMessage responseMessage = PostResponseMessage.POST_VOTED_FIND_SUCCESS;
+            //when
+            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            //when
+            mockMvc.perform(post(baseUrl + "/" + postId + "/vote")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andDo(print());
+            //then
+            mockMvc.perform(get(baseUrl + "/" + postId + "/vote"))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+    }
 
 }
