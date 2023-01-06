@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class CategoryResponse(
     @SerialName("id") val id: Long,
     @SerialName("name") val name: String,
-    @SerialName("icon_url") val iconUrl: String,
+    @SerialName("iconUrl") val iconUrl: String,
 )
