@@ -14,8 +14,8 @@ class PostRepositoryImp(
     private val postApi: PostApi
 ) : PostRepository {
 
-    override fun postsById(postId: Long): Flow<Post> {
-        TODO("Not yet implemented")
+    override suspend fun postsById(postId: Long): Post {
+        return postApi.getPost(postId).data!!.toDomain()
     }
 
     override suspend fun getPagedPost(categoryId: Long?, nextKey : Long?): PagingResponse<Post> {

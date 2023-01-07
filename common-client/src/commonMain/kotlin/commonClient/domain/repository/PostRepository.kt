@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
 
-    fun postsById(postId: Long): Flow<Post>
+    suspend fun postsById(postId: Long): Post
 
     suspend fun getPagedPost(categoryId : Long?, nextKey : Long?) : PagingResponse<Post>
 

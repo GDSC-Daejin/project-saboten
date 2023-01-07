@@ -24,7 +24,7 @@ interface PostApi : Api {
 
     suspend fun deletePost(postId: Int): ApiResponse<String>
 
-    suspend fun getPost(postId: Int): ApiResponse<PostResponse>
+    suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
     suspend fun getPagedPosts(categoryId: Long?, nextKey : Long?): ApiResponse<PagingResponse<PostResponse>>
 
@@ -42,8 +42,8 @@ class PostApiImp : PostApi {
     override suspend fun deletePost(postId: Int) =
         responseDelete<String>(postId)
 
-    override suspend fun getPost(postId: Int) =
-        responseGet<PostResponse>(postId)
+    override suspend fun getPost(postId: Long) =
+        responseGet<PostResponse>("/$postId")
 
     override suspend fun getPagedPosts(categoryId: Long?, nextKey: Long?) =
         responseGet<PagingResponse<PostResponse>> {
