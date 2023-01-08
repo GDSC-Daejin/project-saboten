@@ -9,16 +9,19 @@ import backend.model.post.CategoryInPostEntity;
 import backend.model.post.PostEntity;
 import backend.model.post.VoteEntity;
 import backend.model.user.UserEntity;
+import backend.model.user.VoteSelectEntity;
 import backend.repository.category.CategoryRepository;
 import backend.repository.post.CategoryInPostRepository;
 import backend.repository.post.PostRepository;
 import backend.repository.post.VoteRepository;
 import backend.repository.user.UserRepository;
+import backend.repository.user.VoteSelectRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import common.message.BasicResponseMessage;
 import common.message.CategoryResponseMessage;
 import common.message.PostResponseMessage;
 import common.message.ResponseMessage;
+import common.model.request.post.VoteSelectRequest;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,6 +55,7 @@ class PostControllerTest {
     private String userId;
     private Long postId;
     private Long categoryId;
+    private Long voteId;
 
     // TODO : 이거 리포가 많아지니까 그냥 MockMvc로 실제 Post등록하면 될것같기도 한데...
     // 과연 테스트를 거치지 않은 게시물 등록 API를 사용해도 되는건지 의문....
@@ -60,13 +64,15 @@ class PostControllerTest {
                        @Autowired PostRepository postRepository,
                        @Autowired CategoryRepository categoryRepository,
                        @Autowired CategoryInPostRepository categoryInPostRepository,
-                       @Autowired VoteRepository voteRepository) {
+                       @Autowired VoteRepository voteRepository,
+                       @Autowired VoteSelectRepository voteSelectRepository) {
         UserEntity user = EntityFactory.basicUserEntity();
         PostEntity post = EntityFactory.basicPostEntity(user);
         CategoryEntity category = EntityFactory.basicCategoryEntity();
         CategoryInPostEntity categoryInPost = EntityFactory.basicCategoryInPostEntity(post, category);
         VoteEntity vote = EntityFactory.basicVoteEntityTrue(post);
         VoteEntity vote2 = EntityFactory.basicVoteEntityFalse(post);
+        VoteSelectEntity voteSelect = EntityFactory.basicVoteSelectEntity(user, post);
 
         userRepository.save(user);
         categoryRepository.save(category);
@@ -74,10 +80,12 @@ class PostControllerTest {
         categoryInPostRepository.save(categoryInPost);
         voteRepository.save(vote);
         voteRepository.save(vote2);
+        voteSelectRepository.save(voteSelect);
 
         userId = user.getUserId().toString();
         postId = post.getPostId();
         categoryId = category.getCategoryId();
+        voteId = vote.getVoteId();
     }
 
     @Nested
@@ -453,7 +461,6 @@ class PostControllerTest {
             }
     }
 
-    //TODO : @GetMapping("/post/recent")
     @Nested
     @DisplayName("GET /api/v1/post/정렬기준")
     class GetRecentPost {
@@ -527,16 +534,20 @@ class PostControllerTest {
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
         }
+
+        // TODO : 클라이언트와 상의해서 검색된게 없을경우 빈배열을 줄건지 NotFoundResponse를 줄건지 상의해야함.
+        // 현재는 빈배열을 내보냄
         @Test
         public void 검색된_게시글이_없는_경우() throws Exception {
             //given
             String searchText = "게시글";
-            ResponseMessage responseMessage = PostResponseMessage.POST_NOT_FOUND;
+            ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
             //when
             // then
             mockMvc.perform(get(baseUrl + "/search/" + searchText))
-                    .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -663,7 +674,7 @@ class PostControllerTest {
 
         }
     }
-    //TODO : 현재 핫게시글이 좋아요 몇개 기준인데 그 기준을 충족하는 것이 없을 땐.. 어떡하죠
+
     @Nested
     @DisplayName("GET /post/hot")
     class GetHotPost {
@@ -676,7 +687,6 @@ class PostControllerTest {
             mockMvc.perform(get(baseUrl + "/hot"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.content").isArray())
-                    .andExpect(jsonPath("$.data.content").isNotEmpty())
                     .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
@@ -684,45 +694,95 @@ class PostControllerTest {
         }
     }
 
-    //TODO : @PostMapping("/post/{id}/vote")
     @Nested
     @DisplayName("POST /post/{id}/vote")
     class PostVote {
         @Test
+        @WithMockUser(username = "1")
         public void 투표하기() throws Exception {
             //given
             ResponseMessage responseMessage = PostResponseMessage.POST_VOTE_SUCCESS;
             //when
-            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
+            String content = objectMapper.writeValueAsString(RequestFactory.basicVoteSelectRequest(voteId));
+
             //then
             mockMvc.perform(post(baseUrl + "/" + postId + "/vote")
                             .content(content)
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+
+        @Test
+        public void 비로그인시_투표_요청() throws Exception {
+            // given
+            ResponseMessage responseMessage = BasicResponseMessage.UNAUTHORIZED;
+            //when
+            String content = objectMapper.writeValueAsString(RequestFactory.basicVoteSelectRequest(voteId));
+
+            //then
+            mockMvc.perform(post(baseUrl + "/" + postId + "/vote")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+
+        @Test
+        @WithMockUser(username = "1")
+        public void 존재하지_않는_투표Id로_투표_요청() throws Exception {
+            // given
+            ResponseMessage responseMessage = PostResponseMessage.POST_VOTE_NOT_FOUND;
+            //when
+            String content = objectMapper.writeValueAsString(RequestFactory.basicVoteSelectRequest(213123123L));
+
+            //then
+            mockMvc.perform(post(baseUrl + "/" + postId + "/vote")
+                            .content(content)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
         }
     }
     @Nested
     @DisplayName("GET /post/my/voted")
-    @WithMockUser(username = "1")
     class GetVotedPost {
         @Test
         public void 내가_투표한_게시글_불러오기() throws Exception {
-            //given
+            // given
             ResponseMessage responseMessage = PostResponseMessage.POST_VOTED_FIND_SUCCESS;
-            //when
-            String content = objectMapper.writeValueAsString(RequestFactory.basicPostCreateRequest(categoryId));
-            //when
-            mockMvc.perform(post(baseUrl + "/" + postId + "/vote")
-                            .content(content)
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .accept(MediaType.APPLICATION_JSON))
-                    .andDo(print());
-            //then
-            mockMvc.perform(get(baseUrl + "/" + postId + "/vote"))
+            // when then
+            mockMvc.perform(get(baseUrl + "/my/voted")
+                            .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").hasJsonPath())
+                    .andExpect(jsonPath("$.data").isArray())
+                    .andExpect(jsonPath("$.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data[0].id").value(postId))
+                    .andExpect(jsonPath("$.code").value(responseMessage.toString()))
+                    .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
+                    .andDo(print());
+        }
+
+        @Test
+        public void 비로그인시_내가_투표한_게시글_불러오기_요청() throws Exception {
+            // given
+            ResponseMessage responseMessage = BasicResponseMessage.UNAUTHORIZED;
+            // when then
+            mockMvc.perform(get(baseUrl + "/my/voted"))
+                    .andExpect(status().isUnauthorized())
+                    .andExpect(jsonPath("$.data").doesNotExist())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());

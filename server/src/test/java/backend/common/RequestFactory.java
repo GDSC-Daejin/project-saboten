@@ -2,6 +2,7 @@ package backend.common;
 
 import common.model.VoteColorsResponse;
 import common.model.request.comment.CommentCreateRequest;
+import common.model.request.post.VoteSelectRequest;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.create.VoteCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
@@ -26,6 +27,10 @@ public class RequestFactory {
         voteCreateRequests.add(new VoteCreateRequest("치킨", VoteColorsResponse.PINK));
 
         return new PostUpdateRequest(postId, "좋아하는 음식은?", voteCreateRequests, Arrays.stream(categoryIds).toList());
+    }
+
+    public static VoteSelectRequest basicVoteSelectRequest(Long id) {
+        return new VoteSelectRequest(id);
     }
 
     public static CommentCreateRequest basicCommentCreateRequest() {

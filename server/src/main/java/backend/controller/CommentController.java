@@ -45,7 +45,7 @@ public class  CommentController {
         return null;
     }
 
-    @ApiOperation(value = "댓글작성 API", notes = "특정 포스트에 댓글을 작성하는 API입니다.")
+    @ApiOperation(value = "댓글작성 API (사용자 인증 필요)", notes = "특정 포스트에 댓글을 작성하는 API입니다.")
     @PostMapping("post/{postId}/comment")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 400, message = "", response = CommentIsNullResponse.class),
@@ -84,7 +84,7 @@ public class  CommentController {
     }
 
     // TODO : URL이 /post/my/comment 가 어울리지 않는지?
-    @ApiOperation(value = "유저별 댓글조회 API", notes = "로그인 된 유저가 단 댓글들을 모두 조회하는 API입니다.")
+    @ApiOperation(value = "유저별 댓글조회 API (사용자 인증 필요)", notes = "로그인 된 유저가 단 댓글들을 모두 조회하는 API입니다.")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class)
     })
@@ -100,7 +100,7 @@ public class  CommentController {
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_USER);
     }
 
-    @ApiOperation(value = "댓글 삭제 API", notes = "본인 댓글을 삭제 합니다.")
+    @ApiOperation(value = "댓글 삭제 API (사용자 인증 필요)", notes = "본인 댓글을 삭제 합니다.")
     @DeleteMapping("post/{postId}/comment/{commentId}")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),

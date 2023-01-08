@@ -30,7 +30,7 @@ class UserController {
         return null;
     }
 
-    @ApiOperation(value = "로그인한 사용자의 프로필 상세정보 조회", notes = "로그인한 사용자 자기자신의 프로필을 조회합니다.")
+    @ApiOperation(value = "로그인한 사용자의 프로필 상세정보 조회 (사용자 인증 필요)", notes = "로그인한 사용자 자기자신의 프로필을 조회합니다.")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class)
     })
