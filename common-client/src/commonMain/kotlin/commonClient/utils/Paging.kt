@@ -13,7 +13,7 @@ fun <T, R> PagingResponse<T>.map(mapper: (T) -> R): PagingResponse<R> {
     )
 }
 
-fun <K : Any, T : Any> PlatformViewModel.createPager(
+fun <K : Any, T : Any> PlatformViewModel<*, *>.createPager(
     pageSize: Int,
     initialKey: K?,
     getItems: suspend (K?, Int) -> PagingResult<K, T>
