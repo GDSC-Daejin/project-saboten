@@ -11,18 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.image.NetworkImage
-import common.model.reseponse.category.CategoryResponse
+import commonClient.domain.entity.post.Category
 
 @Composable
 fun CategoryItem(
-    categoryResponse: CategoryResponse,
-    onClick: (CategoryResponse) -> Unit
+    category: Category,
+    onClick: (Category) -> Unit
 ) {
     Card(
         shape = RoundedCornerShape(5.dp),
         modifier = Modifier
             .padding(10.dp)
-            .clickable { onClick(categoryResponse) },
+            .clickable { onClick(category) },
         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(alpha = 0.1f)),
         elevation = 2.dp
     ) {
@@ -34,13 +34,13 @@ fun CategoryItem(
                 modifier = Modifier
                     .size(26.dp)
                 ,
-                url = categoryResponse.iconUrl,
+                url = category.iconUrl,
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.primary)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            Text(text = categoryResponse.name)
+            Text(text = category.name)
         }
     }
 }
