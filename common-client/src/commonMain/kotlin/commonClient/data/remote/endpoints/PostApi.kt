@@ -4,6 +4,7 @@ import common.model.request.post.create.PostCreateRequest
 import common.model.request.post.update.PostUpdateRequest
 import common.model.reseponse.ApiResponse
 import common.model.reseponse.PagingResponse
+import common.model.reseponse.paging.NewPagingResponse
 import common.model.reseponse.post.PostResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseDelete
@@ -26,7 +27,16 @@ interface PostApi : Api {
 
     suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
-    suspend fun getPagedPosts(categoryId: Long?, nextKey : Long?): ApiResponse<PagingResponse<PostResponse>>
+    suspend fun getPagedPosts(
+        categoryId: Long?,
+        nextKey: Long?
+    ): ApiResponse<PagingResponse<PostResponse>>
+
+    suspend fun getPagedHotPosts(
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ): ApiResponse<NewPagingResponse<PostResponse>>
 
 }
 
@@ -49,5 +59,15 @@ class PostApiImp : PostApi {
         responseGet<PagingResponse<PostResponse>> {
             parameter("category_id", categoryId)
         }
+
+    override suspend fun getPagedHotPosts(
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ) = responseGet<NewPagingResponse<PostResponse>>("/hot") {
+        parameter("offset", offset)
+        parameter("pageNumber", pageNumber)
+        parameter("pageSize", pageSize)
+    }
 
 }
