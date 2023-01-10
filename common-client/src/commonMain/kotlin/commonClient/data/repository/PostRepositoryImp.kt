@@ -27,4 +27,14 @@ class PostRepositoryImp(
         val response = postApi.getPagedHotPosts(offset, pageNumber, pageSize).data!!
         return response.map { it.toDomain() }
     }
+
+    override suspend fun getPagedSearchPost(
+        searchText: String,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ): NewPagingResponse<Post> {
+        val response = postApi.getPagedSearchPosts(searchText, offset, pageNumber, pageSize).data!!
+        return response.map { it.toDomain() }
+    }
 }

@@ -38,6 +38,12 @@ interface PostApi : Api {
         pageSize: Int?
     ): ApiResponse<NewPagingResponse<PostResponse>>
 
+    suspend fun getPagedSearchPosts(
+        searchText: String,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ): ApiResponse<NewPagingResponse<PostResponse>>
 }
 
 @Single(binds = [PostApi::class])
@@ -65,6 +71,17 @@ class PostApiImp : PostApi {
         pageNumber: Int?,
         pageSize: Int?
     ) = responseGet<NewPagingResponse<PostResponse>>("/hot") {
+        parameter("offset", offset)
+        parameter("pageNumber", pageNumber)
+        parameter("pageSize", pageSize)
+    }
+
+    override suspend fun getPagedSearchPosts(
+        searchText: String,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ) = responseGet<NewPagingResponse<PostResponse>>("/search/$searchText") {
         parameter("offset", offset)
         parameter("pageNumber", pageNumber)
         parameter("pageSize", pageSize)

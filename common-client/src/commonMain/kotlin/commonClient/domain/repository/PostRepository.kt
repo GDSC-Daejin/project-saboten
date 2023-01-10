@@ -11,4 +11,6 @@ interface PostRepository {
     suspend fun getPagedPost(categoryId : Long?, nextKey : Long?) : PagingResponse<Post>
 
     suspend fun getPagedHotPost(offset: Int?, pageNumber: Int?, pageSize: Int?): NewPagingResponse<Post>
+
+    suspend fun getPagedSearchPost(searchText: String, offset: Int?, pageNumber: Int?, pageSize: Int?): NewPagingResponse<Post>
 }
