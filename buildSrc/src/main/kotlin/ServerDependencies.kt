@@ -23,6 +23,10 @@ object H2 {
     const val h2 = "com.h2database:h2:_"
 }
 
+object Apache {
+    const val httpClient = "org.apache.httpcomponents:httpclient:_"
+}
+
 object SpringFramework {
     object Boot {
         const val jpa = "org.springframework.boot:spring-boot-starter-data-jpa"
@@ -61,6 +65,7 @@ fun DependencyHandler.serverDependency() {
     add("implementation", SpringFox.swaggerModels)
     add("implementation", Sentry.sentry)
     add("implementation", Sentry.logback)
+    add("implementation", Apache.httpClient)
 
     add("testImplementation", SpringFramework.BootTest.bootTest)
     add("testImplementation", SpringFramework.BootTest.securityTest)

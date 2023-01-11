@@ -1,16 +1,18 @@
 package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
+import backend.controller.swagger.response.SocialInvalidLoginResponse;
 import backend.service.AuthService;
 import common.message.UserResponseMessage;
+import common.model.request.auth.SocialLoginRequest;
 import common.model.request.auth.TokenReissueRequest;
-import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.auth.JwtTokenResponse;
 import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,17 +44,31 @@ public class AuthController {
         return ApiResponse.withMessage(userResponse, UserResponseMessage.USER_CREATED);
     }
 
-    @ApiOperation(value = "유저 로그인", notes = "임시 로그인입니다 추후 소셜로그인 대응해야 합니다.")
-    @PostMapping(authUrl + "/login")
-    public ApiResponse<JwtTokenResponse> login(@RequestBody UserLoginTestRequest userLoginTestRequest) {
-        JwtTokenResponse jwtTokenResponse = authService.login(userLoginTestRequest);
+    @ApiOperation(value = "구글 소셜 로그인 (안드로이드 환경)", notes = "구글 소셜 로그인 사용방법\n" +
+            "1. 안드로이드 측에서 구글 로그인을 한다.\n" +
+            "2. 로그인 성공 이후 얻은 AccessToken을 백엔드 API body에 넣어 요청한다.\n" +
+            "3. 선인장 백엔드에서도 로그인 성공!!"
+    )
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = SocialInvalidLoginResponse.class)
+    })
+    @PostMapping(authUrl + "/social/login/google")
+    public ApiResponse<JwtTokenResponse> googleLogin(@RequestBody SocialLoginRequest socialLoginRequest) {
+        JwtTokenResponse jwtTokenResponse = authService.googleLogin(socialLoginRequest.getAccessToken());
         return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 
-    @ApiOperation(value = "소셜 로그인", notes = "임시 소셜로그인 테스트용 로그인")
-    @PostMapping(authUrl + "/social/login")
-    public ApiResponse<JwtTokenResponse> socialLogin(@RequestBody UserLoginTestRequest userLoginTestRequest) {
-        JwtTokenResponse jwtTokenResponse = authService.socialLogin(userLoginTestRequest);
+    @ApiOperation(value = "카카오 소셜 로그인 (안드로이드 환경)", notes = "카카오 소셜 로그인\n" +
+            "1. 안드로이드 측에서 카카오 로그인을 한다.\n" +
+            "2. 로그인 성공 이후 얻은 AccessToken을 백엔드 API body에 넣어 요청한다.\n" +
+            "3. 선인장 백엔드에서도 로그인 성공!!"
+    )
+    @ApiResponses({
+            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = SocialInvalidLoginResponse.class)
+    })
+    @PostMapping(authUrl + "/social/login/kakao")
+    public ApiResponse<JwtTokenResponse> kakaoLogin(@RequestBody SocialLoginRequest socialLoginRequest) {
+        JwtTokenResponse jwtTokenResponse = authService.kakaoLogin(socialLoginRequest.getAccessToken());
         return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 
