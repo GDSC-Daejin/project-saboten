@@ -71,12 +71,13 @@ public class PostDto {
                 registDate.toString());
     }
 
-    public PostReadResponse toReadResponse(List<VoteResponse> votes) {
+    public PostReadResponse toReadResponse(List<VoteResponse> votes, Boolean scrap) {
         return new PostReadResponse(
                 postId,
                 postText,
                 user.toResponse(),
                 votes,
+                scrap,
                 registDate.toString(),
                 modifyDate.toString());
     }
