@@ -1,6 +1,5 @@
 package backend.service;
 
-import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.jwt.RedisUtil;
 import backend.jwt.RoleType;
@@ -8,21 +7,31 @@ import backend.jwt.SecurityUtil;
 import backend.jwt.TokenProvider;
 import backend.model.user.RefreshTokenEntity;
 import backend.model.user.UserEntity;
+import backend.oauth.entity.ProviderType;
+import backend.oauth.info.OAuth2UserInfo;
+import backend.oauth.info.OAuth2UserInfoFactory;
 import backend.repository.user.RefreshTokenRepository;
 import backend.repository.user.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import common.message.AuthResponseMessage;
 import common.message.BasicResponseMessage;
 import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
-import common.model.request.user.UserLoginTestRequest;
 import common.model.request.user.UserSignUpRequest;
 import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
 import common.model.reseponse.auth.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -31,7 +40,8 @@ public class AuthService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
-    private final UserService userService;
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
     private final RedisUtil redisUtil;
 
     @Transactional
@@ -45,23 +55,9 @@ public class AuthService {
     }
 
     @Transactional
-    public JwtTokenResponse login(UserLoginTestRequest userLoginTestRequest) {
-        // 테스트용
-        Long id = userLoginTestRequest.getId();
+    private JwtTokenResponse createToken(UserEntity user) {
+        JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(user.getUserId().toString(), RoleType.USER);
 
-        // 보류 이유 : 소셜로그인 기반이라 필요없음 1. Login ID/PW 를 기반으로 AuthenticationToken 생성
-        // 보류 이유 : 소셜로그인 기반이라 필요없음 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
-
-        // 서비스가 타 서비스의 기능을 이용하는건 적합하지 않은 것 같음
-//        UserDto user = userService.findUserEntity(id);
-
-        // 해당 유저가 있는지 검증
-        UserEntity user = userRepository.findByUserId(id);
-
-        // 3. 인증 정보를 기반으로 JWT 토큰 생성
-        JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
-
-        // 4. RefreshToken 저장
         RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
                 .user(user)
                 .refreshToken(jwtTokenResponse.getRefreshToken())
@@ -69,16 +65,72 @@ public class AuthService {
 
         refreshTokenRepository.save(refreshToken);
 
-        // 5. 토큰 발급
         return jwtTokenResponse;
     }
 
     @Transactional
-    public JwtTokenResponse socialLogin(UserLoginTestRequest userLoginTestRequest) {
-        //소셜로그인 테스트용
-        Long id = userLoginTestRequest.getId();
-        UserDto user = userService.findUserEntity(id);
-        return tokenProvider.generateJwtToken(Long.toString(id), RoleType.USER);
+    private UserEntity createUser(OAuth2UserInfo userInfo, ProviderType providerType) {
+        UserEntity user = UserEntity.builder()
+                .socialId(userInfo.getId())
+                .providerType(providerType)
+                .nickname(userInfo.getName())
+                .email(userInfo.getEmail())
+                .userImage(userInfo.getImageUrl())
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private UserEntity getSocialUser(String body, ProviderType providerType) {
+        try {
+            Map<String, Object> attributes = objectMapper.readValue(body, Map.class);
+            OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType , attributes);
+
+            UserEntity user = userRepository.findBySocialId(userInfo.getId());
+            if(user == null) {
+                user = createUser(userInfo, providerType);
+            }
+            return user;
+        }
+        catch (Exception e) {
+            throw new ApiException(BasicResponseMessage.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @Transactional
+    public JwtTokenResponse kakaoLogin(String accessToken) {
+        final String KAKAO_USERINFO_URL = "https://kapi.kakao.com/v2/user/me";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        try {
+            HttpEntity<String> response = restTemplate.exchange(KAKAO_USERINFO_URL, HttpMethod.GET , entity, String.class);
+            UserEntity user = getSocialUser(response.getBody(), ProviderType.KAKAO);
+            return createToken(user);
+        }
+        catch (HttpClientErrorException e) {
+            throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
+        }
+    }
+
+    @Transactional
+    public JwtTokenResponse googleLogin(String accessToken) {
+        final String GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + accessToken);
+
+        HttpEntity<String> entity = new HttpEntity<>("", headers);
+        try {
+            HttpEntity<String> response = restTemplate.exchange(GOOGLE_USERINFO_URL, HttpMethod.GET , entity, String.class);
+            UserEntity user = getSocialUser(response.getBody(), ProviderType.GOOGLE);
+            return createToken(user);
+        }
+        catch (HttpClientErrorException e) {
+            throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
+        }
     }
 
     @Transactional
