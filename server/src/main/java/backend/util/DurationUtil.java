@@ -3,6 +3,7 @@ package backend.util;
 import common.model.request.Duration;
 
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.TimeZone;
 
@@ -38,8 +39,8 @@ public class DurationUtil {
         LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime startTime = currentTime.minusDays(7);
 
-        if(startTime.getDayOfMonth() <= postRegistTime.getDayOfMonth() &&
-                postRegistTime.getDayOfMonth() <= currentTime.getDayOfMonth()) {
+        if(startTime.getDayOfYear() <= postRegistTime.getDayOfYear() &&
+                postRegistTime.getDayOfYear() <= currentTime.getDayOfYear()) {
             return true;
         }
 
@@ -50,8 +51,17 @@ public class DurationUtil {
         LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime startTime = currentTime.minusMonths(1);
 
-        if(startTime.getDayOfMonth() <= postRegistTime.getDayOfMonth() &&
-            postRegistTime.getDayOfMonth() <= currentTime.getDayOfMonth()) {
+        int startTimeDay = startTime.getDayOfYear();
+        int postTimeDay = postRegistTime.getDayOfYear();
+        int currentTimeDay = currentTime.getDayOfYear();
+
+        if(currentTime.getMonth() == Month.JANUARY) {
+            postTimeDay += 365;
+            currentTimeDay += 365;
+        }
+
+        if(startTimeDay <= postTimeDay &&
+                postTimeDay <= currentTimeDay) {
             return true;
         }
 
