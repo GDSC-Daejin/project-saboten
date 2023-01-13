@@ -44,7 +44,11 @@ sealed interface LoadState<T> {
 
     data class Success<T>(val data: T) : LoadState<T>
     class Loading<T> : LoadState<T>
-    class Failed<T>(val throwable: Throwable, val cachedData: T? = null) : LoadState<T>
+    class Failed<T>(val throwable: Throwable, val cachedData: T? = null) : LoadState<T> {
+        init {
+            throwable.printStackTrace()
+        }
+    }
 
     companion object {
 

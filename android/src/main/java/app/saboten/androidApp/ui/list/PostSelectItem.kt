@@ -59,7 +59,7 @@ fun PostSelectItem(
                 crossAxisSpacing = 6.dp,
                 mainAxisSpacing = 6.dp,
             ) {
-                post.categories.forEach {
+                post.categories?.forEach {
                     Box(
                         modifier = Modifier
                             .background(
@@ -79,10 +79,11 @@ fun PostSelectItem(
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            val sum = remember(post) { post.voteResponses.sumOf { it.count } }
+            val sum = remember(post) { post.voteResponses?.sumOf { it.count } ?: 0 }
 
-            post.voteResponses.sortedByDescending { it.count }
-                .forEachIndexed { index, voteResponse ->
+            post.voteResponses
+                ?.sortedByDescending { it.count }
+                ?.forEachIndexed { index, voteResponse ->
 
                     Row(modifier = Modifier.fillMaxWidth()) {
                         Text(

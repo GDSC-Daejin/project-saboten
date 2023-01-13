@@ -42,22 +42,24 @@ import commonClient.domain.entity.post.Post
 @Composable
 fun LargePostCard(
     post: Post,
+    onClicked: () -> Unit,
     onFirstVoteClicked: () -> Unit,
     onSecondVoteClicked: () -> Unit,
     onScrapClicked: () -> Unit,
     onLikeClicked: () -> Unit,
-    onCommentClicked: () -> Unit
+    onCommentClicked: () -> Unit,
 ) {
     Box(
         modifier = Modifier
             .padding(top = 10.dp)
             .width(320.dp)
             .wrapContentHeight()
-            .shadow(8.dp, shape = RoundedCornerShape(10.dp))
+            .shadow(2.dp, shape = RoundedCornerShape(10.dp), ambientColor = Color.Black.copy(0.2f), spotColor = Color.Black.copy(0.1f))
             .background(
                 color = Color.White,
                 shape = RoundedCornerShape(10.dp)
             )
+            .clickable(onClick = onClicked)
     ) {
         Column(
             modifier = Modifier

@@ -5,6 +5,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,6 +38,8 @@ fun SelectedVoteItem(
         modifier = Modifier
             .width(290.dp)
             .height(90.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .clickable { onVoteItemClicked() }
             .background(
                 color = if (isSelected) SabotenColors.selectedGreen else Color.White.copy(0.5f),
                 shape = RoundedCornerShape(8.dp)
@@ -45,10 +48,7 @@ fun SelectedVoteItem(
                 width = 1.dp,
                 color = if (isSelected) SabotenColors.selectedGreen else SabotenColors.green200,
                 shape = RoundedCornerShape(8.dp)
-            )
-            .clickable {
-                onVoteItemClicked()
-            },
+            ),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(

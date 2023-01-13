@@ -2,12 +2,14 @@ package app.saboten.androidApp.ui.screens.main.home
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -26,11 +28,13 @@ import app.saboten.androidApp.ui.list.CategoryItem
 import app.saboten.androidApp.ui.list.PostFeedListItem
 import app.saboten.androidApp.ui.list.PostSelectItem
 import app.saboten.androidApp.ui.screens.main.MainTopBar
+import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.domain.entity.post.Post
 import commonClient.presentation.main.HomeScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
@@ -45,14 +49,16 @@ fun HomeScreen(
 
     HomeScreenContent(
         vm = vm,
-        navigator = navigator
+        onPostClicked = {
+//            navigator.navigate()
+        }
     )
 }
 
 @Composable
 fun HomeScreenContent(
     vm: HomeScreenViewModel,
-    navigator: DestinationsNavigator,
+    onPostClicked: (Post) -> Unit = {},
 ) {
 
     val state by vm.collectAsState()
@@ -110,12 +116,29 @@ fun HomeScreenContent(
 
                 item { HeaderBar(title = "뜨거웠던 고민거리") }
 
-                state.hotPost.getDataOrNull()?.first()?.let {
+                state.hotPost.getDataOrNull()?.let {
                     item {
-                        PostSelectItem(post = it) {
-
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement(),
+                            contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
+                        ) {
+                            items(it) { post ->
+                                LargePostCard(
+                                    post = post,
+                                    onClicked = {
+                                        onPostClicked(post)
+                                    },
+                                    {},
+                                    {},
+                                    {},
+                                    {},
+                                    {}
+                                )
+                                Spacer(modifier = Modifier.width(10.dp))
+                            }
                         }
-
                     }
                 }
 
@@ -145,8 +168,19 @@ fun HomeScreenContent(
 
                 state.recentPost.getDataOrNull()?.let { post ->
                     item {
-                        PostFeedListItem(post = post) {
-
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement()
+                        ) {
+                            items(post) { post ->
+                                PostFeedListItem(
+                                    post = post,
+                                    onClicked = {
+                                        onPostClicked(post)
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -158,8 +192,19 @@ fun HomeScreenContent(
 
                 state.selectedPost.getDataOrNull()?.let { post ->
                     item {
-                        PostSelectItem(post = post) {
-
+                        LazyRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement()
+                        ) {
+                            items(post) { post ->
+                                PostFeedListItem(
+                                    post = post,
+                                    onClicked = {
+                                        onPostClicked(post)
+                                    }
+                                )
+                            }
                         }
                     }
                 }

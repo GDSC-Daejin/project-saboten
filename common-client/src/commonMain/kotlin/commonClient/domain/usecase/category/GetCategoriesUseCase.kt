@@ -8,6 +8,6 @@ class GetCategoriesUseCase(
     private val categoryRepository: CategoryRepository
 ) {
 
-    operator fun invoke() = categoryRepository.getCategories()
+    suspend operator fun invoke() = categoryRepository.getCategories()
 
 }

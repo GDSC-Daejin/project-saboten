@@ -4,6 +4,8 @@ import common.message.ResponseMessage
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
 
+
+
 @Serializable
 data class ApiResponse<T>(
     val data: T?,
