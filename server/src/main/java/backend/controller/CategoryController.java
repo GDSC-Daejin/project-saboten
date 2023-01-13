@@ -3,8 +3,6 @@ package backend.controller;
 import backend.controller.annotation.Version1RestController;
 import backend.controller.dto.CategoryDto;
 import backend.controller.swagger.response.CategoryNotFoundResponse;
-import backend.controller.swagger.response.UnauthorizedResponse;
-import backend.model.category.CategoryEntity;
 import backend.service.CategoryService;
 import common.message.CategoryResponseMessage;
 import common.model.reseponse.ApiResponse;
