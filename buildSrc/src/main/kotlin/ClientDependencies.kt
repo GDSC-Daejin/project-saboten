@@ -17,6 +17,14 @@ object Multiplatform {
     const val firestore = "dev.gitlive:firebase-firestore:_"
 }
 
+object Orbit {
+    const val core = "org.orbit-mvi:orbit-core:_"
+
+    const val viewmodel = "org.orbit-mvi:orbit-viewmodel:_"
+
+    const val compose = "org.orbit-mvi:orbit-compose:_"
+}
+
 val AndroidX.DataStore.coreOkio get() = "androidx.datastore:datastore-core-okio:_"
 val Koin.annotation get() = "io.insert-koin:koin-annotations:1.0.3"
 val Koin.kspCompiler get() = "io.insert-koin:koin-ksp-compiler:1.0.3"

@@ -18,25 +18,21 @@ fun HeaderBar(
     moreButtonText: String? = null,
     moreButtonAction: () -> Unit = {},
 ) {
-
-    Surface {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 20.dp, bottom = 20.dp, top = 20.dp, end = 10.dp)
-        ) {
-            Text(
-                modifier = Modifier.align(Alignment.CenterStart),
-                text = title,
-                style = MaterialTheme.typography.subtitle1
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 20.dp, bottom = 20.dp, top = 20.dp, end = 10.dp)
+    ) {
+        Text(
+            modifier = Modifier.align(Alignment.CenterStart),
+            text = title,
+            style = MaterialTheme.typography.subtitle2
+        )
+        if (moreButtonText != null) {
+            TextOnlyButton(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                text = moreButtonText, onClick = moreButtonAction
             )
-            if (moreButtonText != null) {
-                TextOnlyButton(
-                    modifier = Modifier.align(Alignment.CenterEnd),
-                    text = moreButtonText, onClick = moreButtonAction
-                )
-            }
         }
     }
-
 }
