@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class JwtTokenResponse (
-    @SerialName("grant_type") val grantType: String,
-    @SerialName("access_token") val accessToken: String,
-    @SerialName("refresh_token") val refreshToken: String,
-    @SerialName("access_token_expiresIn") val accessTokenExpiresIn: Long,
+    @SerialName("grantType") val grantType: String,
+    @SerialName("accessToken") val accessToken: String,
+    @SerialName("refreshToken") val refreshToken: String,
+    @SerialName("accessTokenExpiresIn") val accessTokenExpiresIn: Long,
 )

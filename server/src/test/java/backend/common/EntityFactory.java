@@ -32,11 +32,12 @@ public class EntityFactory {
                 .build();
     }
 
-    public static PostEntity basicPostEntity(){
+    public static PostEntity basicPostEntity(UserEntity user){
         return PostEntity.builder()
                 .postLikeCount(0)
                 .postText("민트초코가 좋을까? 초콜릿이 좋을까?")
-                .user(authorUserEntity())
+                .user(user)
+                .postLikeCount(0)
                 .postScrapCount(0)
                 .view(0)
                 .build();
@@ -44,82 +45,80 @@ public class EntityFactory {
 
     public static CategoryEntity basicCategoryEntity(){
         return CategoryEntity.builder()
-                .categoryName("음식")
+                .categoryName("애완동물")
                 .categoryIconUrl("https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg")
                 .build();
     }
 
-    public static CommentEntity basicCommentEntity(){
+    public static CommentEntity basicCommentEntity(UserEntity user, PostEntity post){
         return CommentEntity.builder()
-                .post(basicPostEntity())
-                .user(basicUserEntity())
+                .post(post)
+                .user(user)
                 .commentText("민트초코가 짱이라 치약에 민트맛을 넣은거에요! 매일 맛봐도 안질리니까")
                 .commentLikeCount(100L)
                 .build();
     }
 
-    public static CommentEntity basicCommentEntity2(){
+    public static CommentEntity basicCommentEntity2(UserEntity user, PostEntity post){
         return CommentEntity.builder()
-                .post(basicPostEntity())
-                .user(authorUserEntity())
-                .post(basicPostEntity())
+                .post(post)
+                .user(user)
                 .commentText("아 민트는 좀...")
                 .commentLikeCount(50L)
                 .build();
     }
 
-    public static CommentEntity basicCommentEntity3(){
+    public static CommentEntity basicCommentEntity3(UserEntity user, PostEntity post){
         return CommentEntity.builder()
-                .post(basicPostEntity())
-                .user(basicUserEntity())
-                .post(basicPostEntity())
+                .post(post)
+                .user(user)
                 .commentText("민트초코 맛을 모르다니,,,")
                 .commentLikeCount(100L)
                 .build();
     }
 
-    public static VoteSelectEntity basicVoteSelectEntity(){
+    public static VoteSelectEntity basicVoteSelectEntity(UserEntity user, PostEntity post){
         return VoteSelectEntity.builder()
-                .user(basicUserEntity())
-                .post(basicPostEntity())
+                .user(user)
+                .post(post)
                 .voteResult(1L)  // 1번 Topic 2번 Topic 이라고 가정!
                 .build();
     }
 
-    public static VoteEntity basicVoteEntityTrue(){
+    public static VoteEntity basicVoteEntityTrue(PostEntity post){
         return VoteEntity.builder()
                 .topic("민초파 찬성")
-                .post(basicPostEntity())
+                .post(post)
                 .count(20)
                 .color("WHITE")
                 .build();
     }
-    public static VoteEntity basicVoteEntityFalse(){
+    public static VoteEntity basicVoteEntityFalse(PostEntity post){
         return VoteEntity.builder()
                 .topic("민초파 반대")
-                .post(basicPostEntity())
+                .post(post)
                 .count(10)
                 .color("WHITE")
                 .build();
     }
-    public static CategoryInPostEntity basicCategoryInPostEntity(){
+    public static CategoryInPostEntity basicCategoryInPostEntity(PostEntity post, CategoryEntity category){
         return CategoryInPostEntity.builder()
-                .post(basicPostEntity())
-                .category(basicCategoryEntity())
+                .post(post)
+                .category(category)
                 .build();
     }
 
-    public static PostLikeEntity basicPostLikeEntity() {
+    public static PostLikeEntity basicPostLikeEntity(UserEntity user, PostEntity post) {
         return PostLikeEntity.builder()
-                .post(basicPostEntity())
-                .user(basicUserEntity())
+                .post(post)
+                .user(user)
                 .build();
     }
 
-    public static RefreshTokenEntity basicRefreshTokenEntity() {
+    public static RefreshTokenEntity basicRefreshTokenEntity(UserEntity user) {
         return RefreshTokenEntity.builder()
                 .refreshToken("JWTJWTJWTJWT")
-                .user(basicUserEntity())
+                .user(user)
                 .build();
     }
 

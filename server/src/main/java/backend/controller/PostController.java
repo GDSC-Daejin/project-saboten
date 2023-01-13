@@ -85,7 +85,7 @@ class PostController {
         return ApiResponse.withMessage(response, PostResponseMessage.POST_FIND_ONE);
     }
 
-    @ApiOperation(value = "게시물 등록", notes = "사용자가 게시물 작성하여 등록합니다.")
+    @ApiOperation(value = "게시물 등록 (사용자 인증 필요)", notes = "사용자가 게시물 작성하여 등록합니다.")
     @PostMapping("/post")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -104,7 +104,7 @@ class PostController {
     }
 
     // 내가 쓴 게시글 조회 API
-    @ApiOperation(value = "내가 쓴 게시물 조회", notes = "로그인한 사용자 자기자신의 게시물을 조회합니다.")
+    @ApiOperation(value = "내가 쓴 게시물 조회 (사용자 인증 필요)", notes = "로그인한 사용자 자기자신의 게시물을 조회합니다.")
     @GetMapping("/post/my")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -202,7 +202,7 @@ class PostController {
     }
 
 
-    @ApiOperation(value = "게시물 수정", notes = "사용자가 게시물 수정하여 갱신합니다.")
+    @ApiOperation(value = "게시물 수정 (사용자 인증 필요)", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -224,7 +224,7 @@ class PostController {
         return ApiResponse.withMessage(response, PostResponseMessage.POST_UPDATED);
     }
 
-    @ApiOperation(value = "게시물 삭제", notes = "사용자가 게시물을 삭제합니다.")
+    @ApiOperation(value = "게시물 삭제 (사용자 인증 필요)", notes = "사용자가 게시물을 삭제합니다.")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
@@ -239,7 +239,7 @@ class PostController {
         return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
     }
 
-    @ApiOperation(value = "게시물 좋아요 등록", notes = "사용자가 게시물을 좋아요 합니다.")
+    @ApiOperation(value = "게시물 좋아요 등록 (사용자 인증 필요)", notes = "사용자가 게시물을 좋아요 합니다.")
     @PostMapping("/post/{id}/like")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -262,7 +262,7 @@ class PostController {
         }
     }
 
-    @ApiOperation(value = "게시물 스크랩 등록 및 취소", notes = "사용자가 게시물을 스크랩 등록 및 취소합니다.")
+    @ApiOperation(value = "게시물 스크랩 등록 및 취소 (사용자 인증 필요)", notes = "사용자가 게시물을 스크랩 등록 및 취소합니다.")
     @PostMapping("/post/{id}/scrap")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -283,7 +283,7 @@ class PostController {
         }
     }
 
-    @ApiOperation(value = "게시물 스크랩 조회", notes = "사용자가 스크랩한 게시물들을 조회합니다.")
+    @ApiOperation(value = "게시물 스크랩 조회 (사용자 인증 필요)", notes = "사용자가 스크랩한 게시물들을 조회합니다.")
     @GetMapping("/post/my/scrap")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -316,7 +316,7 @@ class PostController {
         return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
     }
 
-    @ApiOperation(value = "게시물 투표", notes = "사용자가 게시물을 투표합니다.")
+    @ApiOperation(value = "게시물 투표 (사용자 인증 필요)", notes = "사용자가 게시물을 투표합니다.")
     @PostMapping("/post/{id}/vote")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
@@ -333,7 +333,7 @@ class PostController {
         return ApiResponse.withMessage(null, PostResponseMessage.POST_VOTE_SUCCESS);
     }
 
-    @ApiOperation(value = "자기가 투표한 게시물 조회", notes = "사용자가 투표했던 게시물들을 조회합니다.")
+    @ApiOperation(value = "자기가 투표한 게시물 조회 (사용자 인증 필요)", notes = "사용자가 투표했던 게시물들을 조회합니다.")
     @GetMapping("/post/my/voted")
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
