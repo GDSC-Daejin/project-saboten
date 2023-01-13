@@ -57,6 +57,8 @@ kotlin {
 
                 implementation(AndroidX.dataStore.coreOkio)
                 implementation(AndroidX.dataStore.preferences.core)
+
+                implementation(Orbit.core)
             }
             kotlin.srcDirs("build/generated/ksp/commonMain/kotlin")
         }
@@ -77,6 +79,7 @@ kotlin {
                 implementation(AndroidX.paging.commonKtx)
                 implementation(project.dependencies.platform(Google.firebase.bom))
                 implementation(Google.firebase.crashlyticsKtx)
+                implementation(Orbit.viewmodel)
             }
         }
         val androidTest by getting {

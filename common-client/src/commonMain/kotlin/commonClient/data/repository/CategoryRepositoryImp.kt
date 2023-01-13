@@ -9,7 +9,7 @@ import org.koin.core.annotation.Single
 
 @Single(binds = [CategoryRepository::class])
 class CategoryRepositoryImp(
-    private val categoryApi: CategoryApi
+    private val categoryApi: CategoryApi,
 ) : CategoryRepository {
 
     //    private var memoryCachedCategories: List<Category>? = null
@@ -21,12 +21,12 @@ class CategoryRepositoryImp(
         Category(0, "쇼핑", ""),
     )
 
-    override fun getCategories() = flow {
+    override suspend fun getCategories(): List<Category> {
         if (memoryCachedCategories.isNullOrEmpty()) {
             val response = categoryApi.getCategories()
             memoryCachedCategories = response.data?.map { it.toDomain() }
         }
-        emit(requireNotNull(memoryCachedCategories))
+        return requireNotNull(memoryCachedCategories)
     }
 
     override fun getCategory(id: Long) = flow {

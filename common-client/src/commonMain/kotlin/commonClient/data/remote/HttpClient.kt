@@ -2,6 +2,7 @@ package commonClient.data.remote
 
 import common.model.request.auth.TokenReissueRequest
 import common.model.reseponse.auth.JwtTokenResponse
+import commonClient.logger.ClientLogger
 import commonClient.utils.AuthTokenManager
 import commonClient.utils.ClientProperties
 import io.ktor.client.*
@@ -18,21 +19,21 @@ import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import kotlinx.serialization.json.Json
 
 // TODO Change URL
-private const val URL = "localhost:8080"
+private const val URL = "saboten-myeongju00.koyeb.app"
 
 expect fun getHttpClient(): HttpClient
 
 @Suppress("FunctionName")
 internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     engineFactory: HttpClientEngineFactory<T>,
-    block: HttpClientConfig<T>.() -> Unit = {}
+    block: HttpClientConfig<T>.() -> Unit = {},
 ) = HttpClient(engineFactory) {
 
     expectSuccess = false
 
     install(HttpTimeout) {
-        requestTimeoutMillis = 5000L
-        connectTimeoutMillis = 5000L
+        requestTimeoutMillis = 10000L
+        connectTimeoutMillis = 10000L
     }
 
     install(ContentNegotiation) {
@@ -81,6 +82,7 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     install(Logging) {
         logger = object : Logger {
             override fun log(message: String) {
+                ClientLogger.d(message)
             }
         }
         level = LogLevel.ALL

@@ -1,4 +1,3 @@
-@file:OptIn(ExperimentalAnimationApi::class, ExperimentalMaterialNavigationApi::class)
 
 package app.saboten.androidApp.ui.screens
 
@@ -23,7 +22,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import app.saboten.androidApp.extensions.collectInLaunchedEffect
 import app.saboten.androidApp.ui.NavGraphs
 import app.saboten.androidApp.ui.destinations.*
 import app.saboten.androidApp.ui.navDestination
@@ -40,27 +38,29 @@ import com.ramcosta.composedestinations.animations.defaults.RootNavGraphDefaultA
 import com.ramcosta.composedestinations.animations.rememberAnimatedNavHostEngine
 import com.ramcosta.composedestinations.navigation.DependenciesContainerBuilder
 import com.ramcosta.composedestinations.navigation.dependency
-import com.ramcosta.composedestinations.navigation.navigate
-import commonClient.presentation.AppViewModel
-import commonClient.presentation.AppViewModelDelegate
+import commonClient.presentation.GlobalAppSideEffect
+import commonClient.presentation.GlobalAppViewModel
+import org.orbitmvi.orbit.compose.collectSideEffect
 
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
-fun AppScreen(appViewModel: AppViewModel) {
+fun AppScreen(globalAppViewModel: GlobalAppViewModel) {
 
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(bottomSheetNavigator) {
-        MainDestinationScaffold(appViewModel, navController) {
-            dependency(appViewModel)
+        MainDestinationScaffold(globalAppViewModel, navController) {
+            dependency(globalAppViewModel)
         }
     }
 
 }
 
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 private fun MainDestinationScaffold(
-    appViewModel: AppViewModel,
+    globalAppViewModel: GlobalAppViewModel,
     navController: NavHostController,
     dependenciesContainerBuilder: @Composable DependenciesContainerBuilder<*>.() -> Unit,
 ) {
@@ -87,9 +87,9 @@ private fun MainDestinationScaffold(
         )
     }
 
-    appViewModel.effect.collectInLaunchedEffect {
+    globalAppViewModel.collectSideEffect {
         when (it) {
-            AppViewModelDelegate.Effect.ShowNetworkErrorUi -> {
+            is GlobalAppSideEffect.ShowNetworkErrorUi -> {
                 navController.navigate(AppInitializeFailedDialogDestination.route)
             }
         }

@@ -28,9 +28,11 @@ import app.saboten.androidUi.styles.SabotenColors
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import commonClient.domain.entity.post.Post
+import commonClient.presentation.main.HomeScreenState
 
 @Composable
 fun HomeScreenTrendingItems(
+    state : HomeScreenState
 ) {
     val pagerState = rememberPagerState()
 

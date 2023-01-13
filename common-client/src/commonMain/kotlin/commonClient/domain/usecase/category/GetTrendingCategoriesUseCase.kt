@@ -4,7 +4,7 @@ import commonClient.domain.repository.CategoryRepository
 import org.koin.core.annotation.Single
 
 @Single
-class GetCategoriesUseCase(
+class GetTrendingCategoriesUseCase(
     private val categoryRepository: CategoryRepository
 ) {
 

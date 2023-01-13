@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewTreeObserver
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.getValue
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
-import app.saboten.androidApp.extensions.extract
 import app.saboten.androidApp.ui.providers.ProvideMeInfo
 import app.saboten.androidApp.ui.screens.AppScreen
 import app.saboten.androidUi.styles.MainTheme
@@ -23,14 +22,15 @@ import coil.ImageLoader
 import coil.decode.SvgDecoder
 import commonClient.data.isLoading
 import commonClient.domain.entity.settings.AppTheme
-import commonClient.presentation.AppViewModel
+import commonClient.presentation.GlobalAppViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.orbitmvi.orbit.compose.collectAsState
 
 class AppActivity : AppCompatActivity() {
 
-    private val appViewModel by viewModel<AppViewModel>()
+    private val globalAppViewModel by viewModel<GlobalAppViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val splashScreen = installSplashScreen()
@@ -40,7 +40,7 @@ class AppActivity : AppCompatActivity() {
         setupCoilImageLoader()
         setupUi()
 
-        appViewModel.state
+        globalAppViewModel.container.stateFlow
             .onEach {
                 AppCompatDelegate.setDefaultNightMode(
                     when (it.appTheme) {
@@ -54,16 +54,17 @@ class AppActivity : AppCompatActivity() {
 
     private fun setupUi() {
         setContent {
-            val (state) = appViewModel.extract()
+            val state by globalAppViewModel.collectAsState()
             MainTheme(
-                isDarkTheme = when (state.appTheme) {
-                    AppTheme.DARK -> true
-                    AppTheme.LIGHT -> false
-                    else -> isSystemInDarkTheme()
-                }
+//                isDarkTheme = when (state.appTheme) {
+//                    AppTheme.DARK -> true
+//                    AppTheme.LIGHT -> false
+//                    else -> isSystemInDarkTheme()
+//                }
+            false
             ) {
-                ProvideMeInfo(state.me) {
-                    AppScreen(appViewModel)
+                ProvideMeInfo(state.meState) {
+                    AppScreen(globalAppViewModel)
                 }
             }
         }
@@ -92,7 +93,7 @@ class AppActivity : AppCompatActivity() {
         content.viewTreeObserver.addOnPreDrawListener(
             object : ViewTreeObserver.OnPreDrawListener {
                 override fun onPreDraw(): Boolean {
-                    return if (!appViewModel.state.value.appLoadingState.isLoading()) {
+                    return if (!globalAppViewModel.container.stateFlow.value.appLoadingState.isLoading()) {
                         content.viewTreeObserver.removeOnPreDrawListener(this)
                         true
                     } else {

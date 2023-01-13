@@ -11,6 +11,7 @@ import commonClient.data.remote.responseDelete
 import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePatch
 import commonClient.data.remote.responsePost
+import commonClient.domain.entity.post.Duration
 import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
 import org.koin.core.annotation.Single
@@ -29,20 +30,24 @@ interface PostApi : Api {
 
     suspend fun getPagedPosts(
         categoryId: Long?,
-        nextKey: Long?
-    ): ApiResponse<PagingResponse<PostResponse>>
-
-    suspend fun getPagedHotPosts(
         offset: Int?,
         pageNumber: Int?,
-        pageSize: Int?
+        pageSize: Int?,
+    ): ApiResponse<NewPagingResponse<PostResponse>>
+
+    suspend fun getPagedHotPosts(
+        categoryId: Long?,
+        duration: Duration?,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?,
     ): ApiResponse<NewPagingResponse<PostResponse>>
 
     suspend fun getPagedSearchPosts(
         searchText: String,
         offset: Int?,
         pageNumber: Int?,
-        pageSize: Int?
+        pageSize: Int?,
     ): ApiResponse<NewPagingResponse<PostResponse>>
 }
 
@@ -61,16 +66,24 @@ class PostApiImp : PostApi {
     override suspend fun getPost(postId: Long) =
         responseGet<PostResponse>("/$postId")
 
-    override suspend fun getPagedPosts(categoryId: Long?, nextKey: Long?) =
-        responseGet<PagingResponse<PostResponse>> {
-            parameter("category_id", categoryId)
-        }
-
-    override suspend fun getPagedHotPosts(
+    override suspend fun getPagedPosts(
+        categoryId: Long?,
         offset: Int?,
         pageNumber: Int?,
-        pageSize: Int?
+        pageSize: Int?,
+    ) = responseGet<NewPagingResponse<PostResponse>> {
+        parameter("categoryId", categoryId)
+    }
+
+    override suspend fun getPagedHotPosts(
+        categoryId: Long?,
+        duration: Duration?,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?,
     ) = responseGet<NewPagingResponse<PostResponse>>("/hot") {
+        parameter("categoryId", categoryId)
+        parameter("duration", duration?.name)
         parameter("offset", offset)
         parameter("pageNumber", pageNumber)
         parameter("pageSize", pageSize)
@@ -80,7 +93,7 @@ class PostApiImp : PostApi {
         searchText: String,
         offset: Int?,
         pageNumber: Int?,
-        pageSize: Int?
+        pageSize: Int?,
     ) = responseGet<NewPagingResponse<PostResponse>>("/search/$searchText") {
         parameter("offset", offset)
         parameter("pageNumber", pageNumber)
