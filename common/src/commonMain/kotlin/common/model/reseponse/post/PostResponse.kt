@@ -16,8 +16,8 @@ data class PostResponse(
     @SerialName("view") val view: Int,
     @SerialName("likeCount") val likeCount: Int,
     @SerialName("scrapCount") val scrapCount: Int,
-    @SerialName("liked") val isLiked: Boolean?,
-    @SerialName("scraped") val isScraped: Boolean?,
+    @SerialName("isLiked") val isLiked: Boolean?,
+    @SerialName("isScraped") val isScraped: Boolean?,
     @SerialName("createdAt") val createdAt: String,
     @SerialName("updatedAt") val updatedAt: String?
 )

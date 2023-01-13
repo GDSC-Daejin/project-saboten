@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class PostScrapRequest (
-    @SerialName("is_scraped") val isScraped: Boolean,
+    @SerialName("isScraped") val isScraped: Boolean,
 )
