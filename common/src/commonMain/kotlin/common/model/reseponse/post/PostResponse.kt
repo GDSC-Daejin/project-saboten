@@ -10,7 +10,7 @@ data class PostResponse(
     @SerialName("id") val id: Long,
     @SerialName("text") val text: String,
     @SerialName("author") val author: UserResponse,
-    @SerialName("votes") val voteResponses: List<VoteResponse>,
+    @SerialName("voteResponses") val voteResponses: List<VoteResponse>,
     @SerialName("categories") val categories: List<CategoryResponse>,
     @SerialName("selectedVote") val selectedVote: Long?,
     @SerialName("view") val view: Int,
