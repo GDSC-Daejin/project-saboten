@@ -3,6 +3,7 @@ package backend.model.post;
 import backend.controller.dto.CategoryDto;
 import backend.controller.dto.CategoryInPostDto;
 import backend.model.category.CategoryEntity;
+import backend.model.common.BaseTimeEntity;
 import backend.model.compositekey.CategoryInPostPK;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -16,7 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity @IdClass(CategoryInPostPK.class)
 @Table(name = "TB_CategoryInPost")
-public class CategoryInPostEntity {
+public class CategoryInPostEntity extends BaseTimeEntity {
     @Id
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)

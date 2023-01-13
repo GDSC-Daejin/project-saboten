@@ -12,6 +12,7 @@ data class PostReadResponse (
     @SerialName("text") val text: String,
     @SerialName("author") val author: UserResponse,
     @SerialName("votes") val votes: List<VoteResponse>,
+    @SerialName("mark") val mark: Boolean,
     @SerialName("createdAt") val createdAt: String,
     @SerialName("updatedAt") val updatedAt: String?
 )
