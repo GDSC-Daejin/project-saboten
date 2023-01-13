@@ -17,7 +17,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity @IdClass(CategoryInPostPK.class)
 @Table(name = "TB_CategoryInPost")
-public class CategoryInPostEntity extends BaseTimeEntity {
+public class CategoryInPostEntity {
     @Id
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @OnDelete(action = OnDeleteAction.CASCADE)
