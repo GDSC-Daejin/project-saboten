@@ -11,6 +11,7 @@ import backend.service.UserService;
 import backend.service.post.*;
 import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
+import common.model.request.Duration;
 import common.model.request.post.VoteSelectRequest;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
@@ -313,19 +314,34 @@ class PostController {
     }
     
     @ApiOperation(value = "Hot 게시판 조회", notes = "추천수가 높은 게시물들을 조회합니다.")
+    @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다.")
     @GetMapping("/post/hot")
-    public ApiResponse<Page<PostReadResponse>> getHotPostList(@PageableDefault Pageable pageable) {
-        Page<PostDto> postPage = null;
+    public ApiResponse<Page<PostReadResponse>> getHotPostList(@RequestParam(required = false) Long categoryId,
+                                                              @RequestParam(required = true) Duration duration,
+                                                              @PageableDefault Pageable pageable) {
+        Page<PostReadResponse> hotPotPage = null;
         UserDto userDto = getUser();
-        postPage = postService.findAllHotPost(pageable);
 
-        Page<PostReadResponse> myHotPostPage = postPage.map(postDto -> {
-            Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
-        });
+        if(categoryId != null){
+            CategoryDto categoryDto = categoryService.findCategory(categoryId);
+            Page<CategoryInPostDto> categoryInPostPage = categoryInPostService.findHotCategoryInPost(categoryId, duration, pageable);
+            hotPotPage = categoryInPostPage.map(categoryInPostDto -> {
+                PostDto postDto = categoryInPostDto.getPost();
+                Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
+                List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+                return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
+            });
+        }
+        else {
+            Page<PostDto> postPage = postService.findAllHotPost(duration, pageable);
+            hotPotPage = postPage.map(postDto -> {
+                Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
+                List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+                return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
+            });
+        }
 
-        return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
+        return ApiResponse.withMessage(hotPotPage, PostResponseMessage.POST_HOT_FIND_ALL);
     }
 
     @ApiOperation(value = "게시물 투표 (사용자 인증 필요)", notes = "사용자가 게시물을 투표합니다.")
