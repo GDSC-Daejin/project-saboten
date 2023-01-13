@@ -17,17 +17,9 @@ class GetHotPostsUseCase(private val postRepository: PostRepository) {
         category: Category,
         duration: Duration,
     ): List<Post> =
-        listOf(
-            PostResponse.MOCK.toDomain(),
-            PostResponse.MOCK.toDomain(),
-            PostResponse.MOCK.toDomain(),
-            PostResponse.MOCK.toDomain(),
-            PostResponse.MOCK.toDomain(),
-            PostResponse.MOCK.toDomain(),
-        )
-//        postRepository
-//        .getPagedHotPost(category.id, duration, null, null, pageSize = PAGE_ITEM_SIZE)
-//        .content
+        postRepository
+        .getPagedHotPost(category.id, duration, null, null, pageSize = PAGE_ITEM_SIZE)
+        .content
 
     companion object {
         private const val PAGE_ITEM_SIZE = 5

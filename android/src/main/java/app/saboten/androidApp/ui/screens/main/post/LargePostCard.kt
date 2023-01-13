@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Bookmark
@@ -37,6 +38,7 @@ import app.saboten.androidApp.ui.screens.main.post.vote.SelectedVoteItem
 import app.saboten.androidApp.ui.screens.main.post.vote.UnSelectedVoteItem
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
+import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
 
 @Composable
@@ -54,10 +56,10 @@ fun LargePostCard(
             .padding(top = 10.dp)
             .width(320.dp)
             .wrapContentHeight()
-            .shadow(2.dp, shape = RoundedCornerShape(10.dp), ambientColor = Color.Black.copy(0.2f), spotColor = Color.Black.copy(0.1f))
+            .sabotenShadow()
             .background(
                 color = Color.White,
-                shape = RoundedCornerShape(10.dp)
+                shape = MaterialTheme.shapes.medium,
             )
             .clickable(onClick = onClicked)
     ) {

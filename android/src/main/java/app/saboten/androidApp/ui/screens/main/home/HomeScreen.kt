@@ -24,11 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.saboten.androidApp.ui.list.CategoryItem
-import app.saboten.androidApp.ui.list.PostFeedListItem
-import app.saboten.androidApp.ui.list.PostSelectItem
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
+import app.saboten.androidApp.ui.screens.main.post.SmallPostCard
+import app.saboten.androidApp.ui.screens.soopeachtest.CategoryItem
 import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -150,12 +149,16 @@ fun HomeScreenContent(
                 state.trendingCategories.getDataOrNull()?.let { categories ->
                     item {
                         LazyRow(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .animateItemPlacement(),
+                            contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
                             items(categories) { category ->
                                 CategoryItem(category = category) {
 
                                 }
+                                Spacer(modifier = Modifier.width(10.dp))
                             }
                         }
                     }
@@ -171,15 +174,17 @@ fun HomeScreenContent(
                         LazyRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .animateItemPlacement()
+                                .animateItemPlacement(),
+                            contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
                             items(post) { post ->
-                                PostFeedListItem(
+                                SmallPostCard(
                                     post = post,
                                     onClicked = {
                                         onPostClicked(post)
                                     }
                                 )
+                                Spacer(modifier = Modifier.width(10.dp))
                             }
                         }
                     }
@@ -195,15 +200,17 @@ fun HomeScreenContent(
                         LazyRow(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .animateItemPlacement()
+                                .animateItemPlacement(),
+                            contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
                             items(post) { post ->
-                                PostFeedListItem(
+                                SmallPostCard(
                                     post = post,
                                     onClicked = {
                                         onPostClicked(post)
                                     }
                                 )
+                                Spacer(modifier = Modifier.width(10.dp))
                             }
                         }
                     }
@@ -217,9 +224,7 @@ fun HomeScreenContent(
 
                 state.scrappedPosts.getDataOrNull()?.let { posts ->
                     items(posts) { post ->
-                        PostFeedListItem(post = post) {
-
-                        }
+                        SmallPostCard(post = post, onClicked = { onPostClicked(post) })
                     }
                 }
 
