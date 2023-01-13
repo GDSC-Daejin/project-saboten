@@ -2,7 +2,6 @@ package backend.controller;
 
 import backend.common.EntityFactory;
 import backend.common.RequestFactory;
-import backend.config.ObjectMapperConfig;
 import backend.config.UTF8Config;
 import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
@@ -42,7 +41,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @UTF8Config
-@ObjectMapperConfig
 @ActiveProfiles("dev")
 class PostControllerTest {
 
@@ -115,8 +113,8 @@ class PostControllerTest {
             mockMvc.perform(get(baseUrl + "/" + postId))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.id").value(postId))
-                    .andExpect(jsonPath("$.data.selected_vote").doesNotExist())
-                    .andExpect(jsonPath("$.data.is_liked").value(false))
+                    .andExpect(jsonPath("$.data.selectedVote").doesNotExist())
+                    .andExpect(jsonPath("$.data.isLiked").value(false))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
