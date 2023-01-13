@@ -330,7 +330,7 @@ class PostControllerTest {
                             .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data").hasJsonPath())
-                    .andExpect(jsonPath("$.data.votes[0].topic").value("탕수육"))
+                    .andExpect(jsonPath("$.data.voteResponses[0].topic").value("탕수육"))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
