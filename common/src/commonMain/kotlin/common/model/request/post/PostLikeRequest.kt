@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 /* POST /post/{post_id}/like */
 @Serializable
 data class PostLikeRequest(
-    @SerialName("is_liked") val isLiked: Boolean,
+    @SerialName("isLiked") val isLiked: Boolean,
 )

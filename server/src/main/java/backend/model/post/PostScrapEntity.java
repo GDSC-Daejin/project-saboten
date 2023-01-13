@@ -1,6 +1,7 @@
 package backend.model.post;
 
 import backend.controller.dto.PostScrapDto;
+import backend.model.common.BaseTimeEntity;
 import backend.model.compositekey.PostScrapPK;
 import backend.model.user.UserEntity;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity @IdClass(PostScrapPK.class)
 @Table(name = "TB_PostScrap")
-public class PostScrapEntity {
+public class PostScrapEntity extends BaseTimeEntity {
 
     @Id
     @ManyToOne

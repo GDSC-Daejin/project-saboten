@@ -3,6 +3,7 @@ package backend.model.post;
 import backend.controller.dto.CategoryDto;
 import backend.controller.dto.CategoryInPostDto;
 import backend.model.category.CategoryEntity;
+import backend.model.common.BaseTimeEntity;
 import backend.model.compositekey.CategoryInPostPK;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;

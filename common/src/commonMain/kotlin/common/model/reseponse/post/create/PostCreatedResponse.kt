@@ -13,5 +13,5 @@ data class PostCreatedResponse(
     @SerialName("author") val author: UserResponse,
     @SerialName("votes") val voteResponses: List<VoteResponse>,
     @SerialName("categories") val categories: List<CategoryResponse>,
-    @SerialName("created_at") val createdAt: String,
+    @SerialName("createdAt") val createdAt: String,
 )
