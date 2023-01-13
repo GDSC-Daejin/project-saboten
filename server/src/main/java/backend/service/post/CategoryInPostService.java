@@ -49,10 +49,6 @@ public class CategoryInPostService {
         return categoryInPostRepository.findALLByCategoryId(categoryId, pageable).map(CategoryInPostEntity::toDto);
     }
 
-    public Page<CategoryInPostDto> findAllCagegoryInPostPage(final Pageable pageable) {
-        return categoryInPostRepository.findAll(pageable).map(CategoryInPostEntity::toDto);
-    }
-
     @Transactional
     public List<CategoryResponse> update(PostDto postDto, List<CategoryDto> categoriesDto) {
         List<CategoryInPostEntity> beforeCategoryInPostEntities = categoryInPostRepository.findByPostId(postDto.getPostId());
