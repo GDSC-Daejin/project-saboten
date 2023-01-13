@@ -4,6 +4,7 @@ import common.model.request.post.create.PostCreateRequest
 import common.model.request.post.update.PostUpdateRequest
 import common.model.reseponse.ApiResponse
 import common.model.reseponse.PagingResponse
+import common.model.reseponse.paging.NewPagingResponse
 import common.model.reseponse.post.PostResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseDelete
@@ -24,10 +25,25 @@ interface PostApi : Api {
 
     suspend fun deletePost(postId: Int): ApiResponse<String>
 
-    suspend fun getPost(postId: Int): ApiResponse<PostResponse>
+    suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
-    suspend fun getPagedPosts(categoryId: Long?, nextKey : Long?): ApiResponse<PagingResponse<PostResponse>>
+    suspend fun getPagedPosts(
+        categoryId: Long?,
+        nextKey: Long?
+    ): ApiResponse<PagingResponse<PostResponse>>
 
+    suspend fun getPagedHotPosts(
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ): ApiResponse<NewPagingResponse<PostResponse>>
+
+    suspend fun getPagedSearchPosts(
+        searchText: String,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ): ApiResponse<NewPagingResponse<PostResponse>>
 }
 
 @Single(binds = [PostApi::class])
@@ -42,12 +58,33 @@ class PostApiImp : PostApi {
     override suspend fun deletePost(postId: Int) =
         responseDelete<String>(postId)
 
-    override suspend fun getPost(postId: Int) =
-        responseGet<PostResponse>(postId)
+    override suspend fun getPost(postId: Long) =
+        responseGet<PostResponse>("/$postId")
 
     override suspend fun getPagedPosts(categoryId: Long?, nextKey: Long?) =
         responseGet<PagingResponse<PostResponse>> {
             parameter("category_id", categoryId)
         }
+
+    override suspend fun getPagedHotPosts(
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ) = responseGet<NewPagingResponse<PostResponse>>("/hot") {
+        parameter("offset", offset)
+        parameter("pageNumber", pageNumber)
+        parameter("pageSize", pageSize)
+    }
+
+    override suspend fun getPagedSearchPosts(
+        searchText: String,
+        offset: Int?,
+        pageNumber: Int?,
+        pageSize: Int?
+    ) = responseGet<NewPagingResponse<PostResponse>>("/search/$searchText") {
+        parameter("offset", offset)
+        parameter("pageNumber", pageNumber)
+        parameter("pageSize", pageSize)
+    }
 
 }

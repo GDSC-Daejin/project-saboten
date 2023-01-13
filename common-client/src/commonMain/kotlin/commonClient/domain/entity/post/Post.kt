@@ -9,6 +9,7 @@ data class Post(
     val voteResponses: List<Vote>,
     val categories: List<Category>,
     val selectedVote: Long?,
+    val isScraped: Boolean?,
     val isLiked: Boolean?,
     val createdAt: String,
     val updatedAt: String?

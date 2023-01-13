@@ -8,6 +8,6 @@ class GetPostByIdUseCase(
     private val postRepository: PostRepository
 ) {
 
-    operator fun invoke(id: Long) = postRepository.postsById(id)
+    suspend operator fun invoke(id: Long) = postRepository.postsById(id)
 
 }

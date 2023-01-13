@@ -15,6 +15,7 @@ fun PostResponse.toDomain(): Post {
         voteResponses.map(VoteResponse::toDomain),
         categories.map(CategoryResponse::toDomain),
         selectedVote,
+        isScraped,
         isLiked,
         createdAt,
         updatedAt
@@ -27,7 +28,10 @@ fun CategoryResponse.toDomain(): Category {
 
 fun VoteResponse.toDomain(): Vote {
     return Vote(
-        id, topic, count, when (color) {
+        id,
+        topic,
+        count,
+        when (color) {
             VoteColorsResponse.WHITE -> VoteColors.WHITE
             VoteColorsResponse.RED -> VoteColors.RED
             VoteColorsResponse.GREEN -> VoteColors.GREEN
