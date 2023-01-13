@@ -115,7 +115,8 @@ class PostController {
         Page<PostDto> postPage = postService.getUserPost(userId, pageable);
         Page<PostReadResponse> myPostPage = postPage.map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_USER);
@@ -142,7 +143,8 @@ class PostController {
         Page<PostReadResponse> myPostPage = categoryInPostPage.map(categoryInPostDto -> {
             PostDto postDto = categoryInPostDto.getPost();
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
@@ -156,7 +158,8 @@ class PostController {
         Page<PostDto> postPage = postService.findAllPageable(pageable);
         Page<PostReadResponse> myPostPage = postPage.map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_REGIST_DATE);
     }
@@ -169,7 +172,8 @@ class PostController {
         Page<PostDto> postPage = postService.findAllPageable(pageable);
         Page<PostReadResponse> myPostPage = postPage.map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_LIKED_COUNT);
     }
@@ -182,7 +186,8 @@ class PostController {
         List<PostDto> postDtoList = postService.findAllOrderedBySortItemList("postLikeCount");
         List<PostReadResponse> myPostList = postDtoList.stream().map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         }).limit(5).toList();
         return ApiResponse.withMessage(myPostList, PostResponseMessage.POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT);
     }
@@ -195,7 +200,8 @@ class PostController {
         Page<PostDto> postPage = postService.searchPost(searchText, pageable);
         Page<PostReadResponse> myPostPage = postPage.map(searchPostDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), searchPostDto.getPostId()) : false;
-            return searchPostDto.toReadResponse(voteService.findVotes(searchPostDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(searchPostDto.getPostId());
+            return searchPostDto.toReadResponse(voteService.findVotes(searchPostDto.getPostId()), categories, isScrap);
         });
 
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
@@ -295,7 +301,8 @@ class PostController {
         List<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userId);
         List<PostReadResponse> myPostScrap = postScrapesDto.stream().map(postScrapDto -> {
             PostDto postDto = postScrapDto.getPost();
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), true);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, true);
         }).collect(Collectors.toList());
 
         return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
@@ -310,7 +317,8 @@ class PostController {
 
         Page<PostReadResponse> myHotPostPage = postPage.map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
         return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
@@ -345,7 +353,8 @@ class PostController {
         List<PostDto> postsDto = voteSelectService.findPostVoted(userId);
         List<PostReadResponse> myPostVoted = postsDto.stream().map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), isScrap);
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         }).collect(Collectors.toList());
 
         return ApiResponse.withMessage(myPostVoted, PostResponseMessage.POST_VOTED_FIND_SUCCESS);
