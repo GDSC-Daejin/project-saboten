@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class UserResponse(
     @SerialName("id") val id : Long,
     @SerialName("nickname") val nickname : String,
-    @SerialName("profile_photo_url") val profilePhotoUrl : String?,
+    @SerialName("profilePhotoUrl") val profilePhotoUrl : String?,
 )
