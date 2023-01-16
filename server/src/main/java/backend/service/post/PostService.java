@@ -112,8 +112,4 @@ public class PostService {
                 .collect(Collectors.toList()), postPage.getPageable(), postPage.getTotalElements());
         return hotPostPage;
     }
-
-    public void findAllByPeriod() {
-
-    }
 }

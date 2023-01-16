@@ -320,26 +320,23 @@ class PostController {
                                                               @RequestParam(required = true) Duration duration,
                                                               @PageableDefault Pageable pageable) {
         Page<PostReadResponse> hotPotPage = null;
+        Page<PostDto> postPage = null;
         UserDto userDto = getUser();
 
         if(categoryId != null){
             CategoryDto categoryDto = categoryService.findCategory(categoryId);
             Page<CategoryInPostDto> categoryInPostPage = categoryInPostService.findHotCategoryInPost(categoryId, duration, pageable);
-            hotPotPage = categoryInPostPage.map(categoryInPostDto -> {
-                PostDto postDto = categoryInPostDto.getPost();
-                Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-                List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-                return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
-            });
+            postPage = categoryInPostPage.map(CategoryInPostDto::getPost);
         }
         else {
-            Page<PostDto> postPage = postService.findAllHotPost(duration, pageable);
-            hotPotPage = postPage.map(postDto -> {
-                Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-                List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-                return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
-            });
+            postPage = postService.findAllHotPost(duration, pageable);
         }
+
+        hotPotPage = postPage.map(postDto -> {
+            Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
+        });
 
         return ApiResponse.withMessage(hotPotPage, PostResponseMessage.POST_HOT_FIND_ALL);
     }

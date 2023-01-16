@@ -5,12 +5,10 @@ import common.model.request.Duration;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
-import java.util.TimeZone;
 
 public class DurationUtil {
 
     public static boolean isIncludeDuration(LocalDateTime postRegistTime, Duration duration) {
-        // else if 극혐
         if(duration == Duration.DAY){
             return calculateDay(postRegistTime);
         }
@@ -39,29 +37,36 @@ public class DurationUtil {
         LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime startTime = currentTime.minusDays(7);
 
-        if(startTime.getDayOfYear() <= postRegistTime.getDayOfYear() &&
-                postRegistTime.getDayOfYear() <= currentTime.getDayOfYear()) {
-            return true;
-        }
-
-        return false;
+        return isIncludePostTimeInDuration(startTime, postRegistTime, currentTime);
     }
 
     private static boolean calculateMonth(LocalDateTime postRegistTime) {
         LocalDateTime currentTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         LocalDateTime startTime = currentTime.minusMonths(1);
 
+        return isIncludePostTimeInDuration(startTime, postRegistTime, currentTime);
+    }
+
+    private static boolean isIncludePostTimeInDuration(LocalDateTime startTime, LocalDateTime postRegistTime, LocalDateTime currentTime) {
         int startTimeDay = startTime.getDayOfYear();
         int postTimeDay = postRegistTime.getDayOfYear();
         int currentTimeDay = currentTime.getDayOfYear();
 
-        if(currentTime.getMonth() == Month.JANUARY) {
-            postTimeDay += 365;
-            currentTimeDay += 365;
+        if(startTime.getMonth() == Month.DECEMBER && currentTime.getMonth() == Month.JANUARY) {
+            if(postRegistTime.getMonth() == Month.DECEMBER) {
+                currentTimeDay += 365;
+            }
+            else if(postRegistTime.getMonth() == Month.JANUARY) {
+                postTimeDay += 365;
+                currentTimeDay += 365;
+            }
         }
 
-        if(startTimeDay <= postTimeDay &&
-                postTimeDay <= currentTimeDay) {
+        return checkIncludeDuration(startTimeDay, postTimeDay, currentTimeDay);
+    }
+
+    private static boolean checkIncludeDuration(int startTimeDay, int postTimeDay, int currentTimeDay) {
+        if(startTimeDay <= postTimeDay && postTimeDay <= currentTimeDay) {
             return true;
         }
 
