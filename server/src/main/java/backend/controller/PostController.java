@@ -24,6 +24,7 @@ import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
 import common.model.reseponse.post.read.PostReadResponse;
 import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import java.util.stream.Collectors;
@@ -313,8 +314,11 @@ class PostController {
         return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
     }
     
-    @ApiOperation(value = "Hot 게시판 조회", notes = "추천수가 높은 게시물들을 조회합니다.")
-    @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다.")
+    @ApiOperation(value = "뜨거운 고민거리 API 입니다.", notes = "카테고리 와 게시물 기간에 따라 게시물들을 조회합니다.")
+    @ApiImplicitParams({
+        @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다."),
+        @ApiImplicitParam(name="duration", value="게시물 기간입니다. DAY, WEEK, MONTH, ALL 이 있습니다.")
+    })
     @GetMapping("/post/hot")
     public ApiResponse<Page<PostReadResponse>> getHotPostList(@RequestParam(required = false) Long categoryId,
                                                               @RequestParam(required = true) Duration duration,
@@ -324,7 +328,7 @@ class PostController {
         UserDto userDto = getUser();
 
         if(categoryId != null){
-            CategoryDto categoryDto = categoryService.findCategory(categoryId);
+            categoryService.findCategory(categoryId);
             Page<CategoryInPostDto> categoryInPostPage = categoryInPostService.findHotCategoryInPost(categoryId, duration, pageable);
             postPage = categoryInPostPage.map(CategoryInPostDto::getPost);
         }
