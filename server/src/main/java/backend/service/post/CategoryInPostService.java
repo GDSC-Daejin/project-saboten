@@ -7,15 +7,19 @@ import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
 import backend.model.post.PostEntity;
 import backend.repository.post.CategoryInPostRepository;
+import backend.util.DurationUtil;
+import common.model.request.Duration;
 import common.model.reseponse.category.CategoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,6 +51,17 @@ public class CategoryInPostService {
 
     public Page<CategoryInPostDto> findCategoryInPostPageByCategoryId(final Long categoryId, final Pageable pageable) {
         return categoryInPostRepository.findALLByCategoryId(categoryId, pageable).map(CategoryInPostEntity::toDto);
+    }
+
+    public Page<CategoryInPostDto> findHotCategoryInPost(final Long categoryId, final Duration duration, final Pageable pageable) {
+        Page<CategoryInPostDto> categoryInPostPage = findCategoryInPostPageByCategoryId(categoryId, pageable);
+
+        Page<CategoryInPostDto> hotCategoryInPostPage = new PageImpl<>(categoryInPostPage.getContent().stream().filter(categoryInPostDto -> {
+            PostDto postDto = categoryInPostDto.getPost();
+            return DurationUtil.isIncludeDuration(postDto.getRegistDate(), duration);
+        }).collect(Collectors.toList()), categoryInPostPage.getPageable(), categoryInPostPage.getTotalElements());
+
+        return hotCategoryInPostPage;
     }
 
     @Transactional

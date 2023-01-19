@@ -5,11 +5,16 @@ import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.model.post.PostEntity;
 import backend.repository.post.PostRepository;
+import backend.util.DurationUtil;
 import common.message.PostResponseMessage;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import common.model.request.Duration;
+import common.model.reseponse.post.read.PostReadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
@@ -100,7 +105,11 @@ public class PostService {
         postRepository.decreaseLikeCount(id);
     }
 
-    public Page<PostDto> findAllHotPost(final Pageable pageable) {
-        return postRepository.findAllHostPost(pageable).map(PostEntity::toDto);
+    public Page<PostDto> findAllHotPost(final Duration duration, final Pageable pageable) {
+        Page<PostDto> postPage = findAllPageable(pageable);
+
+        Page<PostDto> hotPostPage = new PageImpl<>(postPage.getContent().stream().filter(post -> DurationUtil.isIncludeDuration(post.getRegistDate(), duration))
+                .collect(Collectors.toList()), postPage.getPageable(), postPage.getTotalElements());
+        return hotPostPage;
     }
 }
