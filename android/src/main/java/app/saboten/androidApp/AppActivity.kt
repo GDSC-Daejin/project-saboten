@@ -8,7 +8,14 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.core.animation.doOnEnd
 import androidx.core.splashscreen.SplashScreen
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -16,6 +23,7 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import app.saboten.androidApp.ui.providers.ProvideMeInfo
 import app.saboten.androidApp.ui.screens.AppScreen
+import app.saboten.androidApp.ui.screens.SplashScreen
 import app.saboten.androidUi.styles.MainTheme
 import coil.Coil
 import coil.ImageLoader
@@ -23,6 +31,7 @@ import coil.decode.SvgDecoder
 import commonClient.data.isLoading
 import commonClient.domain.entity.settings.AppTheme
 import commonClient.presentation.GlobalAppViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -55,6 +64,16 @@ class AppActivity : AppCompatActivity() {
     private fun setupUi() {
         setContent {
             val state by globalAppViewModel.collectAsState()
+
+            var showAppScreen by remember {
+                mutableStateOf(false)
+            }
+
+            LaunchedEffect(true) {
+                delay(2000)
+                showAppScreen = true
+            }
+
             MainTheme(
 //                isDarkTheme = when (state.appTheme) {
 //                    AppTheme.DARK -> true
@@ -64,7 +83,10 @@ class AppActivity : AppCompatActivity() {
             false
             ) {
                 ProvideMeInfo(state.meState) {
-                    AppScreen(globalAppViewModel)
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        SplashScreen()
+                        if (showAppScreen) AppScreen(globalAppViewModel)
+                    }
                 }
             }
         }
@@ -81,28 +103,10 @@ class AppActivity : AppCompatActivity() {
     private fun setupSplashScreen(splashScreen: SplashScreen) {
 
         splashScreen.setOnExitAnimationListener { splashScreenView ->
-            with(ObjectAnimator.ofFloat(splashScreenView.view, View.ALPHA, 1f, 0f)) {
-                duration = 450L
-                doOnEnd { splashScreenView.remove() }
-                start()
-            }
+            splashScreenView.remove()
         }
 
-        /*  */
-        val content: View = findViewById(android.R.id.content)
-        content.viewTreeObserver.addOnPreDrawListener(
-            object : ViewTreeObserver.OnPreDrawListener {
-                override fun onPreDraw(): Boolean {
-                    return if (!globalAppViewModel.container.stateFlow.value.appLoadingState.isLoading()) {
-                        content.viewTreeObserver.removeOnPreDrawListener(this)
-                        true
-                    } else {
-                        false
-                    }
-                }
-            }
-        )
-
+        splashScreen.setKeepOnScreenCondition { false }
     }
 
 }
