@@ -20,7 +20,7 @@ fun SplashScreen() {
     Box(modifier = Modifier.fillMaxSize()) {
 
         LottieAnimation(
-            modifier = Modifier.align(Alignment.Center).padding(22.5.dp),
+            modifier = Modifier.align(Alignment.Center).padding(22.6.dp),
             composition = composition
         )
 
