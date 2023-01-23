@@ -52,16 +52,16 @@ fun SortSelector(
             Spacer(modifier = Modifier.padding(start = 5.dp))
 
             Text(
-                text = "${hotPostSortState.categoryState.type.text} ", fontSize = 14.sp,
+                text = "${hotPostSortState.categoryState.type.text} ", fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = SabotenColors.green500
             )
             Text(
-                text = "중에서 ", fontSize = 14.sp,
+                text = "중에서 ", fontSize = 12.sp,
                 color = SabotenColors.green500
             )
             Text(
-                text = "${hotPostSortState.periodState.type.text} ", fontSize = 14.sp,
+                text = "${hotPostSortState.periodState.type.text} ", fontSize = 12.sp,
                 fontWeight = FontWeight.Bold,
                 color = SabotenColors.green500
             )
