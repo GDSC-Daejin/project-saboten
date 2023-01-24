@@ -53,7 +53,7 @@ public class CategoryInPostService {
         return categoryInPostRepository.findALLByCategoryId(categoryId, pageable).map(CategoryInPostEntity::toDto);
     }
 
-    public Page<CategoryInPostDto> findHotCategoryInPost(final Long categoryId, final Duration duration, final Pageable pageable) {
+    public Page<CategoryInPostDto> findHotDebateCategoryInPost(final Long categoryId, final Duration duration, final Pageable pageable) {
         Page<CategoryInPostDto> categoryInPostPage = findCategoryInPostPageByCategoryId(categoryId, pageable);
 
         Page<CategoryInPostDto> hotCategoryInPostPage = new PageImpl<>(categoryInPostPage.getContent().stream().filter(categoryInPostDto -> {

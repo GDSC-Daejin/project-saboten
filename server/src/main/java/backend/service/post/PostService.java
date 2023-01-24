@@ -105,11 +105,15 @@ public class PostService {
         postRepository.decreaseLikeCount(id);
     }
 
-    public Page<PostDto> findAllHotPost(final Duration duration, final Pageable pageable) {
+    public Page<PostDto> findAllHotDebatePost(final Duration duration, final Pageable pageable) {
         Page<PostDto> postPage = findAllPageable(pageable);
 
         Page<PostDto> hotPostPage = new PageImpl<>(postPage.getContent().stream().filter(post -> DurationUtil.isIncludeDuration(post.getRegistDate(), duration))
                 .collect(Collectors.toList()), postPage.getPageable(), postPage.getTotalElements());
         return hotPostPage;
+    }
+
+    public Page<PostDto> findAllHotPost(final Pageable pageable) {
+        return postRepository.findAllHostPost(pageable).map(PostEntity::toDto);
     }
 }
