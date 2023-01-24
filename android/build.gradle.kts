@@ -187,12 +187,12 @@ android {
                     .replace("app-release", "saboten-android-${AppProperties.androidAppVersionName}")
                     .replace("app-debug", "saboten-android-${AppProperties.androidAppVersionName}")
         }
-//        val variantName = name
-//        sourceSets {
-//            getByName("main") {
-//                java.srcDir(File("build/generated/ksp/$variantName/kotlin"))
-//            }
-//        }
+
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/${name}/kotlin")
+            }
+        }
     }
 
     compileOptions {
