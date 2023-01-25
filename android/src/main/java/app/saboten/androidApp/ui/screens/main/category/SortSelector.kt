@@ -22,8 +22,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.saboten.androidApp.ui.screens.main.home.HotPostSortState
 import app.saboten.androidUi.styles.SabotenColors
+import commonClient.domain.entity.post.HotPostSortState
 
 @Composable
 fun SortSelector(
