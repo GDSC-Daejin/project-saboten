@@ -32,34 +32,18 @@ import androidx.compose.ui.unit.sp
 import app.saboten.androidUi.bars.DragBar
 import app.saboten.androidUi.styles.SabotenColors
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import commonClient.domain.entity.post.CategoryType
+import commonClient.domain.entity.post.HotPostSortState
 import commonClient.domain.entity.post.PeriodType
+import commonClient.domain.entity.post.SortState
 import commonClient.domain.entity.post.SortType
-
-interface SortState {
-    val type: SortType
-}
-
-data class PeriodState(
-    override val type: SortType = PeriodType.DAY
-) : SortState
-
-data class CategoryState(
-    override val type: SortType = CategoryType.ALL
-) : SortState
-
-data class HotPostSortState(
-    var periodState: PeriodState = PeriodState(),
-    var categoryState: CategoryState = CategoryState()
-)
 
 @Composable
 @Destination(style = DestinationStyle.BottomSheet::class)
 fun SortHotPostDialog(
-    navigator: DestinationsNavigator,
-    onApplyButtonClick: (HotPostSortState) -> Unit = { },
+    resultNavigator: ResultBackNavigator<String>,
 ) {
 
     var hotPostSortState by remember {
@@ -132,7 +116,9 @@ fun SortHotPostDialog(
                 )
                 .fillMaxWidth()
                 .height(44.dp),
-            onClick = { onApplyButtonClick(hotPostSortState) }) {
+            onClick = {
+                resultNavigator.navigateBack(hotPostSortState.toJsonString())
+            }) {
             Text(text = "적용하기", fontSize = 16.sp)
         }
 
