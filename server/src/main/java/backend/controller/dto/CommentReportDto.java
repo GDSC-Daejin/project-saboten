@@ -27,7 +27,7 @@ public class CommentReportDto {
                 .commentReportId(commentReportId)
                 .postId(postId.toEntity())
                 .commentId(commentId.toEntity())
-                .reportedUserId(reportedUserId.toEntity())
+                .reportedUserId(commentId.getUser().toEntity())
                 .reporterId(reporterId.toEntity())
                 .content(content)
                 .build();

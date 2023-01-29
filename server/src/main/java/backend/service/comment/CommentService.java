@@ -42,6 +42,10 @@ public class CommentService {
 
         return commentRepository.save(commentEntity).toDto();
     }
+    public CommentDto findCommentById(Long commentId) {
+        CommentEntity commentEntity = commentRepository.findByCommentId(commentId);
+        return commentEntity.toDto();
+    }
 
     public Page<CommentDto> getAllCommentsByPost(Long postId, Pageable pageable) {
         Page<CommentEntity> commetPage = commentRepository.findAllByPostId(postId, pageable);

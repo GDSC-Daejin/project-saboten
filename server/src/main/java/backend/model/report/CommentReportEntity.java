@@ -43,12 +43,12 @@ public class CommentReportEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name="reported_user_id", nullable = false)
     private UserEntity reportedUserId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JoinColumn(name="user_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    @JoinColumn(name="reporter_id", nullable = false)
     private UserEntity reporterId;
 
     @Column(name = "report_content", nullable = false)
@@ -59,7 +59,7 @@ public class CommentReportEntity extends BaseTimeEntity {
                 .commentReportId(commentReportId)
                 .postId(postId.toDto())
                 .commentId(commentId.toDto())
-                .reportedUserId(reportedUserId.toDto())
+                .reportedUserId(commentId.getUser().toDto())
                 .reporterId(reporterId.toDto())
                 .content(content)
                 .registDate(getRegistDate())
