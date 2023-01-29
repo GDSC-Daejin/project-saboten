@@ -1,9 +1,11 @@
 package commonClient.presentation.main
 
 import commonClient.data.LoadState
+import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Duration
 import commonClient.domain.entity.post.Post
+import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.category.GetTrendingCategoriesUseCase
 import commonClient.domain.usecase.post.GetHotPostsUseCase
@@ -25,6 +27,7 @@ interface HomeScreenEffect {
 }
 
 data class HomeScreenState(
+    val banners: LoadState<List<Banner>> = LoadState.idle(),
     val categories: LoadState<List<Category>> = LoadState.idle(),
     val hotPost: LoadState<List<Post>> = LoadState.idle(),
     val trendingCategories: LoadState<List<Category>> = LoadState.idle(),
@@ -34,6 +37,7 @@ data class HomeScreenState(
 )
 
 class HomeScreenViewModel(
+    private val getBannerUseCase: GetBannerUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getRecentPostsUseCase: GetRecentPostsUseCase,
     private val getSelectedPostsUseCase: GetSelectedPostsUseCase,
@@ -56,9 +60,17 @@ class HomeScreenViewModel(
                 .launchIn(platformViewModelScope)
         }
 
+        loadBanners()
         loadTrendingCategories()
         loadRecentPosts()
         loadSelectedPosts()
+    }
+
+    fun loadBanners() = intent {
+        flow { emit(getBannerUseCase() )}
+            .toLoadState()
+            .onEach { reduce { state.copy(banners = it) } }
+            .launchIn(platformViewModelScope)
     }
 
     fun loadHotPosts(
