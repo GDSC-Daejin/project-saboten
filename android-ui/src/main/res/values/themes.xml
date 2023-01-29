@@ -9,10 +9,10 @@
     </style>
 
     <style name="Theme.SabotenAndroid.Starting" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">?android:colorBackground</item>
+        <item name="windowSplashScreenBackground">#fff</item>
         <item name="windowSplashScreenIconBackgroundColor">?colorPrimary</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
-        <item name="windowSplashScreenAnimationDuration">200</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/img_saboten_logo</item>
+        <item name="windowSplashScreenAnimationDuration">0</item>
         <item name="postSplashScreenTheme">@style/Theme.SabotenAndroid</item>
     </style>
 
