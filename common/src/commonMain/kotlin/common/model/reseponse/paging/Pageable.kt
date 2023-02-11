@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Pageable(
-    val offset: Int,
+    val offset: Long,
     val pageNumber: Int,
     val pageSize: Int,
     val paged: Boolean,

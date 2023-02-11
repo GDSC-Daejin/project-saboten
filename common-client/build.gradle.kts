@@ -39,7 +39,7 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 implementation(project(":common"))
-                implementation(project(":client-paging"))
+                implementation(Utils.paging)
 
                 implementation(Koin.core)
                 implementation(Koin.annotation)

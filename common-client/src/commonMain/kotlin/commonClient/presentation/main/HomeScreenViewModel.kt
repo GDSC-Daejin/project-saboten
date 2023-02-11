@@ -9,7 +9,6 @@ import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.category.GetTrendingCategoriesUseCase
 import commonClient.domain.usecase.post.GetHotPostsUseCase
-import commonClient.domain.usecase.post.GetPagedPostsUseCase
 import commonClient.domain.usecase.post.GetRecentPostsUseCase
 import commonClient.domain.usecase.post.GetSelectedPostsUseCase
 import commonClient.presentation.PlatformViewModel

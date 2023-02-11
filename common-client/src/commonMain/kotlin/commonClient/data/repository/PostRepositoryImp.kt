@@ -1,8 +1,12 @@
 package commonClient.data.repository
 
+import common.model.request.post.VoteSelectRequest
+import common.model.reseponse.ApiResponse
 import common.model.reseponse.PagingResponse
 import common.model.reseponse.paging.NewPagingResponse
+import common.model.reseponse.post.PostResponse
 import commonClient.data.remote.endpoints.PostApi
+import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
 import commonClient.domain.entity.post.Post
 import commonClient.domain.mapper.toDomain
@@ -15,42 +19,44 @@ class PostRepositoryImp(
     private val postApi: PostApi,
 ) : PostRepository {
 
+    override suspend fun votePost(postId: Long, voteSelectRequest: VoteSelectRequest): Post {
+        return postApi.votePost(postId, voteSelectRequest).data!!.toDomain()
+    }
+
+    override suspend fun scrapPost(postId: Long): Post {
+        return postApi.scrapPost(postId).data!!.toDomain()
+    }
+
+    override suspend fun likePost(postId: Long): Post {
+        return postApi.likePost(postId).data!!.toDomain()
+    }
+
     override suspend fun postsById(postId: Long): Post {
         return postApi.getPost(postId).data!!.toDomain()
     }
 
-    override suspend fun getPagedPosts(categoryId: Long?, offset: Int?, pageNumber: Int?, pageSize: Int?): NewPagingResponse<Post> {
-        val response = postApi.getPagedPosts(categoryId, offset, pageNumber, pageSize).data!!
-        return response.map { it.toDomain() }
+    override suspend fun getRecentPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getRecentPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getRecentPosts(): NewPagingResponse<Post> {
-        val response = postApi.getPagedPosts(null, null, null, null).data!!
-        return response.map { it.toDomain() }
+    override suspend fun getHotPosts(categoryId: Long?, duration: Duration?, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getHotPosts(categoryId, duration, pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getSelectedPosts(): NewPagingResponse<Post> {
-        // TODO : Selected 로 API Call 변경해야함
-        val response = postApi.getPagedPosts(null, null, null, null).data!!
-        return response.map { it.toDomain() }
+    override suspend fun getMyPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getMyPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getPagedHotPost(
-        categoryId: Long?,
-        duration: Duration?,
-        offset: Int?, pageNumber: Int?, pageSize: Int?,
-    ): NewPagingResponse<Post> {
-        val response = postApi.getPagedHotPosts(categoryId, duration, offset, pageNumber, pageSize).data!!
-        return response.map { it.toDomain() }
+    override suspend fun getMyScrappedPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getMyScrappedPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getPagedSearchPost(
-        searchText: String,
-        offset: Int?,
-        pageNumber: Int?,
-        pageSize: Int?,
-    ): NewPagingResponse<Post> {
-        val response = postApi.getPagedSearchPosts(searchText, offset, pageNumber, pageSize).data!!
-        return response.map { it.toDomain() }
+    override suspend fun getMyVotedPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getMyVotedPosts(pagingRequest).data!!.map { it.toDomain() }
     }
+
+    override suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getSearchPosts(searchText, pagingRequest).data!!.map { it.toDomain() }
+    }
+
 }

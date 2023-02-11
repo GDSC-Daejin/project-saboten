@@ -36,7 +36,7 @@ fun SelectedVoteItem(
 ) {
     Column(
         modifier = Modifier
-            .width(290.dp)
+            .fillMaxWidth()
             .height(90.dp)
             .clip(RoundedCornerShape(8.dp))
             .clickable { onVoteItemClicked() }

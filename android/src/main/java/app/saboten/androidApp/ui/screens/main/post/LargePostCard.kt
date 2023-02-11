@@ -40,21 +40,20 @@ import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
+import commonClient.domain.entity.post.Vote
 
 @Composable
 fun LargePostCard(
+    modifier : Modifier = Modifier,
     post: Post,
     onClicked: () -> Unit,
-    onFirstVoteClicked: () -> Unit,
-    onSecondVoteClicked: () -> Unit,
+    onVoteClicked : (Vote) -> Unit,
     onScrapClicked: () -> Unit,
     onLikeClicked: () -> Unit,
     onCommentClicked: () -> Unit,
 ) {
     Box(
-        modifier = Modifier
-            .padding(top = 10.dp)
-            .width(320.dp)
+        modifier = modifier
             .wrapContentHeight()
             .sabotenShadow()
             .background(
@@ -123,7 +122,7 @@ fun LargePostCard(
             if (post.selectedVote != null) {
                 SelectedVoteItem(
                     vote = post.voteResponses.first(),
-                    onVoteItemClicked = { onFirstVoteClicked() },
+                    onVoteItemClicked = { onVoteClicked(post.voteResponses.first()) },
                     isFirst = true,
                     isSelected = post.selectedVote == 0L,
                     sum = sum
@@ -133,7 +132,7 @@ fun LargePostCard(
 
                 SelectedVoteItem(
                     vote = post.voteResponses[1],
-                    onVoteItemClicked = { onSecondVoteClicked() },
+                    onVoteItemClicked = { onVoteClicked(post.voteResponses[1]) },
                     isFirst = false,
                     isSelected = post.selectedVote == 1L,
                     sum = sum
@@ -141,13 +140,13 @@ fun LargePostCard(
             } else {
                 UnSelectedVoteItem(
                     post.voteResponses.first()
-                ) { onFirstVoteClicked() }
+                ) { onVoteClicked(post.voteResponses.first()) }
 
                 Spacer(modifier = Modifier.padding(vertical = 5.dp))
 
                 UnSelectedVoteItem(
                     post.voteResponses[1]
-                ) { onSecondVoteClicked() }
+                ) { onVoteClicked(post.voteResponses[1]) }
             }
 
             Spacer(modifier = Modifier.padding(vertical = 9.dp))
