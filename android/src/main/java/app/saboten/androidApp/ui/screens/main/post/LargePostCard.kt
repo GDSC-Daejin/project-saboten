@@ -74,7 +74,7 @@ fun LargePostCard(
             ) {
                 Row {
                     NetworkImage(
-                        url = "https://picsum.photos/200/200",
+                        url = post.author.profilePhotoUrl,
                         modifier = Modifier
                             .size(30.dp)
                             .clip(CircleShape)
