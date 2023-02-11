@@ -31,6 +31,8 @@ interface PostApi : Api {
 
     suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
+    suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): ApiResponse<NewPagingResponse<PostResponse>>
+
     suspend fun getHotPosts(
         categoryId: Long?,
         duration: Duration?,
@@ -70,6 +72,11 @@ class PostApiImp : PostApi {
 
     override suspend fun scrapPost(postId: Long): ApiResponse<PostResponse> {
         return responsePost("/$postId/scrap")
+    }
+
+    override suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): ApiResponse<NewPagingResponse<PostResponse>> = responseGet("/") {
+        parameter("categoryId", categoryId)
+        pagingRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
     }
 
     override suspend fun getHotPosts(

@@ -1,4 +1,3 @@
-
 package app.saboten.androidApp.ui.screens
 
 import androidx.compose.animation.*
@@ -14,6 +13,9 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocal
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -42,6 +44,11 @@ import commonClient.presentation.GlobalAppSideEffect
 import commonClient.presentation.GlobalAppViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 
+
+typealias OpenLoginDialogEffect = () -> Unit
+
+val LocalOpenLoginDialogEffect = compositionLocalOf<OpenLoginDialogEffect> { error("Not Provided!") }
+
 @OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 fun AppScreen(globalAppViewModel: GlobalAppViewModel) {
@@ -50,8 +57,12 @@ fun AppScreen(globalAppViewModel: GlobalAppViewModel) {
     val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
     ModalBottomSheetLayout(bottomSheetNavigator) {
-        MainDestinationScaffold(globalAppViewModel, navController) {
-            dependency(globalAppViewModel)
+        CompositionLocalProvider(LocalOpenLoginDialogEffect provides {
+            navController.navigate(LoginDialogDestination.route)
+        }) {
+            MainDestinationScaffold(globalAppViewModel, navController) {
+                dependency(globalAppViewModel)
+            }
         }
     }
 
@@ -111,7 +122,8 @@ private fun MainDestinationScaffold(
                             2.dp,
                             color = Color.White,
                             shape = CircleShape
-                        ).shadow(
+                        )
+                        .shadow(
                             10.dp,
                             shape = CircleShape,
                             ambientColor = Color.Black,

@@ -35,6 +35,10 @@ class PostRepositoryImp(
         return postApi.getPost(postId).data!!.toDomain()
     }
 
+    override suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+        return postApi.getPosts(categoryId, pagingRequest).data!!.map { it.toDomain() }
+    }
+
     override suspend fun getRecentPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
         return postApi.getRecentPosts(pagingRequest).data!!.map { it.toDomain() }
     }

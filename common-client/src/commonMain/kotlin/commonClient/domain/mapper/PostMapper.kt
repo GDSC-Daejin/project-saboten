@@ -23,7 +23,7 @@ fun PostResponse.toDomain(): Post {
 }
 
 fun CategoryResponse.toDomain(): Category {
-    return Category(id, name, iconUrl)
+    return Category(id, name, iconUrl, startColor, endColor)
 }
 
 fun VoteResponse.toDomain(): Vote {

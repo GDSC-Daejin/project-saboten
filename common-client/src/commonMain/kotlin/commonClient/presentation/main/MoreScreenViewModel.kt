@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -52,49 +53,13 @@ class MoreScreenViewModel(
     private val getPagedRecentPostsUseCase: GetPagedRecentPostsUseCase,
     private val getPagedVotedPostsUseCase: GetPagedVotedPostsUseCase,
     private val getPagedScrappedPostsUseCase: GetPagedScrappedPostsUseCase,
-    private val requestScrapPostUseCase: RequestScrapPostUseCase,
-    private val requestVotePostUseCase: RequestVotePostUseCase,
-    private val requestLikePostUseCase: RequestLikePostUseCase,
-) : PlatformViewModel<MoreScreenState, MoreScreenEffect>() {
+    postActionsDelegate: PostActionsDelegate
+) : PlatformViewModel<MoreScreenState, MoreScreenEffect>(), PostActionsDelegate by postActionsDelegate {
 
     override val container: Container<MoreScreenState, MoreScreenEffect> = container(MoreScreenState())
 
     init {
-
-    }
-
-    fun requestVote(postId: Long, voteId: Long) {
-        intent {
-            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-            updatePostInList(post)
-        }
-    }
-
-    fun requestLike(postId: Long) {
-        intent {
-            val post = requestLikePostUseCase(postId)
-            updatePostInList(post)
-        }
-    }
-
-    fun requestScrap(postId: Long) {
-        intent {
-            val post = requestScrapPostUseCase(postId)
-            updatePostInList(post)
-        }
-    }
-
-    private suspend fun SimpleSyntax<MoreScreenState, MoreScreenEffect>.updatePostInList(post: Post) {
-        reduce {
-            state.copy(
-                items = state.items.map { pagingData ->
-                    pagingData.map { item ->
-                        if (item.id == post.id) post
-                        else item
-                    }
-                }
-            )
-        }
+        containerHost = this
     }
 
     private val recentPager = createPager<Long, Post>(20, -1) { key, _ ->
@@ -143,6 +108,21 @@ class MoreScreenViewModel(
                 state.copy(
                     type = type,
                     items = pagingData
+                )
+            }
+        }
+    }
+
+    override suspend fun onPostUpdated(post: Post) {
+        intent {
+            reduce {
+                state.copy(
+                    items = state.items.map { pagingData ->
+                        pagingData.map { item ->
+                            if (item.id == post.id) post
+                            else item
+                        }
+                    }
                 )
             }
         }
