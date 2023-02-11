@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -38,10 +40,10 @@ fun LoginDialogContent() {
 
             Surface(
                 modifier = Modifier
-                    .size(width = 163.dp, height = 5.dp)
+                    .size(width = 100.dp, height = 4.dp)
                     .align(Alignment.CenterHorizontally),
-                shape = RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp),
-                color = MaterialTheme.colors.onSurface.copy(alpha = 0.2f)
+                shape = CircleShape,
+                color = MaterialTheme.colors.onSurface.copy(alpha = 0.05f)
             ) {}
 
             Spacer(modifier = Modifier.height(21.dp))
@@ -64,7 +66,9 @@ fun LoginDialogContent() {
 
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(20.dp))
+
+            Spacer(modifier = Modifier.navigationBarsPadding())
 
         }
     }

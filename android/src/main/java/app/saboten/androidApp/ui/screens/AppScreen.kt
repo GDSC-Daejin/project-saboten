@@ -27,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import app.saboten.androidApp.ui.NavGraphs
 import app.saboten.androidApp.ui.destinations.*
 import app.saboten.androidApp.ui.navDestination
+import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.main.MainBottomNavigation
 import app.saboten.androidUi.motions.materialTransitionZaxisIn
 import app.saboten.androidUi.motions.materialTransitionZaxisOut
@@ -106,6 +107,9 @@ private fun MainDestinationScaffold(
         }
     }
 
+    val meState = LocalMeInfo.current
+    val openLoginDialog = LocalOpenLoginDialogEffect.current
+
     BasicScaffold(
         floatingActionButtonPosition = FabPosition.Center,
         isFloatingActionButtonDocked = true,
@@ -115,6 +119,7 @@ private fun MainDestinationScaffold(
                 enter = scaleIn(),
                 exit = scaleOut()
             ) {
+
                 FloatingActionButton(
                     modifier = Modifier
                         .size(50.dp)
@@ -131,7 +136,8 @@ private fun MainDestinationScaffold(
                         ),
                     elevation = FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp),
                     onClick = {
-
+                        if (meState.needLogin) openLoginDialog()
+                        else navController.navigate(WritePostScreenDestination.route)
                     }
                 ) {
                     Icon(imageVector = Icons.Rounded.Add, contentDescription = null, modifier = Modifier.size(30.dp))

@@ -33,7 +33,7 @@ fun FilledButton(
         content = {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 icon?.let {
-                    Icon(imageVector = icon, contentDescription = text)
+                    Icon(imageVector = icon, contentDescription = text, tint = Color.Unspecified)
                     Spacer(modifier = Modifier.width(20.dp))
                 }
                 Text(text)
