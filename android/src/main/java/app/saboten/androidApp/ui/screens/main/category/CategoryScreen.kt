@@ -61,10 +61,11 @@ private fun CategoryScreenContent(viewModel: CategoryScreenViewModel) {
 
     Scaffold(
         topBar = {
-            MainTopBar(
-                backgroundColor = MaterialTheme.colors.surface,
-                contentColor = MaterialTheme.colors.secondary,
-            )
+//            MainTopBar(
+//                backgroundColor = MaterialTheme.colors.surface,
+//                contentColor = MaterialTheme.colors.secondary,
+//            )
+            BasicTopBar(title = { Text("카테고리") })
         },
         content = {
 
@@ -76,8 +77,8 @@ private fun CategoryScreenContent(viewModel: CategoryScreenViewModel) {
                 stickyHeader {
                     Surface(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .sabotenShadow()
+                            .fillMaxWidth(),
+                        color = MaterialTheme.colors.surface,
                     ) {
                         LazyRow(
                             contentPadding = PaddingValues(20.dp),
@@ -90,17 +91,19 @@ private fun CategoryScreenContent(viewModel: CategoryScreenViewModel) {
                                     color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
                                     else Color.Transparent,
                                     contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
-                                    else MaterialTheme.colors.onBackground,
+                                    else MaterialTheme.colors.onBackground.copy(0.3f),
                                     shape = CircleShape,
                                     border = if (state.selectedCategoryId == itemId) null
                                     else {
-                                        BorderStroke(1.dp, MaterialTheme.colors.onBackground)
+                                        BorderStroke(1.dp, MaterialTheme.colors.onBackground.copy(0.3f))
                                     },
                                 ) {
 
                                     Text(
                                         text = item.name,
                                         modifier = Modifier.padding(10.dp),
+                                        color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
+                                        else MaterialTheme.colors.onBackground.copy(0.3f),
                                     )
 
                                 }

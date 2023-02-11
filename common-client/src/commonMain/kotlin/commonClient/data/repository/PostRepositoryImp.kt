@@ -33,31 +33,31 @@ class PostRepositoryImp(
         return postApi.getPost(postId).data!!.toDomain()
     }
 
-    override suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getPosts(categoryId, pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getRecentPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getRecentPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getRecentPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getHotPosts(categoryId: Long?, duration: Duration?, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getHotPosts(categoryId: Long?, duration: Duration?, pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getHotPosts(categoryId, duration, pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getMyPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getMyPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getMyPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getMyScrappedPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getMyScrappedPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getMyScrappedPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getMyVotedPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getMyVotedPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getMyVotedPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getSearchPosts(searchText, pagingRequest).data!!.map { it.toDomain() }
     }
 

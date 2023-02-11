@@ -75,12 +75,11 @@ class AppActivity : AppCompatActivity() {
             }
 
             MainTheme(
-//                isDarkTheme = when (state.appTheme) {
-//                    AppTheme.DARK -> true
-//                    AppTheme.LIGHT -> false
-//                    else -> isSystemInDarkTheme()
-//                }
-            false
+                isDarkTheme = when (state.appTheme) {
+                    AppTheme.DARK -> true
+                    AppTheme.LIGHT -> false
+                    else -> isSystemInDarkTheme()
+                }
             ) {
                 ProvideMeInfo(state.meState) {
                     Box(modifier = Modifier.fillMaxSize()) {

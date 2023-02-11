@@ -94,7 +94,7 @@ private fun MainDestinationScaffold(
             HomeScreenDestination,
             ProfileScreenDestination,
             CategoryScreenDestination,
-            NotificationScreenDestination
+            SearchScreenDestination
         )
     }
 
@@ -120,7 +120,7 @@ private fun MainDestinationScaffold(
                         .size(50.dp)
                         .border(
                             2.dp,
-                            color = Color.White,
+                            color = MaterialTheme.colors.surface,
                             shape = CircleShape
                         )
                         .shadow(
