@@ -2,7 +2,6 @@ package commonClient.data.repository
 
 import common.model.request.post.VoteSelectRequest
 import common.model.request.post.create.PostCreateRequest
-import common.model.reseponse.paging.NewPagingResponse
 import commonClient.data.remote.endpoints.PostApi
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
