@@ -1,6 +1,7 @@
 package commonClient.domain.usecase.post
 
 import common.model.reseponse.post.PostResponse
+import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Duration
 import commonClient.domain.entity.post.Post
@@ -18,8 +19,11 @@ class GetHotPostsUseCase(private val postRepository: PostRepository) {
         duration: Duration,
     ): List<Post> =
         postRepository
-        .getPagedHotPost(category.id, duration, null, null, pageSize = PAGE_ITEM_SIZE)
-        .content
+            .getHotPosts(
+                category.id, duration,
+                PagingRequest(null, null, pageSize = PAGE_ITEM_SIZE)
+            )
+            .content
 
     companion object {
         private const val PAGE_ITEM_SIZE = 5

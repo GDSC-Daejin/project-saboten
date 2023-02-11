@@ -31,7 +31,6 @@ fun createDebugReleaseNote(): String {
 dependencies {
     implementation(project(":common"))
     implementation(project(":common-client"))
-    implementation(project(":client-paging"))
     implementation(project(":android-ui"))
 
     implementation(AndroidX.activity.ktx)
@@ -89,6 +88,7 @@ dependencies {
     implementation(ComposeDestination.core)
     implementation(ComposeDestination.animationsCore)
     ksp(ComposeDestination.ksp)
+    implementation(Utils.paging)
 
     testImplementation(Kotlin.test)
     testImplementation(Kotlin.Test.junit5)
