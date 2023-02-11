@@ -23,6 +23,12 @@ public class CategoryEntity {
     @Column(name = "category_icon_url", nullable = false)
     private String categoryIconUrl;
 
+    @Column(name = "category_start_color")
+    private String categoryStartColor;
+
+    @Column(name = "category_end_color")
+    private String categoryEndColor;
+
 //    public CategoryResponse toCategoryResponse() {
 //        return new CategoryResponse(this.categoryId, this.categoryName, this.categoryIconUrl);
 //    }
@@ -32,6 +38,8 @@ public class CategoryEntity {
                 .categoryId(categoryId)
                 .categoryName(categoryName)
                 .categoryIconUrl(categoryIconUrl)
+                .startColor(categoryStartColor)
+                .endColor(categoryEndColor)
                 .build();
     }
 

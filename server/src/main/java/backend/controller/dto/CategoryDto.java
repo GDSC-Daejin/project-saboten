@@ -27,6 +27,8 @@ public class CategoryDto {
                 .categoryId(categoryId)
                 .categoryName(categoryName)
                 .categoryIconUrl(categoryIconUrl)
+                .categoryStartColor(startColor)
+                .categoryEndColor(endColor)
                 .build();
     }
 }
