@@ -165,6 +165,7 @@ background: #111111;
     val yellow800 = Color(0xFF665B2A)
     val yellow900 = Color(0xFF332D15)
 
+    val grey50 = Color(0xFFFAFAFA)
     val grey100 = Color(0xFFECECEC)
     val grey200 = Color(0xFFD9D9D9)
     val grey300 = Color(0xFFC6C6C6)
@@ -188,7 +189,7 @@ internal val lightColors = lightColors(
     onSecondary = SabotenColors.grey100,
     surface = Color.White,
     onSurface = Color.Black,
-    background = SabotenColors.grey100
+    background = SabotenColors.grey50
 )
 
 @SuppressLint("ConflictingOnColor")
@@ -198,7 +199,7 @@ internal val darkColors = darkColors(
     primaryVariant = SabotenColors.green500,
     secondary = SabotenColors.green500,
     secondaryVariant = SabotenColors.green500,
-    surface = SabotenColors.grey700,
+    surface = SabotenColors.grey900,
     onSurface = SabotenColors.grey100,
     background = SabotenColors.grey1000
 )

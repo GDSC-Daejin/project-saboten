@@ -24,7 +24,6 @@ fun MainTopBar(
     modifier: Modifier = Modifier,
     backgroundColor: Color = MaterialTheme.colors.surface,
     contentColor: Color = contentColorFor(backgroundColor),
-    onSearchClicked: () -> Unit = {},
 ) {
     BasicTopBar(
         modifier = modifier,
@@ -36,18 +35,6 @@ fun MainTopBar(
                     imageVector = SabotenIcons.MainLogo,
                     contentDescription = "선인장 로고"
                 )
-            }
-
-        },
-        actions = {
-            CompositionLocalProvider(LocalContentAlpha provides 1f) {
-                IconButton(onClick = { onSearchClicked() }) {
-                    Icon(
-                        imageVector = Icons.Rounded.Search,
-                        contentDescription = "검색",
-                        modifier = Modifier.size(26.dp)
-                    )
-                }
             }
         }
     )

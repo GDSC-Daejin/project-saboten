@@ -39,8 +39,8 @@ private val mainNavigationBarData = listOf(
         Icon(if (it) Icons.Rounded.Dashboard else Icons.Rounded.Dashboard, null, modifier = Modifier.size(30.dp))
     },
     null,
-    NavigationData(NotificationScreenDestination) {
-        Icon(if (it) Icons.Rounded.Notifications else Icons.Rounded.Notifications, null, modifier = Modifier.size(30.dp))
+    NavigationData(SearchScreenDestination) {
+        Icon(if (it) Icons.Rounded.Search else Icons.Rounded.Search, null, modifier = Modifier.size(30.dp))
     },
     NavigationData(ProfileScreenDestination) {
         Icon(if (it) Icons.Rounded.Person else Icons.Rounded.Person, null, modifier = Modifier.size(30.dp))
@@ -68,7 +68,7 @@ fun MainBottomNavigation(
             mainNavigationBarData.forEach {
                 if (it == null) Spacer(modifier = Modifier.weight(1f))
                 else BottomNavigationItem(
-                    unselectedContentColor = SabotenColors.grey200,
+                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.1f),
                     selectedContentColor = MaterialTheme.colors.primary,
                     icon = { it.icon(destination == it.direction) },
                     selected = destination == it.direction,

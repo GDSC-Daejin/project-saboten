@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.image.SabotenIconPack
@@ -38,8 +39,8 @@ fun CategoryItem(category: Category, onClick: () -> Unit = {}) {
                 .background(
                     brush = Brush.linearGradient(
                         listOf(
-                            SabotenColors.yellow500,
-                            SabotenColors.yellow800
+                            Color(android.graphics.Color.parseColor(category.startColor)),
+                            Color(android.graphics.Color.parseColor(category.endColor))
                         )
                     )
                 )
