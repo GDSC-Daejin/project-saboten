@@ -68,7 +68,7 @@ fun MainBottomNavigation(
             mainNavigationBarData.forEach {
                 if (it == null) Spacer(modifier = Modifier.weight(1f))
                 else BottomNavigationItem(
-                    unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.1f),
+                    unselectedContentColor = SabotenColors.grey200,
                     selectedContentColor = MaterialTheme.colors.primary,
                     icon = { it.icon(destination == it.direction) },
                     selected = destination == it.direction,
