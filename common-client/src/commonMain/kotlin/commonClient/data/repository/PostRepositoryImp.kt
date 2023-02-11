@@ -1,10 +1,8 @@
 package commonClient.data.repository
 
 import common.model.request.post.VoteSelectRequest
-import common.model.reseponse.ApiResponse
-import common.model.reseponse.PagingResponse
+import common.model.request.post.create.PostCreateRequest
 import common.model.reseponse.paging.NewPagingResponse
-import common.model.reseponse.post.PostResponse
 import commonClient.data.remote.endpoints.PostApi
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
@@ -61,6 +59,11 @@ class PostRepositoryImp(
 
     override suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): NewPagingResponse<Post> {
         return postApi.getSearchPosts(searchText, pagingRequest).data!!.map { it.toDomain() }
+    }
+
+    override suspend fun createPost(postCreateRequest: PostCreateRequest): Post {
+        // TODO: 사용자 인증
+        return postApi.createPost(postCreateRequest).data!!.toDomain()
     }
 
 }
