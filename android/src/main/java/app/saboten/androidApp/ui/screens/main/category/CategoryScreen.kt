@@ -39,9 +39,11 @@ import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import androidx.paging.compose.itemsIndexed
+import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.utils.sabotenShadow
+import commonClient.domain.entity.post.Post
 
 @Composable
 @Destination
@@ -51,11 +53,17 @@ fun CategoryScreen(
 
     val viewModel = koinViewModel<CategoryScreenViewModel>()
 
-    CategoryScreenContent(viewModel)
+    CategoryScreenContent(viewModel) {
+        navigator.navigate(DetailPostScreenDestination(postId = it.id))
+    }
+
 }
 
 @Composable
-private fun CategoryScreenContent(viewModel: CategoryScreenViewModel) {
+private fun CategoryScreenContent(
+    viewModel: CategoryScreenViewModel,
+    onPostClicked: (Post) -> Unit,
+) {
 
     val state by viewModel.collectAsState()
 
@@ -125,9 +133,7 @@ private fun CategoryScreenContent(viewModel: CategoryScreenViewModel) {
                                 .fillMaxWidth()
                                 .padding(horizontal = 20.dp),
                             post = post,
-                            onClicked = {
-
-                            },
+                            onClicked = { onPostClicked(it) },
                             onCommentClicked = {
 
                             },

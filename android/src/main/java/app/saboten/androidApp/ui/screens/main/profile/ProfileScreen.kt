@@ -22,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.SettingsScreenDestination
 import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.providers.MeInfo
@@ -37,6 +38,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import commonClient.data.LoadState
+import commonClient.domain.entity.post.Post
 import commonClient.domain.entity.user.UserInfo
 import commonClient.presentation.main.ProfileScreenViewModel
 import kotlinx.coroutines.launch
@@ -51,6 +53,7 @@ fun ProfileScreen(
     val viewModel = koinViewModel<ProfileScreenViewModel>()
     ProfileScreenContent(
         viewModel = viewModel,
+        onPostClicked = { navigator.navigate(DetailPostScreenDestination(postId = it.id)) },
         onOpenSettings = { navigator.navigate(SettingsScreenDestination()) }
     )
 }
@@ -59,6 +62,7 @@ fun ProfileScreen(
 @Composable
 private fun ProfileScreenContent(
     viewModel: ProfileScreenViewModel,
+    onPostClicked: (Post) -> Unit,
     onOpenSettings: () -> Unit,
 ) {
 
@@ -143,9 +147,7 @@ private fun ProfileScreenContent(
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
                         post = post,
-                        onClicked = {
-
-                        },
+                        onClicked = { onPostClicked(it) },
                         onCommentClicked = {
 
                         },

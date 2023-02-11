@@ -51,6 +51,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
@@ -231,9 +232,7 @@ fun SearchScreen(
                         LargePostCard(
                             modifier = Modifier.fillMaxWidth(),
                             post = post,
-                            onClicked = {
-
-                            },
+                            onClicked = { navigator.navigate(DetailPostScreenDestination(postId = it.id)) },
                             onCommentClicked = {
 
                             },

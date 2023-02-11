@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
@@ -51,7 +52,7 @@ fun HomeScreen(
     HomeScreenContent(
         vm = vm,
         onPostClicked = {
-//            navigator.navigate()
+            navigator.navigate(DetailPostScreenDestination(postId = it.id))
         },
         onMorePostClicked = {
             navigator.navigate(MoreScreenDestination(option = it))
