@@ -197,10 +197,7 @@ public class AuthService {
         if(userEntity.isEmpty())
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
 
-        userEntity.get().setGender(userInfoResponse.getGender().getValue());
         userEntity.get().setNickname(userInfoResponse.getNickname());
-        userEntity.get().setMyPageIntroduction(userInfoResponse.getIntroduction());
-        userEntity.get().setAge(userInfoResponse.getAge());
         userEntity.get().setEmail(userInfoResponse.getEmail());
         userEntity.get().setUserImage(userInfoResponse.getProfilePhotoUrl());
 

@@ -55,8 +55,7 @@ public class UserDto {
         if(this.gender == 1) gender = GenderResponse.M;
         else if(this.gender == 2) gender = GenderResponse.F;
 
-        return new UserInfoResponse(this.userId, this.nickname, userImage ,this.email, this.myPageIntroduction,
-                this.age, gender);
+        return new UserInfoResponse(this.userId, this.nickname, userImage ,this.email);
     }
 
     public UserResponse toResponse() {
