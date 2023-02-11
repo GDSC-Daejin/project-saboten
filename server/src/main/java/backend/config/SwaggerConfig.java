@@ -1,9 +1,14 @@
 package backend.config;
 
+import backend.controller.swagger.request.PageableRequest;
+import com.fasterxml.classmate.TypeResolver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.domain.Pageable;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.schema.AlternateTypeRules;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spi.service.contexts.SecurityContext;
@@ -17,13 +22,17 @@ import java.util.Set;
 
 
 @Configuration
+@RequiredArgsConstructor
 @EnableSwagger2
 public class SwaggerConfig {
+    private final TypeResolver typeResolver;
     private final String API_VERSION = "1.0";
 
     @Bean
     public Docket sabotenApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .alternateTypeRules(AlternateTypeRules
+                        .newRule(typeResolver.resolve(Pageable.class), typeResolver.resolve(PageableRequest.class)))
                 .consumes(getConsumeContentTypes())
                 .produces(getProduceContentTypes())
                 .select()

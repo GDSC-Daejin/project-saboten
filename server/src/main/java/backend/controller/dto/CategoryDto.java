@@ -14,8 +14,12 @@ public class CategoryDto {
 
     private String categoryIconUrl;
 
+    private String startColor;
+
+    private String endColor;
+
     public CategoryResponse toCategoryResponse() {
-        return new CategoryResponse(this.categoryId, this.categoryName, this.categoryIconUrl);
+        return new CategoryResponse(this.categoryId, this.categoryName, this.categoryIconUrl, this.startColor, this.endColor);
     }
 
     public CategoryEntity toEntity() {
