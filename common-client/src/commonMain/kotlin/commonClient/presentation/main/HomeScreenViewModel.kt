@@ -1,8 +1,6 @@
 package commonClient.presentation.main
 
-import com.kuuurt.paging.multiplatform.map
 import commonClient.data.LoadState
-import commonClient.data.map
 import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Duration
@@ -11,6 +9,7 @@ import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.category.GetTrendingCategoriesUseCase
 import commonClient.domain.usecase.post.GetHotPostsUseCase
+import commonClient.domain.usecase.post.GetPagedPostsUseCase
 import commonClient.domain.usecase.post.GetRecentPostsUseCase
 import commonClient.domain.usecase.post.GetSelectedPostsUseCase
 import commonClient.presentation.PlatformViewModel
@@ -18,10 +17,8 @@ import commonClient.presentation.container
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
@@ -46,13 +43,11 @@ class HomeScreenViewModel(
     private val getSelectedPostsUseCase: GetSelectedPostsUseCase,
     private val getHotPostsUseCase: GetHotPostsUseCase,
     private val getTrendingCategoriesUseCase: GetTrendingCategoriesUseCase,
-    private val postActionsDelegate: PostActionsDelegate,
-) : PlatformViewModel<HomeScreenState, HomeScreenEffect>(), PostActionsDelegate by postActionsDelegate {
+) : PlatformViewModel<HomeScreenState, HomeScreenEffect>() {
 
     override val container: Container<HomeScreenState, HomeScreenEffect> = container(HomeScreenState())
 
     init {
-        containerHost = this
         intent {
             flow { emit(getCategoriesUseCase()) }
                 .toLoadState()
@@ -72,7 +67,7 @@ class HomeScreenViewModel(
     }
 
     fun loadBanners() = intent {
-        flow { emit(getBannerUseCase()) }
+        flow { emit(getBannerUseCase() )}
             .toLoadState()
             .onEach { reduce { state.copy(banners = it) } }
             .launchIn(platformViewModelScope)
@@ -107,19 +102,6 @@ class HomeScreenViewModel(
             .toLoadState()
             .onEach { reduce { state.copy(selectedPost = it) } }
             .launchIn(platformViewModelScope)
-    }
-
-    override suspend fun onPostUpdated(post: Post) {
-        intent {
-            reduce {
-                state.copy(
-                    hotPost = state.hotPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                    recentPost = state.recentPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                    selectedPost = state.selectedPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                    scrappedPosts = state.scrappedPosts.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                )
-            }
-        }
     }
 
 }

@@ -66,11 +66,8 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
                 val token = AuthTokenManager.tokenStorage.lastOrNull()
                 val accessToken = token?.accessToken
                 val refreshToken = token?.refreshToken
-
-                if (accessToken == null || refreshToken == null) return@refreshTokens null
-
                 val response = client.post("https://$URL/refresh") {
-                    setBody(TokenReissueRequest(accessToken, refreshToken))
+                    setBody(TokenReissueRequest(accessToken!!, refreshToken!!))
                 }.body<JwtTokenResponse>()
                 AuthTokenManager.addToken(response)
                 BearerTokens(

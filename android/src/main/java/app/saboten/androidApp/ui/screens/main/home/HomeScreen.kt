@@ -24,12 +24,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import app.saboten.androidApp.ui.destinations.MoreScreenDestination
 import app.saboten.androidApp.ui.screens.main.MainTopBar
-import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidApp.ui.screens.main.post.SmallPostCard
-import app.saboten.androidApp.ui.screens.main.category.CategoryItem
+import app.saboten.androidApp.ui.screens.soopeachtest.CategoryItem
 import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -52,9 +50,6 @@ fun HomeScreen(
         vm = vm,
         onPostClicked = {
 //            navigator.navigate()
-        },
-        onMorePostClicked = {
-            navigator.navigate(MoreScreenDestination(option = it))
         }
     )
 }
@@ -63,7 +58,6 @@ fun HomeScreen(
 fun HomeScreenContent(
     vm: HomeScreenViewModel,
     onPostClicked: (Post) -> Unit = {},
-    onMorePostClicked: (MoreScreenOption) -> Unit = {},
 ) {
 
     val state by vm.collectAsState()
@@ -121,7 +115,7 @@ fun HomeScreenContent(
 
                 item { HeaderBar(title = "뜨거웠던 고민거리") }
 
-                state.hotPost.getDataOrNull()?.let { posts ->
+                state.hotPost.getDataOrNull()?.let {
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -129,15 +123,14 @@ fun HomeScreenContent(
                                 .animateItemPlacement(),
                             contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
-                            items(posts, key = { it.id }) { post ->
+                            items(it) { post ->
                                 LargePostCard(
-                                    modifier = Modifier.width(320.dp),
                                     post = post,
                                     onClicked = {
                                         onPostClicked(post)
                                     },
-                                    onVoteClicked = { vote ->
-                                    },
+                                    {},
+                                    {},
                                     {},
                                     {},
                                     {}
@@ -173,12 +166,10 @@ fun HomeScreenContent(
 
                 item {
                     Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "최근 고민거리", moreButtonText = "더보기", moreButtonAction = {
-                        onMorePostClicked(MoreScreenOption.RECENT)
-                    })
+                    HeaderBar(title = "최근 고민거리")
                 }
 
-                state.recentPost.getDataOrNull()?.let { posts ->
+                state.recentPost.getDataOrNull()?.let { post ->
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -186,7 +177,7 @@ fun HomeScreenContent(
                                 .animateItemPlacement(),
                             contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
-                            items(posts, key = { it.id }) { post ->
+                            items(post) { post ->
                                 SmallPostCard(
                                     post = post,
                                     onClicked = {
@@ -201,12 +192,10 @@ fun HomeScreenContent(
 
                 item {
                     Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "내가 선택했던 글", moreButtonText = "더보기", moreButtonAction = {
-                        onMorePostClicked(MoreScreenOption.MY_SELECTED)
-                    })
+                    HeaderBar(title = "내가 선택했던 글")
                 }
 
-                state.selectedPost.getDataOrNull()?.let { posts ->
+                state.selectedPost.getDataOrNull()?.let { post ->
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -214,7 +203,7 @@ fun HomeScreenContent(
                                 .animateItemPlacement(),
                             contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
-                            items(posts, key = { it.id }) { post ->
+                            items(post) { post ->
                                 SmallPostCard(
                                     post = post,
                                     onClicked = {
@@ -230,13 +219,11 @@ fun HomeScreenContent(
 
                 item {
                     Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "내가 스크랩한 글", moreButtonText = "더보기", moreButtonAction = {
-                        onMorePostClicked(MoreScreenOption.MY_SCRAPPED)
-                    })
+                    HeaderBar(title = "내가 스크랩한 글")
                 }
 
                 state.scrappedPosts.getDataOrNull()?.let { posts ->
-                    items(posts, key = { it.id }) { post ->
+                    items(posts) { post ->
                         SmallPostCard(post = post, onClicked = { onPostClicked(post) })
                     }
                 }

@@ -15,7 +15,6 @@ fun NetworkImage(
     modifier: Modifier = Modifier,
     url: Any?,
     colorFilter: ColorFilter? = null,
-    shimmer: Boolean = true
 ) {
     SubcomposeAsyncImage(
         model = ImageRequest.Builder(LocalContext.current)
@@ -26,8 +25,7 @@ fun NetworkImage(
         contentDescription = null,
         contentScale = ContentScale.Crop,
         loading = {
-            if (shimmer) Box(modifier = modifier.shimmer())
-            else Box(modifier = modifier)
+            Box(modifier = modifier.shimmer())
         },
         colorFilter = colorFilter
     )

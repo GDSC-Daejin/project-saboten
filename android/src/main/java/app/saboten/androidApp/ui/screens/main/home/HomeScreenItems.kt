@@ -61,7 +61,7 @@ fun HomeScreenTrendingItems(
                         brush = Brush.verticalGradient(
                             colors = listOf(
                                 SabotenColors.green500,
-                                SabotenColors.green800
+                                SabotenColors.selectedGreen
                             )
                         )
                     )

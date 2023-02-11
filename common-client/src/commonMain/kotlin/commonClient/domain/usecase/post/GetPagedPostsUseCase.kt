@@ -4,10 +4,10 @@ import commonClient.domain.repository.PostRepository
 import org.koin.core.annotation.Single
 
 @Single
-class GetSelectedPostsUseCase(
+class GetPagedPostsUseCase(
     private val postRepository: PostRepository,
 ) {
 
-    suspend operator fun invoke() = postRepository.getRecentPosts().content
+    suspend operator fun invoke() = postRepository.getRecentPosts()
 
 }
