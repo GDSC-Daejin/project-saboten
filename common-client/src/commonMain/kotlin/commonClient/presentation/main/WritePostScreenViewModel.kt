@@ -47,15 +47,9 @@ class WritePostScreenViewModel(
                     reduce {
                         state.copy(
                             categories = categories.map {
-                                listOf(
-                                    Category(
-                                        -1,
-                                        "전체",
-                                        "",
-                                        "",
-                                        ""
-                                    )
-                                ) + it
+                                it.filter { category ->
+                                    category.id != 10L
+                                }.sortedBy { category -> category.id }
                             },
                         )
                     }
