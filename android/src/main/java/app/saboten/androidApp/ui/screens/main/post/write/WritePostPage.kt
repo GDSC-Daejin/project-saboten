@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -62,11 +61,7 @@ fun WritePostScreenContent(
 
     val state by viewModel.collectAsState()
 
-    Column(
-        modifier = Modifier
-            .background(SabotenColors.grey100)
-            .fillMaxSize()
-    ) {
+    Column() {
 
         val titleText = remember {
             mutableStateOf("")
