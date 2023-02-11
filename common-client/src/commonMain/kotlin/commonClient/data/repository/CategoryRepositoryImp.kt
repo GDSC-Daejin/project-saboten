@@ -12,14 +12,7 @@ class CategoryRepositoryImp(
     private val categoryApi: CategoryApi,
 ) : CategoryRepository {
 
-    //    private var memoryCachedCategories: List<Category>? = null
-    private var memoryCachedCategories: List<Category>? = listOf(
-        Category(0, "전체", ""),
-        Category(0, "MBTI", ""),
-        Category(0, "연애", ""),
-        Category(0, "먹을거", ""),
-        Category(0, "쇼핑", ""),
-    )
+    private var memoryCachedCategories: List<Category>? = null
 
     override suspend fun getCategories(): List<Category> {
         if (memoryCachedCategories.isNullOrEmpty()) {

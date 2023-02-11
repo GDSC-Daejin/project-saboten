@@ -1,22 +1,20 @@
 package app.saboten.androidApp.ui.dialog
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import app.saboten.androidApp.ui.buttons.EmailLoginButton
 import app.saboten.androidApp.ui.buttons.GoogleLoginButton
-import app.saboten.androidApp.ui.buttons.KakaoLoginButton
-import app.saboten.androidUi.buttons.FilledButton
-import app.saboten.androidUi.styles.surfaceOver
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
@@ -32,9 +30,7 @@ fun LoginDialog(
 @Composable
 fun LoginDialogContent() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .height(372.dp),
+        modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.TopCenter
     ) {
         Column(modifier = Modifier.fillMaxWidth(0.8f)) {
@@ -70,47 +66,6 @@ fun LoginDialogContent() {
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            KakaoLoginButton {
-
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            EmailLoginButton {
-
-            }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-
-            FilledButton(
-                modifier = Modifier.fillMaxWidth(),
-                text = "가입 없이 둘러보기",
-                backgroundColor = MaterialTheme.colors.surfaceOver,
-                onClick = {
-
-                }
-            )
-
         }
     }
-}
-
-@Composable
-private fun LoginDialogButton(
-    onClicked: () -> Unit,
-    loginButtonText: String
-) {
-    FilledButton(
-        onClick = onClicked,
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(
-            topStart = 10.dp,
-            topEnd = 10.dp,
-            bottomStart = 0.dp,
-            bottomEnd = 10.dp
-        ),
-        backgroundColor = MaterialTheme.colors.onSurface.copy(alpha = 0.05f),
-        text = loginButtonText
-    )
 }

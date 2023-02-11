@@ -25,7 +25,6 @@ rootProject.name = "saboten-service"
 
 include(":common")
 include(":common-client")
-include(":client-paging")
 
 include(":android")
 include(":server")
