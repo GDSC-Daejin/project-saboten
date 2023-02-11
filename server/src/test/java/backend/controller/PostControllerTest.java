@@ -516,9 +516,13 @@ class PostControllerTest {
             //given
             String searchText = "테스트";
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
+
+            MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+            param.add("searchText", searchText);
             //when
             // then
-            mockMvc.perform(get(baseUrl + "/search/" + searchText))
+            mockMvc.perform(get(baseUrl + "/search")
+                            .params(param))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.data").isArray())
                     .andExpect(jsonPath("$.data.data").isNotEmpty())
@@ -534,9 +538,13 @@ class PostControllerTest {
             //given
             String searchText = "게시글";
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
+
+            MultiValueMap<String, String> param = new LinkedMultiValueMap<>();
+            param.add("searchText", searchText);
             //when
             // then
-            mockMvc.perform(get(baseUrl + "/search/" + searchText))
+            mockMvc.perform(get(baseUrl + "/search")
+                            .params(param))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.data").isArray())
                     .andExpect(jsonPath("$.data.data").isEmpty())
