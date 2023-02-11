@@ -41,12 +41,12 @@ fun SelectedVoteItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onVoteItemClicked() }
             .background(
-                color = if (isSelected) SabotenColors.selectedGreen else Color.White.copy(0.5f),
+                color = if (isSelected) SabotenColors.green500 else Color.White.copy(0.5f),
                 shape = RoundedCornerShape(8.dp)
             )
             .border(
                 width = 1.dp,
-                color = if (isSelected) SabotenColors.selectedGreen else SabotenColors.green200,
+                color = if (isSelected) SabotenColors.green500 else SabotenColors.green200,
                 shape = RoundedCornerShape(8.dp)
             ),
         horizontalAlignment = Alignment.CenterHorizontally

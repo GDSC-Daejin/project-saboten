@@ -7,6 +7,7 @@ import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
+import commonClient.data.map
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
@@ -67,7 +68,7 @@ class CategoryScreenViewModel(
                     val pager = createPagerByCategoryId(null)
                     reduce {
                         state.copy(
-                            categories = categories,
+                            categories = categories.map { listOf(Category(-1, "전체", "", "", "")) + it },
                             items = pager.pagingData.cachedIn(platformViewModelScope)
                         )
                     }

@@ -1,4 +1,4 @@
-package app.saboten.androidApp.ui.screens.soopeachtest
+package app.saboten.androidApp.ui.screens.main.category
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -14,10 +14,12 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.image.SabotenIconPack
 import app.saboten.androidUi.image.sabotenIconPack.ABIcon
+import app.saboten.androidUi.styles.SabotenColors
 import commonClient.domain.entity.post.Category
 
 @Composable
@@ -31,18 +33,30 @@ fun CategoryItem(category: Category, onClick: () -> Unit = {}) {
         color = MaterialTheme.colors.secondary
     ) {
         Box(
-          modifier =  Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = Brush.linearGradient(
+                        listOf(
+                            SabotenColors.yellow500,
+                            SabotenColors.yellow800
+                        )
+                    )
+                )
         ) {
-            NetworkImage(
-                modifier = Modifier.align(Alignment.BottomEnd).size(160.dp),
-                url = category.iconUrl
-            )
             Image(
                 SabotenIconPack.ABIcon,
                 "Exclude",
                 modifier = Modifier
                     .padding(top = 14.dp, start = 10.dp)
                     .align(Alignment.TopStart)
+            )
+            NetworkImage(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(160.dp),
+                url = category.iconUrl,
+                shimmer = false
             )
             Text(
                 text = category.name,

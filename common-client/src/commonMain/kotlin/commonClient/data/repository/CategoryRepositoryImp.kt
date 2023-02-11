@@ -19,8 +19,7 @@ class CategoryRepositoryImp(
             val response = categoryApi.getCategories()
             memoryCachedCategories = response.data?.map { it.toDomain() }
         }
-
-        return mutableListOf(Category(-1, "전체", "")) + requireNotNull(memoryCachedCategories)
+        return requireNotNull(memoryCachedCategories)
     }
 
     override fun getCategory(id: Long) = flow {

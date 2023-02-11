@@ -29,7 +29,7 @@ import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidApp.ui.screens.main.post.SmallPostCard
-import app.saboten.androidApp.ui.screens.soopeachtest.CategoryItem
+import app.saboten.androidApp.ui.screens.main.category.CategoryItem
 import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
