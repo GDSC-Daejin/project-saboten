@@ -18,6 +18,8 @@ import commonClient.domain.usecase.post.paged.GetPagedVotedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.createPager
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
@@ -44,6 +46,7 @@ data class MoreScreenState(
     val items: Flow<PagingData<Post>> = flowOf(),
 )
 
+@OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class MoreScreenViewModel(
     private val getPagedHotPostsUseCase: GetPagedHotPostsUseCase,
     private val getPagedRecentPostsUseCase: GetPagedRecentPostsUseCase,
@@ -94,11 +97,28 @@ class MoreScreenViewModel(
         }
     }
 
-
-    private val recentPager = createPager<Long, Post>(20, -1) { key, count ->
-        val pagingResult = getPagedRecentPostsUseCase(
-            PagingRequest()
+    private val recentPager = createPager<Long, Post>(20, -1) { key, _ ->
+        val pagingResult = getPagedRecentPostsUseCase(PagingRequest(offset = key))
+        PagingResult(
+            pagingResult.content,
+            currentKey = pagingResult.pageable.offset,
+            prevKey = { key },
+            nextKey = { pagingResult.pageable.offset + 1 }
         )
+    }
+
+    private val selectedPager = createPager<Long, Post>(20, -1) { key, _ ->
+        val pagingResult = getPagedVotedPostsUseCase(PagingRequest(offset = key))
+        PagingResult(
+            pagingResult.content,
+            currentKey = pagingResult.pageable.offset,
+            prevKey = { key },
+            nextKey = { pagingResult.pageable.offset + 1 }
+        )
+    }
+
+    private val scrappedPager = createPager<Long, Post>(20, -1) { key, _ ->
+        val pagingResult = getPagedScrappedPostsUseCase(PagingRequest(offset = key))
         PagingResult(
             pagingResult.content,
             currentKey = pagingResult.pageable.offset,
@@ -111,21 +131,13 @@ class MoreScreenViewModel(
         intent {
             reduce {
                 val pagingData = when (type) {
-                    MoreScreenType.HOT -> {
-                        recentPager.pagingData.cachedIn(platformViewModelScope)
-                    }
+                    MoreScreenType.HOT -> TODO("Not yet implemented")
 
-                    MoreScreenType.RECENT -> {
-                        recentPager.pagingData.cachedIn(platformViewModelScope)
-                    }
+                    MoreScreenType.RECENT -> recentPager.pagingData.cachedIn(platformViewModelScope)
 
-                    MoreScreenType.MY_SELECTED -> {
-                        recentPager.pagingData.cachedIn(platformViewModelScope)
-                    }
+                    MoreScreenType.MY_SELECTED -> selectedPager.pagingData.cachedIn(platformViewModelScope)
 
-                    MoreScreenType.MY_SCRAPPED -> {
-                        recentPager.pagingData.cachedIn(platformViewModelScope)
-                    }
+                    MoreScreenType.MY_SCRAPPED -> scrappedPager.pagingData.cachedIn(platformViewModelScope)
                 }
 
                 state.copy(
