@@ -10,13 +10,13 @@ import backend.service.CategoryService;
 import backend.service.UserService;
 import backend.service.post.*;
 import backend.service.user.VoteSelectService;
-import backend.util.ConvertResponseUtil;
 import common.message.PostResponseMessage;
 import common.model.request.Duration;
 import common.model.request.post.VoteSelectRequest;
 import common.model.request.post.create.PostCreateRequest;
 import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
+import common.model.reseponse.PagingResponse;
 import common.model.reseponse.category.CategoryResponse;
 import common.model.reseponse.paging.PagingResponse;
 import common.model.reseponse.post.PostResponse;
@@ -32,6 +32,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -119,7 +120,8 @@ class PostController {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
-        PagingResponse<PostReadResponse> myPostPage = ConvertResponseUtil.pageToPageResponse(postPage);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_USER);
     }
 
@@ -128,7 +130,7 @@ class PostController {
     @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다. (필터 역할)")
     @GetMapping("/post")
     public ApiResponse<PagingResponse<PostReadResponse>> getPostList(@RequestParam(required = false) Long categoryId,
-                                                                     @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable){
+                                                   @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable){
         Page<PostReadResponse> postPage;
         UserDto userDto = getUser();
 
@@ -150,7 +152,8 @@ class PostController {
             });
         }
 
-        PagingResponse<PostReadResponse> myPostPage = ConvertResponseUtil.pageToPageResponse(postPage);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
@@ -165,7 +168,8 @@ class PostController {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
-        PagingResponse<PostReadResponse> myPostPage = ConvertResponseUtil.pageToPageResponse(postPage);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_REGIST_DATE);
     }
 
@@ -180,7 +184,8 @@ class PostController {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
-        PagingResponse<PostReadResponse> myPostPage = ConvertResponseUtil.pageToPageResponse(postPage);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL_ORDERED_BY_LIKED_COUNT);
     }
 
@@ -199,8 +204,8 @@ class PostController {
 
     @ApiOperation(value = "게시물 검색",
             notes = "사용자가 검색어를 입력하면, 검색어가 들어간 게시물을 조회할 수 있습니다.")
-    @GetMapping("/post/search/{searchText}")
-    public ApiResponse<PagingResponse<PostReadResponse>> getSearchPost(@PathVariable("searchText") String searchText, @PageableDefault Pageable pageable) {
+    @GetMapping("/post/search")
+    public ApiResponse<PagingResponse<PostReadResponse>> getSearchPost(@RequestParam(required = false) String searchText, @PageableDefault Pageable pageable) {
         UserDto userDto = getUser();
         Page<PostReadResponse> postPage = postService.searchPost(searchText, pageable).map(searchPostDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), searchPostDto.getPostId()) : false;
@@ -208,7 +213,8 @@ class PostController {
             return searchPostDto.toReadResponse(voteService.findVotes(searchPostDto.getPostId()), categories, isScrap);
         });
 
-        PagingResponse<PostReadResponse> myPostPage = ConvertResponseUtil.pageToPageResponse(postPage);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
@@ -333,8 +339,8 @@ class PostController {
     })
     @GetMapping("/post/debate")
     public ApiResponse<PagingResponse<PostReadResponse>> getHotDebatePostList(@RequestParam(required = false) Long categoryId,
-                                                                              @RequestParam(required = true) Duration duration,
-                                                                              @PageableDefault Pageable pageable) {
+                                                              @RequestParam(required = true) Duration duration,
+                                                              @PageableDefault Pageable pageable) {
         Page<PostDto> postPage = null;
         UserDto userDto = getUser();
 
@@ -353,7 +359,8 @@ class PostController {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
-        PagingResponse<PostReadResponse> hotPostPage = ConvertResponseUtil.pageToPageResponse(postPageResponse);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> hotPostPage = new PagingResponse<>(postPageResponse.getContent(), nextPage, postPageResponse.getTotalPages());
         return ApiResponse.withMessage(hotPostPage, PostResponseMessage.POST_HOT_DEBATE_FIND_ALL);
     }
 
@@ -368,7 +375,8 @@ class PostController {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
         });
 
-        PagingResponse<PostReadResponse> myHotPostPage = ConvertResponseUtil.pageToPageResponse(postPage);
+        Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
+        PagingResponse<PostReadResponse> myHotPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myHotPostPage, PostResponseMessage.POST_HOT_FIND_ALL);
     }
 
