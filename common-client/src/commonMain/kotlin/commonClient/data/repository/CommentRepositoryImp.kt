@@ -1,7 +1,7 @@
 package commonClient.data.repository
 
 import com.kuuurt.paging.multiplatform.Pager
-import common.model.reseponse.paging.NewPagingResponse
+import common.model.reseponse.paging.PagingResponse
 import commonClient.data.remote.endpoints.CommentApi
 import commonClient.domain.entity.post.Comment
 import commonClient.domain.mapper.toDomain
@@ -23,7 +23,7 @@ class CommentRepositoryImp(
         offset: Int?,
         pageNumber: Int?,
         pageSize: Int?
-    ): NewPagingResponse<Comment> {
+    ): PagingResponse<Comment> {
         val response = commentApi.getPagedComments(postId, offset, pageNumber, pageSize).data!!
         return response.map { it.toDomain() }
     }

@@ -1,25 +1,15 @@
 package commonClient.presentation.main
 
-import com.kuuurt.paging.multiplatform.Pager
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
-import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
-import commonClient.data.map
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.category.GetCategoriesUseCase
-import commonClient.domain.usecase.post.RequestLikePostUseCase
-import commonClient.domain.usecase.post.RequestScrapPostUseCase
-import commonClient.domain.usecase.post.RequestVotePostUseCase
-import commonClient.domain.usecase.post.paged.GetPagedHotPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedPostsByCategoryUseCase
-import commonClient.domain.usecase.post.paged.GetPagedRecentPostsUseCase
-import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
-import commonClient.domain.usecase.post.paged.GetPagedVotedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.createPager
@@ -33,8 +23,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
@@ -68,7 +56,7 @@ class CategoryScreenViewModel(
                     val pager = createPagerByCategoryId(null)
                     reduce {
                         state.copy(
-                            categories = categories.map { listOf(Category(-1, "전체", "", "", "")) + it },
+                            categories = categories,
                             items = pager.pagingData.cachedIn(platformViewModelScope)
                         )
                     }
@@ -89,12 +77,12 @@ class CategoryScreenViewModel(
     }
 
     private fun createPagerByCategoryId(categoryId: Long?) = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(offset = key))
+        val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(page = key))
         PagingResult(
-            pagingResult.content,
-            currentKey = pagingResult.pageable.offset,
-            prevKey = { key },
-            nextKey = { pagingResult.pageable.offset + 1 }
+            pagingResult.data,
+            currentKey = key ?: -1,
+            prevKey = { null },
+            nextKey = { pagingResult.nextKey }
         )
     }
 

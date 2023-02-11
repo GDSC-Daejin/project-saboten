@@ -78,12 +78,12 @@ class ProfileScreenViewModel(
     }
 
     private fun createPagerByCategoryId(categoryId: Long?) = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(offset = key))
+        val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(page = key))
         PagingResult(
-            pagingResult.content,
-            currentKey = pagingResult.pageable.offset,
-            prevKey = { key },
-            nextKey = { pagingResult.pageable.offset + 1 }
+            pagingResult.data,
+            currentKey = key ?: -1,
+            prevKey = { null },
+            nextKey = { pagingResult.nextKey }
         )
     }
 

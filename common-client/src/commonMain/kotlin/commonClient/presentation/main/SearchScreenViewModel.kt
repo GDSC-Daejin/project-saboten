@@ -27,7 +27,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 
 data class SearchScreenState(
     val searchHistories: List<String> = emptyList(),
-    val totalCount : Int? = null,
+    val totalCount : Long? = null,
     val items: Flow<PagingData<Post>> = flowOf(),
 )
 
@@ -71,19 +71,19 @@ class SearchScreenViewModel(
         reduce {
 
             val searchedPager = createPager<Long, Post>(20, -1) { key, _ ->
-                val pagingResult = getPagedSearchPostsUseCase(query, PagingRequest(offset = key))
+                val pagingResult = getPagedSearchPostsUseCase(query, PagingRequest(page = key))
 
                 intent {
                     reduce {
-                        state.copy(totalCount = 100)
+                        state.copy(totalCount = pagingResult.count)
                     }
                 }
 
                 PagingResult(
-                    pagingResult.content,
-                    currentKey = pagingResult.pageable.offset,
-                    prevKey = { key },
-                    nextKey = { pagingResult.pageable.offset + 1 }
+                    pagingResult.data,
+                    currentKey = key ?: -1,
+                    prevKey = { null },
+                    nextKey = { pagingResult.nextKey }
                 )
             }
 

@@ -1,6 +1,5 @@
 package common.model.reseponse.post
 
-import common.model.VoteColorsResponse
 import common.model.reseponse.category.CategoryResponse
 import common.model.reseponse.user.UserResponse
 import kotlinx.serialization.SerialName
@@ -15,6 +14,7 @@ data class PostResponse(
     @SerialName("categories") val categories: List<CategoryResponse>,
     @SerialName("selectedVote") val selectedVote: Long? = null,
     @SerialName("view") val view: Int? = null,
+    @SerialName("mark") val mark: Boolean? = null, // TODO
     @SerialName("likeCount") val likeCount: Int? = null,
     @SerialName("scrapCount") val scrapCount: Int? = null,
     @SerialName("isLiked") val isLiked: Boolean? = null,

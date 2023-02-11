@@ -191,7 +191,7 @@ fun SearchScreen(
 
                         Spacer(modifier = Modifier.width(4.dp))
 
-                        if (state.totalCount == 0) {
+                        if (state.totalCount == 0L) {
                             Text(
                                 text = "찾을 수가 없었어요...",
                                 style = MaterialTheme.typography.subtitle1,

@@ -1,7 +1,7 @@
 package commonClient.domain.entity
 
 data class PagingRequest(
-    val offset : Long? = null,
-    val pageNumber : Int? = null,
-    val pageSize : Int? = null,
+    val page : Long? = null,
+    val size : Int? = null,
+    val sort : List<String>? = null
 )

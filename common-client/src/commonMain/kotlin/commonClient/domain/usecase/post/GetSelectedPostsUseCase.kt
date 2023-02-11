@@ -10,8 +10,8 @@ class GetSelectedPostsUseCase(
 ) {
 
     suspend operator fun invoke() = postRepository.getRecentPosts(
-        PagingRequest(null, null, pageSize = PAGE_ITEM_SIZE)
-    ).content
+        PagingRequest(null, size = PAGE_ITEM_SIZE)
+    ).data
 
     companion object {
         private const val PAGE_ITEM_SIZE = 5

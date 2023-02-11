@@ -1,16 +1,11 @@
 package commonClient.presentation.main
 
-import com.kuuurt.paging.multiplatform.Pager
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
-import common.model.request.post.VoteSelectRequest
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Post
-import commonClient.domain.usecase.post.RequestLikePostUseCase
-import commonClient.domain.usecase.post.RequestScrapPostUseCase
-import commonClient.domain.usecase.post.RequestVotePostUseCase
 import commonClient.domain.usecase.post.paged.GetPagedHotPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedRecentPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
@@ -21,12 +16,9 @@ import commonClient.utils.createPager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
@@ -63,32 +55,32 @@ class MoreScreenViewModel(
     }
 
     private val recentPager = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedRecentPostsUseCase(PagingRequest(offset = key))
+        val pagingResult = getPagedRecentPostsUseCase(PagingRequest(page = key))
         PagingResult(
-            pagingResult.content,
-            currentKey = pagingResult.pageable.offset,
-            prevKey = { key },
-            nextKey = { pagingResult.pageable.offset + 1 }
+            pagingResult.data,
+            currentKey = key ?: -1,
+            prevKey = { null },
+            nextKey = { pagingResult.nextKey }
         )
     }
 
     private val selectedPager = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedVotedPostsUseCase(PagingRequest(offset = key))
+        val pagingResult = getPagedVotedPostsUseCase(PagingRequest(page = key))
         PagingResult(
-            pagingResult.content,
-            currentKey = pagingResult.pageable.offset,
-            prevKey = { key },
-            nextKey = { pagingResult.pageable.offset + 1 }
+            pagingResult.data,
+            currentKey = key ?: -1,
+            prevKey = { null },
+            nextKey = { pagingResult.nextKey }
         )
     }
 
     private val scrappedPager = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedScrappedPostsUseCase(PagingRequest(offset = key))
+        val pagingResult = getPagedScrappedPostsUseCase(PagingRequest(page = key))
         PagingResult(
-            pagingResult.content,
-            currentKey = pagingResult.pageable.offset,
-            prevKey = { key },
-            nextKey = { pagingResult.pageable.offset + 1 }
+            pagingResult.data,
+            currentKey = key ?: -1,
+            prevKey = { null },
+            nextKey = { pagingResult.nextKey }
         )
     }
 
