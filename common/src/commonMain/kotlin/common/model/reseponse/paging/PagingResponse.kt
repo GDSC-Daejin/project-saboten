@@ -7,5 +7,5 @@ import kotlinx.serialization.Serializable
 data class PagingResponse<T>(
     @SerialName("data") val data: List<T>,
     @SerialName("next_key") val nextKey : Long? = null,
-    @SerialName("count") val count : Long,
+    @SerialName("count") val count : Long? = null,
 )

@@ -18,6 +18,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Chip
 import androidx.compose.material.ChipColors
 import androidx.compose.material.ChipDefaults
@@ -43,7 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.semantics.SemanticsProperties.ImeAction
+import androidx.compose.ui.text.input.ImeAction.Companion
 import androidx.compose.ui.unit.dp
+import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
@@ -97,7 +102,11 @@ fun SearchScreen(
                             value = query,
                             cursorBrush = SolidColor(MaterialTheme.colors.secondary),
                             textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
-                            onValueChange = { query = it }
+                            onValueChange = { query = it },
+                            keyboardActions = KeyboardActions {
+                                viewModel.search(query)
+                            },
+                            keyboardOptions = KeyboardOptions.Default.copy(imeAction = androidx.compose.ui.text.input.ImeAction.Search)
                         )
 
                         Spacer(modifier = Modifier.width(10.dp))
@@ -179,12 +188,21 @@ fun SearchScreen(
                 }
             }
 
-            if (state.totalCount != null) {
+            if (
+                state.totalCount != null
+                && state.lastSearchedQuery != null
+                && query == state.lastSearchedQuery
+            ) {
+
                 item {
-                    Row(modifier = Modifier.fillMaxWidth().padding(vertical = 10.dp)) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 10.dp)
+                    ) {
 
                         Text(
-                            text = "'${query}'",
+                            text = "'${state.lastSearchedQuery}'",
                             style = MaterialTheme.typography.subtitle1,
                             color = MaterialTheme.colors.secondary
                         )
@@ -207,26 +225,27 @@ fun SearchScreen(
 
                     }
                 }
-            }
 
-            items(items, key = { it.id }) {
-                it?.let { post ->
-                    LargePostCard(
-                        modifier = Modifier.fillMaxWidth(),
-                        post = post,
-                        onClicked = {
+                items(items, key = { it.id }) {
+                    it?.let { post ->
+                        LargePostCard(
+                            modifier = Modifier.fillMaxWidth(),
+                            post = post,
+                            onClicked = {
 
-                        },
-                        onCommentClicked = {
+                            },
+                            onCommentClicked = {
 
-                        },
-                        onVoteClicked = { vote -> viewModel.requestVote(post.id, vote.id) },
-                        onScrapClicked = { viewModel.requestScrap(post.id) },
-                        onLikeClicked = { viewModel.requestLike(post.id) },
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
+                            },
+                            onVoteClicked = { vote -> viewModel.requestVote(post.id, vote.id) },
+                            onScrapClicked = { viewModel.requestScrap(post.id) },
+                            onLikeClicked = { viewModel.requestLike(post.id) },
+                        )
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
                 }
             }
+
         }
 
 

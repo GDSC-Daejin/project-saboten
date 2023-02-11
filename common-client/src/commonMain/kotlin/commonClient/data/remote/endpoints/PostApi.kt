@@ -13,6 +13,7 @@ import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
 import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
+import okio.ByteString.Companion.encodeUtf8
 import org.koin.core.annotation.Single
 
 interface PostApi : Api {
@@ -96,7 +97,8 @@ class PostApiImp : PostApi {
     override suspend fun getSearchPosts(
         searchText: String,
         pagingRequest: PagingRequest,
-    ) = responseGet<PagingResponse<PostResponse>>("/search/$searchText") {
+    ) = responseGet<PagingResponse<PostResponse>>("/search") {
+        parameter("searchText", searchText)
         pagingRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
     }
 

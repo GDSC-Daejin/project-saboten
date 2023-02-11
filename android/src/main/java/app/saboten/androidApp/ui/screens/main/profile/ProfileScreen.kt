@@ -176,7 +176,29 @@ private fun ProfileBannerUi() {
 
     if (meInfo.needLogin) {
 
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
 
+            Text(
+                text = "로그인이 필요합니다.",
+                style = MaterialTheme.typography.h6,
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            SmallOutlinedButton(
+                text = "로그인",
+                onClick = {
+
+                }
+            )
+
+        }
 
     } else {
 
