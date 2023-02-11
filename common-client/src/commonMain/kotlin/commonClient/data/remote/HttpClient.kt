@@ -31,12 +31,10 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
 
     expectSuccess = false
 
-    /*
-    install(HttpTimeout) {
-        requestTimeoutMillis = 10000L
-        connectTimeoutMillis = 10000L
-    }
-*/
+//    install(HttpTimeout) {
+//        requestTimeoutMillis = 10000L
+//        connectTimeoutMillis = 10000L
+//    }
 
     install(ContentNegotiation) {
         register(

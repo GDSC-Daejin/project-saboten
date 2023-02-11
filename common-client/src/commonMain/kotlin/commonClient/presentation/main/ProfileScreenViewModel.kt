@@ -57,7 +57,7 @@ class ProfileScreenViewModel(
                     val pager = createPagerByCategoryId(null)
                     reduce {
                         state.copy(
-                            categories = categories.map { listOf(Category(-1, "전체", "", "", "")) + it },
+                            categories = categories,
                             items = pager.pagingData.cachedIn(platformViewModelScope)
                         )
                     }
