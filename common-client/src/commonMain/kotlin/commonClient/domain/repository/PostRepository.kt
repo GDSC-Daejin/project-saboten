@@ -18,6 +18,8 @@ interface PostRepository {
 
     suspend fun postsById(postId: Long): Post
 
+    suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest) : NewPagingResponse<Post>
+
     suspend fun getRecentPosts(pagingRequest: PagingRequest): NewPagingResponse<Post>
 
     suspend fun getHotPosts(categoryId: Long?, duration: Duration?, pagingRequest: PagingRequest): NewPagingResponse<Post>
