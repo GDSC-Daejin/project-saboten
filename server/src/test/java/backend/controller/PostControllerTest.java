@@ -153,8 +153,9 @@ class PostControllerTest {
                         .params(param)
                         .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath(("$.data.data[0].author.id")).value(userId))
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath(("$.data.content[0].author.id")).value(userId))
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -192,8 +193,9 @@ class PostControllerTest {
             // when then
             mockMvc.perform(get(baseUrl))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -211,8 +213,9 @@ class PostControllerTest {
             mockMvc.perform(get(baseUrl)
                     .params(param))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -466,8 +469,8 @@ class PostControllerTest {
             //when, then
             mockMvc.perform(get(baseUrl + "/recent"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -483,8 +486,9 @@ class PostControllerTest {
             //when, then
             mockMvc.perform(get(baseUrl + "/liked"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -520,8 +524,9 @@ class PostControllerTest {
             // then
             mockMvc.perform(get(baseUrl + "/search/" + searchText))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -538,9 +543,9 @@ class PostControllerTest {
             // then
             mockMvc.perform(get(baseUrl + "/search/" + searchText))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isEmpty())
-                    .andExpect(jsonPath("$.data.nextKey").doesNotExist())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -563,8 +568,8 @@ class PostControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").hasJsonPath())
-                    .andExpect(jsonPath("$.data.like").value(true))
+                    .andExpect(jsonPath("$.data.id").value(postId))
+                    .andExpect(jsonPath("$.data.isLiked").value(true))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -587,8 +592,8 @@ class PostControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").hasJsonPath())
-                    .andExpect(jsonPath("$.data.like").value(false))
+                    .andExpect(jsonPath("$.data.id").value(postId))
+                    .andExpect(jsonPath("$.data.isLiked").value(false))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -611,8 +616,8 @@ class PostControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").hasJsonPath())
-                    .andExpect(jsonPath("$.data.scrap").value(true))
+                    .andExpect(jsonPath("$.data.id").value(postId))
+                    .andExpect(jsonPath("$.data.isScraped").value(true))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -634,8 +639,8 @@ class PostControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").hasJsonPath())
-                    .andExpect(jsonPath("$.data.scrap").value(false))
+                    .andExpect(jsonPath("$.data.id").value(postId))
+                    .andExpect(jsonPath("$.data.isScraped").value(false))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -679,7 +684,9 @@ class PostControllerTest {
             // when then
             mockMvc.perform(get(baseUrl + "/hot"))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.data").isArray())
+                    .andExpect(jsonPath("$.data.content").isArray())
+                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.pageable").hasJsonPath())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -703,7 +710,7 @@ class PostControllerTest {
                             .contentType(MediaType.APPLICATION_JSON)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").doesNotExist())
+                    .andExpect(jsonPath("$.data.id").value(postId))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());

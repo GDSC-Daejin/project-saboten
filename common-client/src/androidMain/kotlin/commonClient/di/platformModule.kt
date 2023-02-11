@@ -18,5 +18,7 @@ actual fun platformModule() = module {
     viewModelOf(::CategoryScreenViewModel)
     viewModelOf(::SearchScreenViewModel)
     viewModelOf(::ProfileScreenViewModel)
+    
+    viewModelOf(::WritePostScreenViewModel)
 
 }

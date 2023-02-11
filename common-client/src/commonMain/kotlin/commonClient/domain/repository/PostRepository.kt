@@ -2,6 +2,7 @@ package commonClient.domain.repository
 
 import common.model.request.post.VoteSelectRequest
 import common.model.reseponse.paging.PagingResponse
+import common.model.request.post.create.PostCreateRequest
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
 import commonClient.domain.entity.post.Post
@@ -29,5 +30,7 @@ interface PostRepository {
     suspend fun getMyVotedPosts(pagingRequest: PagingRequest): PagingResponse<Post>
 
     suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): PagingResponse<Post>
+
+    suspend fun createPost(postCreateRequest: PostCreateRequest): Post
 
 }
