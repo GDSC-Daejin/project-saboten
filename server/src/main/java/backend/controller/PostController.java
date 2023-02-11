@@ -255,13 +255,11 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
     })
-    public ApiResponse<PostLikeResponse> postLike(@PathVariable Long id) {
+    public ApiResponse<PostResponse> postLike(@PathVariable Long id) {
         UserDto userDto = getUser();
         PostDto postDto = postService.findPost(id);
 
         boolean isLike = postLikeService.triggerPostLike(userDto, postDto);
-        PostLikeResponse postLikeResponse = new PostLikeResponse(isLike);
-
         List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
         List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
 
@@ -271,10 +269,14 @@ class PostController {
 
         if(isLike) {
             postService.increasePostLike(id);
+            postDto.setPostLikeCount(postDto.getPostLikeCount() + 1);
+            PostResponse postLikeResponse = postDto.toResponse(votes, categories, voteResult, isLike, isScrap);
             return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_LIKE_SUCCESS);
         }
         else {
             postService.decreasePostLike(id);
+            postDto.setPostLikeCount(postDto.getPostLikeCount() - 1);
+            PostResponse postLikeResponse = postDto.toResponse(votes, categories, voteResult, isLike, isScrap);
             return ApiResponse.withMessage(postLikeResponse, PostResponseMessage.POST_UNLIKE_SUCCESS);
         }
     }
@@ -285,12 +287,19 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
     })
-    public ApiResponse<PostScrapResponse> postScrap(@PathVariable Long id) {
+    public ApiResponse<PostResponse> postScrap(@PathVariable Long id) {
         UserDto userDto = getUser();
         PostDto postDto = postService.findPost(id);
 
         boolean isScrap = postScrapService.triggerPostScrap(userDto, postDto);
-        PostScrapResponse postScrapResponse = new PostScrapResponse(isScrap);
+        List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
+        List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+
+        Long userId = userDto != null ? userDto.getUserId() : null;
+        Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
+        boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
+
+        PostResponse postScrapResponse = postDto.toResponse(votes, categories, voteResult, isLike, isScrap);
 
         if(isScrap) {
             return ApiResponse.withMessage(postScrapResponse, PostResponseMessage.POST_SCRAP_SUCCESS);
@@ -372,14 +381,23 @@ class PostController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class),
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostVoteNotFound.class),
     })
-    public ApiResponse<?> votePost(@RequestBody VoteSelectRequest voteSelectRequest, @PathVariable Long id) {
+    public ApiResponse<PostResponse> votePost(@RequestBody VoteSelectRequest voteSelectRequest, @PathVariable Long id) {
         UserDto userDto = getUser();
 
         PostDto postDto = postService.findPost(id);
-        voteService.findVote(voteSelectRequest.getId());
+        voteService.findVote(voteSelectRequest.getId(), id);
         voteSelectService.saveVoteSelect(postDto, userDto, voteSelectRequest.getId());
 
-        return ApiResponse.withMessage(null, PostResponseMessage.POST_VOTE_SUCCESS);
+        List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
+        List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+
+        Long userId = userDto != null ? userDto.getUserId() : null;
+        Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
+        boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
+        boolean isScrap = postScrapService.findPostIsScrap(userId, postDto.getPostId());
+
+        PostResponse voteResponse = postDto.toResponse(votes, categories, voteResult, isLike, isScrap);
+        return ApiResponse.withMessage(voteResponse, PostResponseMessage.POST_VOTE_SUCCESS);
     }
 
     @ApiOperation(value = "자기가 투표한 게시물 조회 (사용자 인증 필요)", notes = "사용자가 투표했던 게시물들을 조회합니다.")

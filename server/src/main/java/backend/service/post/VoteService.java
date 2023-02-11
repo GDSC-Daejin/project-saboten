@@ -67,11 +67,15 @@ public class VoteService {
         return votes;
     }
 
-    public VoteEntity findVote(long id) {
-        Optional<VoteEntity> optionalVoteEntity = voteRepository.findById(id);
+    public VoteEntity findVote(final long voteId, final long postId) {
+        Optional<VoteEntity> optionalVoteEntity = voteRepository.findById(voteId);
 
         if(optionalVoteEntity.isEmpty()) {
             throw new ApiException(PostResponseMessage.POST_VOTE_NOT_FOUND);
+        }
+        else {
+            if (optionalVoteEntity.get().getPost().getPostId() != postId)
+                throw new ApiException(PostResponseMessage.POST_VOTE_NOT_FOUND);
         }
 
         return optionalVoteEntity.get();
