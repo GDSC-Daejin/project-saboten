@@ -1,6 +1,5 @@
 package common.model.reseponse.post
 
-import common.model.VoteColorsResponse
 import common.model.reseponse.category.CategoryResponse
 import common.model.reseponse.user.UserResponse
 import kotlinx.serialization.SerialName

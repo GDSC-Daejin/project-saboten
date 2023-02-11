@@ -13,13 +13,6 @@ fun UserInfoResponse.toDomain(): UserInfo {
         nickname = nickname,
         profilePhotoUrl = profilePhotoUrl,
         email = email,
-        introduction = introduction,
-        age = age,
-        gender = when (gender) {
-            GenderResponse.M -> Gender.M
-            GenderResponse.F -> Gender.F
-            null -> null
-        },
     )
 }
 

@@ -13,136 +13,93 @@ val Colors.surfaceOver
 object SabotenColors {
     /*
     /* Ellipse 212 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 197px;
 top: 1210px;
-
 /* Sab_Grey/100 */
 background: #ECECEC;
-
-
 /* Ellipse 221 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 111px;
 top: 1210px;
-
 /* ffffff */
 background: #FFFFFF;
-
-
 /* Ellipse 213 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 283px;
 top: 1210px;
-
 /* Sab_Grey/200 */
 background: #D9D9D9;
-
-
 /* Ellipse 214 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 369px;
 top: 1210px;
-
 /* Sab_Grey/300 */
 background: #C6C6C6;
-
-
 /* Ellipse 215 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 455px;
 top: 1210px;
-
 /* Sab_Grey/400 */
 background: #B3B3B3;
-
-
 /* Ellipse 216 */
-
 position: absolute;
 width: 75px;
 height: 75px;
 left: 542px;
 top: 1210px;
-
 /* Sab_Grey/500 */
 background: #A0A0A0;
-
-
 /* Ellipse 217 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 628px;
 top: 1210px;
-
 /* Sab_Grey/600 */
 background: #808080;
-
-
 /* Ellipse 218 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 714px;
 top: 1210px;
-
 /* Sab_Grey/700 */
 background: #606060;
-
-
 /* Ellipse 219 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 800px;
 top: 1210px;
-
 /* Sab_Grey/800 */
 background: #404040;
-
-
 /* Ellipse 220 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 886px;
 top: 1210px;
-
 /* Sab_Grey/900 */
 background: #202020;
-
-
 /* Ellipse 222 */
-
 position: absolute;
 width: 76px;
 height: 75px;
 left: 972px;
 top: 1210px;
-
 /* Sab_Grey/1000 */
 background: #111111;
-
     * */
 
     val green100 = Color(0xFFE7F7EF)
@@ -165,6 +122,7 @@ background: #111111;
     val yellow800 = Color(0xFF665B2A)
     val yellow900 = Color(0xFF332D15)
 
+    val grey50 = Color(0xFFFAFAFA)
     val grey100 = Color(0xFFECECEC)
     val grey200 = Color(0xFFD9D9D9)
     val grey300 = Color(0xFFC6C6C6)
@@ -188,7 +146,7 @@ internal val lightColors = lightColors(
     onSecondary = SabotenColors.grey100,
     surface = Color.White,
     onSurface = Color.Black,
-    background = SabotenColors.grey100
+    background = SabotenColors.grey50
 )
 
 @SuppressLint("ConflictingOnColor")
@@ -198,7 +156,7 @@ internal val darkColors = darkColors(
     primaryVariant = SabotenColors.green500,
     secondary = SabotenColors.green500,
     secondaryVariant = SabotenColors.green500,
-    surface = SabotenColors.grey700,
+    surface = SabotenColors.grey900,
     onSurface = SabotenColors.grey100,
     background = SabotenColors.grey1000
 )

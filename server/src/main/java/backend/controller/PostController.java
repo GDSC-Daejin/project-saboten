@@ -18,6 +18,7 @@ import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.PagingResponse;
 import common.model.reseponse.category.CategoryResponse;
+import common.model.reseponse.paging.PagingResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;

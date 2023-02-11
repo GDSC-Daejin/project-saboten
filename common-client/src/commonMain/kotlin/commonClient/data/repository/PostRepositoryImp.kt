@@ -1,10 +1,7 @@
 package commonClient.data.repository
 
 import common.model.request.post.VoteSelectRequest
-import common.model.reseponse.ApiResponse
-import common.model.reseponse.PagingResponse
-import common.model.reseponse.paging.NewPagingResponse
-import common.model.reseponse.post.PostResponse
+import common.model.request.post.create.PostCreateRequest
 import commonClient.data.remote.endpoints.PostApi
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
@@ -35,32 +32,37 @@ class PostRepositoryImp(
         return postApi.getPost(postId).data!!.toDomain()
     }
 
-    override suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getPosts(categoryId: Long?, pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getPosts(categoryId, pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getRecentPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getRecentPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getRecentPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getHotPosts(categoryId: Long?, duration: Duration?, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getHotPosts(categoryId: Long?, duration: Duration?, pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getHotPosts(categoryId, duration, pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getMyPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getMyPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getMyPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getMyScrappedPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getMyScrappedPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getMyScrappedPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getMyVotedPosts(pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getMyVotedPosts(pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getMyVotedPosts(pagingRequest).data!!.map { it.toDomain() }
     }
 
-    override suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): NewPagingResponse<Post> {
+    override suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): common.model.reseponse.paging.PagingResponse<Post> {
         return postApi.getSearchPosts(searchText, pagingRequest).data!!.map { it.toDomain() }
+    }
+
+    override suspend fun createPost(postCreateRequest: PostCreateRequest): Post {
+        // TODO: 사용자 인증
+        return postApi.createPost(postCreateRequest).data!!.toDomain()
     }
 
 }

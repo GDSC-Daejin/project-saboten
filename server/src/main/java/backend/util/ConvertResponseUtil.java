@@ -1,6 +1,6 @@
 package backend.util;
 
-import common.model.reseponse.paging.NewPagingResponse;
+import common.model.reseponse.paging.PagingResponse;
 import common.model.reseponse.paging.Pageable;
 import common.model.reseponse.paging.SortX;
 import common.model.reseponse.post.read.PostReadResponse;
@@ -9,7 +9,7 @@ import org.springframework.data.domain.Sort;
 
 public class ConvertResponseUtil {
 
-    public static NewPagingResponse<PostReadResponse> pageToPageResponse(Page<PostReadResponse> page) {
+    public static PagingResponse<PostReadResponse> pageToPageResponse(Page<PostReadResponse> page) {
         Sort pageableSort = page.getPageable().getSort();
         SortX pageableSortX = new SortX(
                 pageableSort.isEmpty(),
@@ -33,7 +33,7 @@ public class ConvertResponseUtil {
                 sort.isUnsorted()
         );
 
-        return new NewPagingResponse<PostReadResponse>(
+        return new PagingResponse<PostReadResponse>(
                 page.getContent(),
                 page.isEmpty(),
                 page.isFirst(),

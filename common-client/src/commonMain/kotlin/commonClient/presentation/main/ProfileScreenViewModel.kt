@@ -5,6 +5,7 @@ import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
 import commonClient.data.LoadState
+import commonClient.data.map
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
@@ -27,24 +28,24 @@ import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 
-interface CategoryScreenEffect {
+interface ProfileScreenEffect {
 
 }
 
-data class CategoryScreenState(
+data class ProfileScreenState(
     val categories: LoadState<List<Category>> = LoadState.idle(),
     val selectedCategoryId: Long? = null,
     val items: Flow<PagingData<Post>> = flowOf(),
 )
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
-class CategoryScreenViewModel(
+class ProfileScreenViewModel(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getPagedPostsByCategoryUseCase: GetPagedPostsByCategoryUseCase,
     postActionsDelegate: PostActionsDelegate,
-) : PlatformViewModel<CategoryScreenState, CategoryScreenEffect>(), PostActionsDelegate by postActionsDelegate {
+) : PlatformViewModel<ProfileScreenState, ProfileScreenEffect>(), PostActionsDelegate by postActionsDelegate {
 
-    override val container: Container<CategoryScreenState, CategoryScreenEffect> = container(CategoryScreenState())
+    override val container: Container<ProfileScreenState, ProfileScreenEffect> = container(ProfileScreenState())
 
     init {
         containerHost = this

@@ -5,7 +5,4 @@ data class UserInfo(
     val nickname: String,
     val profilePhotoUrl: String,
     val email: String,
-    val introduction: String,
-    val age: Int?,
-    val gender: Gender?
 )

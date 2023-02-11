@@ -10,6 +10,9 @@ import commonClient.domain.entity.user.UserInfo
 class MeInfo(
     val userInfo: LoadState<UserInfo?>,
 ) {
+
+    val notNullUserInfo: UserInfo get() = requireNotNull(userInfo.getDataOrNull())
+
     val needLogin get() = userInfo is LoadState.Success && userInfo.data == null
 
 }

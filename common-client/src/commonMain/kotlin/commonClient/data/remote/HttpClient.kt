@@ -19,7 +19,7 @@ import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import kotlinx.serialization.json.Json
 
 // TODO Change URL
-private const val URL = "saboten-myeongju00.koyeb.app"
+private const val URL = "saboten.loca.lt"
 
 expect fun getHttpClient(): HttpClient
 
@@ -31,10 +31,10 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
 
     expectSuccess = false
 
-    install(HttpTimeout) {
-        requestTimeoutMillis = 10000L
-        connectTimeoutMillis = 10000L
-    }
+//    install(HttpTimeout) {
+//        requestTimeoutMillis = 10000L
+//        connectTimeoutMillis = 10000L
+//    }
 
     install(ContentNegotiation) {
         register(

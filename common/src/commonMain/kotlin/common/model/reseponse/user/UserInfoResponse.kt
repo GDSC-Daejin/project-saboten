@@ -1,6 +1,5 @@
 package common.model.reseponse.user
 
-import common.model.GenderResponse
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,7 +9,4 @@ data class UserInfoResponse(
     @SerialName("nickname") val nickname: String,
     @SerialName("profilePhotoUrl") val profilePhotoUrl: String,
     @SerialName("email") val email: String,
-    @SerialName("introduction") val introduction: String,
-    @SerialName("age") val age: Int?,
-    @SerialName("gender") val gender: GenderResponse?
 )
