@@ -47,6 +47,8 @@ public class EntityFactory {
         return CategoryEntity.builder()
                 .categoryName("애완동물")
                 .categoryIconUrl("https://raw.githubusercontent.com/GDSC-Daejin/project-saboten-iconpack/master/ic_favorite.svg")
+                .categoryStartColor("startColor")
+                .categoryEndColor("endColor")
                 .build();
     }
 

@@ -38,6 +38,14 @@ jobs:
         env:
           DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
 
+      - name: Create SSL KeyStore File
+        run: |
+          touch server/src/main/resources/ssl/keystore.p12
+          echo "$SSL_KEYSTORE" > keystore.p12.b64
+          base64 -d -i keystore.p12.b64 > server/src/main/resources/ssl/keystore.p12
+        env:
+          SSL_KEYSTORE: ${{ secrets.SSL_KEYSTORE }}
+
       - name: Build with Gradle
         run: |
           ./gradlew clean :server:build -Pprofile=dev    

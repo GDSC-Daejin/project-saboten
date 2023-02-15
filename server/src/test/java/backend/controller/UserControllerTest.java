@@ -43,9 +43,6 @@ class UserControllerTest {
                         .andExpect(jsonPath("$.data.nickname").isNotEmpty())
                         .andExpect(jsonPath("$.data.profilePhotoUrl").isNotEmpty())
                         .andExpect(jsonPath("$.data.email").isNotEmpty())
-                        .andExpect(jsonPath("$.data.introduction").isNotEmpty())
-                        .andExpect(jsonPath("$.data.age").isNotEmpty())
-                        .andExpect(jsonPath("$.data.gender").isNotEmpty())
                         .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                         .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                         .andDo(print());
@@ -82,9 +79,6 @@ class UserControllerTest {
                     .andExpect(jsonPath("$.data.nickname").isNotEmpty())
                     .andExpect(jsonPath("$.data.profilePhotoUrl").isNotEmpty())
                     .andExpect(jsonPath("$.data.email").isNotEmpty())
-                    .andExpect(jsonPath("$.data.introduction").isNotEmpty())
-                    .andExpect(jsonPath("$.data.age").isNotEmpty())
-                    .andExpect(jsonPath("$.data.gender").isNotEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());

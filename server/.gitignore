@@ -1,3 +1,4 @@
 /build
 *dev.properties
 *prod.properties
+*.p12
