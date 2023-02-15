@@ -28,7 +28,7 @@ platform :android do
         slack(
            message: ":rocket: 몹시 싱싱한 빌드가 업로드 되었습니다. :cactus:",
            success: true,
-           slack_url: "https://hooks.slack.com/services/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",
+           slack_url: "https://hooks.slack.com/services/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",
            default_payloads: [:git_branch, :last_git_commit_message],
            attachment_properties: {
                fields: [
@@ -43,6 +43,10 @@ platform :android do
                    {
                        title: "Release Notes",
                        value: release_notes
+                   },
+                   {
+                       title: "APK 다운로드 링크 (1시간 후 만료)",
+                       value: binary_download_uri
                    }
                ]
            }
