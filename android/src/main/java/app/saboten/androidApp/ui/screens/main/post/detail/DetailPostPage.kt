@@ -20,8 +20,7 @@ import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import commonClient.domain.entity.post.Post
-import commonClient.presentation.main.DetailPostScreenViewModel
+import commonClient.presentation.post.DetailPostScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 

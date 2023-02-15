@@ -41,7 +41,7 @@ public class UserEntity extends BaseTimeEntity {
     @Column(name = "user_mypage_introduction")
     private String myPageIntroduction;
 
-    @Column(name = "user_gender")
+    @Column(name = "user_gender", nullable = true)
     private Integer gender;
 
     @Column(name= "user_email", length = 50)

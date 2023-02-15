@@ -7,4 +7,6 @@ interface AuthRepository {
 
     fun refreshToken(forceRefresh : Boolean) : Flow<JwtToken?>
 
+    suspend fun requestGoogleLogin(idToken : String) : JwtToken
+
 }

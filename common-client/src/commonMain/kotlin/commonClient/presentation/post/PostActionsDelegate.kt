@@ -1,18 +1,13 @@
-package commonClient.presentation.main
+package commonClient.presentation.post
 
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
-import kotlinx.coroutines.flow.map
 import org.koin.core.annotation.Single
 import org.orbitmvi.orbit.ContainerHost
-import org.orbitmvi.orbit.syntax.simple.SimpleSyntax
 import org.orbitmvi.orbit.syntax.simple.intent
-import org.orbitmvi.orbit.syntax.simple.postSideEffect
-import org.orbitmvi.orbit.syntax.simple.reduce
 
 
 interface PostActionsDelegate {

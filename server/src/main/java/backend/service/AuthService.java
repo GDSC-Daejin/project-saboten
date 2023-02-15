@@ -1,5 +1,27 @@
 package backend.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.gson.GsonFactory;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+
 import backend.exception.ApiException;
 import backend.jwt.RedisUtil;
 import backend.jwt.RoleType;
@@ -10,29 +32,18 @@ import backend.model.user.UserEntity;
 import backend.oauth.entity.ProviderType;
 import backend.oauth.info.OAuth2UserInfo;
 import backend.oauth.info.OAuth2UserInfoFactory;
+import backend.oauth.info.impl.GoogleOAuth2UserInfo;
 import backend.repository.user.RefreshTokenRepository;
 import backend.repository.user.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import common.message.AuthResponseMessage;
 import common.message.BasicResponseMessage;
 import common.message.UserResponseMessage;
 import common.model.request.auth.TokenReissueRequest;
 import common.model.request.user.UserSignUpRequest;
+import common.model.reseponse.auth.JwtTokenResponse;
 import common.model.reseponse.user.UserInfoResponse;
 import common.model.reseponse.user.UserResponse;
-import common.model.reseponse.auth.JwtTokenResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.Map;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -43,6 +54,10 @@ public class AuthService {
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
     private final RedisUtil redisUtil;
+
+    // Google OAuth2 Client Id from properties
+    @Value("${google.client.id}")
+    private String googleClientId;
 
     @Transactional
     public UserResponse signup(UserSignUpRequest userSignInRequest) {
@@ -76,6 +91,7 @@ public class AuthService {
                 .nickname(userInfo.getName())
                 .email(userInfo.getEmail())
                 .userImage(userInfo.getImageUrl())
+                .gender(0)
                 .build();
 
         return userRepository.save(user);
@@ -84,15 +100,14 @@ public class AuthService {
     private UserEntity getSocialUser(String body, ProviderType providerType) {
         try {
             Map<String, Object> attributes = objectMapper.readValue(body, Map.class);
-            OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType , attributes);
+            OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, attributes);
 
             UserEntity user = userRepository.findBySocialId(userInfo.getId());
-            if(user == null) {
+            if (user == null) {
                 user = createUser(userInfo, providerType);
             }
             return user;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new ApiException(BasicResponseMessage.INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,30 +121,54 @@ public class AuthService {
 
         HttpEntity<String> entity = new HttpEntity<>("", headers);
         try {
-            HttpEntity<String> response = restTemplate.exchange(KAKAO_USERINFO_URL, HttpMethod.GET , entity, String.class);
+            HttpEntity<String> response = restTemplate.exchange(KAKAO_USERINFO_URL, HttpMethod.GET, entity, String.class);
             UserEntity user = getSocialUser(response.getBody(), ProviderType.KAKAO);
             return createToken(user);
-        }
-        catch (HttpClientErrorException e) {
+        } catch (HttpClientErrorException e) {
             throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
         }
     }
 
     @Transactional
-    public JwtTokenResponse googleLogin(String accessToken) {
-        final String GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo";
+    public JwtTokenResponse googleLogin(String idToken) {
+        GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
+                .setAudience(Collections.singletonList(googleClientId))
+                .build();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", "Bearer " + accessToken);
-
-        HttpEntity<String> entity = new HttpEntity<>("", headers);
         try {
-            HttpEntity<String> response = restTemplate.exchange(GOOGLE_USERINFO_URL, HttpMethod.GET , entity, String.class);
-            UserEntity user = getSocialUser(response.getBody(), ProviderType.GOOGLE);
-            return createToken(user);
-        }
-        catch (HttpClientErrorException e) {
+            GoogleIdToken googleIdToken = verifier.verify(idToken);
+
+            if (googleIdToken == null) {
+                throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
+            } else {
+                GoogleIdToken.Payload payload = googleIdToken.getPayload();
+
+                String sub = payload.getSubject();
+                String email = payload.getEmail();
+                String name = (String) payload.get("name");
+                String pictureUrl = (String) payload.get("picture");
+
+                GoogleOAuth2UserInfo userInfo = new GoogleOAuth2UserInfo(sub, name, email, pictureUrl);
+
+                UserEntity user = createGoogleUser(userInfo);
+
+                return createToken(user);
+            }
+
+        } catch (HttpClientErrorException | GeneralSecurityException | IOException e) {
             throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
+        }
+    }
+
+    private UserEntity createGoogleUser(GoogleOAuth2UserInfo userInfo) {
+        try {
+            UserEntity user = userRepository.findBySocialId(userInfo.getId());
+            if (user == null) {
+                user = createUser(userInfo, ProviderType.GOOGLE);
+            }
+            return user;
+        } catch (Exception e) {
+            throw new ApiException(BasicResponseMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -149,7 +188,7 @@ public class AuthService {
         // 논의가 필요!!!!
         String id = authentication.getName();
         Optional<UserEntity> userEntity = userRepository.findById(Long.parseLong(id));
-        if(userEntity.isEmpty())
+        if (userEntity.isEmpty())
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
 
         RefreshTokenEntity refreshToken = refreshTokenRepository.findByUser(userEntity.get());
@@ -194,7 +233,7 @@ public class AuthService {
         Long id = SecurityUtil.getCurrentUserId();
         Optional<UserEntity> userEntity = userRepository.findById(id);
 
-        if(userEntity.isEmpty())
+        if (userEntity.isEmpty())
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
 
         userEntity.get().setNickname(userInfoResponse.getNickname());

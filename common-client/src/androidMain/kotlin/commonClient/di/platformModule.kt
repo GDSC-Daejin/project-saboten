@@ -8,8 +8,9 @@ import commonClient.presentation.main.MoreScreenViewModel
 import commonClient.presentation.main.CategoryScreenViewModel
 import commonClient.presentation.main.SearchScreenViewModel
 import commonClient.presentation.main.ProfileScreenViewModel
-import commonClient.presentation.main.DetailPostScreenViewModel
-import commonClient.presentation.main.WritePostScreenViewModel
+import commonClient.presentation.post.DetailPostScreenViewModel
+import commonClient.presentation.post.WritePostScreenViewModel
+import commonClient.presentation.login.LoginScreenViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.dsl.module
@@ -25,5 +26,6 @@ actual fun platformModule() = module {
     viewModelOf(::ProfileScreenViewModel)
     viewModelOf(::WritePostScreenViewModel)
     viewModelOf(::DetailPostScreenViewModel)
+    viewModelOf(::LoginScreenViewModel)
 
 }

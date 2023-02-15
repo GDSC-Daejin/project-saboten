@@ -5,5 +5,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SocialLoginRequest (
-    @SerialName("accessToken") val accessToken : String
+    @SerialName("token") val token : String
 )

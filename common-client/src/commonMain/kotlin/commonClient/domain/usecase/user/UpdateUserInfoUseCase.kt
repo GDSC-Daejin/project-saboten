@@ -9,6 +9,6 @@ class UpdateUserInfoUseCase(
     private val userRepository: UserRepository
 )  {
 
-    operator fun invoke(userUpdateRequest: UserUpdateRequest) = userRepository.updateUserInfo(userUpdateRequest)
+    suspend operator fun invoke(userUpdateRequest: UserUpdateRequest) = userRepository.updateUserInfo(userUpdateRequest)
 
 }
