@@ -54,7 +54,7 @@ public class AuthController {
     })
     @PostMapping(authUrl + "/social/login/google")
     public ApiResponse<JwtTokenResponse> googleLogin(@RequestBody SocialLoginRequest socialLoginRequest) {
-        JwtTokenResponse jwtTokenResponse = authService.googleLogin(socialLoginRequest.getAccessToken());
+        JwtTokenResponse jwtTokenResponse = authService.googleLogin(socialLoginRequest.getToken());
         return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 
@@ -68,7 +68,7 @@ public class AuthController {
     })
     @PostMapping(authUrl + "/social/login/kakao")
     public ApiResponse<JwtTokenResponse> kakaoLogin(@RequestBody SocialLoginRequest socialLoginRequest) {
-        JwtTokenResponse jwtTokenResponse = authService.kakaoLogin(socialLoginRequest.getAccessToken());
+        JwtTokenResponse jwtTokenResponse = authService.kakaoLogin(socialLoginRequest.getToken());
         return ApiResponse.withMessage(jwtTokenResponse, UserResponseMessage.USER_LOGIN);
     }
 

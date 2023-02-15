@@ -1,4 +1,4 @@
-package commonClient.presentation.main
+package commonClient.presentation.post
 
 import common.model.VoteColorsResponse
 import common.model.request.post.create.PostCreateRequest

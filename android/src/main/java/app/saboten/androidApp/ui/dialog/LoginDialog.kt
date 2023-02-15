@@ -31,8 +31,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
+import commonClient.presentation.login.LoginScreenEffect
+import commonClient.presentation.login.LoginScreenViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
+import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
 
 @Composable
@@ -40,11 +44,23 @@ import timber.log.Timber
 fun LoginDialog(
     navigator: DestinationsNavigator,
 ) {
-    LoginDialogContent()
+    LoginDialogContent(
+        dismiss = { navigator.popBackStack() }
+    )
 }
 
 @Composable
-fun LoginDialogContent() {
+fun LoginDialogContent(
+    dismiss : () -> Unit
+) {
+
+    val viewModel = koinViewModel<LoginScreenViewModel>()
+
+    viewModel.collectSideEffect {
+        when (it) {
+            is LoginScreenEffect.SignInSuccess -> dismiss()
+        }
+    }
 
     val context = LocalContext.current
 
@@ -58,9 +74,11 @@ fun LoginDialogContent() {
         if (result.resultCode == Activity.RESULT_OK) {
             val intent = result.data
             if (intent != null) {
-                val task = googleLoginManager.oneTapClient.getSignInCredentialFromIntent(intent)
-                Timber.d("Google Login Success = " + task.googleIdToken)
-                Timber.d("Google Login Success = " + task.password)
+                val credential = googleLoginManager.oneTapClient.getSignInCredentialFromIntent(intent)
+                val googleIdToken = credential.googleIdToken
+                if (googleIdToken != null) {
+                    viewModel.requestGoogleSignIn(googleIdToken)
+                }
             } else {
                 Timber.d("Google Login Failed")
             }

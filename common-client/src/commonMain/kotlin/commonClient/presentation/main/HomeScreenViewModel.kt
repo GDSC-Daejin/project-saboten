@@ -1,6 +1,5 @@
 package commonClient.presentation.main
 
-import com.kuuurt.paging.multiplatform.map
 import commonClient.data.LoadState
 import commonClient.data.map
 import commonClient.domain.entity.banner.Banner
@@ -15,13 +14,12 @@ import commonClient.domain.usecase.post.GetRecentPostsUseCase
 import commonClient.domain.usecase.post.GetSelectedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
+import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
-import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 

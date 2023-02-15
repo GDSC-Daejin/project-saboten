@@ -5,7 +5,6 @@ import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
 import commonClient.data.LoadState
-import commonClient.data.map
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
@@ -13,6 +12,7 @@ import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.post.paged.GetPagedPostsByCategoryUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
+import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.ExperimentalCoroutinesApi

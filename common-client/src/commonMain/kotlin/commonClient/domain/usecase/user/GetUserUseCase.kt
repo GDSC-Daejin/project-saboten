@@ -8,6 +8,6 @@ class GetUserUseCase(
     private val userRepository: UserRepository
 ) {
 
-    operator fun invoke(userId: Long) = userRepository.getUser(userId)
+    suspend operator fun invoke(userId: Long) = userRepository.getUser(userId)
 
 }
