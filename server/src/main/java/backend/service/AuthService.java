@@ -57,7 +57,7 @@ public class AuthService {
 
     // Google OAuth2 Client Id from properties
     @Value("${google.client.id}")
-    private final String googleClientId;
+    private String googleClientId;
 
     @Transactional
     public UserResponse signup(UserSignUpRequest userSignInRequest) {
@@ -91,6 +91,7 @@ public class AuthService {
                 .nickname(userInfo.getName())
                 .email(userInfo.getEmail())
                 .userImage(userInfo.getImageUrl())
+                .gender(0)
                 .build();
 
         return userRepository.save(user);
@@ -130,7 +131,6 @@ public class AuthService {
 
     @Transactional
     public JwtTokenResponse googleLogin(String idToken) {
-
         GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
                 .setAudience(Collections.singletonList(googleClientId))
                 .build();
@@ -148,14 +148,27 @@ public class AuthService {
                 String name = (String) payload.get("name");
                 String pictureUrl = (String) payload.get("picture");
 
-                GoogleOAuth2UserInfo userInfo = new GoogleOAuth2UserInfo(sub, email, name, pictureUrl);
-                UserEntity user = createUser(userInfo, ProviderType.GOOGLE);
+                GoogleOAuth2UserInfo userInfo = new GoogleOAuth2UserInfo(sub, name, email, pictureUrl);
+
+                UserEntity user = createGoogleUser(userInfo);
 
                 return createToken(user);
             }
 
         } catch (HttpClientErrorException | GeneralSecurityException | IOException e) {
             throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
+        }
+    }
+
+    private UserEntity createGoogleUser(GoogleOAuth2UserInfo userInfo) {
+        try {
+            UserEntity user = userRepository.findBySocialId(userInfo.getId());
+            if (user == null) {
+                user = createUser(userInfo, ProviderType.GOOGLE);
+            }
+            return user;
+        } catch (Exception e) {
+            throw new ApiException(BasicResponseMessage.INTERNAL_SERVER_ERROR);
         }
     }
 
