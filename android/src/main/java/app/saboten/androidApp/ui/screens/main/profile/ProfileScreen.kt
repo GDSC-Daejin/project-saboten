@@ -203,7 +203,8 @@ private fun ProfileBannerUi() {
                 Icon(
                     modifier = Modifier.size(20.dp),
                     imageVector = SabotenIcons.Google,
-                    contentDescription = "구글 로고"
+                    contentDescription = "구글 로고",
+                    tint = Color.Unspecified
                 )
                 Spacer(modifier = Modifier.padding(start = 4.dp))
                 Text(
