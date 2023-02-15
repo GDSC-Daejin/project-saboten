@@ -18,6 +18,7 @@ import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.PagingResponse;
 import common.model.reseponse.category.CategoryResponse;
+import common.model.reseponse.post.PostCountResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
 import common.model.reseponse.post.create.PostCreatedResponse;
@@ -421,5 +422,19 @@ class PostController {
         }).collect(Collectors.toList());
 
         return ApiResponse.withMessage(myPostVoted, PostResponseMessage.POST_VOTED_FIND_SUCCESS);
+    }
+
+    @ApiOperation(value = "마이페이지 게시글 카운트")
+    @GetMapping("/mypage")
+    public ApiResponse<PostCountResponse> getPostCount() {
+        UserDto userDto = getUser();
+        Long userId = userDto != null ? userDto.getUserId() : null;
+
+        Long myPostCount = postService.countByUserId(userId);
+        Long votedCount = voteSelectService.countByUserId(userId);
+        Long scrapedCount = postScrapService.countByUserId(userId);
+
+        PostCountResponse postCountResponse = new PostCountResponse(myPostCount, votedCount, scrapedCount);
+        return ApiResponse.withMessage(postCountResponse, PostResponseMessage.POST_COUNT_BY_USER_ID);
     }
 }
