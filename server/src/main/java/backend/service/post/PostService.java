@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import common.model.request.Duration;
-import common.model.reseponse.post.read.PostReadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -115,5 +114,9 @@ public class PostService {
 
     public Page<PostDto> findAllHotPost(final Pageable pageable) {
         return postRepository.findAllHostPost(pageable).map(PostEntity::toDto);
+    }
+
+    public Long countByUserId(final Long userId) {
+        return postRepository.countByUserId(userId);
     }
 }

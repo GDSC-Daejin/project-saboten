@@ -22,6 +22,7 @@ enum class PostResponseMessage(
     POST_VOTE_NOT_FOUND("게시물 투표 정보를 찾지 못하였습니다.", 404),
     POST_VOTED_FIND_SUCCESS("투표한 게시물들을 조회하였습니다.", 200),
     POST_FIND_ALL_ORDERED_BY_LIKED_COUNT("좋아요 수 기준으로 조회하였습니다.", 200),
-    POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT("좋아요 수 기준으로 5개 조회외었습니다.", 200),
-    POST_FIND_ALL_ORDERED_BY_REGIST_DATE("최신순 기준으로 게시글을 조회하였습니다.", 200);
+    POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT("좋아요 수 기준으로 5개 조회하였습니다.", 200),
+    POST_FIND_ALL_ORDERED_BY_REGIST_DATE("최신순 기준으로 게시글을 조회하였습니다.", 200),
+    POST_COUNT_BY_USER_ID("유저 id 기준으로 게시글을 카운팅 하였습니다.", 200);
 }
