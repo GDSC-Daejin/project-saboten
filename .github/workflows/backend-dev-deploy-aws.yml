@@ -79,11 +79,15 @@ jobs:
 #            docker pull peonypeonypeony/saboten:$GITHUB_SHA
 #            docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
 
-      - name: EC2 Docker Deploy and RUn
-        run: |
-          ssh -i ~/.ssh/saboten-gdsc-dju.pem ec2-user@${{ secrets.EC2_HOST }}
-          docker stop $(docker ps -qa)
-          docker rm -f $(docker ps -qa)
-          docker rmi $(docker images -q)
-          docker pull peonypeonypeony/saboten:$GITHUB_SHA
-          docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
+      - name: EC2 Docker Deploy and Run
+        uses: fifsky/ssh-action@master
+        with:
+          command: |
+            docker stop $(docker ps -qa)
+            docker rm -f $(docker ps -qa)
+            docker rmi $(docker images -q)
+            docker pull peonypeonypeony/saboten:$GITHUB_SHA
+            docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
+          host: ${{ secrets.EC2_HOST }}
+          user: ec2-user
+          key: ${{ secrets.EC2_KEY}}
