@@ -1,4 +1,4 @@
-name: Backend Dev Deploy to Koyeb
+name: Backend Dev Deploy to EC2
 
 on:
   push:
@@ -62,10 +62,16 @@ jobs:
         run: |
           docker push peonypeonypeony/saboten:$GITHUB_SHA
 
-      - name: Install and configure the Koyeb CLI
-        uses: koyeb-community/install-koyeb-cli@v2
+      # 서버에서 Docker 이미지 실행
+      - name: EC2 Docker Deploy and Run
+        uses: appleboy/ssh-action@master
         with:
-          api_token: ${{ secrets.KOYEB_TOKEN }}
-
-      - name: Deploy to Koyeb
-        run: koyeb service redeploy saboten/saboten
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            docker stop $(docker ps -qa)
+            docker rm -f $(docker ps -qa)
+            docker rmi $(docker images -q)
+            docker pull peonypeonypeony/saboten:$GITHUB_SHA
+            docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
