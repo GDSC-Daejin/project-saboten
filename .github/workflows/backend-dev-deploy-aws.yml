@@ -86,8 +86,7 @@ jobs:
           SSHKEY: ${{ secrets.EC2_KEY }} # ----- BEGIN RSA PRIVATE KEY----- ...
           USER: ec2-user
       - run: |
-          docker stop $(docker ps -qa)
-          docker rm -f $(docker ps -qa)
-          docker rmi $(docker images -q)
+          docker ps -aq | xargs docker stop | xargs docker rm
+          docker rmi prune
           docker pull peonypeonypeony/saboten:$GITHUB_SHA
-          docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA          
+          docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
