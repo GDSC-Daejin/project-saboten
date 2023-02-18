@@ -83,6 +83,7 @@ jobs:
         run: |
           touch saboten-gdsc-dju.pem
           echo "$EC2_KEY" > saboten-gdsc-dju.pem
+          chmod 400 saboten-gdsc-dju.pem
         env:
           EC2_KEY: ${{ secrets.EC2_KEY }}
 
