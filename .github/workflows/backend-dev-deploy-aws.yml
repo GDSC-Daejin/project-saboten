@@ -7,9 +7,6 @@ on:
 jobs:
   deploy:
     runs-on: self-hosted
-    # 흐음 appleboy/ssh-action@master가 Linux OS로 밖에 안돌아간다는데....
-    # 방법 1 : Mac ssh 기본 명령어로 직접 연결 (ssh 폴더 및 세팅 필요함)
-    # 방법 2 : self hosted runner 포기하고 ssh 포트 IP 전부열기......
 
     steps:
       - name: Checkout
