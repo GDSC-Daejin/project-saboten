@@ -2,11 +2,11 @@ name: Backend Dev Deploy to EC2
 
 on:
   push:
-    branches: [ release-server/* ]
+    branches: [ release-server/ec2 ]
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: macOS
 
     steps:
       - name: Checkout
