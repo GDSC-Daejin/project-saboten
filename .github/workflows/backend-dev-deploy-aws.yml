@@ -57,7 +57,7 @@ jobs:
       - name: Docker Build
         run: |
           docker login --username=peonypeonypeony --password=${{ secrets.PEONY_PW }}
-          docker build --tag peonypeonypeony/saboten:$GITHUB_SHA server
+          docker build --tag peonypeonypeony/saboten:$GITHUB_SHA server --platform=linux/amd64
 
       - name: Docker Push
         run: |
@@ -89,7 +89,7 @@ jobs:
         run: |
           ssh -t -i saboten-gdsc-dju.pem root@${{ secrets.EC2_HOST }} '
           docker ps -aq | xargs docker stop | xargs docker rm && 
-          docker image prune -a &&
+          docker image prune -a -f &&
           docker pull peonypeonypeony/saboten:$GITHUB_SHA &&
           docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
           '
