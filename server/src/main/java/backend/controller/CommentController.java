@@ -79,23 +79,6 @@ public class  CommentController {
         return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_ALL);
     }
 
-    // TODO : URL이 /post/my/comment 가 어울리지 않는지?
-    @ApiOperation(value = "유저별 댓글조회 API (사용자 인증 필요)", notes = "로그인 된 유저가 단 댓글들을 모두 조회하는 API입니다.")
-    @ApiResponses({
-            @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class)
-    })
-    @GetMapping("post/comment")
-    public ApiResponse<Page<CommentResponse>> getAllCommentsByUser(@PageableDefault Pageable pageable){
-        UserDto userDto = getUser();
-        Page<CommentDto> commentPage = commentService.getAllCommentsByUser(userDto.getUserId(), pageable);
-
-        Page<CommentResponse> commentResponses = commentPage.map(commentDto ->
-                commentDto.toCommentResponse(commentDto.getUser(),
-                        voteSelectService.findVoteSelectResult(commentDto.getUser().getUserId(), commentDto.getPost().getPostId()))
-        );
-        return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_USER);
-    }
-
     @ApiOperation(value = "댓글 삭제 API (사용자 인증 필요)", notes = "본인 댓글을 삭제 합니다.")
     @DeleteMapping("post/{postId}/comment/{commentId}")
     @ApiResponses({

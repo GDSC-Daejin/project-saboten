@@ -5,12 +5,10 @@ import backend.controller.dto.PostDto;
 import backend.controller.dto.UserDto;
 import backend.exception.ApiException;
 import backend.model.comment.CommentEntity;
-import backend.model.post.PostEntity;
-import backend.model.user.UserEntity;
 import backend.repository.comment.CommentRepository;
 import backend.repository.post.PostRepository;
 import common.message.CommentResponseMessage;
-import common.message.PostResponseMessage;
+import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.xml.stream.events.Comment;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
@@ -45,6 +42,11 @@ public class CommentService {
     public CommentDto findCommentById(Long commentId) {
         CommentEntity commentEntity = commentRepository.findByCommentId(commentId);
         return commentEntity.toDto();
+    }
+
+    public List<Long> findPostIdByUserId(Long userId) {
+
+        return commentRepository.findCommentIdByUserId(userId);
     }
 
     public Page<CommentDto> getAllCommentsByPost(Long postId, Pageable pageable) {

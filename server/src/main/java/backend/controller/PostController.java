@@ -8,6 +8,7 @@ import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
 import backend.service.CategoryService;
 import backend.service.UserService;
+import backend.service.comment.CommentService;
 import backend.service.post.*;
 import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
@@ -27,6 +28,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,6 +52,7 @@ class PostController {
     private final CategoryInPostService categoryInPostService;
     private final PostLikeService postLikeService;
     private final PostScrapService postScrapService;
+    private final CommentService commentService;
 
 
     // 로그인 안된 사용자면 null 반환
@@ -436,5 +439,21 @@ class PostController {
 
         PostCountResponse postCountResponse = new PostCountResponse(myPostCount, votedCount, scrapedCount);
         return ApiResponse.withMessage(postCountResponse, PostResponseMessage.POST_COUNT_BY_USER_ID);
+    }
+
+    @GetMapping("mypage/comment")
+    public ApiResponse<List<PostReadResponse>> getPostCommented() {
+        UserDto userDto = getUser();
+        Long userId = userDto != null ? userDto.getUserId() : null;
+
+        List<Long> postIdList = commentService.findPostIdByUserId(userId);
+        List<PostDto> postDtoList = postIdList.stream().map(postService::findPost).toList();
+        List<PostReadResponse> postResponseList = postDtoList.stream().map(postDto -> {
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories,
+                    userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false);
+        }).toList();
+        return ApiResponse.withMessage(postResponseList, PostResponseMessage.COMMENTED_POST_FIND_ALL_BY_USERID);
     }
 }
