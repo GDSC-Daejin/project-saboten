@@ -30,15 +30,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 테스트는 Dev 환경으로 돌리기 때문에 Dev Properties 생성
-      - name: Create Spring Dev Properties
-        run: |
-          touch server/src/main/resources/application-dev.properties
-          echo "$DEV_SPRING_PROPERTIES" > application-dev.properties.b64
-          base64 -d -i application-dev.properties.b64 > server/src/main/resources/application-dev.properties
-        env:
-          DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
-
       - name: Create Spring Prod Properties
         run: |
           touch server/src/main/resources/application-prod.properties
