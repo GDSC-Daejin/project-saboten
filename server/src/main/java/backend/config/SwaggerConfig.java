@@ -26,7 +26,7 @@ import java.util.Set;
 @EnableSwagger2
 public class SwaggerConfig {
     private final TypeResolver typeResolver;
-    private final String API_VERSION = "1.0";
+    private final String API_VERSION = "2.1";
 
     @Bean
     public Docket sabotenApi() {

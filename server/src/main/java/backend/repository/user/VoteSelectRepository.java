@@ -19,4 +19,7 @@ public interface VoteSelectRepository extends JpaRepository<VoteSelectEntity, Lo
     VoteSelectEntity findByUserIdAndPostId(Long userId, Long postId);
 
     void deleteByUserAndPost(UserEntity user, PostEntity post);
+
+    @Query("select count(voteSelect) from VoteSelectEntity voteSelect where voteSelect.user.userId = :userId")
+    Long countByUserId(Long userId);
 }

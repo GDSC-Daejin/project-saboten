@@ -1,7 +1,6 @@
 package backend.repository.post;
 
 import backend.model.post.PostEntity;
-import backend.model.post.PostLikeEntity;
 import backend.model.post.PostScrapEntity;
 import backend.model.user.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +18,7 @@ public interface PostScrapRepository extends JpaRepository<PostScrapEntity, Long
     @Query("select postScrap from PostScrapEntity postScrap " +
             "where postScrap.user.userId = :userId and postScrap.post.postId = :postId")
     PostScrapEntity findByUserIdAndPostId(Long userId, Long postId);
+
+    @Query("select count(postScrap) from PostScrapEntity postScrap where postScrap.user.userId = :userId")
+    Long countByUserId(Long userId);
 }

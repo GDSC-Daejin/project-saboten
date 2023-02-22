@@ -1,11 +1,8 @@
 package backend.repository.post;
 
-import backend.controller.dto.PostDto;
 import backend.model.post.PostEntity;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -39,4 +36,8 @@ public interface PostRepository extends JpaRepository<PostEntity, Long> {
     @Modifying
     @Query("update PostEntity post set post.view = post.view + 1 where post.postId = :id")
     Integer upateView(Long id);
+
+    @Query("select count(post) from PostEntity post where post.user.userId = :userId")
+    Long countByUserId(Long userId);
+    //select post from PostEntity post where post.user.userId = :userId
 }

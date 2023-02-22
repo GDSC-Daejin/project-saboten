@@ -3,7 +3,6 @@ package backend.service.user;
 import backend.controller.dto.PostDto;
 import backend.controller.dto.UserDto;
 import backend.model.post.PostEntity;
-import backend.model.user.UserEntity;
 import backend.model.user.VoteSelectEntity;
 import backend.repository.user.VoteSelectRepository;
 import lombok.RequiredArgsConstructor;
@@ -53,5 +52,9 @@ public class VoteSelectService {
                 .map(VoteSelectEntity::getPost)
                 .map(PostEntity::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Long countByUserId(final Long userId) {
+        return voteSelectRepository.countByUserId(userId);
     }
 }

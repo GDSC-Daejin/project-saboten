@@ -3,10 +3,7 @@ package backend.service.post;
 import backend.controller.dto.PostDto;
 import backend.controller.dto.PostScrapDto;
 import backend.controller.dto.UserDto;
-import backend.model.post.PostEntity;
-import backend.model.post.PostLikeEntity;
 import backend.model.post.PostScrapEntity;
-import backend.model.user.UserEntity;
 import backend.repository.post.PostScrapRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -45,5 +42,9 @@ public class PostScrapService {
         return postScrapRepository.findAllByUserId(userId)
                 .stream().map(PostScrapEntity::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public Long countByUserId(Long userId) {
+        return postScrapRepository.countByUserId(userId);
     }
 }
