@@ -450,9 +450,11 @@ class PostController {
         List<PostDto> postDtoList = postIdList.stream().map(postService::findPost).toList();
         List<PostReadResponse> postResponseList = postDtoList.stream().map(postDto -> {
             List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            Boolean isLiked = postLikeService.findPostIsLike(userId, postDto.getPostId());
+            Boolean isScraped = postScrapService.findPostIsScrap(userId, postDto.getPostId());
 
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories,
-                    userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false);
+                    isScraped);
         }).toList();
         return ApiResponse.withMessage(postResponseList, PostResponseMessage.COMMENTED_POST_FIND_ALL_BY_USERID);
     }
