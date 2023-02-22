@@ -1,5 +1,6 @@
 package commonClient.data.remote.endpoints
 
+import common.model.request.auth.SocialLoginRequest
 import common.model.request.auth.TokenReissueRequest
 import common.model.request.user.UserSignUpRequest
 import common.model.reseponse.ApiResponse
@@ -15,7 +16,7 @@ interface AuthApi : Api {
 
     suspend fun signup(userSignInRequest: UserSignUpRequest): ApiResponse<String>
 
-    suspend fun login(): ApiResponse<JwtTokenResponse>
+    suspend fun googleLogin(idToken : String): ApiResponse<JwtTokenResponse>
 
     suspend fun reissue(tokenReissueRequest: TokenReissueRequest): ApiResponse<JwtTokenResponse>
 
@@ -28,8 +29,8 @@ class AuthApiImp() : AuthApi {
         setBody(userSignInRequest)
     }
 
-    override suspend fun login(): ApiResponse<JwtTokenResponse> = responsePost("/login") {
-
+    override suspend fun googleLogin(idToken : String): ApiResponse<JwtTokenResponse> = responsePost("/social/login/google") {
+        setBody(SocialLoginRequest(idToken))
     }
 
     override suspend fun reissue(tokenReissueRequest: TokenReissueRequest): ApiResponse<JwtTokenResponse> =

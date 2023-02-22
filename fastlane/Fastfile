@@ -26,14 +26,14 @@ platform :android do
         release_notes = File.read("metadata/android/ko-KR/changelogs/debug-release-notes.txt")
 
         slack(
-           message: ":rocket: 몹시 싱싱한 빌드가 업로드 되었습니다. :cactus:",
+           message: ":rocket: 싱싱한 빌드가 업로드 되었습니다. :cactus:",
            success: true,
-           slack_url: "https://hooks.slack.com/services/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",
+           slack_url: "https://hooks.slack.com/services/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",
            default_payloads: [:git_branch, :last_git_commit_message],
            attachment_properties: {
                fields: [
                    {
-                       title: "항상 감사하십시오",
+                       title: "Firebase App Distribution",
                        value: "https://appdistribution.firebase.dev/i/506c2a6476f45a3d",
                    },
                    {
@@ -51,7 +51,7 @@ platform :android do
 
     error do |lane, exception, options|
         slack(
-               message: "불발쇼! 빌드에 실패했습니다. :rage:",
+               message: "빌드에 실패했습니다. :rage:",
                success: false,
                slack_url: "https://hooks.slack.com/services/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",
                default_payloads: [:git_branch, :last_git_commit_message],

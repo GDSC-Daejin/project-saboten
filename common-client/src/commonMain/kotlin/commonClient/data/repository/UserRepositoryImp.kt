@@ -3,6 +3,7 @@ package commonClient.data.repository
 import common.model.request.user.UserUpdateRequest
 import commonClient.data.cache.MeCache
 import commonClient.data.remote.endpoints.UserApi
+import commonClient.domain.entity.user.UserInfo
 import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.UserRepository
 import kotlinx.coroutines.flow.flow
@@ -15,21 +16,21 @@ class UserRepositoryImp(
     private val meCache: MeCache
 ) : UserRepository {
 
-    override fun getMe() = flow {
+    override suspend fun getMe() : UserInfo {
         val me = userApi.getMe()
         meCache.save(requireNotNull(me.data))
-        emit(requireNotNull(me.data?.toDomain()))
+        return requireNotNull(me.data?.toDomain())
     }
 
-    override fun getUser(id: Long) = flow {
+    override suspend fun getUser(id: Long) : UserInfo {
         val user = userApi.getUser(id)
-        emit(requireNotNull(user.data?.toDomain()))
+        return requireNotNull(user.data?.toDomain())
     }
 
-    override fun updateUserInfo(userUpdateRequest: UserUpdateRequest) = flow {
+    override suspend fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : UserInfo {
         val user = userApi.updateUserInfo(userUpdateRequest)
         meCache.save(requireNotNull(user.data))
-        emit(requireNotNull(user.data?.toDomain()))
+        return requireNotNull(user.data?.toDomain())
     }
 
     override fun observeMe() = meCache.me.map { it?.toDomain() }

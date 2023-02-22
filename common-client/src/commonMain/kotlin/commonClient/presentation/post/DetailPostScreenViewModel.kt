@@ -1,12 +1,8 @@
-package commonClient.presentation.main
+package commonClient.presentation.post
 
-import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.GetPostByIdUseCase
-import commonClient.domain.usecase.post.RequestLikePostUseCase
-import commonClient.domain.usecase.post.RequestScrapPostUseCase
-import commonClient.domain.usecase.post.RequestVotePostUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.toLoadState

@@ -12,6 +12,7 @@ import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedVotedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
+import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

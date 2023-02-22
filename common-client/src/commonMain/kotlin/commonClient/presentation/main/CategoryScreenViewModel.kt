@@ -12,6 +12,7 @@ import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.post.paged.GetPagedPostsByCategoryUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
+import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.ExperimentalCoroutinesApi

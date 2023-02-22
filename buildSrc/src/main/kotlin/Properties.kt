@@ -5,7 +5,7 @@ object Properties {
     const val androidCompileSDK = 33
     const val androidPackageName = "app.saboten.androidApp"
 
-    const val androidAppVersionName = "1.00.00"
+    const val androidAppVersionName = "1.01.00"
     val androidAppVersionCode = androidAppVersionName.filter { it.isDigit() }.toInt()
 
 }

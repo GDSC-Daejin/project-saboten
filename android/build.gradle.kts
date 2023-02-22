@@ -66,6 +66,7 @@ dependencies {
     implementation(Google.accompanist.navigation.animation)
     implementation(Google.accompanist.navigation.material)
     implementation(Google.accompanist.flowLayout)
+    implementation(Google.android.playServices.auth)
 
     implementation(platform(Google.firebase.bom))
     implementation(Google.firebase.analyticsKtx)

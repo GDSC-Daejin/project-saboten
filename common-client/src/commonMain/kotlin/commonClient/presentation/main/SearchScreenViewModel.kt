@@ -13,6 +13,7 @@ import commonClient.domain.usecase.post.RemoveRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedSearchPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
+import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview

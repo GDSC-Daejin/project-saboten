@@ -8,6 +8,6 @@ class GetMeUseCase(
     private val userRepository: UserRepository
 ) {
 
-    operator fun invoke()  = userRepository.getMe()
+    suspend operator fun invoke()  = userRepository.getMe()
 
 }

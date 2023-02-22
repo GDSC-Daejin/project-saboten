@@ -14,6 +14,19 @@ class AuthRepositoryImp constructor(
     private val authTokenManager: AuthTokenManager,
 ) : AuthRepository {
 
+    override suspend fun requestGoogleLogin(idToken: String): JwtToken {
+        val jwtToken = authApi.googleLogin(idToken).data?.run {
+            authTokenManager.setToken(this)
+            JwtToken(
+                grantType = grantType,
+                accessToken = accessToken,
+                refreshToken = refreshToken,
+                accessTokenExpiresIn = accessTokenExpiresIn
+            )
+        }
+        return requireNotNull(jwtToken)
+    }
+
     override fun refreshToken(forceRefresh: Boolean) = flow {
 
         val accessToken = authTokenManager.accessToken()
