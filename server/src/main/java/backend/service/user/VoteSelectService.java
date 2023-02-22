@@ -6,6 +6,8 @@ import backend.model.post.PostEntity;
 import backend.model.user.VoteSelectEntity;
 import backend.repository.user.VoteSelectRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,13 +47,12 @@ public class VoteSelectService {
         return voteResult;
     }
 
-    public List<PostDto> findPostVoted(final Long userId) {
-        List<VoteSelectEntity> voteSelectEntities = voteSelectRepository.findByUserId(userId);
+    public Page<PostDto> findPostVoted(final Long userId, Pageable pageable) {
+        Page<VoteSelectEntity> voteSelectEntities = voteSelectRepository.findByUserId(userId, pageable);
 
-        return voteSelectEntities.stream()
+        return voteSelectEntities
                 .map(VoteSelectEntity::getPost)
-                .map(PostEntity::toDto)
-                .collect(Collectors.toList());
+                .map(PostEntity::toDto);
     }
 
     public Long countByUserId(final Long userId) {

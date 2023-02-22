@@ -13,7 +13,9 @@ import backend.service.user.VoteSelectService;
 import common.message.CommentResponseMessage;
 import common.model.request.comment.CommentCreateRequest;
 import common.model.reseponse.ApiResponse;
+import common.model.reseponse.PagingResponse;
 import common.model.reseponse.comment.CommentResponse;
+import common.model.reseponse.post.read.PostReadResponse;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +69,7 @@ public class  CommentController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = PostNotFoundResponse.class)
     })
     @GetMapping("post/{postId}/comment")
-    public ApiResponse<Page<CommentResponse>> getAllCommentsByPost(@PathVariable Long postId, @PageableDefault Pageable pageable){
+    public ApiResponse<PagingResponse<CommentResponse>> getAllCommentsByPost(@PathVariable Long postId, @PageableDefault Pageable pageable){
         PostDto postDto = postService.findPost(postId);
         Page<CommentDto> commentPage = commentService.getAllCommentsByPost(postDto.getPostId(), pageable);
 
@@ -76,7 +78,9 @@ public class  CommentController {
                         voteSelectService.findVoteSelectResult(commentDto.getUser().getUserId(), postDto.getPostId()))
         );
 
-        return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_ALL);
+        Long nextPage = commentResponses.isLast() ? null : (long) commentResponses.getNumber() + 2;
+        PagingResponse<CommentResponse> commentPaging = new PagingResponse<>(commentResponses.getContent(), nextPage, commentResponses.getTotalPages());
+        return ApiResponse.withMessage(commentPaging,CommentResponseMessage.COMMENT_FIND_ALL);
     }
 
     // TODO : URL이 /post/my/comment 가 어울리지 않는지?
@@ -85,7 +89,7 @@ public class  CommentController {
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class)
     })
     @GetMapping("post/comment")
-    public ApiResponse<Page<CommentResponse>> getAllCommentsByUser(@PageableDefault Pageable pageable){
+    public ApiResponse<PagingResponse<CommentResponse>> getAllCommentsByUser(@PageableDefault Pageable pageable){
         UserDto userDto = getUser();
         Page<CommentDto> commentPage = commentService.getAllCommentsByUser(userDto.getUserId(), pageable);
 
@@ -93,7 +97,10 @@ public class  CommentController {
                 commentDto.toCommentResponse(commentDto.getUser(),
                         voteSelectService.findVoteSelectResult(commentDto.getUser().getUserId(), commentDto.getPost().getPostId()))
         );
-        return ApiResponse.withMessage(commentResponses,CommentResponseMessage.COMMENT_FIND_USER);
+
+        Long nextPage = commentResponses.isLast() ? null : (long) commentResponses.getNumber() + 2;
+        PagingResponse<CommentResponse> commentPaging = new PagingResponse<>(commentResponses.getContent(), nextPage, commentResponses.getTotalPages());
+        return ApiResponse.withMessage(commentPaging,CommentResponseMessage.COMMENT_FIND_USER);
     }
 
     @ApiOperation(value = "댓글 삭제 API (사용자 인증 필요)", notes = "본인 댓글을 삭제 합니다.")
@@ -103,7 +110,7 @@ public class  CommentController {
             @io.swagger.annotations.ApiResponse(code = 404, message = "", response = CommentNotFoundResponse.class)
     })
     @ResponseStatus(HttpStatus.OK)
-    public ApiResponse<Page<CommentResponse>> deleteComment(@PathVariable Long postId, @PathVariable Long commentId){
+    public ApiResponse<?> deleteComment(@PathVariable Long postId, @PathVariable Long commentId){
         UserDto userDto = getUser();
         commentService.deleteComment(commentId, postId, userDto);
         return ApiResponse.withMessage(null,CommentResponseMessage.COMMENT_DELETED);
