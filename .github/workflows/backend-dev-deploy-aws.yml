@@ -30,14 +30,13 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # application-dev.properties 생성
-      - name: Create Spring Properties
+      - name: Create Spring Prod Properties
         run: |
-          touch server/src/main/resources/application-dev.properties
-          echo "$DEV_SPRING_PROPERTIES" > application-dev.properties.b64
-          base64 -d -i application-dev.properties.b64 > server/src/main/resources/application-dev.properties
+          touch server/src/main/resources/application-prod.properties
+          echo "$PROD_SPRING_PROPERTIES" > application-prod.properties.b64
+          base64 -d -i application-prod.properties.b64 > server/src/main/resources/application-prod.properties
         env:
-          DEV_SPRING_PROPERTIES: ${{ secrets.DEV_SPRING_PROPERTIES }}
+          PROD_SPRING_PROPERTIES: ${{ secrets.PROD_SPRING_PROPERTIES }}
 
       - name: Create SSL KeyStore File
         run: |
@@ -49,7 +48,7 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          ./gradlew clean :server:build -Pprofile=dev    
+          ./gradlew clean :server:build -Pprofile=prod    
 
       - name: Move to DockerFile Directory
         run: cd server

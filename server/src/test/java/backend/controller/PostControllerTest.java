@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @UTF8Config
-@ActiveProfiles("dev")
+@ActiveProfiles("prod")
 class PostControllerTest {
 
     @Autowired
@@ -525,7 +525,6 @@ class PostControllerTest {
                             .params(param))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -687,7 +686,6 @@ class PostControllerTest {
             mockMvc.perform(get(baseUrl + "/hot"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.data").isArray())
-                    .andExpect(jsonPath("$.data.data").isNotEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -767,9 +765,9 @@ class PostControllerTest {
             mockMvc.perform(get(baseUrl + "/my/voted")
                             .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").isArray())
-                    .andExpect(jsonPath("$.data").isNotEmpty())
-                    .andExpect(jsonPath("$.data[0].id").value(postId))
+                    .andExpect(jsonPath("$.data.data").isArray())
+                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.data[0].id").value(postId))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());

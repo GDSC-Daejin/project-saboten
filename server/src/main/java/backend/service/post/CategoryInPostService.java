@@ -38,6 +38,7 @@ public class CategoryInPostService {
     @Transactional
     public List<CategoryResponse> saveCategoriesInPost(final List<CategoryDto> categoryEntities, final PostDto postDto){
         List<CategoryResponse> categories = new ArrayList<>();
+
         for(CategoryDto categoryDto : categoryEntities){
             CategoryInPostEntity categoryInPostEntity = CategoryInPostEntity.builder()
                     .post(postDto.toEntity())
