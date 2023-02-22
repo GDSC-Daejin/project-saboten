@@ -2,6 +2,8 @@ package backend.controller;
 
 import backend.controller.annotation.Version1RestController;
 import backend.controller.swagger.response.SocialInvalidLoginResponse;
+import backend.jwt.RoleType;
+import backend.jwt.TokenProvider;
 import backend.service.AuthService;
 import common.message.UserResponseMessage;
 import common.model.request.auth.SocialLoginRequest;
@@ -34,6 +36,7 @@ public class AuthController {
         UserInfoResponse userInfo = authService.signupUpdate(userInfoResponse);
         return ApiResponse.withMessage(userInfoResponse, UserResponseMessage.USER_UPDATED);
     }
+
 
     // 현재 auth 기능들은 제대로 된 auth 가 아니라서 추후 소셜로그인 구현이 되면 제대로 구현합시다!
     @ApiOperation(value = "유저 회원가입", notes = "임시 회원가입입니다 추후 소셜로그인 대응해야 합니다.")

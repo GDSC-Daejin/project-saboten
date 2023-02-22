@@ -6,6 +6,8 @@ import backend.controller.dto.UserDto;
 import backend.model.post.PostScrapEntity;
 import backend.repository.post.PostScrapRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,10 +40,8 @@ public class PostScrapService {
         }
     }
 
-    public List<PostScrapDto> getUserScrap(Long userId) {
-        return postScrapRepository.findAllByUserId(userId)
-                .stream().map(PostScrapEntity::toDto)
-                .collect(Collectors.toList());
+    public Page<PostScrapDto> getUserScrap(Long userId, Pageable pageable) {
+        return postScrapRepository.findAllByUserId(userId, pageable).map(PostScrapEntity::toDto);
     }
 
     public Long countByUserId(Long userId) {

@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @UTF8Config
-@ActiveProfiles("dev")
+@ActiveProfiles("prod")
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -69,13 +69,13 @@ class UserControllerTest {
         @WithMockUser(username = "1")
         public void 다른유저_프로필조회() throws Exception {
             // given
-            int userId = 2;
+            int userId = 1;
             ResponseMessage responseMessage = UserResponseMessage.USER_READ;
 
             // when then
             mockMvc.perform(get(infoBaseUrl+"/"+userId))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.id").value(2))
+                    .andExpect(jsonPath("$.data.id").value(userId))
                     .andExpect(jsonPath("$.data.nickname").isNotEmpty())
                     .andExpect(jsonPath("$.data.profilePhotoUrl").isNotEmpty())
                     .andExpect(jsonPath("$.data.email").isNotEmpty())

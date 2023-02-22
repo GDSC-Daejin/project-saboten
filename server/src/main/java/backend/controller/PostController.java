@@ -8,6 +8,7 @@ import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
 import backend.service.CategoryService;
 import backend.service.UserService;
+import backend.service.comment.CommentService;
 import backend.service.post.*;
 import backend.service.user.VoteSelectService;
 import common.message.PostResponseMessage;
@@ -18,6 +19,7 @@ import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.PagingResponse;
 import common.model.reseponse.category.CategoryResponse;
+import common.model.reseponse.comment.CommentResponse;
 import common.model.reseponse.post.PostCountResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
@@ -27,6 +29,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -50,6 +53,7 @@ class PostController {
     private final CategoryInPostService categoryInPostService;
     private final PostLikeService postLikeService;
     private final PostScrapService postScrapService;
+    private final CommentService commentService;
 
 
     // 로그인 안된 사용자면 null 반환
@@ -128,9 +132,9 @@ class PostController {
             notes = "기본적으로는 전체 게시물 리스트를 조회하지만 특정 카테고리에 해당하는 게시물 리스트를 조회할 수도 있습니다.")
     @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다. (필터 역할)")
     @GetMapping("/post")
-    public ApiResponse<PagingResponse<PostReadResponse>> getPostList(@RequestParam(required = false) Long categoryId,
+    public ApiResponse<PagingResponse<PostResponse>> getPostList(@RequestParam(required = false) Long categoryId,
                                                    @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable){
-        Page<PostReadResponse> postPage;
+        Page<PostResponse> postPage;
         UserDto userDto = getUser();
 
         if(categoryId != null){
@@ -140,19 +144,37 @@ class PostController {
                         PostDto postDto = categoryInPostDto.getPost();
                         Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
                         List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-                        return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
+
+                        Long userId = userDto != null ? userDto.getUserId() : null;
+                        Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
+                        boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
+
+                        return postDto.toResponse(voteService.findVotes(postDto.getPostId()),
+                                categories,
+                                voteResult,
+                                isLike,
+                                isScrap);
                     });
         }
         else {
             postPage = postService.findAllPageable(pageable).map(postDto -> {
                 Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
                 List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-                return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
+
+                Long userId = userDto != null ? userDto.getUserId() : null;
+                Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
+                boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
+
+                return postDto.toResponse(voteService.findVotes(postDto.getPostId()),
+                        categories,
+                        voteResult,
+                        isLike,
+                        isScrap);
             });
         }
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
-        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
+        PagingResponse<PostResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
@@ -216,7 +238,6 @@ class PostController {
         PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
-
 
     @ApiOperation(value = "게시물 수정 (사용자 인증 필요)", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
@@ -317,18 +338,20 @@ class PostController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
     })
-    public ApiResponse<List<PostReadResponse>> getPostScrap() {
+    public ApiResponse<PagingResponse<PostReadResponse>> getPostScrap(Pageable pageable) {
         UserDto userDto = getUser();
         Long userId = userDto != null ? userDto.getUserId() : null;
 
-        List<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userId);
-        List<PostReadResponse> myPostScrap = postScrapesDto.stream().map(postScrapDto -> {
+        Page<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userId, pageable);
+        Page<PostReadResponse> myPostScrap = postScrapesDto.map(postScrapDto -> {
             PostDto postDto = postScrapDto.getPost();
             List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, true);
-        }).collect(Collectors.toList());
+        });
 
-        return ApiResponse.withMessage(myPostScrap, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
+        Long nextPage = myPostScrap.isLast() ? null : (long) myPostScrap.getNumber() + 2;
+        PagingResponse<PostReadResponse> myPostScrapPage = new PagingResponse<>(myPostScrap.getContent(), nextPage, myPostScrap.getTotalPages());
+        return ApiResponse.withMessage(myPostScrapPage, PostResponseMessage.POST_SCRAP_FIND_SUCCESS);
     }
     
     @ApiOperation(value = "뜨거운 고민거리 API 입니다.", notes = "카테고리 와 게시물 기간에 따라 게시물들을 조회합니다.")
@@ -410,18 +433,20 @@ class PostController {
     @ApiResponses({
             @io.swagger.annotations.ApiResponse(code = 401, message = "", response = UnauthorizedResponse.class),
     })
-    public ApiResponse<List<PostReadResponse>> getPostVoted() {
+    public ApiResponse<PagingResponse<PostReadResponse>> getPostVoted(Pageable pageable) {
         UserDto userDto = getUser();
         Long userId = userDto != null ? userDto.getUserId() : null;
 
-        List<PostDto> postsDto = voteSelectService.findPostVoted(userId);
-        List<PostReadResponse> myPostVoted = postsDto.stream().map(postDto -> {
+        Page<PostDto> postsDto = voteSelectService.findPostVoted(userId, pageable);
+        Page<PostReadResponse> myPostVoted = postsDto.map(postDto -> {
             Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
             List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, isScrap);
-        }).collect(Collectors.toList());
+        });
 
-        return ApiResponse.withMessage(myPostVoted, PostResponseMessage.POST_VOTED_FIND_SUCCESS);
+        Long nextPage = myPostVoted.isLast() ? null : (long) myPostVoted.getNumber() + 2;
+        PagingResponse<PostReadResponse> postPage = new PagingResponse<>(myPostVoted.getContent(), nextPage, myPostVoted.getTotalPages());
+        return ApiResponse.withMessage(postPage, PostResponseMessage.POST_VOTED_FIND_SUCCESS);
     }
 
     @ApiOperation(value = "마이페이지 게시글 카운트")
@@ -436,5 +461,23 @@ class PostController {
 
         PostCountResponse postCountResponse = new PostCountResponse(myPostCount, votedCount, scrapedCount);
         return ApiResponse.withMessage(postCountResponse, PostResponseMessage.POST_COUNT_BY_USER_ID);
+    }
+
+    @GetMapping("mypage/comment")
+    public ApiResponse<List<PostReadResponse>> getPostCommented() {
+        UserDto userDto = getUser();
+        Long userId = userDto != null ? userDto.getUserId() : null;
+
+        List<Long> postIdList = commentService.findPostIdByUserId(userId);
+        List<PostDto> postDtoList = postIdList.stream().map(postService::findPost).toList();
+        List<PostReadResponse> postResponseList = postDtoList.stream().map(postDto -> {
+            List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
+            Boolean isLiked = postLikeService.findPostIsLike(userId, postDto.getPostId());
+            Boolean isScraped = postScrapService.findPostIsScrap(userId, postDto.getPostId());
+
+            return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories,
+                    isScraped);
+        }).toList();
+        return ApiResponse.withMessage(postResponseList, PostResponseMessage.COMMENTED_POST_FIND_ALL_BY_USERID);
     }
 }
