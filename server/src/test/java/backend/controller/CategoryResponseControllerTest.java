@@ -22,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @Transactional
 @UTF8Config
-@ActiveProfiles("dev")
+@ActiveProfiles("prod")
 class CategoryResponseControllerTest {
     @Autowired
     private MockMvc mockMvc;
