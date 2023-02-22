@@ -23,7 +23,4 @@ public class SecurityUtil {
             return null;
         return Long.parseLong(name);
     }
-
-
-
 }
