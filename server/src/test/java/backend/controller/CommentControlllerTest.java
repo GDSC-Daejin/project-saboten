@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @UTF8Config
 @Transactional
-@ActiveProfiles("prod")
+@ActiveProfiles("dev")
 class CommentControlllerTest {
     @Autowired
     private MockMvc mockMvc;
