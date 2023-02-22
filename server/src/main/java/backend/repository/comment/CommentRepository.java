@@ -23,4 +23,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     Page<CommentEntity> findAllByUserId(Long userId, Pageable pageable);
 
     void deleteByCommentIdAndUser(Long commentId, UserEntity user);
+
+    @Query("select commentEntity.post.postId from CommentEntity  commentEntity where commentEntity.user.userId = :userId")
+    List<Long> findCommentIdByUserId(Long userId);
 }

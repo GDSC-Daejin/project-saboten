@@ -24,5 +24,6 @@ enum class PostResponseMessage(
     POST_FIND_ALL_ORDERED_BY_LIKED_COUNT("좋아요 수 기준으로 조회하였습니다.", 200),
     POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT("좋아요 수 기준으로 5개 조회하였습니다.", 200),
     POST_FIND_ALL_ORDERED_BY_REGIST_DATE("최신순 기준으로 게시글을 조회하였습니다.", 200),
-    POST_COUNT_BY_USER_ID("유저 id 기준으로 게시글을 카운팅 하였습니다.", 200);
+    POST_COUNT_BY_USER_ID("유저 id 기준으로 게시글을 카운팅 하였습니다.", 200),
+    COMMENTED_POST_FIND_ALL_BY_USERID("댓글 쓴 포스트들을 조회하였습니다", 200);
 }
