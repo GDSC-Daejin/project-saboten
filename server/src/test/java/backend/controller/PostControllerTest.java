@@ -765,9 +765,9 @@ class PostControllerTest {
             mockMvc.perform(get(baseUrl + "/my/voted")
                             .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data").isArray())
-                    .andExpect(jsonPath("$.data").isNotEmpty())
-                    .andExpect(jsonPath("$.data[0].id").value(postId))
+                    .andExpect(jsonPath("$.data.data").isArray())
+                    .andExpect(jsonPath("$.data.data").isNotEmpty())
+                    .andExpect(jsonPath("$.data.data[0].id").value(postId))
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());

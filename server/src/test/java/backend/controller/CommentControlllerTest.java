@@ -77,8 +77,8 @@ class CommentControlllerTest {
             // when then
             mockMvc.perform(get(requestUrl))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.content").isArray())
-                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.data").isArray())
+                    .andExpect(jsonPath("$.data.data").isNotEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
@@ -244,8 +244,8 @@ class CommentControlllerTest {
             mockMvc.perform(get(requestUrl)
                             .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.data.content").isArray())
-                    .andExpect(jsonPath("$.data.content").isNotEmpty())
+                    .andExpect(jsonPath("$.data.data").isArray())
+                    .andExpect(jsonPath("$.data.data").isNotEmpty())
                     .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                     .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                     .andDo(print());
