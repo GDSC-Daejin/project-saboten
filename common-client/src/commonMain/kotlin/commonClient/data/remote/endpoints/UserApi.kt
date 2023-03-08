@@ -11,7 +11,7 @@ import org.koin.core.annotation.Single
 
 interface UserApi : Api {
 
-    override val prefixUrl: String get() = "/api/v1/users"
+    override val prefixUrl: String get() = "/api/v1/userInfo"
 
     suspend fun getMe(): ApiResponse<UserInfoResponse>
 
@@ -24,9 +24,9 @@ interface UserApi : Api {
 @Single(binds = [UserApi::class])
 class UserApiImp : UserApi {
 
-    override suspend fun getMe() = responseGet<UserInfoResponse>("me")
+    override suspend fun getMe() = responseGet<UserInfoResponse>("/")
 
-    override suspend fun getUser(id: Long) = responseGet<UserInfoResponse>(id)
+    override suspend fun getUser(id: Long) = responseGet<UserInfoResponse>("/$id")
 
     override suspend fun updateUserInfo(userUpdateRequest: UserUpdateRequest) = responsePatch<UserInfoResponse> {
         setBody(userUpdateRequest)

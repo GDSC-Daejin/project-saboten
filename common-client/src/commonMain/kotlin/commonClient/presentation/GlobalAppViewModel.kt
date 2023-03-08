@@ -8,6 +8,7 @@ import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.entity.user.UserInfo
 import commonClient.domain.usecase.auth.RefreshTokenUseCase
 import commonClient.domain.usecase.settings.ObserveAppThemeSettingsUseCase
+import commonClient.domain.usecase.user.GetMeUseCase
 import commonClient.domain.usecase.user.ObserveMeUseCase
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.flow.collect
@@ -30,6 +31,7 @@ sealed interface GlobalAppSideEffect {
 }
 
 class GlobalAppViewModel(
+    private val getMeUseCase: GetMeUseCase,
     private val observeMeUseCase: ObserveMeUseCase,
     private val observeAppThemeSettingsUseCase: ObserveAppThemeSettingsUseCase,
     private val refreshTokenUseCase: RefreshTokenUseCase
@@ -48,6 +50,7 @@ class GlobalAppViewModel(
     private fun initializeApp() = intent {
 
         platformViewModelScope.launch(PlatformDispatchers.IO) {
+            kotlin.runCatching { getMeUseCase() }
             observeMeUseCase()
                 .toLoadState()
                 .onEach {

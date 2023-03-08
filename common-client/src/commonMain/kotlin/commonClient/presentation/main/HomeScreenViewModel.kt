@@ -51,6 +51,18 @@ class HomeScreenViewModel(
 
     init {
         containerHost = this
+        onPostUpdated = { post ->
+            intent {
+                reduce {
+                    state.copy(
+                        hotPost = state.hotPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
+                        recentPost = state.recentPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
+                        selectedPost = state.selectedPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
+                        scrappedPosts = state.scrappedPosts.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
+                    )
+                }
+            }
+        }
         intent {
             flow { emit(getCategoriesUseCase()) }
                 .toLoadState()
@@ -105,19 +117,6 @@ class HomeScreenViewModel(
             .toLoadState()
             .onEach { reduce { state.copy(selectedPost = it) } }
             .launchIn(platformViewModelScope)
-    }
-
-    override suspend fun onPostUpdated(post: Post) {
-        intent {
-            reduce {
-                state.copy(
-                    hotPost = state.hotPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                    recentPost = state.recentPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                    selectedPost = state.selectedPost.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                    scrappedPosts = state.scrappedPosts.map { it.map { prevPost -> if (prevPost.id == post.id) post else prevPost } },
-                )
-            }
-        }
     }
 
 }

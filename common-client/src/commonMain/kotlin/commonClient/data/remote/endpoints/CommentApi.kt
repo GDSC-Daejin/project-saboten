@@ -1,10 +1,13 @@
 package commonClient.data.remote.endpoints
 
+import common.model.request.comment.CommentCreateRequest
 import common.model.reseponse.ApiResponse
 import common.model.reseponse.comment.CommentResponse
 import common.model.reseponse.paging.PagingResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
+import commonClient.data.remote.responsePost
+import commonClient.domain.entity.PagingRequest
 import io.ktor.client.request.*
 import org.koin.core.annotation.Single
 
@@ -12,27 +15,36 @@ interface CommentApi : Api {
 
     override val prefixUrl: String get() = "/api/v1/post"
 
+    suspend fun postComment(
+        postId: Long,
+        content: String,
+    ): ApiResponse<CommentResponse>
+
     suspend fun getPagedComments(
         postId: Long,
-        offset: Int?,
-        pageNumber: Int?,
-        pageSize: Int?
-    ) : ApiResponse<PagingResponse<CommentResponse>>
+        pageRequest: PagingRequest,
+    ): ApiResponse<PagingResponse<CommentResponse>>
 
 }
 
 @Single(binds = [CommentApi::class])
 class CommentApiImp : CommentApi {
-    override suspend fun getPagedComments(
-        postId: Long,
-        offset: Int?,
-        pageNumber: Int?,
-        pageSize: Int?
-    ) = responseGet<PagingResponse<CommentResponse>>("/$postId/comment") {
-        parameter("offset", offset)
-        parameter("pageNumber", pageNumber)
-        parameter("pageSize", pageSize)
+
+    override suspend fun postComment(postId: Long, content: String) = responsePost<CommentResponse>("/$postId/comment") {
+        setBody(CommentCreateRequest(content))
     }
 
+    override suspend fun getPagedComments(
+        postId: Long,
+        pageRequest: PagingRequest,
+    ) = responseGet<PagingResponse<CommentResponse>>("/$postId/comment") {
+        pageRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
+    }
+
+    private fun PagingRequest.toParameters() = listOf(
+        "page" to if (page != null && page < 0) null else page,
+        "size" to size,
+        "sort" to sort?.joinToString(","),
+    )
 
 }

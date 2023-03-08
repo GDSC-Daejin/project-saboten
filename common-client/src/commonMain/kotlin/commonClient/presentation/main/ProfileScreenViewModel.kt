@@ -49,6 +49,20 @@ class ProfileScreenViewModel(
 
     init {
         containerHost = this
+        onPostUpdated = { post ->
+            intent {
+                reduce {
+                    state.copy(
+                        items = state.items.map { pagingData ->
+                            pagingData.map { item ->
+                                if (item.id == post.id) post
+                                else item
+                            }
+                        }
+                    )
+                }
+            }
+        }
         intent {
             flow { emit(getCategoriesUseCase()) }
                 .toLoadState()
@@ -85,21 +99,6 @@ class ProfileScreenViewModel(
             prevKey = { null },
             nextKey = { pagingResult.nextKey }
         )
-    }
-
-    override suspend fun onPostUpdated(post: Post) {
-        intent {
-            reduce {
-                state.copy(
-                    items = state.items.map { pagingData ->
-                        pagingData.map { item ->
-                            if (item.id == post.id) post
-                            else item
-                        }
-                    }
-                )
-            }
-        }
     }
 
 }

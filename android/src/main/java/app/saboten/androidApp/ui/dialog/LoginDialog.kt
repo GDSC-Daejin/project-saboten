@@ -51,7 +51,7 @@ fun LoginDialog(
 
 @Composable
 fun LoginDialogContent(
-    dismiss : () -> Unit
+    dismiss: () -> Unit,
 ) {
 
     val viewModel = koinViewModel<LoginScreenViewModel>()
@@ -119,7 +119,10 @@ fun LoginDialogContent(
             Spacer(modifier = Modifier.height(25.dp))
 
             GoogleLoginButton {
-                coroutineScope.launch(CoroutineExceptionHandler { _, throwable -> throwable.printStackTrace() }) {
+                coroutineScope.launch(CoroutineExceptionHandler { _, throwable ->
+                    throwable.printStackTrace()
+                    dismiss()
+                }) {
                     requestSignIn.launch(
                         IntentSenderRequest.Builder(googleLoginManager.signInIntent(context.getActivity()!!)).build()
                     )

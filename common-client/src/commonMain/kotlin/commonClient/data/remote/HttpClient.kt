@@ -19,7 +19,7 @@ import io.ktor.serialization.kotlinx.KotlinxSerializationConverter
 import kotlinx.serialization.json.Json
 
 // TODO Change URL
-private const val URL = "saboten.loca.lt"
+private const val URL = "pitapat-adventcalendar.site"
 
 expect fun getHttpClient(): HttpClient
 
@@ -31,10 +31,10 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
 
     expectSuccess = false
 
-//    install(HttpTimeout) {
-//        requestTimeoutMillis = 10000L
-//        connectTimeoutMillis = 10000L
-//    }
+    install(HttpTimeout) {
+        requestTimeoutMillis = 10000L
+        connectTimeoutMillis = 10000L
+    }
 
     install(ContentNegotiation) {
         register(
@@ -101,7 +101,7 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
         }
 
         url {
-            protocol = URLProtocol.HTTP
+            protocol = URLProtocol.HTTPS
             host = URL
         }
     }
