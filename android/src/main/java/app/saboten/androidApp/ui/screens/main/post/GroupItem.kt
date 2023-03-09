@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,7 +21,7 @@ fun GroupItem(text: String) {
             .width(66.dp)
             .height(30.dp)
             .background(
-                color = SabotenColors.grey100,
+                color = MaterialTheme.colors.onSurface.copy(0.1f),
                 shape = RoundedCornerShape(8.dp)
             ),
         contentAlignment = Alignment.Center

@@ -9,7 +9,7 @@ class GetSelectedPostsUseCase(
     private val postRepository: PostRepository,
 ) {
 
-    suspend operator fun invoke() = postRepository.getRecentPosts(
+    suspend operator fun invoke() = postRepository.getMyVotedPosts(
         PagingRequest(null, size = PAGE_ITEM_SIZE)
     ).data
 

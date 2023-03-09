@@ -1,8 +1,8 @@
 package commonClient.data.repository
 
-import com.kuuurt.paging.multiplatform.Pager
 import common.model.reseponse.paging.PagingResponse
 import commonClient.data.remote.endpoints.CommentApi
+import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Comment
 import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.CommentRepository
@@ -14,17 +14,15 @@ class CommentRepositoryImp(
     private val commentApi: CommentApi
 ) : CommentRepository {
 
-    override fun getCommentsPager(postId: Long): Pager<Long, Comment> {
-        TODO("Not yet implemented")
+    override suspend fun postComment(postId: Long, content: String): Comment {
+        return commentApi.postComment(postId, content).data!!.toDomain()
     }
 
     override suspend fun getPagedComment(
         postId: Long,
-        offset: Int?,
-        pageNumber: Int?,
-        pageSize: Int?
+        pageRequest: PagingRequest
     ): PagingResponse<Comment> {
-        val response = commentApi.getPagedComments(postId, offset, pageNumber, pageSize).data!!
+        val response = commentApi.getPagedComments(postId, pageRequest).data!!
         return response.map { it.toDomain() }
     }
 

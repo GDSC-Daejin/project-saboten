@@ -5,6 +5,7 @@ import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
+import commonClient.logger.ClientLogger
 import org.koin.core.annotation.Single
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -14,13 +15,13 @@ interface PostActionsDelegate {
 
     var containerHost: ContainerHost<*, *>?
 
+    var onPostUpdated: ((Post) -> Unit)?
+
     fun requestVote(postId: Long, voteId: Long)
 
     fun requestLike(postId: Long)
 
     fun requestScrap(postId: Long)
-
-    suspend fun onPostUpdated(post: Post)
 
 }
 
@@ -34,27 +35,27 @@ open class PostActionsDelegateImp(
 
     override var containerHost: ContainerHost<*, *>? = null
 
+    override var onPostUpdated: ((Post) -> Unit)? = null
+
     override fun requestVote(postId: Long, voteId: Long) {
-       containerHost?.intent {
+        containerHost?.intent {
             val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-            onPostUpdated(post)
+            onPostUpdated?.invoke(post)
         }
     }
 
     override fun requestLike(postId: Long) {
-       containerHost?.intent {
+        containerHost?.intent {
             val post = requestLikePostUseCase(postId)
-            onPostUpdated(post)
+            onPostUpdated?.invoke(post)
         }
     }
 
     override fun requestScrap(postId: Long) {
-       containerHost?.intent {
+        containerHost?.intent {
             val post = requestScrapPostUseCase(postId)
-            onPostUpdated(post)
+            onPostUpdated?.invoke(post)
         }
     }
 
-    override suspend fun onPostUpdated(post: Post) {
-    }
 }

@@ -60,7 +60,7 @@ fun LargePostCard(
             .wrapContentHeight()
             .sabotenShadow()
             .background(
-                color = Color.White,
+                color = MaterialTheme.colors.surface,
                 shape = MaterialTheme.shapes.medium,
             )
             .clickable(onClick = onClicked)
@@ -104,7 +104,7 @@ fun LargePostCard(
                         },
                     imageVector = Icons.Rounded.Bookmark,
                     tint =
-                    if (post.isScraped == true) SabotenColors.green500 else SabotenColors.grey200,
+                    if (post.isScraped == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f),
                     contentDescription = "스크랩"
                 )
             }
@@ -128,7 +128,7 @@ fun LargePostCard(
                     onVoteItemClicked = {
                         if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses.first()) },
                     isFirst = true,
-                    isSelected = post.selectedVote == 0L,
+                    isSelected = post.selectedVote == post.voteResponses.first().id,
                     sum = sum
                 )
 
@@ -138,7 +138,7 @@ fun LargePostCard(
                     vote = post.voteResponses[1],
                     onVoteItemClicked = { if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses[1]) },
                     isFirst = false,
-                    isSelected = post.selectedVote == 1L,
+                    isSelected = post.selectedVote == post.voteResponses[1].id,
                     sum = sum
                 )
             } else {
@@ -180,7 +180,7 @@ fun LargePostCard(
                         imageVector = Icons.Rounded.Favorite,
                         contentDescription = "하트",
                         tint =
-                        if (post.isLiked == true) SabotenColors.green500 else SabotenColors.grey200
+                        if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f)
 
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 6.dp))
@@ -193,7 +193,7 @@ fun LargePostCard(
                             },
                         imageVector = Icons.Rounded.Forum,
                         contentDescription = "댓글",
-                        tint = SabotenColors.grey200
+                        tint = MaterialTheme.colors.onSurface.copy(0.5f)
                     )
                 }
             }

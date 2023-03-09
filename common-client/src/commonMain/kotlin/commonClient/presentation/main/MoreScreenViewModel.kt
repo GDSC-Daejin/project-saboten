@@ -53,6 +53,20 @@ class MoreScreenViewModel(
 
     init {
         containerHost = this
+        onPostUpdated = { post ->
+            intent {
+                reduce {
+                    state.copy(
+                        items = state.items.map { pagingData ->
+                            pagingData.map { item ->
+                                if (item.id == post.id) post
+                                else item
+                            }
+                        }
+                    )
+                }
+            }
+        }
     }
 
     private val recentPager = createPager<Long, Post>(20, -1) { key, _ ->
@@ -101,21 +115,6 @@ class MoreScreenViewModel(
                 state.copy(
                     type = type,
                     items = pagingData
-                )
-            }
-        }
-    }
-
-    override suspend fun onPostUpdated(post: Post) {
-        intent {
-            reduce {
-                state.copy(
-                    items = state.items.map { pagingData ->
-                        pagingData.map { item ->
-                            if (item.id == post.id) post
-                            else item
-                        }
-                    }
                 )
             }
         }

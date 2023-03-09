@@ -44,6 +44,7 @@ import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
+import commonClient.logger.ClientLogger
 
 @Composable
 @Destination
@@ -137,9 +138,9 @@ private fun CategoryScreenContent(
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.requestVote(post.id, vote.id) },
-                            onScrapClicked = { viewModel.requestScrap(post.id) },
-                            onLikeClicked = { viewModel.requestLike(post.id) },
+                            onVoteClicked = { vote -> viewModel.vote(post.id, vote.id) },
+                            onScrapClicked = { viewModel.scrap(post.id) },
+                            onLikeClicked = { viewModel.like(post.id) },
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }

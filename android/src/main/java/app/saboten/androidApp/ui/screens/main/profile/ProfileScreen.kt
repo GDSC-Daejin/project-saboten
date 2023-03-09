@@ -2,6 +2,7 @@ package app.saboten.androidApp.ui.screens.main.profile
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -27,6 +28,7 @@ import androidx.paging.compose.items
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.SettingsScreenDestination
 import app.saboten.androidApp.ui.providers.LocalMeInfo
+import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.image.NetworkImage
@@ -185,6 +187,8 @@ private fun ProfileBannerUi() {
 
     val meInfo = LocalMeInfo.current
 
+    val openLoginDialog = LocalOpenLoginDialogEffect.current
+
     if (meInfo.needLogin) {
 
         Column(
@@ -197,7 +201,8 @@ private fun ProfileBannerUi() {
 
             Row(
                 modifier = Modifier
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .clickable { openLoginDialog() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Icon(

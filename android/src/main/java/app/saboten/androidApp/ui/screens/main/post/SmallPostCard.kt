@@ -51,7 +51,7 @@ fun SmallPostCard(
             .wrapContentHeight()
             .sabotenShadow()
             .background(
-                color = Color.White,
+                color = MaterialTheme.colors.surface,
                 shape = MaterialTheme.shapes.medium,
             )
             .clickable(onClick = onClicked),
@@ -83,9 +83,9 @@ fun SmallPostCard(
                                 fontSize = 12.sp
                             )
                             Text(
-                                "24분전",
+                                post.createdAt,
                                 fontSize = 10.sp,
-                                color = SabotenColors.grey200
+                                color = MaterialTheme.colors.onSurface.copy(0.5f)
                             )
                         }
                     }
@@ -98,7 +98,7 @@ fun SmallPostCard(
                             },
                         imageVector = Icons.Rounded.Bookmark,
                         tint =
-                        if (post.isScraped == true) SabotenColors.green500 else SabotenColors.grey200,
+                        if (post.isScraped == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f),
                         contentDescription = "북마크"
                     )
                 }
@@ -136,7 +136,7 @@ fun SmallPostCard(
                             imageVector = Icons.Rounded.Favorite,
                             contentDescription = "하트",
                             tint =
-                            if (post.isLiked == true) SabotenColors.green500 else SabotenColors.grey200
+                            if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f)
                         )
                         Spacer(modifier = Modifier.padding(horizontal = 6.dp))
                         Icon(
@@ -148,7 +148,7 @@ fun SmallPostCard(
                                 },
                             imageVector = Icons.Rounded.Forum,
                             contentDescription = "댓글",
-                            tint = SabotenColors.grey200
+                            tint = MaterialTheme.colors.onSurface.copy(0.5f)
                         )
                     }
                 }

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,12 +42,12 @@ fun SelectedVoteItem(
             .clip(RoundedCornerShape(8.dp))
             .clickable { onVoteItemClicked() }
             .background(
-                color = if (isSelected) SabotenColors.green500 else Color.White.copy(0.5f),
+                color = if (isSelected) MaterialTheme.colors.secondary else Color.Transparent,
                 shape = RoundedCornerShape(8.dp)
             )
             .border(
                 width = 1.dp,
-                color = if (isSelected) SabotenColors.green500 else SabotenColors.green200,
+                color = MaterialTheme.colors.secondary,
                 shape = RoundedCornerShape(8.dp)
             ),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -56,14 +57,14 @@ fun SelectedVoteItem(
                 .padding(top = 14.dp)
                 .size(18.dp)
                 .clip(CircleShape)
-                .background(if (isSelected) Color.White else SabotenColors.grey200),
+                .background(MaterialTheme.colors.surface),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = if (isFirst) "A" else "B",
                 fontSize = 12.sp,
                 color =
-                if (isSelected) SabotenColors.green500 else Color.White
+                if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.5f)
             )
         }
         Text(

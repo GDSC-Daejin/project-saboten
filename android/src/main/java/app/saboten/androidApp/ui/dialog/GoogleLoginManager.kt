@@ -9,6 +9,8 @@ import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 class GoogleLoginManager() {
@@ -26,15 +28,17 @@ class GoogleLoginManager() {
                 BeginSignInRequest.GoogleIdTokenRequestOptions.builder()
                     .setSupported(true)
                     .setServerClientId(activity.getString(R.string.default_web_client_id))
-                    .setFilterByAuthorizedAccounts(true)
+                    .setFilterByAuthorizedAccounts(false)
                     .build())
             .setAutoSelectEnabled(true)
             .build()
 
         oneTapClient.beginSignIn(signInRequest)
-            .addOnFailureListener { continuation.resumeWith(Result.failure(it)) }
+            .addOnFailureListener {
+                continuation.resumeWithException(it)
+            }
             .addOnSuccessListener {
-                continuation.resumeWith(Result.success(it.pendingIntent))
+                continuation.resume(it.pendingIntent)
             }
     }
 

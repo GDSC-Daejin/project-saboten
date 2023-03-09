@@ -51,6 +51,20 @@ class SearchScreenViewModel(
 
     init {
         containerHost = this
+        onPostUpdated = { post ->
+            intent {
+                reduce {
+                    state.copy(
+                        items = state.items.map { pagingData ->
+                            pagingData.map { item ->
+                                if (item.id == post.id) post
+                                else item
+                            }
+                        }
+                    )
+                }
+            }
+        }
         intent {
             getRecentSearchTextsUseCase()
                 .onEach {
@@ -98,21 +112,6 @@ class SearchScreenViewModel(
             state.copy(
                 items = searchedPager.pagingData.cachedIn(platformViewModelScope)
             )
-        }
-    }
-
-    override suspend fun onPostUpdated(post: Post) {
-        intent {
-            reduce {
-                state.copy(
-                    items = state.items.map { pagingData ->
-                        pagingData.map { item ->
-                            if (item.id == post.id) post
-                            else item
-                        }
-                    }
-                )
-            }
         }
     }
 
