@@ -90,13 +90,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throw new ApiException(UserResponseMessage.USER_NOT_FOUND);
 
         JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(Long.toString(user.getUserId()), RoleType.USER);
-        // DB 저장
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .user(user)
-                .refreshToken(jwtTokenResponse.getRefreshToken())
-                .build();
-        refreshTokenRepository.save(refreshToken);
 
+        RefreshTokenEntity refreshToken = refreshTokenRepository.findByUser(user);
+        if(refreshToken != null) {
+            refreshToken.setRefreshToken(jwtTokenResponse.getRefreshToken());
+        }
+        else {
+            refreshToken = RefreshTokenEntity.builder()
+                    .user(user)
+                    .refreshToken(jwtTokenResponse.getRefreshToken())
+                    .build();
+        }
+
+        refreshTokenRepository.save(refreshToken);
         return jwtTokenResponse;
     }
 }
