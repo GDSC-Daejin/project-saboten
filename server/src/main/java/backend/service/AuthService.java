@@ -73,13 +73,19 @@ public class AuthService {
     private JwtTokenResponse createToken(UserEntity user) {
         JwtTokenResponse jwtTokenResponse = tokenProvider.generateJwtToken(user.getUserId().toString(), RoleType.USER);
 
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .user(user)
-                .refreshToken(jwtTokenResponse.getRefreshToken())
-                .build();
+        RefreshTokenEntity refreshToken = refreshTokenRepository.findByUser(user);
+
+        if(refreshToken != null) {
+            refreshToken.setRefreshToken(jwtTokenResponse.getRefreshToken());
+        }
+        else {
+            refreshToken = RefreshTokenEntity.builder()
+                    .user(user)
+                    .refreshToken(jwtTokenResponse.getRefreshToken())
+                    .build();
+        }
 
         refreshTokenRepository.save(refreshToken);
-
         return jwtTokenResponse;
     }
 
@@ -154,7 +160,6 @@ public class AuthService {
 
                 return createToken(user);
             }
-
         } catch (HttpClientErrorException | GeneralSecurityException | IOException e) {
             throw new ApiException(AuthResponseMessage.INVALID_ACCESS_TOKEN);
         }
