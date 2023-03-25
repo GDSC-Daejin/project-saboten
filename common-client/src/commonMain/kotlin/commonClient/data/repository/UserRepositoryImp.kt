@@ -2,7 +2,9 @@ package commonClient.data.repository
 
 import common.model.request.user.UserUpdateRequest
 import commonClient.data.cache.MeCache
+import commonClient.data.remote.endpoints.MyPageApi
 import commonClient.data.remote.endpoints.UserApi
+import commonClient.domain.entity.user.MyPageCount
 import commonClient.domain.entity.user.UserInfo
 import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.UserRepository
@@ -13,8 +15,13 @@ import org.koin.core.annotation.Single
 @Single(binds = [UserRepository::class])
 class UserRepositoryImp(
     private val userApi: UserApi,
+    private val myPageApi: MyPageApi,
     private val meCache: MeCache
 ) : UserRepository {
+
+    override suspend fun getMyPageCount(): MyPageCount {
+        return myPageApi.getMyPageCounts().data!!.toDomain()
+    }
 
     override suspend fun getMe() : UserInfo {
         val me = userApi.getMe()

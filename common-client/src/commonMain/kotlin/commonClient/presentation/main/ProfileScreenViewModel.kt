@@ -7,13 +7,14 @@ import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.PagingRequest
-import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
+import commonClient.domain.entity.user.MyPageCount
 import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
-import commonClient.domain.usecase.post.paged.GetPagedPostsByCategoryUseCase
+import commonClient.domain.usecase.post.paged.GetPagedMyPostsUseCase
+import commonClient.domain.usecase.user.GetMyPageCountUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.createPager
@@ -36,15 +37,14 @@ interface ProfileScreenEffect {
 }
 
 data class ProfileScreenState(
-    val categories: LoadState<List<Category>> = LoadState.idle(),
-    val selectedCategoryId: Long? = null,
-    val items: Flow<PagingData<Post>> = flowOf(),
+    val myPageCount: LoadState<MyPageCount> = LoadState.Idle(),
+    val myPosts: Flow<PagingData<Post>> = flowOf(),
 )
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
 class ProfileScreenViewModel(
-    private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getPagedPostsByCategoryUseCase: GetPagedPostsByCategoryUseCase,
+    private val getMyPageCountUseCase: GetMyPageCountUseCase,
+    private val getPagedMyPostsUseCase: GetPagedMyPostsUseCase,
     private val requestScrapPostUseCase: RequestScrapPostUseCase,
     private val requestVotePostUseCase: RequestVotePostUseCase,
     private val requestLikePostUseCase: RequestLikePostUseCase,
@@ -53,36 +53,26 @@ class ProfileScreenViewModel(
     override val container: Container<ProfileScreenState, ProfileScreenEffect> = container(ProfileScreenState())
 
     init {
-        intent {
-            flow { emit(getCategoriesUseCase()) }
-                .toLoadState()
-                .onEach { categories ->
-                    // 전체 보여주기
-                    val pager = createPagerByCategoryId(null)
-                    reduce {
-                        state.copy(
-                            categories = categories,
-                            items = pager.pagingData.cachedIn(platformViewModelScope)
-                        )
-                    }
-                }.launchIn(platformViewModelScope)
-        }
+        loadMyPage()
     }
 
-    fun selectCategory(categoryId: Long?) {
+    fun loadMyPage() {
         intent {
-            val pager = createPagerByCategoryId(categoryId)
             reduce {
-                state.copy(
-                    selectedCategoryId = categoryId,
-                    items = pager.pagingData.cachedIn(platformViewModelScope)
-                )
+                state.copy(myPosts = createMyPostsPager().pagingData)
             }
+
+            flow { emit(getMyPageCountUseCase()) }
+                .toLoadState()
+                .onEach {
+                    reduce { state.copy(myPageCount = it) }
+                }
+                .launchIn(platformViewModelScope)
         }
     }
 
-    private fun createPagerByCategoryId(categoryId: Long?) = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(page = key))
+    private fun createMyPostsPager() = createPager<Long, Post>(20, -1) { key, _ ->
+        val pagingResult = getPagedMyPostsUseCase(PagingRequest(page = key))
         PagingResult(
             pagingResult.data,
             currentKey = key ?: -1,
@@ -91,11 +81,11 @@ class ProfileScreenViewModel(
         )
     }
 
-    private val onPostUpdated = { post : Post ->
+    private val onPostUpdated = { post: Post ->
         intent {
             reduce {
                 state.copy(
-                    items = state.items.map { pagingData ->
+                    myPosts = state.myPosts.map { pagingData ->
                         pagingData.map { item ->
                             if (item.id == post.id) post
                             else item
