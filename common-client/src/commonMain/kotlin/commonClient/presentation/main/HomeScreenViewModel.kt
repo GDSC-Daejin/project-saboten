@@ -13,10 +13,12 @@ import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.category.GetTrendingCategoriesUseCase
 import commonClient.domain.usecase.post.GetHotPostsUseCase
 import commonClient.domain.usecase.post.GetRecentPostsUseCase
+import commonClient.domain.usecase.post.GetScrappedPostsUseCase
 import commonClient.domain.usecase.post.GetSelectedPostsUseCase
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
+import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.toLoadState
@@ -47,6 +49,7 @@ class HomeScreenViewModel(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getRecentPostsUseCase: GetRecentPostsUseCase,
     private val getSelectedPostsUseCase: GetSelectedPostsUseCase,
+    private val getScrappedPostsUseCase: GetScrappedPostsUseCase,
     private val getHotPostsUseCase: GetHotPostsUseCase,
     private val getTrendingCategoriesUseCase: GetTrendingCategoriesUseCase,
     private val requestScrapPostUseCase: RequestScrapPostUseCase,
@@ -73,6 +76,7 @@ class HomeScreenViewModel(
         loadTrendingCategories()
         loadRecentPosts()
         loadSelectedPosts()
+        loadScrappedPosts()
     }
 
     fun loadBanners() = intent {
@@ -110,6 +114,13 @@ class HomeScreenViewModel(
         flow { emit(getSelectedPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(selectedPost = it) } }
+            .launchIn(platformViewModelScope)
+    }
+
+    fun loadScrappedPosts() = intent {
+        flow { emit(getScrappedPostsUseCase()) }
+            .toLoadState()
+            .onEach { reduce { state.copy(scrappedPosts = it) } }
             .launchIn(platformViewModelScope)
     }
 

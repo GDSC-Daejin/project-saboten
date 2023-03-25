@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -48,7 +50,7 @@ fun SmallPostCard(
     Box(
         modifier = Modifier
             .width(320.dp)
-            .wrapContentHeight()
+            .height(200.dp)
             .sabotenShadow()
             .background(
                 color = MaterialTheme.colors.surface,
@@ -57,7 +59,7 @@ fun SmallPostCard(
             .clickable(onClick = onClicked),
     ) {
         Box(
-            modifier = Modifier
+            modifier = Modifier.fillMaxHeight()
         ) {
             Column(
                 modifier = Modifier
@@ -111,46 +113,44 @@ fun SmallPostCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
+            }
 
-                Spacer(modifier = Modifier.padding(vertical = 9.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).padding(10.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Row() {
+                    GroupItem("음식")
+                    Spacer(modifier = Modifier.padding(horizontal = 3.dp))
+                    GroupItem("취향")
+                }
 
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row() {
-                        GroupItem("음식")
-                        Spacer(modifier = Modifier.padding(horizontal = 3.dp))
-                        GroupItem("취향")
-                    }
-
-                    Row() {
-                        Icon(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .size(26.dp)
-                                .clickable {
-                                    onLikeClicked()
-                                },
-                            imageVector = Icons.Rounded.Favorite,
-                            contentDescription = "하트",
-                            tint =
-                            if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f)
-                        )
-                        Spacer(modifier = Modifier.padding(horizontal = 6.dp))
-                        Icon(
-                            modifier = Modifier
-                                .padding(2.dp)
-                                .size(26.dp)
-                                .clickable {
-                                    onCommentClicked()
-                                },
-                            imageVector = Icons.Rounded.Forum,
-                            contentDescription = "댓글",
-                            tint = MaterialTheme.colors.onSurface.copy(0.5f)
-                        )
-                    }
+                Row() {
+                    Icon(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .size(26.dp)
+                            .clickable {
+                                onLikeClicked()
+                            },
+                        imageVector = Icons.Rounded.Favorite,
+                        contentDescription = "하트",
+                        tint =
+                        if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f)
+                    )
+                    Spacer(modifier = Modifier.padding(horizontal = 6.dp))
+                    Icon(
+                        modifier = Modifier
+                            .padding(2.dp)
+                            .size(26.dp)
+                            .clickable {
+                                onCommentClicked()
+                            },
+                        imageVector = Icons.Rounded.Forum,
+                        contentDescription = "댓글",
+                        tint = MaterialTheme.colors.onSurface.copy(0.5f)
+                    )
                 }
             }
         }

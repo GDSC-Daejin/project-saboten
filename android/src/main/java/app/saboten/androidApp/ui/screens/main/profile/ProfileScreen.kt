@@ -1,5 +1,6 @@
 package app.saboten.androidApp.ui.screens.main.profile
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -36,8 +37,11 @@ import app.saboten.androidUi.scaffolds.BasicScaffold
 import app.saboten.androidUi.styles.SabotenColors
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.data.LoadState
+import commonClient.data.isLoading
 import commonClient.domain.entity.post.Post
 import commonClient.domain.entity.user.MyPageCount
+import commonClient.presentation.main.ProfileScreenState
 import commonClient.presentation.main.ProfileScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
@@ -97,7 +101,12 @@ private fun ProfileScreenContent(
 
                         ProfileBannerUi(viewModel)
 
-                        PostInfoBox(state.myPageCount.getDataOrNull())
+                        PostInfoBox(
+                            state.myPageCount,
+                            state.selectedType,
+                        ) {
+                            viewModel.load(it)
+                        }
 
                     }
 
@@ -141,7 +150,7 @@ private fun ProfileScreenContent(
 
 @Composable
 private fun ProfileBannerUi(
-    viewModel: ProfileScreenViewModel
+    viewModel: ProfileScreenViewModel,
 ) {
 
     val meInfo = LocalMeInfo.current
@@ -196,8 +205,8 @@ private fun ProfileBannerUi(
 
     } else {
 
-        LaunchedEffect(key1 = true ) {
-            viewModel.loadMyPage()
+        LaunchedEffect(key1 = true) {
+            viewModel.load()
         }
 
         Column {
@@ -241,7 +250,12 @@ private fun ProfileBannerUi(
 }
 
 @Composable
-private fun PostInfoBox(counts: MyPageCount? = null) {
+private fun PostInfoBox(
+    counts: LoadState<MyPageCount>,
+    type: ProfileScreenState.ProfileType,
+    onTypeSelected : (ProfileScreenState.ProfileType) -> Unit
+) {
+    val meState = LocalMeInfo.current
 
     Row(
         modifier = Modifier
@@ -256,40 +270,73 @@ private fun PostInfoBox(counts: MyPageCount? = null) {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        if (counts != null) {
-            TextWithCount("게시글", counts.myPost)
-            TextWithCount("투표", counts.votedPost)
-            TextWithCount("스크랩", counts.scrapedPost)
+        if (meState.needLogin) {
+            TextWithCount("게시글", counts.isLoading())
+            TextWithCount("투표", counts.isLoading())
+            TextWithCount("스크랩", counts.isLoading())
         } else {
-            TextWithCount("게시글")
-            TextWithCount("투표")
-            TextWithCount("스크랩")
+            TextWithCount("게시글", counts.isLoading(), counts.getDataOrNull()?.myPost, type == ProfileScreenState.ProfileType.MY_POSTS) {
+                onTypeSelected(ProfileScreenState.ProfileType.MY_POSTS)
+            }
+            TextWithCount("투표", counts.isLoading(),counts.getDataOrNull()?.votedPost, type == ProfileScreenState.ProfileType.VOTED_POSTS) {
+                onTypeSelected(ProfileScreenState.ProfileType.VOTED_POSTS)
+            }
+            TextWithCount("스크랩",counts.isLoading(), counts.getDataOrNull()?.scrapedPost, type == ProfileScreenState.ProfileType.SCRAPPED_POSTS) {
+                onTypeSelected(ProfileScreenState.ProfileType.SCRAPPED_POSTS)
+            }
+
         }
-
-
     }
 }
 
 @Composable
-private fun TextWithCount(text: String, count: Long? = null) {
+private fun TextWithCount(
+    text: String,
+    isLoading : Boolean,
+    count: Long? = null,
+    isSelected: Boolean = false,
+    onSelect: () -> Unit = {},
+) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-
-        if (count != null) {
-            Text(
-                text = "$count",
-                fontSize = 20.sp,
-                color = SabotenColors.grey900
-            )
+        if (isLoading) {
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(if (isSelected) SabotenColors.green500 else SabotenColors.grey200, shape = CircleShape)
+                    .clickable { onSelect() },
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = if (isSelected) Color.White else SabotenColors.grey600,
+                    strokeWidth = 2.dp
+                )
+            }
         } else {
-            Icon(
-                imageVector = Icons.Outlined.Lock, contentDescription = "자물쇠",
-                tint = SabotenColors.grey600
-            )
+            if (count != null) {
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .background(if (isSelected) SabotenColors.green500 else SabotenColors.grey200, shape = CircleShape)
+                        .clickable { onSelect() },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "$count",
+                        fontSize = 20.sp,
+                        color = if (isSelected) Color.White else SabotenColors.grey600,
+                    )
+                }
+            } else {
+                Icon(
+                    imageVector = Icons.Outlined.Lock, contentDescription = "자물쇠",
+                    tint = SabotenColors.grey600
+                )
+            }
         }
+
 
         Spacer(modifier = Modifier.padding(top = 10.dp))
         Text(

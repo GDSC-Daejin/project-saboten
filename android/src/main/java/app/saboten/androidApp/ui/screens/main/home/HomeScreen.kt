@@ -120,9 +120,9 @@ fun HomeScreenContent(
 
                 item { HomeScreenTrendingItems(state) }
 
-                item { HeaderBar(title = "뜨거웠던 고민거리") }
-
                 state.hotPost.getDataOrNull()?.let { posts ->
+                    item { HeaderBar(title = "뜨거웠던 고민거리") }
+
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -149,12 +149,13 @@ fun HomeScreenContent(
                     }
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "실시간 인기 카테고리")
-                }
-
                 state.trendingCategories.getDataOrNull()?.let { categories ->
+
+                    item {
+                        Spacer(modifier = Modifier.height(36.dp))
+                        HeaderBar(title = "실시간 인기 카테고리")
+                    }
+
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -172,14 +173,14 @@ fun HomeScreenContent(
                     }
                 }
 
-                item {
-                    Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "최근 고민거리", moreButtonText = "더보기", moreButtonAction = {
-                        onMorePostClicked(MoreScreenOption.RECENT)
-                    })
-                }
-
                 state.recentPost.getDataOrNull()?.let { posts ->
+                    item {
+                        Spacer(modifier = Modifier.height(36.dp))
+                        HeaderBar(title = "최근 고민거리", moreButtonText = "더보기", moreButtonAction = {
+                            onMorePostClicked(MoreScreenOption.RECENT)
+                        })
+                    }
+
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -198,16 +199,17 @@ fun HomeScreenContent(
                             }
                         }
                     }
-                }
-
-                item {
-                    Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "내가 선택했던 글", moreButtonText = "더보기", moreButtonAction = {
-                        onMorePostClicked(MoreScreenOption.MY_SELECTED)
-                    })
                 }
 
                 state.selectedPost.getDataOrNull()?.let { posts ->
+
+                    item {
+                        Spacer(modifier = Modifier.height(36.dp))
+                        HeaderBar(title = "내가 선택했던 글", moreButtonText = "더보기", moreButtonAction = {
+                            onMorePostClicked(MoreScreenOption.MY_SELECTED)
+                        })
+                    }
+
                     item {
                         LazyRow(
                             modifier = Modifier
@@ -228,22 +230,37 @@ fun HomeScreenContent(
                     }
                 }
 
-
-                item {
-                    Spacer(modifier = Modifier.height(36.dp))
-                    HeaderBar(title = "내가 스크랩한 글", moreButtonText = "더보기", moreButtonAction = {
-                        onMorePostClicked(MoreScreenOption.MY_SCRAPPED)
-                    })
-                }
-
                 state.scrappedPosts.getDataOrNull()?.let { posts ->
+
+                    item {
+                        Spacer(modifier = Modifier.height(36.dp))
+                        HeaderBar(title = "내가 스크랩한 글", moreButtonText = "더보기", moreButtonAction = {
+                            onMorePostClicked(MoreScreenOption.MY_SCRAPPED)
+                        })
+                    }
+
                     items(posts, key = { it.id }) { post ->
-                        SmallPostCard(post = post, onClicked = { onPostClicked(post) })
+                        LargePostCard(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 20.dp, vertical = 10.dp)
+                            ,
+                            post = post,
+                            onClicked = {
+
+                            },
+                            onCommentClicked = {
+
+                            },
+                            onVoteClicked = { vote -> vm.requestVote(post.id, vote.id) },
+                            onScrapClicked = { vm.requestScrap(post.id) },
+                            onLikeClicked = { vm.requestLike(post.id) },
+                        )
                     }
                 }
 
                 item {
-                    Spacer(modifier = Modifier.height(36.dp))
+                    Spacer(modifier = Modifier.height(100.dp))
                 }
 
                 item {
