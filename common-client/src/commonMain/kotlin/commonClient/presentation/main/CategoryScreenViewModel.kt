@@ -14,10 +14,8 @@ import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
 import commonClient.domain.usecase.post.paged.GetPagedPostsByCategoryUseCase
-import commonClient.logger.ClientLogger
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
-import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.ExperimentalCoroutinesApi

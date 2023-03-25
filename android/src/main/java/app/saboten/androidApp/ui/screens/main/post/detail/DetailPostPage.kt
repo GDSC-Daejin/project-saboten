@@ -25,7 +25,6 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Cancel
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,6 +53,8 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
+import commonClient.presentation.post.DetailPostScreenEffect
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 @Destination
@@ -84,8 +85,29 @@ fun DetailPostPageContent(
     val openLoginDialog = LocalOpenLoginDialogEffect.current
 
     var query by remember { mutableStateOf("") }
+    var isPostingComment by remember { mutableStateOf(false) }
 
-    val post = state.post.getDataOrNull()
+    val post = remember(state.post) { state.post.getDataOrNull() }
+
+    val comments = state.comments.collectAsLazyPagingItems()
+
+    viewModel.collectSideEffect {
+        when (it) {
+            is DetailPostScreenEffect.CommentPosted -> {
+                isPostingComment = false
+                query = ""
+                viewModel.refreshComment()
+            }
+
+            is DetailPostScreenEffect.CommentPosting -> {
+                isPostingComment = true
+            }
+
+            is DetailPostScreenEffect.CommentPostFailed -> {
+                isPostingComment = false
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -98,7 +120,8 @@ fun DetailPostPageContent(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(20.dp)
+                        .padding(20.dp),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     NetworkImage(
                         url = meState.notNullUserInfo.profilePhotoUrl,
@@ -114,14 +137,16 @@ fun DetailPostPageContent(
                         border = BorderStroke(1.dp, MaterialTheme.colors.onSurface.copy(0.5f)),
                         shape = MaterialTheme.shapes.medium
                     ) {
-                        Row(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(40.dp)) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
+                                .padding(horizontal = 10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
 
                             BasicTextField(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .fillMaxHeight(),
+                                modifier = Modifier.weight(1f),
                                 value = query,
                                 cursorBrush = SolidColor(MaterialTheme.colors.secondary),
                                 textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
@@ -132,14 +157,21 @@ fun DetailPostPageContent(
 
                             Spacer(modifier = Modifier.width(10.dp))
 
-                            IconButton(
-                                modifier = Modifier.size(24.dp),
-                                onClick = { viewModel.postComment(post.id, query) }) {
-                                Icon(
-                                    imageVector = Icons.Rounded.Send,
-                                    contentDescription = "보내기",
-                                    tint = MaterialTheme.colors.onBackground.copy(0.5f)
+                            if (isPostingComment) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(24.dp),
+                                    color = MaterialTheme.colors.secondary
                                 )
+                            } else {
+                                IconButton(
+                                    modifier = Modifier.size(24.dp),
+                                    onClick = { viewModel.postComment(post.id, query) }) {
+                                    Icon(
+                                        imageVector = Icons.Rounded.Send,
+                                        contentDescription = "보내기",
+                                        tint = MaterialTheme.colors.onBackground.copy(0.5f)
+                                    )
+                                }
                             }
 
                         }
@@ -151,7 +183,6 @@ fun DetailPostPageContent(
         }
     ) {
         if (post != null) {
-            val comments = state.comments.collectAsLazyPagingItems()
             LazyColumn(
                 modifier = Modifier.padding(it),
                 content = {
@@ -175,10 +206,6 @@ fun DetailPostPageContent(
                         }
                     }
 
-                    stickyHeader {
-
-                    }
-
                     items(comments) { comment ->
                         if (comment != null) {
                             Row(
@@ -197,7 +224,7 @@ fun DetailPostPageContent(
                                     Text(
                                         comment.author.nickname,
                                         fontSize = 10.sp,
-                                        color = SabotenColors.grey200
+                                        color = SabotenColors.grey400
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
@@ -208,7 +235,7 @@ fun DetailPostPageContent(
                                     Text(
                                         comment.createdAt,
                                         fontSize = 10.sp,
-                                        color = SabotenColors.grey200
+                                        color = SabotenColors.grey400
                                     )
                                 }
                             }
@@ -231,7 +258,6 @@ fun DetailPostPageContent(
                 )
             }
 
-            // TODO: 댓글 부분 추가
         }
     }
 

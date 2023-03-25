@@ -4,15 +4,18 @@ import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
+import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.category.GetCategoriesUseCase
+import commonClient.domain.usecase.post.RequestLikePostUseCase
+import commonClient.domain.usecase.post.RequestScrapPostUseCase
+import commonClient.domain.usecase.post.RequestVotePostUseCase
 import commonClient.domain.usecase.post.paged.GetPagedPostsByCategoryUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
-import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import commonClient.utils.toLoadState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,27 +45,14 @@ data class ProfileScreenState(
 class ProfileScreenViewModel(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getPagedPostsByCategoryUseCase: GetPagedPostsByCategoryUseCase,
-    postActionsDelegate: PostActionsDelegate,
-) : PlatformViewModel<ProfileScreenState, ProfileScreenEffect>(), PostActionsDelegate by postActionsDelegate {
+    private val requestScrapPostUseCase: RequestScrapPostUseCase,
+    private val requestVotePostUseCase: RequestVotePostUseCase,
+    private val requestLikePostUseCase: RequestLikePostUseCase,
+) : PlatformViewModel<ProfileScreenState, ProfileScreenEffect>() {
 
     override val container: Container<ProfileScreenState, ProfileScreenEffect> = container(ProfileScreenState())
 
     init {
-        containerHost = this
-        onPostUpdated = { post ->
-            intent {
-                reduce {
-                    state.copy(
-                        items = state.items.map { pagingData ->
-                            pagingData.map { item ->
-                                if (item.id == post.id) post
-                                else item
-                            }
-                        }
-                    )
-                }
-            }
-        }
         intent {
             flow { emit(getCategoriesUseCase()) }
                 .toLoadState()
@@ -99,6 +89,42 @@ class ProfileScreenViewModel(
             prevKey = { null },
             nextKey = { pagingResult.nextKey }
         )
+    }
+
+    private val onPostUpdated = { post : Post ->
+        intent {
+            reduce {
+                state.copy(
+                    items = state.items.map { pagingData ->
+                        pagingData.map { item ->
+                            if (item.id == post.id) post
+                            else item
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    fun requestVote(postId: Long, voteId: Long) {
+        intent {
+            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
+            onPostUpdated(post)
+        }
+    }
+
+    fun requestLike(postId: Long) {
+        intent {
+            val post = requestLikePostUseCase(postId)
+            onPostUpdated(post)
+        }
+    }
+
+    fun requestScrap(postId: Long) {
+        intent {
+            val post = requestScrapPostUseCase(postId)
+            onPostUpdated(post)
+        }
     }
 
 }

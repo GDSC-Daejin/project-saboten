@@ -4,15 +4,18 @@ import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
+import common.model.request.post.VoteSelectRequest
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Post
+import commonClient.domain.usecase.post.RequestLikePostUseCase
+import commonClient.domain.usecase.post.RequestScrapPostUseCase
+import commonClient.domain.usecase.post.RequestVotePostUseCase
 import commonClient.domain.usecase.post.paged.GetPagedHotPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedRecentPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
 import commonClient.domain.usecase.post.paged.GetPagedVotedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
-import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -46,28 +49,12 @@ class MoreScreenViewModel(
     private val getPagedRecentPostsUseCase: GetPagedRecentPostsUseCase,
     private val getPagedVotedPostsUseCase: GetPagedVotedPostsUseCase,
     private val getPagedScrappedPostsUseCase: GetPagedScrappedPostsUseCase,
-    postActionsDelegate: PostActionsDelegate
-) : PlatformViewModel<MoreScreenState, MoreScreenEffect>(), PostActionsDelegate by postActionsDelegate {
+    private val requestScrapPostUseCase: RequestScrapPostUseCase,
+    private val requestVotePostUseCase: RequestVotePostUseCase,
+    private val requestLikePostUseCase: RequestLikePostUseCase,
+) : PlatformViewModel<MoreScreenState, MoreScreenEffect>() {
 
     override val container: Container<MoreScreenState, MoreScreenEffect> = container(MoreScreenState())
-
-    init {
-        containerHost = this
-        onPostUpdated = { post ->
-            intent {
-                reduce {
-                    state.copy(
-                        items = state.items.map { pagingData ->
-                            pagingData.map { item ->
-                                if (item.id == post.id) post
-                                else item
-                            }
-                        }
-                    )
-                }
-            }
-        }
-    }
 
     private val recentPager = createPager<Long, Post>(20, -1) { key, _ ->
         val pagingResult = getPagedRecentPostsUseCase(PagingRequest(page = key))
@@ -120,4 +107,39 @@ class MoreScreenViewModel(
         }
     }
 
+    private val onPostUpdated = { post : Post ->
+        intent {
+            reduce {
+                state.copy(
+                    items = state.items.map { pagingData ->
+                        pagingData.map { item ->
+                            if (item.id == post.id) post
+                            else item
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    fun requestVote(postId: Long, voteId: Long) {
+        intent {
+            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
+            onPostUpdated(post)
+        }
+    }
+
+    fun requestLike(postId: Long) {
+        intent {
+            val post = requestLikePostUseCase(postId)
+            onPostUpdated(post)
+        }
+    }
+
+    fun requestScrap(postId: Long) {
+        intent {
+            val post = requestScrapPostUseCase(postId)
+            onPostUpdated(post)
+        }
+    }
 }

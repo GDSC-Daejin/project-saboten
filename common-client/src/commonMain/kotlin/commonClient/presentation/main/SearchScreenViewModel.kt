@@ -4,16 +4,19 @@ import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import com.kuuurt.paging.multiplatform.map
+import common.model.request.post.VoteSelectRequest
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.AddRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.ClearRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.GetRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.RemoveRecentSearchTextsUseCase
+import commonClient.domain.usecase.post.RequestLikePostUseCase
+import commonClient.domain.usecase.post.RequestScrapPostUseCase
+import commonClient.domain.usecase.post.RequestVotePostUseCase
 import commonClient.domain.usecase.post.paged.GetPagedSearchPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
-import commonClient.presentation.post.PostActionsDelegate
 import commonClient.utils.createPager
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -44,27 +47,14 @@ class SearchScreenViewModel(
     private val removeRecentSearchTextsUseCase: RemoveRecentSearchTextsUseCase,
     private val clearRecentSearchTextsUseCase: ClearRecentSearchTextsUseCase,
     private val getRecentSearchTextsUseCase: GetRecentSearchTextsUseCase,
-    postActionsDelegate: PostActionsDelegate,
-) : PlatformViewModel<SearchScreenState, SearchScreenEffect>(), PostActionsDelegate by postActionsDelegate {
+    private val requestScrapPostUseCase: RequestScrapPostUseCase,
+    private val requestVotePostUseCase: RequestVotePostUseCase,
+    private val requestLikePostUseCase: RequestLikePostUseCase,
+) : PlatformViewModel<SearchScreenState, SearchScreenEffect>() {
 
     override val container: Container<SearchScreenState, SearchScreenEffect> = container(SearchScreenState())
 
     init {
-        containerHost = this
-        onPostUpdated = { post ->
-            intent {
-                reduce {
-                    state.copy(
-                        items = state.items.map { pagingData ->
-                            pagingData.map { item ->
-                                if (item.id == post.id) post
-                                else item
-                            }
-                        }
-                    )
-                }
-            }
-        }
         intent {
             getRecentSearchTextsUseCase()
                 .onEach {
@@ -112,6 +102,42 @@ class SearchScreenViewModel(
             state.copy(
                 items = searchedPager.pagingData.cachedIn(platformViewModelScope)
             )
+        }
+    }
+
+    private val onPostUpdated = { post : Post ->
+        intent {
+            reduce {
+                state.copy(
+                    items = state.items.map { pagingData ->
+                        pagingData.map { item ->
+                            if (item.id == post.id) post
+                            else item
+                        }
+                    }
+                )
+            }
+        }
+    }
+
+    fun requestVote(postId: Long, voteId: Long) {
+        intent {
+            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
+            onPostUpdated(post)
+        }
+    }
+
+    fun requestLike(postId: Long) {
+        intent {
+            val post = requestLikePostUseCase(postId)
+            onPostUpdated(post)
+        }
+    }
+
+    fun requestScrap(postId: Long) {
+        intent {
+            val post = requestScrapPostUseCase(postId)
+            onPostUpdated(post)
         }
     }
 

@@ -32,14 +32,12 @@ data class WritePostScreenState(
 class WritePostScreenViewModel(
     private val createPostUseCase: CreatePostUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val postActionsDelegate: PostActionsDelegate,
 ) : PlatformViewModel<WritePostScreenState, WritePostScreenEffect>() {
 
     override val container: Container<WritePostScreenState, WritePostScreenEffect> =
         container(WritePostScreenState())
 
     init {
-        postActionsDelegate.containerHost = this
         intent {
             flow { emit(getCategoriesUseCase()) }
                 .toLoadState()
