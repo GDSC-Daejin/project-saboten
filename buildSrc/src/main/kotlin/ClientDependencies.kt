@@ -26,8 +26,8 @@ object Orbit {
 }
 
 val AndroidX.DataStore.coreOkio get() = "androidx.datastore:datastore-core-okio:_"
-val Koin.annotation get() = "io.insert-koin:koin-annotations:1.0.3"
-val Koin.kspCompiler get() = "io.insert-koin:koin-ksp-compiler:1.0.3"
+val Koin.annotation get() = "io.insert-koin:koin-annotations:1.2.0"
+val Koin.kspCompiler get() = "io.insert-koin:koin-ksp-compiler:1.2.0"
 
 val Ktor.serializationKotlinx get() = "io.ktor:ktor-serialization-kotlinx:_"
 

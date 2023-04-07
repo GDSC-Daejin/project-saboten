@@ -22,7 +22,15 @@
           }
         },
         {
-          "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
+          "client_id": "844420568567-nn13jbt9blkhkqrlopjr8fc06gu1bial.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "9acc1c6d97d8732add16b6b440b6a9e8d5908ff8"
+          }
+        },
+        {
+          "client_id": "844420568567-1jregijk4e5llm921r8mabrf85l1v0cj.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -35,7 +43,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "844420568567-iov9oqsi8ptnmv801uspct08ui91ukg3.apps.googleusercontent.com",
+              "client_id": "844420568567-1jregijk4e5llm921r8mabrf85l1v0cj.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

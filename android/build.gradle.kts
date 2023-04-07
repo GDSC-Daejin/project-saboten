@@ -82,7 +82,7 @@ dependencies {
     implementation(Koin.android)
     implementation(Koin.annotation)
 //    implementation(Koin.compose)
-    implementation("io.insert-koin:koin-androidx-compose:3.2.1")
+    implementation("io.insert-koin:koin-androidx-compose:3.4.0")
     implementation("com.airbnb.android:lottie-compose:5.2.0")
     ksp(Koin.kspCompiler)
 
