@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "844420568567-lgmr46a4e214dblsl9cdn907ktvlkbki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "da141b0e08b33161910579cfb7b824fc9921e9d9"
+          }
+        },
+        {
           "client_id": "844420568567-nn13jbt9blkhkqrlopjr8fc06gu1bial.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
