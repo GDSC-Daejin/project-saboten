@@ -13,6 +13,7 @@ import org.orbitmvi.orbit.syntax.simple.postSideEffect
 
 interface LoginScreenEffect {
     object SignInSuccess : LoginScreenEffect
+    data class Toast(val message : String) : LoginScreenEffect
 }
 
 data class LoginScreenState(
@@ -30,10 +31,15 @@ class LoginScreenViewModel(
         kotlin.runCatching {
             requestGoogleSignInUseCase(idToken)
         }.onFailure {
+            showToast(it.message ?: "")
             ClientLogger.e(it)
         }.onSuccess {
             postSideEffect(LoginScreenEffect.SignInSuccess)
         }
+    }
+
+    fun showToast(message: String) = intent {
+        postSideEffect(LoginScreenEffect.Toast(message))
     }
 
 }

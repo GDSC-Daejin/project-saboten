@@ -2,6 +2,7 @@ package app.saboten.androidApp.ui.dialog
 
 import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,6 +32,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
+import commonClient.logger.ClientLogger
 import commonClient.presentation.login.LoginScreenEffect
 import commonClient.presentation.login.LoginScreenViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -55,36 +57,50 @@ fun LoginDialogContent(
     dismiss: () -> Unit,
 ) {
 
+    val context = LocalContext.current
+
     val viewModel = koinViewModel<LoginScreenViewModel>()
 
     viewModel.collectSideEffect {
         when (it) {
             is LoginScreenEffect.SignInSuccess -> dismiss()
+            is LoginScreenEffect.Toast -> {
+                context.getActivity()?.let { activity ->
+                    Toast.makeText(activity, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
-    val context = LocalContext.current
-
-    val coroutineScope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope {
+        CoroutineExceptionHandler { _, throwable ->
+            throwable.printStackTrace()
+            dismiss()
+        }
+    }
 
     val googleLoginManager = remember {
-        GoogleLoginManager()
+        GoogleLoginManager(context.getActivity()!!)
     }
 
     val requestSignIn = rememberLauncherForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+
+        ClientLogger.d("result: $result")
         if (result.resultCode == Activity.RESULT_OK) {
+            ClientLogger.d("Success")
             val intent = result.data
             if (intent != null) {
                 val credential = googleLoginManager.oneTapClient.getSignInCredentialFromIntent(intent)
                 val googleIdToken = credential.googleIdToken
+                ClientLogger.d("Success $googleIdToken")
                 if (googleIdToken != null) {
                     viewModel.requestGoogleSignIn(googleIdToken)
                 }
             } else {
-                Timber.d("Google Login Failed")
+                viewModel.showToast("로그인에 실패했습니다.")
             }
         } else {
-            Timber.d("Google Login Failed")
+            viewModel.showToast("로그인에 실패했습니다.")
         }
     }
 
@@ -120,15 +136,12 @@ fun LoginDialogContent(
             Spacer(modifier = Modifier.height(25.dp))
 
             GoogleLoginButton {
-                coroutineScope.launch(CoroutineExceptionHandler { _, throwable ->
-                    throwable.printStackTrace()
-                    dismiss()
-                }) {
-                    withTimeout(3000) {
-                        requestSignIn.launch(
-                            IntentSenderRequest.Builder(googleLoginManager.signInIntent(context.getActivity()!!)).build()
-                        )
-                    }
+                coroutineScope.launch {
+                    val signInIntent = googleLoginManager.signInIntent()
+                    requestSignIn.launch(
+                        IntentSenderRequest.Builder(signInIntent)
+                            .build()
+                    )
                 }
             }
 
