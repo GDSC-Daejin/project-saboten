@@ -14,15 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "844420568567-2lcdagngmu7nq4bhb4dnq7ff3k5ufb3i.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "app.saboten.androidApp",
-            "certificate_hash": "888cd6de0b4ce794fa0375789db72749c1308b53"
-          }
-        },
-        {
-          "client_id": "844420568567-lgmr46a4e214dblsl9cdn907ktvlkbki.apps.googleusercontent.com",
+          "client_id": "844420568567-9kjbc21bf56srdk4juf4c7hkomntlm9a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "app.saboten.androidApp",
@@ -30,7 +22,15 @@
           }
         },
         {
-          "client_id": "844420568567-nn13jbt9blkhkqrlopjr8fc06gu1bial.apps.googleusercontent.com",
+          "client_id": "844420568567-bjt55io3ngcprmk5hvj98hni1fg5h3t2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "888cd6de0b4ce794fa0375789db72749c1308b53"
+          }
+        },
+        {
+          "client_id": "844420568567-qv8gsc7sma5cpo451tm2oh0u6m6gnb68.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "app.saboten.androidApp",

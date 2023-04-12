@@ -35,6 +35,7 @@ import commonClient.presentation.login.LoginScreenEffect
 import commonClient.presentation.login.LoginScreenViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectSideEffect
 import timber.log.Timber
@@ -123,9 +124,11 @@ fun LoginDialogContent(
                     throwable.printStackTrace()
                     dismiss()
                 }) {
-                    requestSignIn.launch(
-                        IntentSenderRequest.Builder(googleLoginManager.signInIntent(context.getActivity()!!)).build()
-                    )
+                    withTimeout(3000) {
+                        requestSignIn.launch(
+                            IntentSenderRequest.Builder(googleLoginManager.signInIntent(context.getActivity()!!)).build()
+                        )
+                    }
                 }
             }
 

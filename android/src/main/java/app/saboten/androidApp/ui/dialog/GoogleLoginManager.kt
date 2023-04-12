@@ -17,7 +17,7 @@ class GoogleLoginManager() {
 
     lateinit var oneTapClient: SignInClient
 
-    suspend fun signInIntent(activity: Activity)  = suspendCoroutine { continuation ->
+    suspend fun signInIntent(activity: Activity) = suspendCoroutine { continuation ->
 
         oneTapClient = Identity.getSignInClient(activity)
         val signInRequest = BeginSignInRequest.builder()
