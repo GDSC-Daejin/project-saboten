@@ -44,6 +44,13 @@ object Navigation {
     const val material = "com.google.accompanist:accompanist-navigation-material:_"
 }
 
+object Sqldelight {
+    val android = "app.cash.sqldelight:android-driver:_"
+    val native = "app.cash.sqldelight:native-driver:_"
+    val coroutines = "app.cash.sqldelight:coroutines-extensions:_"
+    val paging3 = "app.cash.sqldelight:androidx-paging3-extensions:_"
+}
+
 object Mokk {
     const val core = "io.mockk:mockk:_"
     const val common = "io.mockk:mockk-common:_"

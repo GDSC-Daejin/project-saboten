@@ -4,6 +4,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("com.google.devtools.ksp")
+    id("app.cash.sqldelight") version "2.0.0-alpha05"
 }
 
 group = "app.saboten"
@@ -59,6 +60,7 @@ kotlin {
                 implementation(AndroidX.dataStore.preferences.core)
 
                 implementation(Orbit.core)
+                api(Sqldelight.coroutines)
             }
             kotlin.srcDirs("build/generated/ksp/commonMain/kotlin")
         }
@@ -80,6 +82,8 @@ kotlin {
                 implementation(project.dependencies.platform(Google.firebase.bom))
                 implementation(Google.firebase.crashlyticsKtx)
                 implementation(Orbit.viewmodel)
+                api(Sqldelight.android)
+                api(Sqldelight.paging3)
             }
         }
         val androidTest by getting {
@@ -103,6 +107,7 @@ kotlin {
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
                 implementation(Ktor.client.darwin)
+                implementation(Sqldelight.native)
             }
         }
         val iosX64Test by getting
