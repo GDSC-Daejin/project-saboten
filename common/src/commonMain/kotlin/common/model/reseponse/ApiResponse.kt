@@ -1,6 +1,7 @@
 package common.model.reseponse
 
 import common.message.ResponseMessage
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
 
@@ -8,9 +9,9 @@ import kotlin.jvm.JvmStatic
 
 @Serializable
 data class ApiResponse<T>(
-    val data: T?,
-    val code: String,
-    val message: String
+    @SerialName("data") val data: T?,
+    @SerialName("code") val code: String,
+    @SerialName("message") val message: String
 ) {
 
     companion object {
