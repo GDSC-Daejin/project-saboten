@@ -80,4 +80,12 @@ public class VoteService {
 
         return optionalVoteEntity.get();
     }
+
+    @Transactional
+    public Integer increaseVoteCount(VoteEntity vote) {
+        int increaseCount = vote.getCount() + 1;
+        vote.setCount(increaseCount);
+        voteRepository.save(vote);
+        return increaseCount;
+    }
 }

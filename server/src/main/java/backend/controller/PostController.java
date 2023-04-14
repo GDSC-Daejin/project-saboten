@@ -6,6 +6,7 @@ import backend.controller.swagger.response.PostNotFoundResponse;
 import backend.controller.swagger.response.PostVoteNotFound;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
+import backend.model.post.VoteEntity;
 import backend.service.CategoryService;
 import backend.service.UserService;
 import backend.service.comment.CommentService;
@@ -413,8 +414,9 @@ class PostController {
         UserDto userDto = getUser();
 
         PostDto postDto = postService.findPost(id);
-        voteService.findVote(voteSelectRequest.getId(), id);
+        VoteEntity vote = voteService.findVote(voteSelectRequest.getId(), id);
         voteSelectService.saveVoteSelect(postDto, userDto, voteSelectRequest.getId());
+        voteService.increaseVoteCount(vote);
 
         List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
         List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
