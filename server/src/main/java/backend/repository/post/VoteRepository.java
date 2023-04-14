@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface VoteRepository extends JpaRepository<VoteEntity, Long> {
-    @Query("select vote from VoteEntity vote where vote.post.postId = :postId")
+    @Query("select vote from VoteEntity vote where vote.post.postId = :postId order by vote.voteId asc")
     List<VoteEntity> findAllByPostId(Long postId);
 
     void delete(VoteEntity voteEntity);

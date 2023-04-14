@@ -2,9 +2,11 @@ package backend.service.user;
 
 import backend.controller.dto.PostDto;
 import backend.controller.dto.UserDto;
+import backend.exception.ApiException;
 import backend.model.post.PostEntity;
 import backend.model.user.VoteSelectEntity;
 import backend.repository.user.VoteSelectRepository;
+import common.message.PostResponseMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +30,13 @@ public class VoteSelectService {
 
         VoteSelectEntity voteSelectEntity = new VoteSelectEntity(postDto.toEntity(), userDto.toEntity(), voteResult);
         voteSelectRepository.save(voteSelectEntity);
+    }
+
+    public void checkExistVoteSelect(final Long userId, final Long postId, Long voteResult) {
+        VoteSelectEntity votedSelectEntity = findVoteSelect(userId, postId);
+
+        if(votedSelectEntity != null && votedSelectEntity.getVoteResult().equals(voteResult))
+            throw new ApiException(PostResponseMessage.POST_VOTE_CONFLICT);
     }
 
     private void deleteVoteSelect(VoteSelectEntity voteSelectEntity) {
