@@ -82,10 +82,26 @@ public class VoteService {
     }
 
     @Transactional
-    public Integer increaseVoteCount(VoteEntity vote) {
-        int increaseCount = vote.getCount() + 1;
-        vote.setCount(increaseCount);
-        voteRepository.save(vote);
+    public Integer increaseVoteCount(final Long oldVoteId , final Long voteId, final Long postId) {
+        VoteEntity oldVote = null;
+        if(oldVoteId != null)
+            oldVote = findVote(oldVoteId, postId);
+        VoteEntity currentVote = findVote(voteId, postId);
+
+        int increaseCount = currentVote.getCount() + 1;
+
+        if(oldVote != null && !oldVote.getVoteId().equals(currentVote.getVoteId())) {
+            oldVote.setCount(oldVote.getCount() - 1);
+            currentVote.setCount(increaseCount);
+
+            voteRepository.save(oldVote);
+            voteRepository.save(currentVote);
+        }
+        else {
+            currentVote.setCount(increaseCount);
+            voteRepository.save(currentVote);
+        }
+
         return increaseCount;
     }
 }
