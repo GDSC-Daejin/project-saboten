@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
 import app.saboten.androidApp.ui.screens.main.MainTopBar
@@ -52,6 +53,9 @@ fun HomeScreen(
 
     HomeScreenContent(
         vm = vm,
+        onCategoryClicked = {
+            navigator.navigate(CategoryScreenDestination(initSelectedItemId = it))
+        },
         onPostClicked = {
             navigator.navigate(DetailPostScreenDestination(postId = it.id))
         },
@@ -64,6 +68,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     vm: HomeScreenViewModel,
+    onCategoryClicked: (Long) -> Unit = {},
     onPostClicked: (Post) -> Unit = {},
     onMorePostClicked: (MoreScreenOption) -> Unit = {},
 ) {
@@ -171,7 +176,7 @@ fun HomeScreenContent(
                         ) {
                             items(categories) { category ->
                                 CategoryItem(category = category) {
-
+                                    onCategoryClicked(category.id)
                                 }
                                 Spacer(modifier = Modifier.width(10.dp))
                             }
