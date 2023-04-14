@@ -37,6 +37,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.RemoveCircle
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -227,18 +228,20 @@ fun SearchScreen(
                     }
                 }
 
-                items(items, key = { it.id }) {
-                    it?.let { post ->
+                items(items, key = { it.id }) {post ->
+                    val observableCache by viewModel.updatedPostCache.collectAsState()
+                    val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                    cachedPost?.let { nonNullPost ->
                         LargePostCard(
                             modifier = Modifier.fillMaxWidth(),
-                            post = post,
-                            onClicked = { navigator.navigate(DetailPostScreenDestination(postId = it.id)) },
+                            post = nonNullPost,
+                            onClicked = { navigator.navigate(DetailPostScreenDestination(postId = nonNullPost.id)) },
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.requestVote(post.id, vote.id) },
-                            onScrapClicked = { viewModel.requestScrap(post.id) },
-                            onLikeClicked = { viewModel.requestLike(post.id) },
+                            onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
+                            onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                            onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }

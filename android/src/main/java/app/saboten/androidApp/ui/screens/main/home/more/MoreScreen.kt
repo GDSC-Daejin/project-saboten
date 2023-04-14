@@ -10,6 +10,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -76,20 +77,22 @@ fun MoreScreen(
         val items = state.items.collectAsLazyPagingItems()
 
         LazyColumn(modifier = Modifier.padding(padding), contentPadding = PaddingValues(20.dp)) {
-            items(items, key = { it.id }) {
-                it?.let { post ->
+            items(items, key = { it.id }) { post ->
+                val observableCache by viewModel.updatedPostCache.collectAsState()
+                val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                cachedPost?.let { nonNullPost ->
                     LargePostCard(
                         modifier = Modifier.fillMaxWidth(),
-                        post = post,
+                        post = nonNullPost,
                         onClicked = {
 
                         },
                         onCommentClicked = {
 
                         },
-                        onVoteClicked = { vote -> viewModel.requestVote(post.id, vote.id) },
-                        onScrapClicked = { viewModel.requestScrap(post.id) },
-                        onLikeClicked = { viewModel.requestLike(post.id) },
+                        onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
+                        onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                        onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }

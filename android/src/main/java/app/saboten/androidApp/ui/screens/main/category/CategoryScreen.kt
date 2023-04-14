@@ -26,6 +26,7 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -127,20 +128,22 @@ private fun CategoryScreenContent(
                     Spacer(modifier = Modifier.height(20.dp))
                 }
 
-                items(items) {
-                    it?.let { post ->
+                items(items) { post ->
+                    val observableCache by viewModel.updatedPostCache.collectAsState()
+                    val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                    cachedPost?.let { nonNullPost ->
                         LargePostCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 20.dp),
-                            post = post,
-                            onClicked = { onPostClicked(it) },
+                            post = nonNullPost,
+                            onClicked = { onPostClicked(nonNullPost) },
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.vote(post.id, vote.id) },
-                            onScrapClicked = { viewModel.scrap(post.id) },
-                            onLikeClicked = { viewModel.like(post.id) },
+                            onVoteClicked = { vote -> viewModel.vote(nonNullPost.id, vote.id) },
+                            onScrapClicked = { viewModel.scrap(nonNullPost.id) },
+                            onLikeClicked = { viewModel.like(nonNullPost.id) },
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }
