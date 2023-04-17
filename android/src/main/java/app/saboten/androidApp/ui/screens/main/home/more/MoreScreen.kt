@@ -21,6 +21,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.ToolbarBackButton
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
@@ -82,7 +83,7 @@ fun MoreScreen(
                         modifier = Modifier.fillMaxWidth(),
                         post = post,
                         onClicked = {
-
+                            navigator.navigate(DetailPostScreenDestination(post.id))
                         },
                         onCommentClicked = {
 
