@@ -4,8 +4,10 @@ import common.model.VoteColorsResponse
 import common.model.request.post.create.PostCreateRequest
 import common.model.request.post.create.VoteCreateRequest
 import commonClient.data.LoadState
+import commonClient.data.isFailed
+import commonClient.data.isLoading
+import commonClient.data.isSuccess
 import commonClient.data.map
-import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
 import commonClient.domain.usecase.category.GetCategoriesUseCase
 import commonClient.domain.usecase.post.CreatePostUseCase
@@ -17,14 +19,19 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
+import org.orbitmvi.orbit.syntax.simple.postSideEffect
 import org.orbitmvi.orbit.syntax.simple.reduce
 
 interface WritePostScreenEffect {
 
+    object CreatePosing : WritePostScreenEffect
+    object CreatePosted : WritePostScreenEffect
+    object CreatePostFailed : WritePostScreenEffect
+
 }
 
 data class WritePostScreenState(
-    val createPost: LoadState<List<Banner>> = LoadState.idle(),
+    val createPost: LoadState<Unit> = LoadState.idle(),
     val categories: LoadState<List<Category>> = LoadState.idle(),
     val selectedCategoryId: Long? = null,
 )
@@ -71,17 +78,34 @@ class WritePostScreenViewModel(
         firstTopicText: String,
         secondTopicText: String
     ) = intent {
-        createPostUseCase(
-            postCreateRequest =
-            PostCreateRequest(
-                text = titleText,
-                voteTopics = listOf(
-                    VoteCreateRequest(firstTopicText, VoteColorsResponse.GREEN),
-                    VoteCreateRequest(secondTopicText, VoteColorsResponse.GREEN),
-                ),
-                categoryIds = listOf(state.selectedCategoryId ?: -1)
+        flow {
+            emit(
+                createPostUseCase(
+                    postCreateRequest =
+                    PostCreateRequest(
+                        text = titleText,
+                        voteTopics = listOf(
+                            VoteCreateRequest(firstTopicText, VoteColorsResponse.GREEN),
+                            VoteCreateRequest(secondTopicText, VoteColorsResponse.GREEN),
+                        ),
+                        categoryIds = listOf(state.selectedCategoryId ?: -1)
+                    )
+                )
             )
-        )
+        }
+            .toLoadState()
+            .onEach {
+                if (it.isSuccess()) {
+                    postSideEffect(WritePostScreenEffect.CreatePosted)
+                }
+                if (it.isLoading()) {
+                    postSideEffect(WritePostScreenEffect.CreatePosing)
+                }
+                if (it.isFailed()) {
+                    postSideEffect(WritePostScreenEffect.CreatePostFailed)
+                }
+            }
+            .launchIn(platformViewModelScope)
     }
 
 }
