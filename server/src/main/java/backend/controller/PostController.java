@@ -415,9 +415,7 @@ class PostController {
         UserDto userDto = getUser();
 
         PostDto postDto = postService.findPost(id);
-        voteSelectService.checkExistVoteSelect(userDto.getUserId(), id, voteSelectRequest.getId());
-
-        Long oldVoteSelectResult = voteSelectService.findVoteSelectResult(userDto.getUserId(), id);
+        Long oldVoteSelectResult = voteSelectService.checkExistVoteSelect(userDto.getUserId(), id, voteSelectRequest.getId());
         voteService.increaseVoteCount(oldVoteSelectResult, voteSelectRequest.getId(), id);
         voteSelectService.saveVoteSelect(postDto, userDto, voteSelectRequest.getId());
 

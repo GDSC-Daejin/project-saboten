@@ -83,24 +83,45 @@ public class VoteService {
 
     @Transactional
     public Integer increaseVoteCount(final Long oldVoteId , final Long voteId, final Long postId) {
-        VoteEntity oldVote = null;
-        if(oldVoteId != null)
-            oldVote = findVote(oldVoteId, postId);
         VoteEntity currentVote = findVote(voteId, postId);
 
+        if(oldVoteId != null) {
+            VoteEntity oldVote = findVote(oldVoteId, postId);
+            if(oldVoteId.equals(voteId)) {
+                return canceledVoteCount(currentVote);
+            }
+
+            if(!oldVote.getVoteId().equals(currentVote.getVoteId())) {
+                return changeVoteCount(oldVote, currentVote);
+            }
+        }
+
+        return pickedVoteCount(currentVote);
+    }
+
+    private Integer canceledVoteCount(VoteEntity currentVote) {
+        int decreaseCount = currentVote.getCount() - 1;
+        currentVote.setCount(decreaseCount);
+        voteRepository.save(currentVote);
+        return decreaseCount;
+    }
+
+    private Integer changeVoteCount(VoteEntity oldVote, VoteEntity currentVote) {
         int increaseCount = currentVote.getCount() + 1;
 
-        if(oldVote != null && !oldVote.getVoteId().equals(currentVote.getVoteId())) {
-            oldVote.setCount(oldVote.getCount() - 1);
-            currentVote.setCount(increaseCount);
+        oldVote.setCount(oldVote.getCount() - 1);
+        currentVote.setCount(increaseCount);
 
-            voteRepository.save(oldVote);
-            voteRepository.save(currentVote);
-        }
-        else {
-            currentVote.setCount(increaseCount);
-            voteRepository.save(currentVote);
-        }
+        voteRepository.save(oldVote);
+        voteRepository.save(currentVote);
+        return increaseCount;
+    }
+
+    private Integer pickedVoteCount(VoteEntity currentVote) {
+        int increaseCount = currentVote.getCount() + 1;
+
+        currentVote.setCount(increaseCount);
+        voteRepository.save(currentVote);
 
         return increaseCount;
     }
