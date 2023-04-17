@@ -22,10 +22,12 @@ public class VoteSelectService {
     private final VoteSelectRepository voteSelectRepository;
 
     @Transactional
-    public void saveVoteSelect(PostDto postDto , UserDto userDto, Long voteResult) {
+    public void saveVoteSelect(PostDto postDto , UserDto userDto, Long voteResult, boolean isIncrease) {
         VoteSelectEntity votedSelectEntity = findVoteSelect(userDto.getUserId(), postDto.getPostId());
         if(votedSelectEntity != null) {
             deleteVoteSelect(votedSelectEntity);
+            if(!isIncrease)
+                return;
         }
 
         VoteSelectEntity voteSelectEntity = new VoteSelectEntity(postDto.toEntity(), userDto.toEntity(), voteResult);
@@ -34,11 +36,9 @@ public class VoteSelectService {
 
     public Long checkExistVoteSelect(final Long userId, final Long postId, Long voteResult) {
         VoteSelectEntity votedSelectEntity = findVoteSelect(userId, postId);
-        Long voteId = votedSelectEntity.getVoteResult();
 
-        if(votedSelectEntity != null && votedSelectEntity.getVoteResult().equals(voteResult)) {
-            deleteVoteSelect(votedSelectEntity);
-            return voteId;
+        if(votedSelectEntity != null) {
+            return votedSelectEntity.getVoteResult();
         }
 
         return null;

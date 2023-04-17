@@ -416,8 +416,8 @@ class PostController {
 
         PostDto postDto = postService.findPost(id);
         Long oldVoteSelectResult = voteSelectService.checkExistVoteSelect(userDto.getUserId(), id, voteSelectRequest.getId());
-        voteService.increaseVoteCount(oldVoteSelectResult, voteSelectRequest.getId(), id);
-        voteSelectService.saveVoteSelect(postDto, userDto, voteSelectRequest.getId());
+        boolean isIncrease = voteService.increaseVoteCount(oldVoteSelectResult, voteSelectRequest.getId(), id);
+        voteSelectService.saveVoteSelect(postDto, userDto, voteSelectRequest.getId(), isIncrease);
 
         List<VoteResponse> votes = voteService.findVotes(postDto.getPostId());
         List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());

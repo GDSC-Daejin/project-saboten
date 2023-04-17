@@ -82,31 +82,33 @@ public class VoteService {
     }
 
     @Transactional
-    public Integer increaseVoteCount(final Long oldVoteId , final Long voteId, final Long postId) {
+    public Boolean increaseVoteCount(final Long oldVoteId , final Long voteId, final Long postId) {
         VoteEntity currentVote = findVote(voteId, postId);
 
         if(oldVoteId != null) {
             VoteEntity oldVote = findVote(oldVoteId, postId);
             if(oldVoteId.equals(voteId)) {
-                return canceledVoteCount(currentVote);
+                canceledVoteCount(currentVote);
+                return false;
             }
 
             if(!oldVote.getVoteId().equals(currentVote.getVoteId())) {
-                return changeVoteCount(oldVote, currentVote);
+                changeVoteCount(oldVote, currentVote);
+                return true;
             }
         }
 
-        return pickedVoteCount(currentVote);
+        pickedVoteCount(currentVote);
+        return true;
     }
 
-    private Integer canceledVoteCount(VoteEntity currentVote) {
+    private void canceledVoteCount(VoteEntity currentVote) {
         int decreaseCount = currentVote.getCount() - 1;
         currentVote.setCount(decreaseCount);
         voteRepository.save(currentVote);
-        return decreaseCount;
     }
 
-    private Integer changeVoteCount(VoteEntity oldVote, VoteEntity currentVote) {
+    private void changeVoteCount(VoteEntity oldVote, VoteEntity currentVote) {
         int increaseCount = currentVote.getCount() + 1;
 
         oldVote.setCount(oldVote.getCount() - 1);
@@ -114,15 +116,12 @@ public class VoteService {
 
         voteRepository.save(oldVote);
         voteRepository.save(currentVote);
-        return increaseCount;
     }
 
-    private Integer pickedVoteCount(VoteEntity currentVote) {
+    private void pickedVoteCount(VoteEntity currentVote) {
         int increaseCount = currentVote.getCount() + 1;
 
         currentVote.setCount(increaseCount);
         voteRepository.save(currentVote);
-
-        return increaseCount;
     }
 }
