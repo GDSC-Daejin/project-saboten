@@ -35,8 +35,10 @@ public class VoteSelectService {
     public void checkExistVoteSelect(final Long userId, final Long postId, Long voteResult) {
         VoteSelectEntity votedSelectEntity = findVoteSelect(userId, postId);
 
-        if(votedSelectEntity != null && votedSelectEntity.getVoteResult().equals(voteResult))
-            throw new ApiException(PostResponseMessage.POST_VOTE_CONFLICT);
+        if(votedSelectEntity != null && votedSelectEntity.getVoteResult().equals(voteResult)) {
+            deleteVoteSelect(votedSelectEntity);
+            throw new ApiException(PostResponseMessage.POST_VOTE_CANCELED);
+        }
     }
 
     private void deleteVoteSelect(VoteSelectEntity voteSelectEntity) {
