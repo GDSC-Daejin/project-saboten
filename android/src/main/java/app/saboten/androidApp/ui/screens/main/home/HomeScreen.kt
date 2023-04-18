@@ -207,6 +207,9 @@ fun HomeScreenContent(
                                         post = nonNullPost,
                                         onClicked = {
                                             onPostClicked(nonNullPost)
+                                        },
+                                        onCommentClicked = {
+                                            onPostClicked(nonNullPost)
                                         }
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
@@ -239,6 +242,9 @@ fun HomeScreenContent(
                                     SmallPostCard(
                                         post = nonNullPost,
                                         onClicked = {
+                                            onPostClicked(nonNullPost)
+                                        },
+                                        onCommentClicked = {
                                             onPostClicked(nonNullPost)
                                         }
                                     )
