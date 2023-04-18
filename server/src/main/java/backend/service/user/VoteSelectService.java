@@ -53,6 +53,9 @@ public class VoteSelectService {
     }
 
     public Long findVoteSelectResult(final Long userId, final Long postId) {
+        if(userId == null) {
+            return null;
+        }
         VoteSelectEntity voteSelectEntity = findVoteSelect(userId, postId);
         Long voteResult = null;
         if(voteSelectEntity != null)

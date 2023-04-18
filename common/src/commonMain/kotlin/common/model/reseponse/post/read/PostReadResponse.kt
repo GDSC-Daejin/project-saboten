@@ -14,7 +14,9 @@ data class PostReadResponse (
     @SerialName("author") val author: UserResponse,
     @SerialName("votes") val votes: List<VoteResponse>,
     @SerialName("categories") val categories: List<CategoryResponse>,
+    @SerialName("voteResult") val voteResult: Long,
     @SerialName("isScraped") val isScraped: Boolean,
+    @SerialName("isLiked") val isLiked: Boolean,
     @SerialName("createdAt") val createdAt: String,
     @SerialName("updatedAt") val updatedAt: String?
 )
