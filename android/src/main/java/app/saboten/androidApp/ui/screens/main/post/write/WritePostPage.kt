@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -137,81 +138,87 @@ fun WritePostScreenContent(
         }
     ) {
 
-        if (isPostingComment) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .align(Alignment.Center)
-                )
-            }
-        }
+        LazyColumn {
 
-        Column(modifier = Modifier.padding(it)) {
+            item {
 
-            Column(modifier = Modifier.padding(top = 20.dp)) {
-
-                // TODO: 디테일한 패딩 조정 필요.
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = titleText.value,
-                    onValueChange = { textValue ->
-                        titleText.value = textValue
-                    },
-                    placeholder = { Text("제목을 입력하세요.", color = SabotenColors.grey500) },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
-                        cursorColor = Color.Black,
-                        disabledLabelColor = Color.White,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    ),
-                )
-
-                WriteTopicTextField(firstTopicText.value) { firstTopicTextValue ->
-                    firstTopicText.value = firstTopicTextValue
-                }
-
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                WriteTopicTextField(secondTopicText.value, false) { secondTopicTextValue ->
-                    secondTopicText.value = secondTopicTextValue
-                }
-
-                Spacer(modifier = Modifier.padding(top = 20.dp))
-                HeaderBar(title = "카테고리 선택")
-
-                // TODO: 기본으로 잡힌 패딩 삭제 / 다중 선택 지원
-                LazyRow(
-                    contentPadding = PaddingValues(20.dp),
-                ) {
-
-                    items(state.categories.getDataOrNull() ?: emptyList()) { item ->
-                        val itemId = if (item.id < 0) null else item.id
-                        Surface(
-                            onClick = { viewModel.selectCategory(itemId) },
-                            color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
-                            else Color.Transparent,
-                            contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
-                            else MaterialTheme.colors.onBackground,
-                            shape = CircleShape,
-                            border = if (state.selectedCategoryId == itemId) null
-                            else {
-                                BorderStroke(1.dp, MaterialTheme.colors.onBackground)
-                            },
-                        ) {
-                            Text(
-                                text = item.name,
-                                modifier = Modifier.padding(10.dp),
-                            )
-
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
+                if (isPostingComment) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(
+                            modifier = Modifier
+                                .size(40.dp)
+                                .align(Alignment.Center)
+                        )
                     }
                 }
+
+                Column(modifier = Modifier.padding(it)) {
+
+                    Column(modifier = Modifier.padding(top = 20.dp)) {
+
+                        // TODO: 디테일한 패딩 조정 필요.
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = titleText.value,
+                            onValueChange = { textValue ->
+                                titleText.value = textValue
+                            },
+                            placeholder = { Text("제목을 입력하세요.", color = SabotenColors.grey500) },
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = Color.Transparent,
+                                cursorColor = Color.Black,
+                                disabledLabelColor = Color.White,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                        )
+
+                        WriteTopicTextField(firstTopicText.value) { firstTopicTextValue ->
+                            firstTopicText.value = firstTopicTextValue
+                        }
+
+                        Spacer(modifier = Modifier.padding(top = 10.dp))
+
+                        WriteTopicTextField(secondTopicText.value, false) { secondTopicTextValue ->
+                            secondTopicText.value = secondTopicTextValue
+                        }
+
+                        Spacer(modifier = Modifier.padding(top = 20.dp))
+                        HeaderBar(title = "카테고리 선택")
+
+                        // TODO: 다중 선택 지원
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal =  20.dp),
+                        ) {
+
+                            items(state.categories.getDataOrNull() ?: emptyList()) { item ->
+                                val itemId = if (item.id < 0) null else item.id
+                                Surface(
+                                    onClick = { viewModel.selectCategory(itemId) },
+                                    color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
+                                    else Color.Transparent,
+                                    contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
+                                    else MaterialTheme.colors.onBackground,
+                                    shape = CircleShape,
+                                    border = if (state.selectedCategoryId == itemId) null
+                                    else {
+                                        BorderStroke(1.dp, MaterialTheme.colors.onBackground)
+                                    },
+                                ) {
+                                    Text(
+                                        text = item.name,
+                                        modifier = Modifier.padding(10.dp),
+                                    )
+
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                            }
+                        }
+                    }
+
+
+                }
             }
-
-
         }
     }
 }
