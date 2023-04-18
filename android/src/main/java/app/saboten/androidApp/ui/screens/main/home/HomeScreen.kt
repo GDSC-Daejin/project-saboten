@@ -207,6 +207,12 @@ fun HomeScreenContent(
                                         post = nonNullPost,
                                         onClicked = {
                                             onPostClicked(nonNullPost)
+                                        },
+                                        onLikeClicked = {
+                                            vm.requestLike(nonNullPost.id)
+                                        },
+                                        onCommentClicked = {
+                                            onPostClicked(nonNullPost)
                                         }
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
@@ -236,9 +242,16 @@ fun HomeScreenContent(
                                 val observableCache by vm.updatedPostCache.collectAsState()
                                 val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
+
                                     SmallPostCard(
                                         post = nonNullPost,
                                         onClicked = {
+                                            onPostClicked(nonNullPost)
+                                        },
+                                        onLikeClicked = {
+                                            vm.requestLike(nonNullPost.id)
+                                        },
+                                        onCommentClicked = {
                                             onPostClicked(nonNullPost)
                                         }
                                     )
@@ -267,10 +280,10 @@ fun HomeScreenContent(
                                 .padding(horizontal = 20.dp, vertical = 10.dp),
                             post = cachedPost,
                             onClicked = {
-
+                                onPostClicked(cachedPost)
                             },
                             onCommentClicked = {
-
+                                onPostClicked(cachedPost)
                             },
                             onVoteClicked = { vote -> vm.requestVote(cachedPost.id, vote.id) },
                             onScrapClicked = { vm.requestScrap(cachedPost.id) },
