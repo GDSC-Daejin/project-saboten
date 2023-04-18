@@ -21,6 +21,8 @@ import commonClient.utils.toLoadState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
@@ -105,16 +107,14 @@ class CategoryScreenViewModel(
         )
     }
 
-    private fun updatePost(post: Post) = intent {
-        reduce {
-            state.copy(
-                items = state.items.map { pagingData ->
-                    pagingData.map { item ->
-                        if (item.id == post.id) post
-                        else item
-                    }
-                }
-            )
+    private val _updatedPostCache = MutableStateFlow(mutableListOf<Post>())
+    val updatedPostCache: StateFlow<List<Post>> = _updatedPostCache
+
+    private fun updatePost(post: Post) {
+        intent {
+            val updatedPostCache = _updatedPostCache.value
+            updatedPostCache.removeAll { it.id == post.id }
+            _updatedPostCache.emit((updatedPostCache + post).toMutableList())
         }
     }
 
