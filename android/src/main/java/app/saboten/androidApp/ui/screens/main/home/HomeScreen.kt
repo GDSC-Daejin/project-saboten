@@ -267,10 +267,10 @@ fun HomeScreenContent(
                                 .padding(horizontal = 20.dp, vertical = 10.dp),
                             post = cachedPost,
                             onClicked = {
-
+                                onPostClicked(cachedPost)
                             },
                             onCommentClicked = {
-
+                                onPostClicked(cachedPost)
                             },
                             onVoteClicked = { vote -> vm.requestVote(cachedPost.id, vote.id) },
                             onScrapClicked = { vm.requestScrap(cachedPost.id) },

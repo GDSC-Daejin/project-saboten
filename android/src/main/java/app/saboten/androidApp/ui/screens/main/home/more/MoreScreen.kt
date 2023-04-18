@@ -86,10 +86,10 @@ fun MoreScreen(
                         modifier = Modifier.fillMaxWidth(),
                         post = nonNullPost,
                         onClicked = {
-                            navigator.navigate(DetailPostScreenDestination(post.id))
+                            navigator.navigate(DetailPostScreenDestination(nonNullPost.id))
                         },
                         onCommentClicked = {
-
+                            navigator.navigate(DetailPostScreenDestination(nonNullPost.id))
                         },
                         onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
                         onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
