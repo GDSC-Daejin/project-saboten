@@ -208,6 +208,9 @@ fun HomeScreenContent(
                                         onClicked = {
                                             onPostClicked(nonNullPost)
                                         },
+                                        onLikeClicked = {
+                                            vm.requestLike(nonNullPost.id)
+                                        },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
                                         }
@@ -239,10 +242,14 @@ fun HomeScreenContent(
                                 val observableCache by vm.updatedPostCache.collectAsState()
                                 val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
+
                                     SmallPostCard(
                                         post = nonNullPost,
                                         onClicked = {
                                             onPostClicked(nonNullPost)
+                                        },
+                                        onLikeClicked = {
+                                            vm.requestLike(nonNullPost.id)
                                         },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
