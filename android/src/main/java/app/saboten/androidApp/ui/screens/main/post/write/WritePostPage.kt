@@ -112,7 +112,7 @@ fun WritePostScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    enabled = isPostingComment.not(),
+                    enabled = isPostingComment.not() && titleText.value.isNotBlank() && firstTopicText.value.isNotBlank() && secondTopicText.value.isNotBlank(),
                     backgroundColor = SabotenColors.green500,
                     onClick = {
                         viewModel.createPost(
