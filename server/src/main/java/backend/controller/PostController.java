@@ -6,8 +6,6 @@ import backend.controller.swagger.response.PostNotFoundResponse;
 import backend.controller.swagger.response.PostVoteNotFound;
 import backend.controller.swagger.response.UnauthorizedResponse;
 import backend.jwt.SecurityUtil;
-import backend.model.post.VoteEntity;
-import backend.model.user.VoteSelectEntity;
 import backend.service.CategoryService;
 import backend.service.UserService;
 import backend.service.comment.CommentService;
@@ -21,7 +19,6 @@ import common.model.request.post.update.PostUpdateRequest;
 import common.model.reseponse.ApiResponse;
 import common.model.reseponse.PagingResponse;
 import common.model.reseponse.category.CategoryResponse;
-import common.model.reseponse.comment.CommentResponse;
 import common.model.reseponse.post.PostCountResponse;
 import common.model.reseponse.post.PostResponse;
 import common.model.reseponse.post.VoteResponse;
@@ -31,8 +28,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponses;
-import java.util.ArrayList;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -94,9 +89,6 @@ class PostController {
     }
 
     private Long findVoteResult(Long userId, Long postId) {
-        if(userId == null)
-            return null;
-
         return voteSelectService.findVoteSelectResult(userId, postId);
     }
 
@@ -128,7 +120,7 @@ class PostController {
         Long userId = userDto != null ? userDto.getUserId() : null;
         Page<PostReadResponse> postPage = postService.getUserPost(userId, pageable)
                 .map(postDto ->
-                    makeReadResponse(postDto, userDto.getUserId())
+                    makeReadResponse(postDto, userDto)
                 );
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
@@ -192,7 +184,7 @@ class PostController {
             @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable) {
         UserDto userDto = getUser();
         Page<PostReadResponse> postPage = postService.findAllPageable(pageable).map(postDto ->
-                makeReadResponse(postDto, userDto.getUserId()));
+                makeReadResponse(postDto, userDto));
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
         PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
@@ -203,9 +195,9 @@ class PostController {
     @GetMapping("/post/liked")
     public ApiResponse<PagingResponse<PostReadResponse>> getPostPageOrderedByLikedCount(
             @PageableDefault(sort = "postLikeCount", direction = Direction.DESC) Pageable pageable) {
-        UserDto userDto = getUser();
+
         Page<PostReadResponse> postPage = postService.findAllPageable(pageable).map(postDto ->
-            makeReadResponse(postDto, userDto.getUserId())
+            makeReadResponse(postDto, getUser())
         );
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
@@ -216,10 +208,9 @@ class PostController {
     @ApiOperation(value = "전체 게시물 조회(좋아요순 5개)")
     @GetMapping("/post/liked/list")
     public ApiResponse<List<PostReadResponse>> getPostListOrderedByLikedCount() {
-        UserDto userDto = getUser();
         List<PostDto> postDtoList = postService.findAllOrderedBySortItemList("postLikeCount");
         List<PostReadResponse> myPostList = postDtoList.stream().map(postDto ->
-            makeReadResponse(postDto, userDto.getUserId())
+            makeReadResponse(postDto, getUser())
         ).limit(5).toList();
         return ApiResponse.withMessage(myPostList, PostResponseMessage.POST_FIND_FIVE_ORDERED_BY_LIKED_COUNT);
     }
@@ -228,9 +219,8 @@ class PostController {
             notes = "사용자가 검색어를 입력하면, 검색어가 들어간 게시물을 조회할 수 있습니다.")
     @GetMapping("/post/search")
     public ApiResponse<PagingResponse<PostReadResponse>> getSearchPost(@RequestParam(required = false) String searchText, @PageableDefault Pageable pageable) {
-        UserDto userDto = getUser();
         Page<PostReadResponse> postPage = postService.searchPost(searchText, pageable).map(postDto ->
-                makeReadResponse(postDto, userDto.getUserId())
+                makeReadResponse(postDto, getUser())
         );
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
@@ -344,7 +334,7 @@ class PostController {
         Page<PostScrapDto> postScrapesDto = postScrapService.getUserScrap(userId, pageable);
         Page<PostReadResponse> myPostScrap = postScrapesDto.map(postScrapDto -> {
             PostDto postDto = postScrapDto.getPost();
-            return makeReadResponse(postDto, userId);
+            return makeReadResponse(postDto, userDto);
         });
 
         Long nextPage = myPostScrap.isLast() ? null : (long) myPostScrap.getNumber() + 2;
@@ -374,7 +364,7 @@ class PostController {
         }
 
         Page<PostReadResponse> postPageResponse = postPage.map(postDto ->
-                makeReadResponse(postDto, userDto.getUserId())
+                makeReadResponse(postDto, userDto)
         );
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
@@ -388,7 +378,7 @@ class PostController {
 
         UserDto userDto = getUser();
         Page<PostReadResponse>  postPage = postService.findAllHotPost(pageable).map(postDto ->
-                makeReadResponse(postDto, userDto.getUserId())
+                makeReadResponse(postDto, userDto)
         );
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
@@ -434,7 +424,7 @@ class PostController {
 
         Page<PostDto> postsDto = voteSelectService.findPostVoted(userId, pageable);
         Page<PostReadResponse> myPostVoted = postsDto.map(postDto ->
-                makeReadResponse(postDto, userId)
+                makeReadResponse(postDto, userDto)
         );
 
         Long nextPage = myPostVoted.isLast() ? null : (long) myPostVoted.getNumber() + 2;
@@ -464,19 +454,19 @@ class PostController {
         List<Long> postIdList = commentService.findPostIdByUserId(userId);
         List<PostDto> postDtoList = postIdList.stream().map(postService::findPost).toList();
         List<PostReadResponse> postResponseList = postDtoList.stream().map(postDto ->
-                makeReadResponse(postDto, userId)
+                makeReadResponse(postDto, userDto)
         ).toList();
         return ApiResponse.withMessage(postResponseList, PostResponseMessage.COMMENTED_POST_FIND_ALL_BY_USERID);
     }
-    private PostReadResponse makeReadResponse(PostDto postDto, Long userId) {
+    private PostReadResponse makeReadResponse(PostDto postDto, UserDto userDto) {
         List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
 
-        if(userId == null) {
+        if(userDto == null) {
             return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, null, false, false);
         }
-        Long voteResult = findVoteResult(userId, postDto.getPostId());
-        Boolean isScraped = postScrapService.findPostIsScrap(userId, postDto.getPostId());
-        Boolean isLiked = postLikeService.findPostIsLike(userId, postDto.getPostId());
+        Long voteResult = findVoteResult(userDto.getUserId(), postDto.getPostId());
+        Boolean isScraped = postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId());
+        Boolean isLiked = postLikeService.findPostIsLike(userDto.getUserId(), postDto.getPostId());
 
         return postDto.toReadResponse(voteService.findVotes(postDto.getPostId()), categories, voteResult, isScraped, isLiked);
     }
