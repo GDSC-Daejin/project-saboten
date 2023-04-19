@@ -22,21 +22,26 @@ public class VoteSelectService {
     private final VoteSelectRepository voteSelectRepository;
 
     @Transactional
-    public void saveVoteSelect(PostDto postDto , UserDto userDto, Long voteResult) {
+    public void saveVoteSelect(PostDto postDto , UserDto userDto, Long voteResult, boolean isIncrease) {
         VoteSelectEntity votedSelectEntity = findVoteSelect(userDto.getUserId(), postDto.getPostId());
         if(votedSelectEntity != null) {
             deleteVoteSelect(votedSelectEntity);
+            if(!isIncrease)
+                return;
         }
 
         VoteSelectEntity voteSelectEntity = new VoteSelectEntity(postDto.toEntity(), userDto.toEntity(), voteResult);
         voteSelectRepository.save(voteSelectEntity);
     }
 
-    public void checkExistVoteSelect(final Long userId, final Long postId, Long voteResult) {
+    public Long checkExistVoteSelect(final Long userId, final Long postId, Long voteResult) {
         VoteSelectEntity votedSelectEntity = findVoteSelect(userId, postId);
 
-        if(votedSelectEntity != null && votedSelectEntity.getVoteResult().equals(voteResult))
-            throw new ApiException(PostResponseMessage.POST_VOTE_CONFLICT);
+        if(votedSelectEntity != null) {
+            return votedSelectEntity.getVoteResult();
+        }
+
+        return null;
     }
 
     private void deleteVoteSelect(VoteSelectEntity voteSelectEntity) {
@@ -48,6 +53,9 @@ public class VoteSelectService {
     }
 
     public Long findVoteSelectResult(final Long userId, final Long postId) {
+        if(userId == null) {
+            return null;
+        }
         VoteSelectEntity voteSelectEntity = findVoteSelect(userId, postId);
         Long voteResult = null;
         if(voteSelectEntity != null)

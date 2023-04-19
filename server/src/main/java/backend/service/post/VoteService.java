@@ -82,26 +82,46 @@ public class VoteService {
     }
 
     @Transactional
-    public Integer increaseVoteCount(final Long oldVoteId , final Long voteId, final Long postId) {
-        VoteEntity oldVote = null;
-        if(oldVoteId != null)
-            oldVote = findVote(oldVoteId, postId);
+    public Boolean increaseVoteCount(final Long oldVoteId , final Long voteId, final Long postId) {
         VoteEntity currentVote = findVote(voteId, postId);
 
+        if(oldVoteId != null) {
+            VoteEntity oldVote = findVote(oldVoteId, postId);
+            if(oldVoteId.equals(voteId)) {
+                canceledVoteCount(currentVote);
+                return false;
+            }
+
+            if(!oldVote.getVoteId().equals(currentVote.getVoteId())) {
+                changeVoteCount(oldVote, currentVote);
+                return true;
+            }
+        }
+
+        pickedVoteCount(currentVote);
+        return true;
+    }
+
+    private void canceledVoteCount(VoteEntity currentVote) {
+        int decreaseCount = currentVote.getCount() - 1;
+        currentVote.setCount(decreaseCount);
+        voteRepository.save(currentVote);
+    }
+
+    private void changeVoteCount(VoteEntity oldVote, VoteEntity currentVote) {
         int increaseCount = currentVote.getCount() + 1;
 
-        if(oldVote != null && !oldVote.getVoteId().equals(currentVote.getVoteId())) {
-            oldVote.setCount(oldVote.getCount() - 1);
-            currentVote.setCount(increaseCount);
+        oldVote.setCount(oldVote.getCount() - 1);
+        currentVote.setCount(increaseCount);
 
-            voteRepository.save(oldVote);
-            voteRepository.save(currentVote);
-        }
-        else {
-            currentVote.setCount(increaseCount);
-            voteRepository.save(currentVote);
-        }
+        voteRepository.save(oldVote);
+        voteRepository.save(currentVote);
+    }
 
-        return increaseCount;
+    private void pickedVoteCount(VoteEntity currentVote) {
+        int increaseCount = currentVote.getCount() + 1;
+
+        currentVote.setCount(increaseCount);
+        voteRepository.save(currentVote);
     }
 }
