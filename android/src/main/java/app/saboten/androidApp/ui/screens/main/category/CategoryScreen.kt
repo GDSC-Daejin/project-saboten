@@ -38,7 +38,7 @@ import commonClient.domain.entity.post.Post
 @Composable
 @Destination
 fun CategoryScreen(
-    initSelectedItemId: Long = 0,
+    initSelectedItemId: Long = 10,
     navigator: DestinationsNavigator,
 ) {
 
