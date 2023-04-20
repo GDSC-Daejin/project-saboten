@@ -94,9 +94,11 @@ fun WritePostScreenContent(
             is WritePostScreenEffect.CreatePosing -> {
                 isPosting = true
             }
+
             is WritePostScreenEffect.CreatePostFailed -> {
                 isPosting = false
             }
+
             is WritePostScreenEffect.CreatePosted -> {
                 onBackPressed()
             }
@@ -138,19 +140,19 @@ fun WritePostScreenContent(
         }
     ) {
 
+        if (isPosting) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.Center)
+                )
+            }
+        }
+
         LazyColumn {
 
             item {
-
-                if (isPosting) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
 
                 Column(modifier = Modifier.padding(it)) {
 
@@ -188,7 +190,7 @@ fun WritePostScreenContent(
 
                         // TODO: 다중 선택 지원
                         LazyRow(
-                            contentPadding = PaddingValues(horizontal =  20.dp),
+                            contentPadding = PaddingValues(horizontal = 20.dp),
                         ) {
 
                             items(state.categories.getDataOrNull() ?: emptyList()) { item ->
@@ -218,6 +220,7 @@ fun WritePostScreenContent(
 
 
                 }
+
             }
         }
     }
