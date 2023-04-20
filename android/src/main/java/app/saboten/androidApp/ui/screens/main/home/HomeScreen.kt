@@ -217,6 +217,10 @@ fun HomeScreenContent(
                                             if (meState.needLogin) openLoginDialog()
                                             else vm.requestLike(nonNullPost.id)
                                         },
+                                        onScrapClicked = {
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestScrap(nonNullPost.id)
+                                        },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
                                         }
@@ -256,6 +260,9 @@ fun HomeScreenContent(
                                         },
                                         onLikeClicked = {
                                             vm.requestLike(nonNullPost.id)
+                                        },
+                                        onScrapClicked = {
+                                            vm.requestScrap(nonNullPost.id)
                                         },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
