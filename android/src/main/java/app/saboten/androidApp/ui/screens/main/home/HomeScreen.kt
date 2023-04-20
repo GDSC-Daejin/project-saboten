@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
+import app.saboten.androidApp.ui.providers.LocalMeInfo
+import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
@@ -90,6 +92,9 @@ fun HomeScreenContent(
             isLight && isHeaderScrolled
         }
     }
+
+    val meState = LocalMeInfo.current
+    val openLoginDialog = LocalOpenLoginDialogEffect.current
 
     val backgroundColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.surface else Color.Transparent)
     val contentColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.primary else Color.White)
@@ -209,7 +214,8 @@ fun HomeScreenContent(
                                             onPostClicked(nonNullPost)
                                         },
                                         onLikeClicked = {
-                                            vm.requestLike(nonNullPost.id)
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestLike(nonNullPost.id)
                                         },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
