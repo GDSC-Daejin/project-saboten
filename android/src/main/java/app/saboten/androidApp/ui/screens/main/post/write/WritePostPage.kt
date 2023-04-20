@@ -77,7 +77,7 @@ fun WritePostScreenContent(
 
     val state by viewModel.collectAsState()
 
-    var isPostingComment by remember { mutableStateOf(false) }
+    var isPosting by remember { mutableStateOf(false) }
 
     val titleText = remember {
         mutableStateOf("")
@@ -92,11 +92,13 @@ fun WritePostScreenContent(
     viewModel.collectSideEffect {
         when (it) {
             is WritePostScreenEffect.CreatePosing -> {
-                isPostingComment = true
+                isPosting = true
             }
+
             is WritePostScreenEffect.CreatePostFailed -> {
-                isPostingComment = false
+                isPosting = false
             }
+
             is WritePostScreenEffect.CreatePosted -> {
                 onBackPressed()
             }
@@ -112,7 +114,7 @@ fun WritePostScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    enabled = isPostingComment.not() && titleText.value.isNotBlank() && firstTopicText.value.isNotBlank() && secondTopicText.value.isNotBlank(),
+                    enabled = isPosting.not() && titleText.value.isNotBlank() && firstTopicText.value.isNotBlank() && secondTopicText.value.isNotBlank(),
                     backgroundColor = SabotenColors.green500,
                     onClick = {
                         viewModel.createPost(
@@ -138,19 +140,19 @@ fun WritePostScreenContent(
         }
     ) {
 
+        if (isPosting) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.Center)
+                )
+            }
+        }
+
         LazyColumn {
 
             item {
-
-                if (isPostingComment) {
-                    Box(modifier = Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .align(Alignment.Center)
-                        )
-                    }
-                }
 
                 Column(modifier = Modifier.padding(it)) {
 
@@ -188,7 +190,7 @@ fun WritePostScreenContent(
 
                         // TODO: 다중 선택 지원
                         LazyRow(
-                            contentPadding = PaddingValues(horizontal =  20.dp),
+                            contentPadding = PaddingValues(horizontal = 20.dp),
                         ) {
 
                             items(state.categories.getDataOrNull() ?: emptyList()) { item ->
@@ -218,6 +220,7 @@ fun WritePostScreenContent(
 
 
                 }
+
             }
         }
     }
