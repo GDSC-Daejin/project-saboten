@@ -77,7 +77,7 @@ fun WritePostScreenContent(
 
     val state by viewModel.collectAsState()
 
-    var isPostingComment by remember { mutableStateOf(false) }
+    var isPosting by remember { mutableStateOf(false) }
 
     val titleText = remember {
         mutableStateOf("")
@@ -92,10 +92,10 @@ fun WritePostScreenContent(
     viewModel.collectSideEffect {
         when (it) {
             is WritePostScreenEffect.CreatePosing -> {
-                isPostingComment = true
+                isPosting = true
             }
             is WritePostScreenEffect.CreatePostFailed -> {
-                isPostingComment = false
+                isPosting = false
             }
             is WritePostScreenEffect.CreatePosted -> {
                 onBackPressed()
@@ -112,7 +112,7 @@ fun WritePostScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    enabled = isPostingComment.not() && titleText.value.isNotBlank() && firstTopicText.value.isNotBlank() && secondTopicText.value.isNotBlank(),
+                    enabled = isPosting.not() && titleText.value.isNotBlank() && firstTopicText.value.isNotBlank() && secondTopicText.value.isNotBlank(),
                     backgroundColor = SabotenColors.green500,
                     onClick = {
                         viewModel.createPost(
@@ -142,7 +142,7 @@ fun WritePostScreenContent(
 
             item {
 
-                if (isPostingComment) {
+                if (isPosting) {
                     Box(modifier = Modifier.fillMaxSize()) {
                         CircularProgressIndicator(
                             modifier = Modifier
