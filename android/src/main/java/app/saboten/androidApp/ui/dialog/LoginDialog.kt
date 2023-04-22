@@ -27,6 +27,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.buttons.GoogleLoginButton
 import app.saboten.androidUi.utils.getActivity
+import com.google.android.gms.auth.api.identity.Identity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.ramcosta.composedestinations.annotation.Destination
@@ -90,7 +91,7 @@ fun LoginDialogContent(
             ClientLogger.d("Success")
             val intent = result.data
             if (intent != null) {
-                val credential = googleLoginManager.oneTapClient.getSignInCredentialFromIntent(intent)
+                val credential = Identity.getSignInClient(context.getActivity()!!).getSignInCredentialFromIntent(intent)
                 val googleIdToken = credential.googleIdToken
                 ClientLogger.d("Success $googleIdToken")
                 if (googleIdToken != null) {

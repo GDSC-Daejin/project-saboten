@@ -18,14 +18,18 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
+import app.saboten.androidApp.ui.providers.LocalMeInfo
+import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
@@ -51,6 +55,9 @@ fun HomeScreen(
 
     HomeScreenContent(
         vm = vm,
+        onCategoryClicked = {
+            navigator.navigate(CategoryScreenDestination(initSelectedItemId = it))
+        },
         onPostClicked = {
             navigator.navigate(DetailPostScreenDestination(postId = it.id))
         },
@@ -63,6 +70,7 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     vm: HomeScreenViewModel,
+    onCategoryClicked: (Long) -> Unit = {},
     onPostClicked: (Post) -> Unit = {},
     onMorePostClicked: (MoreScreenOption) -> Unit = {},
 ) {
@@ -84,6 +92,9 @@ fun HomeScreenContent(
             isLight && isHeaderScrolled
         }
     }
+
+    val meState = LocalMeInfo.current
+    val openLoginDialog = LocalOpenLoginDialogEffect.current
 
     val backgroundColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.surface else Color.Transparent)
     val contentColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.primary else Color.White)
@@ -131,19 +142,24 @@ fun HomeScreenContent(
                             contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
                             items(posts, key = { it.id }) { post ->
-                                LargePostCard(
-                                    modifier = Modifier.width(320.dp),
-                                    post = post,
-                                    onClicked = {
-                                        onPostClicked(post)
-                                    },
-                                    onVoteClicked = { vote ->
-                                    },
-                                    {},
-                                    {},
-                                    {}
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
+                                val observableCache by vm.updatedPostCache.collectAsState()
+                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                cachedPost.let { nonNullPost ->
+                                    LargePostCard(
+                                        modifier = Modifier.width(320.dp),
+                                        post = nonNullPost,
+                                        onClicked = {
+                                            onPostClicked(nonNullPost)
+                                        },
+                                        onVoteClicked = { vote ->
+
+                                        },
+                                        {},
+                                        {},
+                                        {}
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                }
                             }
                         }
                     }
@@ -165,7 +181,7 @@ fun HomeScreenContent(
                         ) {
                             items(categories) { category ->
                                 CategoryItem(category = category) {
-
+                                    onCategoryClicked(category.id)
                                 }
                                 Spacer(modifier = Modifier.width(10.dp))
                             }
@@ -189,13 +205,28 @@ fun HomeScreenContent(
                             contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
                             items(posts, key = { it.id }) { post ->
-                                SmallPostCard(
-                                    post = post,
-                                    onClicked = {
-                                        onPostClicked(post)
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
+                                val observableCache by vm.updatedPostCache.collectAsState()
+                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                cachedPost.let { nonNullPost ->
+                                    SmallPostCard(
+                                        post = nonNullPost,
+                                        onClicked = {
+                                            onPostClicked(nonNullPost)
+                                        },
+                                        onLikeClicked = {
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestLike(nonNullPost.id)
+                                        },
+                                        onScrapClicked = {
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestScrap(nonNullPost.id)
+                                        },
+                                        onCommentClicked = {
+                                            onPostClicked(nonNullPost)
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                }
                             }
                         }
                     }
@@ -218,13 +249,27 @@ fun HomeScreenContent(
                             contentPadding = PaddingValues(start = 20.dp, end = 10.dp)
                         ) {
                             items(posts, key = { it.id }) { post ->
-                                SmallPostCard(
-                                    post = post,
-                                    onClicked = {
-                                        onPostClicked(post)
-                                    }
-                                )
-                                Spacer(modifier = Modifier.width(10.dp))
+                                val observableCache by vm.updatedPostCache.collectAsState()
+                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                cachedPost.let { nonNullPost ->
+
+                                    SmallPostCard(
+                                        post = nonNullPost,
+                                        onClicked = {
+                                            onPostClicked(nonNullPost)
+                                        },
+                                        onLikeClicked = {
+                                            vm.requestLike(nonNullPost.id)
+                                        },
+                                        onScrapClicked = {
+                                            vm.requestScrap(nonNullPost.id)
+                                        },
+                                        onCommentClicked = {
+                                            onPostClicked(nonNullPost)
+                                        }
+                                    )
+                                    Spacer(modifier = Modifier.width(10.dp))
+                                }
                             }
                         }
                     }
@@ -240,21 +285,22 @@ fun HomeScreenContent(
                     }
 
                     items(posts, key = { it.id }) { post ->
+                        val observableCache by vm.updatedPostCache.collectAsState()
+                        val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
                         LargePostCard(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(horizontal = 20.dp, vertical = 10.dp)
-                            ,
-                            post = post,
+                                .padding(horizontal = 20.dp, vertical = 10.dp),
+                            post = cachedPost,
                             onClicked = {
-
+                                onPostClicked(cachedPost)
                             },
                             onCommentClicked = {
-
+                                onPostClicked(cachedPost)
                             },
-                            onVoteClicked = { vote -> vm.requestVote(post.id, vote.id) },
-                            onScrapClicked = { vm.requestScrap(post.id) },
-                            onLikeClicked = { vm.requestLike(post.id) },
+                            onVoteClicked = { vote -> vm.requestVote(cachedPost.id, vote.id) },
+                            onScrapClicked = { vm.requestScrap(cachedPost.id) },
+                            onLikeClicked = { vm.requestLike(cachedPost.id) },
                         )
                     }
                 }

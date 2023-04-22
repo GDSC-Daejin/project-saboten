@@ -8,16 +8,19 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.LocalTextStyle
@@ -33,6 +36,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,9 +50,11 @@ import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.styles.SabotenColors
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.presentation.post.WritePostScreenEffect
 import commonClient.presentation.post.WritePostScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
+import org.orbitmvi.orbit.compose.collectSideEffect
 
 @Composable
 @Destination
@@ -71,6 +77,8 @@ fun WritePostScreenContent(
 
     val state by viewModel.collectAsState()
 
+    var isPosting by remember { mutableStateOf(false) }
+
     val titleText = remember {
         mutableStateOf("")
     }
@@ -81,6 +89,23 @@ fun WritePostScreenContent(
         mutableStateOf("")
     }
 
+    viewModel.collectSideEffect {
+        when (it) {
+            is WritePostScreenEffect.CreatePosing -> {
+                isPosting = true
+            }
+
+            is WritePostScreenEffect.CreatePostFailed -> {
+                isPosting = false
+            }
+
+            is WritePostScreenEffect.CreatePosted -> {
+                onBackPressed()
+            }
+
+        }
+    }
+
     Scaffold(
         bottomBar = {
             Column(modifier = Modifier.navigationBarsPadding()) {
@@ -89,6 +114,7 @@ fun WritePostScreenContent(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
+                    enabled = isPosting.not() && titleText.value.isNotBlank() && firstTopicText.value.isNotBlank() && secondTopicText.value.isNotBlank(),
                     backgroundColor = SabotenColors.green500,
                     onClick = {
                         viewModel.createPost(
@@ -110,86 +136,92 @@ fun WritePostScreenContent(
                         Icon(Icons.Rounded.Close, null)
                     }
                 },
-//                actions = {
-//                    TextButton(onClick = {
-//                        viewModel.createPost(
-//                            titleText.value,
-//                            firstTopicText.value,
-//                            secondTopicText.value
-//                        )
-//                    }) {
-//                        Text(text = "등록")
-//                    }
-//                }
             )
         }
     ) {
 
-        Column(modifier = Modifier.padding(it)) {
-
-            Column(modifier = Modifier.padding(top = 20.dp)) {
-
-                // TODO: 디테일한 패딩 조정 필요.
-                TextField(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = titleText.value,
-                    onValueChange = { textValue ->
-                        titleText.value = textValue
-                    },
-                    placeholder = { Text("제목을 입력하세요.", color = SabotenColors.grey500) },
-                    colors = TextFieldDefaults.textFieldColors(
-                        backgroundColor = Color.Transparent,
-                        cursorColor = Color.Black,
-                        disabledLabelColor = Color.White,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent
-                    ),
+        if (isPosting) {
+            Box(modifier = Modifier.fillMaxSize()) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .align(Alignment.Center)
                 )
-
-                WriteTopicTextField(firstTopicText.value) { firstTopicTextValue ->
-                    firstTopicText.value = firstTopicTextValue
-                }
-
-                Spacer(modifier = Modifier.padding(top = 10.dp))
-
-                WriteTopicTextField(secondTopicText.value, false) { secondTopicTextValue ->
-                    secondTopicText.value = secondTopicTextValue
-                }
-
-                Spacer(modifier = Modifier.padding(top = 20.dp))
-                HeaderBar(title = "카테고리 선택")
-
-                // TODO: 기본으로 잡힌 패딩 삭제 / 다중 선택 지원
-                LazyRow(
-                    contentPadding = PaddingValues(20.dp),
-                ) {
-
-                    items(state.categories.getDataOrNull() ?: emptyList()) { item ->
-                        val itemId = if (item.id < 0) null else item.id
-                        Surface(
-                            onClick = { viewModel.selectCategory(itemId) },
-                            color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
-                            else Color.Transparent,
-                            contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
-                            else MaterialTheme.colors.onBackground,
-                            shape = CircleShape,
-                            border = if (state.selectedCategoryId == itemId) null
-                            else {
-                                BorderStroke(1.dp, MaterialTheme.colors.onBackground)
-                            },
-                        ) {
-                            Text(
-                                text = item.name,
-                                modifier = Modifier.padding(10.dp),
-                            )
-
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                    }
-                }
             }
+        }
+
+        LazyColumn {
+
+            item {
+
+                Column(modifier = Modifier.padding(it)) {
+
+                    Column(modifier = Modifier.padding(top = 20.dp)) {
+
+                        // TODO: 디테일한 패딩 조정 필요.
+                        TextField(
+                            modifier = Modifier.fillMaxWidth(),
+                            value = titleText.value,
+                            onValueChange = { textValue ->
+                                titleText.value = textValue
+                            },
+                            placeholder = { Text("제목을 입력하세요.", color = SabotenColors.grey500) },
+                            colors = TextFieldDefaults.textFieldColors(
+                                backgroundColor = Color.Transparent,
+                                cursorColor = Color.Black,
+                                disabledLabelColor = Color.White,
+                                focusedIndicatorColor = Color.Transparent,
+                                unfocusedIndicatorColor = Color.Transparent
+                            ),
+                        )
+
+                        WriteTopicTextField(firstTopicText.value) { firstTopicTextValue ->
+                            firstTopicText.value = firstTopicTextValue
+                        }
+
+                        Spacer(modifier = Modifier.padding(top = 10.dp))
+
+                        WriteTopicTextField(secondTopicText.value, false) { secondTopicTextValue ->
+                            secondTopicText.value = secondTopicTextValue
+                        }
+
+                        Spacer(modifier = Modifier.padding(top = 20.dp))
+                        HeaderBar(title = "카테고리 선택")
+
+                        // TODO: 다중 선택 지원
+                        LazyRow(
+                            contentPadding = PaddingValues(horizontal = 20.dp),
+                        ) {
+
+                            items(state.categories.getDataOrNull() ?: emptyList()) { item ->
+                                val itemId = if (item.id < 0) null else item.id
+                                Surface(
+                                    onClick = { viewModel.selectCategory(itemId) },
+                                    color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
+                                    else Color.Transparent,
+                                    contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
+                                    else MaterialTheme.colors.onBackground,
+                                    shape = CircleShape,
+                                    border = if (state.selectedCategoryId == itemId) null
+                                    else {
+                                        BorderStroke(1.dp, MaterialTheme.colors.onBackground)
+                                    },
+                                ) {
+                                    Text(
+                                        text = item.name,
+                                        modifier = Modifier.padding(10.dp),
+                                    )
+
+                                }
+                                Spacer(modifier = Modifier.width(10.dp))
+                            }
+                        }
+                    }
 
 
+                }
+
+            }
         }
     }
 }

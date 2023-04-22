@@ -1,13 +1,7 @@
 package app.saboten.androidApp.ui.screens.main.category
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,15 +11,14 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,23 +31,20 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import androidx.paging.compose.itemsIndexed
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
-import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
-import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
-import commonClient.logger.ClientLogger
 
 @Composable
 @Destination
 fun CategoryScreen(
+    initSelectedItemId: Long = 10,
     navigator: DestinationsNavigator,
 ) {
 
     val viewModel = koinViewModel<CategoryScreenViewModel>()
 
-    CategoryScreenContent(viewModel) {
+    CategoryScreenContent(initSelectedItemId = initSelectedItemId, viewModel = viewModel) {
         navigator.navigate(DetailPostScreenDestination(postId = it.id))
     }
 
@@ -63,11 +53,14 @@ fun CategoryScreen(
 @Composable
 private fun CategoryScreenContent(
     viewModel: CategoryScreenViewModel,
+    initSelectedItemId: Long,
     onPostClicked: (Post) -> Unit,
 ) {
 
     val state by viewModel.collectAsState()
-
+    LaunchedEffect(initSelectedItemId){
+        viewModel.selectCategory(initSelectedItemId)
+    }
     Scaffold(
         topBar = {
 //            MainTopBar(
@@ -127,20 +120,22 @@ private fun CategoryScreenContent(
                     Spacer(modifier = Modifier.height(20.dp))
                 }
 
-                items(items) {
-                    it?.let { post ->
+                items(items) { post ->
+                    val observableCache by viewModel.updatedPostCache.collectAsState()
+                    val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                    cachedPost?.let { nonNullPost ->
                         LargePostCard(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 20.dp),
-                            post = post,
-                            onClicked = { onPostClicked(it) },
+                            post = nonNullPost,
+                            onClicked = { onPostClicked(nonNullPost) },
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.vote(post.id, vote.id) },
-                            onScrapClicked = { viewModel.scrap(post.id) },
-                            onLikeClicked = { viewModel.like(post.id) },
+                            onVoteClicked = { vote -> viewModel.vote(nonNullPost.id, vote.id) },
+                            onScrapClicked = { viewModel.scrap(nonNullPost.id) },
+                            onLikeClicked = { viewModel.like(nonNullPost.id) },
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }

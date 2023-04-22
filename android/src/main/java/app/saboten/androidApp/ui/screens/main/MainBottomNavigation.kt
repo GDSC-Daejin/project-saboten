@@ -1,29 +1,21 @@
 package app.saboten.androidApp.ui.screens.main
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import app.saboten.androidApp.ui.destinations.*
-import app.saboten.androidUi.styles.SabotenColors
-import app.saboten.androidUi.styles.SabotenColors.green500
 import com.ramcosta.composedestinations.navigation.navigate
-import com.ramcosta.composedestinations.navigation.navigateTo
 import com.ramcosta.composedestinations.spec.Direction
 
 private data class NavigationData(
@@ -31,11 +23,16 @@ private data class NavigationData(
     val icon: @Composable (Boolean) -> Unit,
 )
 
+private data class  TypedNavigationData<T>(
+    val direction: TypedDestination<T>,
+    val icon: @Composable (Boolean) -> Unit,
+)
+
 private val mainNavigationBarData = listOf(
     NavigationData(HomeScreenDestination) {
         Icon(if (it) Icons.Rounded.Home else Icons.Rounded.Home, null, modifier = Modifier.size(30.dp))
     },
-    NavigationData(CategoryScreenDestination) {
+    TypedNavigationData(CategoryScreenDestination) {
         Icon(if (it) Icons.Rounded.Dashboard else Icons.Rounded.Dashboard, null, modifier = Modifier.size(30.dp))
     },
     null,
@@ -70,12 +67,22 @@ fun MainBottomNavigation(
                 else BottomNavigationItem(
                     unselectedContentColor = MaterialTheme.colors.onSurface.copy(0.4f),
                     selectedContentColor = MaterialTheme.colors.primary,
-                    icon = { it.icon(destination == it.direction) },
-                    selected = destination == it.direction,
+                    icon = {
+                           when(it) {
+                               is NavigationData -> it.icon(destination == it.direction)
+                               is TypedNavigationData<*> -> it.icon(destination == it.direction)
+                           }
+
+                    },
+                    selected = when(it) {
+                        is NavigationData -> destination == it.direction
+                        is TypedNavigationData<*> -> destination == it.direction
+                        else -> false
+                    },
                     onClick = {
-                        navController.navigate(it.direction) {
-                            launchSingleTop = true
-                            restoreState = true
+                        when(it) {
+                            is NavigationData -> navController.navigate(it.direction)
+                            is TypedNavigationData<*> -> navController.navigate(it.direction.route)
                         }
                     }
                 )

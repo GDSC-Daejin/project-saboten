@@ -14,6 +14,7 @@ import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -117,20 +118,22 @@ private fun ProfileScreenContent(
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            items(items) {
-                it?.let { post ->
+            items(items) { post ->
+                val observableCache by viewModel.updatedPostCache.collectAsState()
+                val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                cachedPost?.let { nonNullPost ->
                     LargePostCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp),
-                        post = post,
-                        onClicked = { onPostClicked(it) },
+                        post = nonNullPost,
+                        onClicked = { onPostClicked(nonNullPost) },
                         onCommentClicked = {
 
                         },
-                        onVoteClicked = { vote -> viewModel.requestVote(post.id, vote.id) },
-                        onScrapClicked = { viewModel.requestScrap(post.id) },
-                        onLikeClicked = { viewModel.requestLike(post.id) },
+                        onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
+                        onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                        onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
                     )
                     Spacer(modifier = Modifier.height(20.dp))
                 }
