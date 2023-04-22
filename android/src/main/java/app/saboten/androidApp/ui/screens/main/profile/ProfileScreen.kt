@@ -13,7 +13,6 @@ import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -100,7 +99,7 @@ private fun ProfileScreenContent(
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
 
-                        ProfileBannerUi(viewModel, state.selectedType)
+                        ProfileBannerUi()
 
                         PostInfoBox(
                             state.myPageCount,
@@ -151,10 +150,7 @@ private fun ProfileScreenContent(
 }
 
 @Composable
-private fun ProfileBannerUi(
-    viewModel: ProfileScreenViewModel,
-    selectedType: ProfileScreenState.ProfileType,
-) {
+private fun ProfileBannerUi() {
 
     val meInfo = LocalMeInfo.current
 
@@ -207,10 +203,6 @@ private fun ProfileBannerUi(
         }
 
     } else {
-
-        LaunchedEffect(key1 = true) {
-            viewModel.load(selectedType)
-        }
 
         Column {
 
