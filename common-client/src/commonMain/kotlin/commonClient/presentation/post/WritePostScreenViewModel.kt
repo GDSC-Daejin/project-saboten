@@ -33,7 +33,7 @@ interface WritePostScreenEffect {
 data class WritePostScreenState(
     val createPost: LoadState<Unit> = LoadState.idle(),
     val categories: LoadState<List<Category>> = LoadState.idle(),
-    val selectedCategoryId: Long? = null,
+    val selectedCategoryIds: List<Long> = emptyList(),
 )
 
 class WritePostScreenViewModel(
@@ -63,11 +63,16 @@ class WritePostScreenViewModel(
 
     }
 
-    fun selectCategory(categoryId: Long?) {
+    fun selectCategory(categoryId: Long) {
         intent {
             reduce {
                 state.copy(
-                    selectedCategoryId = categoryId
+                    selectedCategoryIds =
+                        if (categoryId in state.selectedCategoryIds) {
+                            state.selectedCategoryIds.filter { it != categoryId }
+                        } else {
+                            state.selectedCategoryIds + categoryId
+                        }
                 )
             }
         }
@@ -88,7 +93,7 @@ class WritePostScreenViewModel(
                             VoteCreateRequest(firstTopicText, VoteColorsResponse.GREEN),
                             VoteCreateRequest(secondTopicText, VoteColorsResponse.GREEN),
                         ),
-                        categoryIds = listOf(state.selectedCategoryId ?: -1)
+                        categoryIds = state.selectedCategoryIds
                     )
                 )
             )
