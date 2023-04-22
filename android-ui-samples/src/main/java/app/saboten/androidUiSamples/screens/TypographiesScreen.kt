@@ -1,6 +1,8 @@
 package app.saboten.androidUiSamples.screens
 
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -11,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 
 @Composable
@@ -36,7 +38,7 @@ fun TypographiesScreen(navController: NavController) {
     val list = typographies()
     Scaffold(
         topBar = {
-            ToolBar(
+            BasicTopBar(
                 title = {
                     Text("Typographies")
                 },
@@ -48,13 +50,17 @@ fun TypographiesScreen(navController: NavController) {
             )
         }
     ) {
-        LazyColumn {
+        LazyColumn(modifier = Modifier.padding(it)) {
             items(list) { (name, typography) ->
                 Text(
                     text = name,
                     style = typography,
                     modifier = Modifier.fillMaxWidth().padding(20.dp)
                 )
+            }
+
+            item {
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }

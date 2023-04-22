@@ -1,11 +1,5 @@
 @file:Suppress("unused", "UnstableApiUsage")
 
-object Koin {
-
-    const val core = "io.insert-koin:koin-core:_"
-
-}
-
 object MultiplatformSettings {
     const val core = "com.russhwolf:multiplatform-settings:_"
 
@@ -23,14 +17,24 @@ object Multiplatform {
     const val firestore = "dev.gitlive:firebase-firestore:_"
 }
 
-val Ktor.Client.contentNegotiation get() = "io.ktor:ktor-client-content-negotiation:_"
+object Orbit {
+    const val core = "org.orbit-mvi:orbit-core:_"
+
+    const val viewmodel = "org.orbit-mvi:orbit-viewmodel:_"
+
+    const val compose = "org.orbit-mvi:orbit-compose:_"
+}
+
+val AndroidX.DataStore.coreOkio get() = "androidx.datastore:datastore-core-okio:_"
+val Koin.annotation get() = "io.insert-koin:koin-annotations:1.2.0"
+val Koin.kspCompiler get() = "io.insert-koin:koin-ksp-compiler:1.2.0"
+
 val Ktor.serializationKotlinx get() = "io.ktor:ktor-serialization-kotlinx:_"
 
 val Firebase.multiplatform get() = Multiplatform
 
 val AndroidX.glanceAppWidget get() = "androidx.glance:glance-appwidget:_"
 
-val Google.Android.maps get() = "com.google.maps.android:maps-ktx:_"
 val Google.Android.mapsUtils get() = "com.google.maps.android:maps-utils-ktx:_"
 val Google.Accompanist.navigation get() = Navigation
 val Google.Accompanist.placeholderMaterial get() = "com.google.accompanist:accompanist-placeholder-material:_"
@@ -46,6 +50,8 @@ object Mokk {
 }
 
 object Utils {
+
+    const val paging = "io.github.kuuuurt:multiplatform-paging:_"
 
     const val kotlinxDateTime = "org.jetbrains.kotlinx:kotlinx-datetime:_"
 
@@ -71,4 +77,10 @@ object Utils {
     const val qrGenerator = "com.google.zxing:zxingorg:_"
 
     const val inject = "com.chrynan.inject:inject:_"
+}
+
+object ComposeDestination {
+    const val core = "io.github.raamcosta.compose-destinations:core:_"
+    const val animationsCore = "io.github.raamcosta.compose-destinations:animations-core:_"
+    const val ksp = "io.github.raamcosta.compose-destinations:ksp:_"
 }

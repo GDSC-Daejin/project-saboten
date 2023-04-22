@@ -1,13 +1,19 @@
 package commonClient.domain.repository
 
-import common.model.User
-import commonClient.data.LoadState
+import common.model.request.user.UserUpdateRequest
+import commonClient.domain.entity.user.MyPageCount
+import commonClient.domain.entity.user.UserInfo
 import kotlinx.coroutines.flow.Flow
 
 interface UserRepository {
 
-    fun getMe(): Flow<LoadState<User>>
+    suspend fun getMe(): UserInfo
+    suspend fun getMyPageCount(): MyPageCount
 
-    fun getUser(id: Long): Flow<LoadState<User>>
+    fun observeMe() : Flow<UserInfo?>
+
+    suspend fun getUser(id: Long): UserInfo
+
+    suspend fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : UserInfo
 
 }

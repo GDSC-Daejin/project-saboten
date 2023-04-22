@@ -8,7 +8,8 @@ pluginManagement {
 }
 
 plugins {
-    id("de.fayard.refreshVersions") version "0.40.0"
+    id("de.fayard.refreshVersions") version "0.50.2"
+////                            # available:"0.51.0"
 }
 
 dependencyResolutionManagement {
@@ -27,7 +28,6 @@ include(":common")
 include(":common-client")
 
 include(":android")
-include(":web")
 include(":server")
 include(":android-ui")
 include(":android-ui-samples")

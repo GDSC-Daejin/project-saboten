@@ -1,22 +1,46 @@
 package commonClient.data.repository
 
-import common.model.User
-import commonClient.data.LoadState
-import commonClient.data.LoadState.Companion.loading
-import commonClient.data.LoadState.Companion.success
+import common.model.request.user.UserUpdateRequest
+import commonClient.data.cache.MeCache
+import commonClient.data.remote.endpoints.MyPageApi
+import commonClient.data.remote.endpoints.UserApi
+import commonClient.domain.entity.user.MyPageCount
+import commonClient.domain.entity.user.UserInfo
+import commonClient.domain.mapper.toDomain
 import commonClient.domain.repository.UserRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import org.koin.core.annotation.Single
 
-class UserRepositoryImp : UserRepository {
-    // TODO 진짜 코드로 교체해야함
-    override fun getMe() = flow {
-        emit(loading())
-        kotlinx.coroutines.delay(1000)
-        emit(success(User(1, "Harry", "")))
+@Single(binds = [UserRepository::class])
+class UserRepositoryImp(
+    private val userApi: UserApi,
+    private val myPageApi: MyPageApi,
+    private val meCache: MeCache
+) : UserRepository {
+
+    override suspend fun getMyPageCount(): MyPageCount {
+        return myPageApi.getMyPageCounts().data!!.toDomain()
     }
 
-    override fun getUser(id: Long): Flow<LoadState<User>> {
-        TODO("Not yet implemented")
+    override suspend fun getMe() : UserInfo {
+        val me = userApi.getMe()
+        meCache.save(requireNotNull(me.data))
+        return requireNotNull(me.data?.toDomain())
     }
+
+    override suspend fun getUser(id: Long) : UserInfo {
+        val user = userApi.getUser(id)
+        return requireNotNull(user.data?.toDomain())
+    }
+
+    override suspend fun updateUserInfo(userUpdateRequest: UserUpdateRequest) : UserInfo {
+        val user = userApi.updateUserInfo(userUpdateRequest)
+        meCache.save(requireNotNull(user.data))
+        return requireNotNull(user.data?.toDomain())
+    }
+
+    override fun observeMe() = meCache.me.map { it?.toDomain() }
+
+
 }

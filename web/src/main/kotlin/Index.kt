@@ -1,11 +1,9 @@
-import commonClient.di.dataModule
-import commonClient.di.domainModule
-import commonClient.di.presentationModule
-import di.initKoin
-import di.jsKoinModule
+import commonClient.di.initKoin
+import commonClient.logger.ClientLogger
+import commonClient.utils.ClientProperties
 import kotlinx.browser.document
 import org.koin.core.component.KoinComponent
-import org.koin.core.context.startKoin
+import org.koin.core.component.inject
 import react.StrictMode
 import react.createContext
 import react.dom.link
@@ -14,8 +12,12 @@ import react.router.dom.BrowserRouter
 import styled.injectGlobal
 
 object AppKoinComponent : KoinComponent {
+
+    private val clientProperties by inject<ClientProperties>()
+
     init {
         initKoin()
+        ClientLogger.init(clientProperties)
     }
 }
 

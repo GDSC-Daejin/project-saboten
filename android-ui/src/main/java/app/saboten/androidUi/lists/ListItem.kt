@@ -1,7 +1,5 @@
 package app.saboten.androidUi.lists
 
-import android.text.style.BackgroundColorSpan
-import app.saboten.androidUi.utils.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -11,12 +9,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import app.saboten.androidUi.utils.*
 
 
 @Composable
 fun BasicListItem(
     modifier: Modifier = Modifier,
-    backgroundColor : Color = MaterialTheme.colors.surface,
+    backgroundColor : Color = MaterialTheme.colors.background,
     title: String,
     subtitle: String? = null,
     leftSideUi: (@Composable () -> Unit)? = null,

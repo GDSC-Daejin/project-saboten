@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.SabotenAndroid" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:statusBarColor" tools:targetApi="l">@android:color/transparent</item>
+        <item name="android:navigationBarColor" tools:targetApi="l">@android:color/transparent</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">@bool/is_light_system_bar</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="o_mr1">@bool/is_light_system_bar</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+    </style>
+
+    <style name="Theme.SabotenAndroid.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#fff</item>
+        <item name="windowSplashScreenIconBackgroundColor">?colorPrimary</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/img_saboten_logo</item>
+        <item name="windowSplashScreenAnimationDuration">0</item>
+        <item name="postSplashScreenTheme">@style/Theme.SabotenAndroid</item>
+    </style>
+
+</resources>

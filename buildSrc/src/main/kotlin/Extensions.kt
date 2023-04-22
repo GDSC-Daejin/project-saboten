@@ -2,14 +2,6 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.get
 import java.io.ByteArrayOutputStream
 
-fun Project.kapt(path: Any) {
-    configurations["kapt"].dependencies.add(project.dependencies.create(path))
-}
-
-fun Project.ksp(path: Any) {
-    configurations["ksp"].dependencies.add(project.dependencies.create(path))
-}
-
 val Project.gitBranch: String
     get() {
         val byteOut = ByteArrayOutputStream()
@@ -24,8 +16,7 @@ val Project.gitDescribe: String
     get() {
         val stdout = ByteArrayOutputStream()
         rootProject.exec {
-            executable("/bin/sh")
-            args("-c", "git rev-parse --short HEAD")
+            commandLine = "git rev-parse --short HEAD -c".split(" ")
             standardOutput = stdout
         }
         return stdout.toString().trim()

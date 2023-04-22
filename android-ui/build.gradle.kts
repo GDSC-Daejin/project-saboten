@@ -22,18 +22,18 @@ dependencies {
     implementation(AndroidX.compose.ui)
     implementation(AndroidX.compose.ui.tooling)
     implementation(AndroidX.constraintLayout.compose)
+    implementation(AndroidX.core.splashscreen)
 
-    implementation(Google.accompanist.insets)
-    implementation(Google.accompanist.insets.ui)
     implementation(Google.accompanist.pager)
     implementation(Google.accompanist.pager.indicators)
-    implementation(Google.accompanist.systemuicontroller)
-    implementation(Google.accompanist.swiperefresh)
+    implementation(Google.accompanist.systemUiController)
+    implementation(Google.accompanist.swipeRefresh)
     implementation(Google.accompanist.placeholderMaterial)
     implementation(Google.accompanist.navigation.animation)
     implementation(Google.accompanist.navigation.material)
-    implementation(Google.accompanist.flowlayout)
+    implementation(Google.accompanist.flowLayout)
 
+    implementation(COIL.compose)
 }
 
 android {
@@ -73,7 +73,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.ui)
+        kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.compiler)
     }
 
 }

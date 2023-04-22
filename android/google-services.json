@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "844420568567",
+    "project_id": "project-saboten",
+    "storage_bucket": "project-saboten.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844420568567:android:70e74271a10a5ad5f58af2",
+        "android_client_info": {
+          "package_name": "app.saboten.androidApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844420568567-9kjbc21bf56srdk4juf4c7hkomntlm9a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "da141b0e08b33161910579cfb7b824fc9921e9d9"
+          }
+        },
+        {
+          "client_id": "844420568567-bjt55io3ngcprmk5hvj98hni1fg5h3t2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "888cd6de0b4ce794fa0375789db72749c1308b53"
+          }
+        },
+        {
+          "client_id": "844420568567-qv8gsc7sma5cpo451tm2oh0u6m6gnb68.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "app.saboten.androidApp",
+            "certificate_hash": "9acc1c6d97d8732add16b6b440b6a9e8d5908ff8"
+          }
+        },
+        {
+          "client_id": "844420568567-1jregijk4e5llm921r8mabrf85l1v0cj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB39brG7bm6k411dMBFl9A6-NqTRAdhPBQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844420568567-1jregijk4e5llm921r8mabrf85l1v0cj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

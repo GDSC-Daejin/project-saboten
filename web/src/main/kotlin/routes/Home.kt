@@ -1,16 +1,23 @@
 package routes
 
-import commonClient.extension.extract
+import commonClient.logger.ClientLogger
 import commonClient.presentation.HomeScreenViewModel
 import components.*
+import extensions.extract
 import kotlinx.css.*
 import react.Props
+import react.useLayoutEffect
 import styled.css
 import styled.styledDiv
 import utils.vfc
 
 val home = vfc<Props, HomeScreenViewModel> { _, vm ->
     val (state, effect, event) = vm.extract()
+
+    useLayoutEffect {
+        ClientLogger.d("Home.kt, useLayoutEffect")
+    }
+
     LayoutContainer {
         css {
             overflowY = Overflow.scroll

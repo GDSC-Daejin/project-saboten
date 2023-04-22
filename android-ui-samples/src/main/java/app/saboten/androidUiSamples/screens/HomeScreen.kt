@@ -1,6 +1,7 @@
 package app.saboten.androidUiSamples.screens
 
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -8,13 +9,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
-import app.saboten.androidUi.bars.ToolbarBackButton
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.lists.BasicListItem
 import app.saboten.androidUiSamples.UiSamplesAppRoutes
+import app.saboten.androidUiSamples.UiSamplesViewModel
 
 private data class Sample(
     val icon: ImageVector,
@@ -33,19 +33,20 @@ private val samples = listOf(
 )
 
 @Composable
-fun HomeScreen(navController: NavController, onThemeChanged: () -> Unit) {
-    Scaffold(topBar = {
-        ToolBar(title = {
-            Text("\uD83C\uDF35 UI Samples")
-        }, actions = {
-            IconButton(onClick = {
-                onThemeChanged()
-            }) {
+fun HomeScreen(navController: NavController, viewModel: UiSamplesViewModel) {
+    Scaffold(
+        topBar = {
+            BasicTopBar(title = {
+                Text("\uD83C\uDF35 UI Samples")
+            })
+        },
+        floatingActionButton = {
+            FloatingActionButton({ viewModel.toggleTheme() }, modifier = Modifier.navigationBarsPadding()) {
                 Icon(if (MaterialTheme.colors.isLight) Icons.Rounded.ModeNight else Icons.Rounded.WbSunny, null)
             }
-        })
-    }) {
-        LazyColumn {
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(it)) {
             items(samples) {
                 BasicListItem(
                     leftSideUi = { Icon(it.icon, it.title, tint = MaterialTheme.colors.primary) },

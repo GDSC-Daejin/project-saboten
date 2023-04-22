@@ -1,0 +1,94 @@
+name: Backend Dev Deploy to EC2
+
+on:
+  push:
+    branches: [ release-server/ec2 ]
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
+# TODO : Self-Hosted Runner에서는 Cache 다운속도가 너무느림...
+#      - name: Cache Gradle packages
+#        uses: actions/cache@v2
+#        with:
+#          path: |
+#            ~/.gradle/caches
+#            ~/.gradle/wrapper
+#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+#          restore-keys: ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Create Spring Prod Properties
+        run: |
+          touch server/src/main/resources/application-prod.properties
+          echo "$PROD_SPRING_PROPERTIES" > application-prod.properties.b64
+          base64 -d -i application-prod.properties.b64 > server/src/main/resources/application-prod.properties
+        env:
+          PROD_SPRING_PROPERTIES: ${{ secrets.PROD_SPRING_PROPERTIES }}
+
+      - name: Create SSL KeyStore File
+        run: |
+          touch server/src/main/resources/ssl/keystore.p12
+          echo "$SSL_KEYSTORE" > keystore.p12.b64
+          base64 -d -i keystore.p12.b64 > server/src/main/resources/ssl/keystore.p12
+        env:
+          SSL_KEYSTORE: ${{ secrets.SSL_KEYSTORE }}
+
+      - name: Build with Gradle
+        run: |
+          ./gradlew clean :server:build -Pprofile=prod    
+
+      - name: Move to DockerFile Directory
+        run: cd server
+
+      - name: Docker Build
+        run: |
+          docker login --username=peonypeonypeony --password=${{ secrets.PEONY_PW }}
+          docker build --tag peonypeonypeony/saboten:$GITHUB_SHA server --platform=linux/amd64
+
+      - name: Docker Push
+        run: |
+          docker push peonypeonypeony/saboten:$GITHUB_SHA
+
+      # 서버에서 Docker 이미지 실행
+#      - name: EC2 Docker Deploy and Run
+#        uses: appleboy/ssh-action@master
+#        with:
+#          host: ${{ secrets.EC2_HOST }}
+#          username: ec2-user
+#          key: ${{ secrets.EC2_KEY }}
+#          script: |
+#            docker stop $(docker ps -qa)
+#            docker rm -f $(docker ps -qa)
+#            docker rmi $(docker images -q)
+#            docker pull peonypeonypeony/saboten:$GITHUB_SHA
+#            docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:$GITHUB_SHA
+
+      - name: Create SSH Private Key
+        run: |
+          touch saboten-gdsc-dju.pem
+          echo "$EC2_KEY" > saboten-gdsc-dju.pem
+          chmod 400 saboten-gdsc-dju.pem
+        env:
+          EC2_KEY: ${{ secrets.EC2_KEY }}
+
+      - name: EC2 Docker Deploy and Run
+        run: |
+          ssh -t -i saboten-gdsc-dju.pem root@${{ secrets.EC2_HOST }} '
+          docker ps -aq | xargs docker stop | xargs docker rm && 
+          docker image prune -a -f &&
+          docker pull peonypeonypeony/saboten:"'$GITHUB_SHA'" &&
+          docker run -d -p 443:443 --name saboten peonypeonypeony/saboten:"'$GITHUB_SHA'"
+          '

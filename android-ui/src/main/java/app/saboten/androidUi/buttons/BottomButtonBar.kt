@@ -8,11 +8,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun BottomButtonBar(
+    modifier: Modifier = Modifier,
     rightButtonRatio: Float = 0.5f,
     leftButton: (@Composable () -> Unit)? = null,
     rightButton: @Composable () -> Unit,
 ) {
-    Surface {
+    Surface(modifier) {
         Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 15.dp)) {
 
             if (leftButton != null) {

@@ -22,20 +22,16 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
+    implementation("com.google.api-client:google-api-client:1.32.1")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    implementation(SpringFox.swagger2)
-    implementation(SpringFox.swaggerUi)
-
-    testImplementation(kotlin("test"))
+    serverDependency()
 }
+
 repositories {
     mavenCentral()
-}
-
-tasks.test {
-    useJUnitPlatform()
 }
 
 tasks.compileKotlin {
@@ -45,6 +41,7 @@ tasks.compileKotlin {
     }
 }
 
+/*
 tasks.processResources {
     dependsOn(":web:browserWebpack")
     from(project(":web").projectDir.resolve("src/main/resources")) {
@@ -53,4 +50,10 @@ tasks.processResources {
     from(project(":web").buildDir.resolve("distributions/app.js")) {
         into("static")
     }
+}
+*/
+
+tasks.bootRun {
+    val activeProfile = System.getProperty("spring.profiles.active")
+    systemProperty("spring.profiles.active", activeProfile)
 }

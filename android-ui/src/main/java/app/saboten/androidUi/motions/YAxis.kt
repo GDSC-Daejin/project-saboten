@@ -1,7 +1,6 @@
-package app.hdj.datepick.ui.animation
+package app.saboten.androidUi.motions
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.FastOutLinearInEasing
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.unit.dp

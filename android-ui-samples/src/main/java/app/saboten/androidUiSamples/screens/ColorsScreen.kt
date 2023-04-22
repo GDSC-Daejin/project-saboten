@@ -2,7 +2,10 @@ package app.saboten.androidUiSamples.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -14,7 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 import app.saboten.androidUi.styles.surfaceOver
 
@@ -41,7 +44,7 @@ fun ColorsScreen(navController: NavController) {
     val colors = colors()
 
     Scaffold(topBar = {
-        ToolBar(
+        BasicTopBar(
             navigationIcon = {
                 ToolbarBackButton {
                     navController.popBackStack()
@@ -53,11 +56,19 @@ fun ColorsScreen(navController: NavController) {
         )
     }) {
         LazyVerticalGrid(
-            cells = GridCells.Fixed(3),
+            modifier = Modifier.padding(it),
+            columns = GridCells.Fixed(3),
             contentPadding = PaddingValues(10.dp)
         ) {
-            items(colors) { (name, color) ->
-                ColorGridItem(name, color)
+            items(
+                colors + (0..colors.size % 3).map { null }
+            ) { item ->
+                if (item != null) ColorGridItem(item.first, item.second)
+                else Box(modifier = Modifier.fillMaxWidth())
+            }
+
+            item(span = { GridItemSpan(1) }) {
+                Spacer(modifier = Modifier.navigationBarsPadding())
             }
         }
     }

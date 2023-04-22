@@ -10,8 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
+import app.saboten.androidUi.buttons.SmallOutlinedButton
 import app.saboten.androidUi.buttons.BottomButtonBar
 import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.styles.surfaceOver
@@ -21,7 +22,7 @@ fun ButtonsScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            ToolBar(
+            BasicTopBar(
                 title = {
                     Text("Buttons")
                 },
@@ -34,6 +35,7 @@ fun ButtonsScreen(navController: NavController) {
         },
         bottomBar = {
             BottomButtonBar(
+                modifier = Modifier.navigationBarsPadding(),
                 rightButtonRatio = 0.7f,
                 leftButton = {
                     FilledButton(
@@ -57,14 +59,26 @@ fun ButtonsScreen(navController: NavController) {
             )
         }
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            FilledButton({}, text = "FilledButton")
+        Box(modifier = Modifier.padding(it)) {
 
-            Spacer(Modifier.height(10.dp))
+            Column(modifier = Modifier.padding(20.dp)) {
+                FilledButton({}, text = "FilledButton")
 
-            FilledButton({}, text = "FilledButton with Icon", icon = Icons.Rounded.AddAPhoto)
+                Spacer(Modifier.height(10.dp))
 
-            Spacer(Modifier.height(10.dp))
+                FilledButton({}, text = "FilledButton with Icon", icon = Icons.Rounded.AddAPhoto)
+
+                Spacer(Modifier.height(10.dp))
+
+                SmallOutlinedButton({}, text = "SmallOutlinedButton")
+
+                Spacer(Modifier.height(10.dp))
+
+                SmallOutlinedButton({}, text = "SmallOutlinedButton with Icon", icon = Icons.Rounded.AddAPhoto)
+
+                Spacer(Modifier.height(10.dp))
+
+            }
 
         }
     }

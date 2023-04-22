@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import app.saboten.androidUi.bars.ToolBar
+import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
 import app.saboten.androidUi.buttons.FilledButton
 import app.saboten.androidUi.dialogs.BasicDialog
@@ -30,7 +30,7 @@ fun DialogsScreen(navController: NavController) {
 
     Scaffold(
         topBar = {
-            ToolBar(
+            BasicTopBar(
                 title = {
                     Text("Dialogs")
                 },
@@ -42,22 +42,26 @@ fun DialogsScreen(navController: NavController) {
             )
         }
     ) {
-        Column(modifier = Modifier.padding(20.dp)) {
-            FilledButton({
-                showDialog = Types.NoContent
-            }, text = "컨텐트가 없는 다이얼로그")
+        Box(modifier = Modifier.padding(it)) {
 
-            Spacer(Modifier.height(10.dp))
+            Column(modifier = Modifier.padding(20.dp)) {
+                FilledButton({
+                    showDialog = Types.NoContent
+                }, text = "컨텐트가 없는 다이얼로그")
 
-            FilledButton({
-                showDialog = Types.WithContentBottom
-            }, text = "컨텐트가 아래에 있는 다이얼로그")
+                Spacer(Modifier.height(10.dp))
 
-            Spacer(Modifier.height(10.dp))
+                FilledButton({
+                    showDialog = Types.WithContentBottom
+                }, text = "컨텐트가 아래에 있는 다이얼로그")
 
-            FilledButton({
-                showDialog = Types.WithContentTop
-            }, text = "컨텐트가 위에 있는 다이얼로그")
+                Spacer(Modifier.height(10.dp))
+
+                FilledButton({
+                    showDialog = Types.WithContentTop
+                }, text = "컨텐트가 위에 있는 다이얼로그")
+
+            }
 
         }
     }

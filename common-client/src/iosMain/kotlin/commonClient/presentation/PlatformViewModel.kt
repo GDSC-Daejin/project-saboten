@@ -1,29 +1,22 @@
 package commonClient.presentation
 
-import kotlinx.coroutines.*
-import platform.darwin.dispatch_async
-import platform.darwin.dispatch_get_main_queue
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import org.orbitmvi.orbit.Container
+import org.orbitmvi.orbit.ContainerHost
+import org.orbitmvi.orbit.SettingsBuilder
+import org.orbitmvi.orbit.container
 
-private class MainDispatcher : CoroutineDispatcher() {
-    override fun dispatch(context: CoroutineContext, block: Runnable) {
-        dispatch_async(dispatch_get_main_queue()) { block.run() }
-    }
-}
-
-internal class MainScope : CoroutineScope {
-    private val dispatcher = MainDispatcher()
-    private val job = Job()
-
-    override val coroutineContext: CoroutineContext
-        get() = dispatcher + job
-}
-
-actual open class PlatformViewModel actual constructor() {
-    protected actual val platformViewModelScope: CoroutineScope = MainScope()
+actual abstract class PlatformViewModel<State : Any, SideEffect: Any> actual constructor() : ContainerHost<State, SideEffect> {
+    actual open val platformViewModelScope: CoroutineScope = MainScope()
 
     actual open fun onViewModelCleared() {
-        platformViewModelScope.cancel()
     }
 
 }
+
+actual fun <STATE : Any, SIDE_EFFECT : Any> PlatformViewModel<STATE, SIDE_EFFECT>.container(
+    initialState: STATE,
+    buildSettings: SettingsBuilder.() -> Unit,
+    onCreate: ((state: STATE) -> Unit)?,
+): Container<STATE, SIDE_EFFECT> = platformViewModelScope.container(initialState, buildSettings, onCreate)
