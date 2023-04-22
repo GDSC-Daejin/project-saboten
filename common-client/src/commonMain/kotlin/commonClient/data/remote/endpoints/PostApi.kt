@@ -13,7 +13,6 @@ import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
 import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
-import okio.ByteString.Companion.encodeUtf8
 import org.koin.core.annotation.Single
 
 interface PostApi : Api {
@@ -84,9 +83,9 @@ class PostApiImp : PostApi {
         categoryId: Long?,
         duration: Duration?,
         pagingRequest: PagingRequest,
-    ) = responseGet<PagingResponse<PostResponse>>("/hot") {
+    ) = responseGet<PagingResponse<PostResponse>>("/debate") {
         parameter("categoryId", categoryId)
-        parameter("duration", duration?.name)
+        parameter("duration", duration?.name ?: "ALL")
         pagingRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
     }
 
