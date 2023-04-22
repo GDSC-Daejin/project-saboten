@@ -3,9 +3,9 @@ package commonClient.presentation.main
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.domain.entity.PagingRequest
+import commonClient.domain.entity.post.Duration
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.flow.map
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
@@ -57,6 +56,17 @@ class MoreScreenViewModel(
 ) : PlatformViewModel<MoreScreenState, MoreScreenEffect>() {
 
     override val container: Container<MoreScreenState, MoreScreenEffect> = container(MoreScreenState())
+
+    // TODO: 카테고리, 기간 설정 가능하도록 변경
+    private val hotPager = createPager<Long, Post>(20, -1) { key, _ ->
+        val pagingResult = getPagedHotPostsUseCase(null, Duration.WEEK, PagingRequest(page = key))
+        PagingResult(
+            pagingResult.data,
+            currentKey = key ?: -1,
+            prevKey = { null },
+            nextKey = { pagingResult.nextKey }
+        )
+    }
 
     private val recentPager = createPager<Long, Post>(20, -1) { key, _ ->
         val pagingResult = getPagedRecentPostsUseCase(PagingRequest(page = key))
@@ -92,7 +102,7 @@ class MoreScreenViewModel(
         intent {
             reduce {
                 val pagingData = when (type) {
-                    MoreScreenType.HOT -> TODO("Not yet implemented")
+                    MoreScreenType.HOT -> hotPager.pagingData.cachedIn(platformViewModelScope)
 
                     MoreScreenType.RECENT -> recentPager.pagingData.cachedIn(platformViewModelScope)
 

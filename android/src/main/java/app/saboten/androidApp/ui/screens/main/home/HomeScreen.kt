@@ -132,7 +132,11 @@ fun HomeScreenContent(
                 item { HomeScreenTrendingItems(state) }
 
                 state.hotPost.getDataOrNull()?.let { posts ->
-                    item { HeaderBar(title = "뜨거웠던 고민거리") }
+                    item {
+                        HeaderBar(title = "뜨거웠던 고민거리", moreButtonText = "더보기", moreButtonAction = {
+                            onMorePostClicked(MoreScreenOption.HOT)
+                        })
+                    }
 
                     item {
                         LazyRow(
