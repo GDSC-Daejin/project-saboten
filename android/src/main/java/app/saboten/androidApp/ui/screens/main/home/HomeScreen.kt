@@ -151,12 +151,21 @@ fun HomeScreenContent(
                                         onClicked = {
                                             onPostClicked(nonNullPost)
                                         },
-                                        onVoteClicked = { vote ->
-
+                                        onCommentClicked = {
+                                            onPostClicked(nonNullPost)
                                         },
-                                        {},
-                                        {},
-                                        {}
+                                        onVoteClicked = { vote ->
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestVote(nonNullPost.id, vote.id)
+                                        },
+                                        onLikeClicked = {
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestLike(nonNullPost.id)
+                                        },
+                                        onScrapClicked = {
+                                            if (meState.needLogin) openLoginDialog()
+                                            else vm.requestScrap(nonNullPost.id)
+                                        },
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
                                 }
