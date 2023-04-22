@@ -194,18 +194,16 @@ fun WritePostScreenContent(
                         ) {
 
                             items(state.categories.getDataOrNull() ?: emptyList()) { item ->
-                                val itemId = if (item.id < 0) null else item.id
+                                val itemId = item.id
                                 Surface(
                                     onClick = { viewModel.selectCategory(itemId) },
-                                    color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
+                                    color = if (itemId in state.selectedCategoryIds) MaterialTheme.colors.secondary
                                     else Color.Transparent,
-                                    contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
+                                    contentColor = if (itemId in state.selectedCategoryIds) MaterialTheme.colors.onSecondary
                                     else MaterialTheme.colors.onBackground,
                                     shape = CircleShape,
-                                    border = if (state.selectedCategoryId == itemId) null
-                                    else {
-                                        BorderStroke(1.dp, MaterialTheme.colors.onBackground)
-                                    },
+                                    border = if (itemId in state.selectedCategoryIds) null
+                                    else BorderStroke(1.dp, MaterialTheme.colors.onBackground),
                                 ) {
                                     Text(
                                         text = item.name,
