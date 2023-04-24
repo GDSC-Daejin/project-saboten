@@ -53,6 +53,13 @@ fun ProfileScreen(
     navigator: DestinationsNavigator,
 ) {
     val viewModel = koinViewModel<ProfileScreenViewModel>()
+
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin) {
+        viewModel.load()
+    }
+
     ProfileScreenContent(
         viewModel = viewModel,
         onPostClicked = { navigator.navigate(DetailPostScreenDestination(postId = it.id)) },
@@ -100,7 +107,7 @@ private fun ProfileScreenContent(
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
 
-                        ProfileBannerUi(viewModel)
+                        ProfileBannerUi()
 
                         PostInfoBox(
                             state.myPageCount,
@@ -152,9 +159,7 @@ private fun ProfileScreenContent(
 }
 
 @Composable
-private fun ProfileBannerUi(
-    viewModel: ProfileScreenViewModel,
-) {
+private fun ProfileBannerUi() {
 
     val meInfo = LocalMeInfo.current
 
@@ -207,10 +212,6 @@ private fun ProfileBannerUi(
         }
 
     } else {
-
-        LaunchedEffect(key1 = true) {
-            viewModel.load()
-        }
 
         Column {
 
@@ -308,7 +309,10 @@ private fun TextWithCount(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(if (isSelected) SabotenColors.green500 else SabotenColors.grey200, shape = CircleShape)
+                    .background(
+                        if (isSelected) SabotenColors.green500 else SabotenColors.grey200,
+                        shape = CircleShape
+                    )
                     .clickable { onSelect() },
                 contentAlignment = Alignment.Center
             ) {
@@ -322,7 +326,10 @@ private fun TextWithCount(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(if (isSelected) SabotenColors.green500 else SabotenColors.grey200, shape = CircleShape)
+                        .background(
+                            if (isSelected) SabotenColors.green500 else SabotenColors.grey200,
+                            shape = CircleShape
+                        )
                         .clickable { onSelect() },
                     contentAlignment = Alignment.Center
                 ) {

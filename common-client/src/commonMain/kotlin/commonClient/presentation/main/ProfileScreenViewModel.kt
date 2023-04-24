@@ -2,7 +2,6 @@ package commonClient.presentation.main
 
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.PagingRequest
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -62,10 +60,6 @@ class ProfileScreenViewModel(
 ) : PlatformViewModel<ProfileScreenState, ProfileScreenEffect>() {
 
     override val container: Container<ProfileScreenState, ProfileScreenEffect> = container(ProfileScreenState())
-
-    init {
-        load()
-    }
 
     fun load(type: ProfileScreenState.ProfileType = ProfileScreenState.ProfileType.MY_POSTS) {
         intent {

@@ -63,11 +63,13 @@ fun DetailPostScreen(
 ) {
     val viewModel = koinViewModel<DetailPostScreenViewModel>()
 
-    LaunchedEffect(true) {
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin) {
         viewModel.loadPost(postId)
     }
 
-    DetailPostPageContent(viewModel) {
+    DetailPostPageContent(viewModel, meState.needLogin) {
         navigator.popBackStack()
     }
 }
@@ -75,12 +77,11 @@ fun DetailPostScreen(
 @Composable
 fun DetailPostPageContent(
     viewModel: DetailPostScreenViewModel,
+    needLogin: Boolean,
     onBackPressed: () -> Unit,
 ) {
 
     val state by viewModel.collectAsState()
-
-    val meState = LocalMeInfo.current
 
     var query by remember { mutableStateOf("") }
     var isPostingComment by remember { mutableStateOf(false) }
@@ -114,7 +115,7 @@ fun DetailPostPageContent(
             })
         },
         bottomBar = {
-            if (post != null && !meState.needLogin) {
+            if (post != null && needLogin.not()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
+import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
@@ -50,6 +51,11 @@ fun HomeScreen(
 ) {
 
     val vm = koinViewModel<HomeScreenViewModel>()
+
+    val meState = LocalMeInfo.current
+    LaunchedEffect(meState.needLogin) {
+        vm.loadPage()
+    }
 
     HomeScreenContent(
         vm = vm,

@@ -32,6 +32,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
+import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import commonClient.domain.entity.post.Post
 
@@ -44,7 +45,17 @@ fun CategoryScreen(
 
     val viewModel = koinViewModel<CategoryScreenViewModel>()
 
-    CategoryScreenContent(initSelectedItemId = initSelectedItemId, viewModel = viewModel) {
+    LaunchedEffect(true) {
+        viewModel.selectCategory(initSelectedItemId)
+    }
+
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin){
+        viewModel.selectCategory(null)
+    }
+
+    CategoryScreenContent(viewModel = viewModel) {
         navigator.navigate(DetailPostScreenDestination(postId = it.id))
     }
 
@@ -53,14 +64,11 @@ fun CategoryScreen(
 @Composable
 private fun CategoryScreenContent(
     viewModel: CategoryScreenViewModel,
-    initSelectedItemId: Long,
     onPostClicked: (Post) -> Unit,
 ) {
 
     val state by viewModel.collectAsState()
-    LaunchedEffect(initSelectedItemId){
-        viewModel.selectCategory(initSelectedItemId)
-    }
+
     Scaffold(
         topBar = {
 //            MainTopBar(
