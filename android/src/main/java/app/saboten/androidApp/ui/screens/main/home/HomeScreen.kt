@@ -28,8 +28,6 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
-import app.saboten.androidApp.ui.providers.LocalMeInfo
-import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
@@ -93,9 +91,6 @@ fun HomeScreenContent(
         }
     }
 
-    val meState = LocalMeInfo.current
-    val openLoginDialog = LocalOpenLoginDialogEffect.current
-
     val backgroundColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.surface else Color.Transparent)
     val contentColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.primary else Color.White)
 
@@ -147,7 +142,8 @@ fun HomeScreenContent(
                         ) {
                             items(posts, key = { it.id }) { post ->
                                 val observableCache by vm.updatedPostCache.collectAsState()
-                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                val cachedPost =
+                                    observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
                                     LargePostCard(
                                         modifier = Modifier.width(320.dp),
@@ -159,16 +155,13 @@ fun HomeScreenContent(
                                             onPostClicked(nonNullPost)
                                         },
                                         onVoteClicked = { vote ->
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestVote(nonNullPost.id, vote.id)
+                                            vm.requestVote(nonNullPost.id, vote.id)
                                         },
                                         onLikeClicked = {
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestLike(nonNullPost.id)
+                                            vm.requestLike(nonNullPost.id)
                                         },
                                         onScrapClicked = {
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestScrap(nonNullPost.id)
+                                            vm.requestScrap(nonNullPost.id)
                                         },
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
@@ -219,7 +212,8 @@ fun HomeScreenContent(
                         ) {
                             items(posts, key = { it.id }) { post ->
                                 val observableCache by vm.updatedPostCache.collectAsState()
-                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                val cachedPost =
+                                    observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
                                     SmallPostCard(
                                         post = nonNullPost,
@@ -227,12 +221,10 @@ fun HomeScreenContent(
                                             onPostClicked(nonNullPost)
                                         },
                                         onLikeClicked = {
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestLike(nonNullPost.id)
+                                            vm.requestLike(nonNullPost.id)
                                         },
                                         onScrapClicked = {
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestScrap(nonNullPost.id)
+                                            vm.requestScrap(nonNullPost.id)
                                         },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
@@ -263,7 +255,8 @@ fun HomeScreenContent(
                         ) {
                             items(posts, key = { it.id }) { post ->
                                 val observableCache by vm.updatedPostCache.collectAsState()
-                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                val cachedPost =
+                                    observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
 
                                     SmallPostCard(

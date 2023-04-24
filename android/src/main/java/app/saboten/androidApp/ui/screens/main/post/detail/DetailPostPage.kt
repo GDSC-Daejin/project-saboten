@@ -40,7 +40,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.saboten.androidApp.ui.providers.LocalMeInfo
-import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
@@ -82,7 +81,6 @@ fun DetailPostPageContent(
     val state by viewModel.collectAsState()
 
     val meState = LocalMeInfo.current
-    val openLoginDialog = LocalOpenLoginDialogEffect.current
 
     var query by remember { mutableStateOf("") }
     var isPostingComment by remember { mutableStateOf(false) }
@@ -125,7 +123,7 @@ fun DetailPostPageContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     NetworkImage(
-                        url = meState.notNullUserInfo.profilePhotoUrl,
+                        url = post.author.profilePhotoUrl,
                         modifier = Modifier
                             .size(30.dp)
                             .clip(CircleShape)
@@ -192,16 +190,13 @@ fun DetailPostPageContent(
                             post = post,
                             onClicked = { /*TODO*/ },
                             onVoteClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestVote(post.id, it.id)
+                                viewModel.requestVote(post.id, it.id)
                             },
                             onScrapClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestScrap(post.id)
+                                viewModel.requestScrap(post.id)
                             },
                             onLikeClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestLike(post.id)
+                                viewModel.requestLike(post.id)
                             }) {
 
                         }
