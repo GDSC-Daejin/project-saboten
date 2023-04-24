@@ -50,6 +50,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.ui.providers.MeInfo
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import commonClient.presentation.post.DetailPostScreenEffect
@@ -69,7 +70,7 @@ fun DetailPostScreen(
         viewModel.loadPost(postId)
     }
 
-    DetailPostPageContent(viewModel, meState.needLogin) {
+    DetailPostPageContent(viewModel, meState) {
         navigator.popBackStack()
     }
 }
@@ -77,7 +78,7 @@ fun DetailPostScreen(
 @Composable
 fun DetailPostPageContent(
     viewModel: DetailPostScreenViewModel,
-    needLogin: Boolean,
+    meState: MeInfo,
     onBackPressed: () -> Unit,
 ) {
 
@@ -115,7 +116,7 @@ fun DetailPostPageContent(
             })
         },
         bottomBar = {
-            if (post != null && needLogin.not()) {
+            if (post != null && meState.needLogin.not()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -124,7 +125,7 @@ fun DetailPostPageContent(
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     NetworkImage(
-                        url = post.author.profilePhotoUrl,
+                        url = meState.notNullUserInfo.profilePhotoUrl,
                         modifier = Modifier
                             .size(30.dp)
                             .clip(CircleShape)
