@@ -25,6 +25,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -113,6 +114,12 @@ fun DetailPostPageContent(
         topBar = {
             BasicTopBar(title = { /*TODO*/ }, navigationIcon = {
                 ToolbarBackButton(onBackPressed)
+            }, actions = {
+                if (post?.author?.id == meState.userInfo.getDataOrNull()?.id) {
+                    IconButton(onClick = {}) {
+                        Icon(Icons.Rounded.MoreVert, null)
+                    }
+                }
             })
         },
         bottomBar = {
@@ -152,7 +159,12 @@ fun DetailPostPageContent(
                                 cursorBrush = SolidColor(MaterialTheme.colors.secondary),
                                 textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
                                 onValueChange = { query = it },
-                                keyboardActions = KeyboardActions { viewModel.postComment(post.id, query) },
+                                keyboardActions = KeyboardActions {
+                                    viewModel.postComment(
+                                        post.id,
+                                        query
+                                    )
+                                },
                                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search)
                             )
 
