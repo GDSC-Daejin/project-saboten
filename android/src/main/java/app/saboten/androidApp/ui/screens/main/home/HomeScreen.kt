@@ -59,7 +59,8 @@ fun HomeScreen(
 
     val vm = koinViewModel<HomeScreenViewModel>()
 
-    val hotPostSortState = requireNotNull(vm.collectAsState().value.hotPostSortState.getDataOrNull())
+    val hotPostSortState =
+        requireNotNull(vm.collectAsState().value.hotPostSortState.getDataOrNull())
     LaunchedEffect(hotPostSortState) {
         vm.loadHotPosts()
     }
@@ -71,10 +72,11 @@ fun HomeScreen(
     }
 
     resultRecipient.onNavResult { result ->
-        when(result) {
+        when (result) {
             is NavResult.Canceled -> {
 
             }
+
             is NavResult.Value<String> -> {
                 val newHotPostSortState = result.value.toHotPostSortState()
                 vm.setHotPostSortState(newHotPostSortState)
@@ -91,8 +93,8 @@ fun HomeScreen(
         onPostClicked = {
             navigator.navigate(DetailPostScreenDestination(postId = it.id))
         },
-        onMorePostClicked = {
-            navigator.navigate(MoreScreenDestination(option = it))
+        onMorePostClicked = { option, initHotPostSortState ->
+            navigator.navigate(MoreScreenDestination(option, initHotPostSortState))
         },
         onSortHotPostDialogSelectorClicked = {
             navigator.navigate(SortHotPostDialogDestination(hotPostSortState.toJsonString()))
@@ -106,7 +108,7 @@ fun HomeScreenContent(
     hotPostSortState: HotPostSortState,
     onCategoryClicked: (Long) -> Unit = {},
     onPostClicked: (Post) -> Unit = {},
-    onMorePostClicked: (MoreScreenOption) -> Unit = {},
+    onMorePostClicked: (MoreScreenOption, String?) -> Unit = { _, _ -> },
     onSortHotPostDialogSelectorClicked: () -> Unit = {},
 ) {
 
@@ -166,13 +168,16 @@ fun HomeScreenContent(
                 state.hotPost.getDataOrNull()?.let { posts ->
                     item {
                         HeaderBar(title = "뜨거웠던 고민거리", moreButtonText = "더보기", moreButtonAction = {
-                            onMorePostClicked(MoreScreenOption.HOT)
+                            onMorePostClicked(MoreScreenOption.HOT, hotPostSortState.toJsonString())
                         })
                     }
 
                     item {
-                        Box(modifier = Modifier.padding(start = 20.dp)
-                            .padding(bottom = 8.dp)) {
+                        Box(
+                            modifier = Modifier
+                                .padding(start = 20.dp)
+                                .padding(bottom = 8.dp)
+                        ) {
                             SortSelector(hotPostSortState) {
                                 onSortHotPostDialogSelectorClicked()
                             }
@@ -245,7 +250,7 @@ fun HomeScreenContent(
                     item {
                         Spacer(modifier = Modifier.height(36.dp))
                         HeaderBar(title = "최근 고민거리", moreButtonText = "더보기", moreButtonAction = {
-                            onMorePostClicked(MoreScreenOption.RECENT)
+                            onMorePostClicked(MoreScreenOption.RECENT, null)
                         })
                     }
 
@@ -288,7 +293,7 @@ fun HomeScreenContent(
                     item {
                         Spacer(modifier = Modifier.height(36.dp))
                         HeaderBar(title = "내가 선택했던 글", moreButtonText = "더보기", moreButtonAction = {
-                            onMorePostClicked(MoreScreenOption.MY_SELECTED)
+                            onMorePostClicked(MoreScreenOption.MY_SELECTED, null)
                         })
                     }
 
@@ -332,7 +337,7 @@ fun HomeScreenContent(
                     item {
                         Spacer(modifier = Modifier.height(36.dp))
                         HeaderBar(title = "내가 스크랩한 글", moreButtonText = "더보기", moreButtonAction = {
-                            onMorePostClicked(MoreScreenOption.MY_SCRAPPED)
+                            onMorePostClicked(MoreScreenOption.MY_SCRAPPED, null)
                         })
                     }
 
