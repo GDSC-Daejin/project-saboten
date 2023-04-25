@@ -60,9 +60,9 @@ public class CategoryService {
             categories.add(categoryEntity.toDto());
         }
 
-        // 전체 카테고리 넣기 TODO : 나중에 10L 말고 전체 카테고리 객체로 넣도록 해주세영
-        CategoryEntity categoryEntity = categoryRepository.findByCategoryId(10L);
-        categories.add(categoryEntity.toDto());
+        // 전체 카테고리는 게시글에 지정 X
+//        CategoryEntity categoryEntity = categoryRepository.findByCategoryId(10L);
+//        categories.add(categoryEntity.toDto());
         return categories;
     }
 }
