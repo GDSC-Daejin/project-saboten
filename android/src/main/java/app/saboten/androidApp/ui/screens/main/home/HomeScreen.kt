@@ -28,18 +28,24 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
+import app.saboten.androidApp.ui.destinations.SortHotPostDialogDestination
 import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidApp.ui.screens.main.post.SmallPostCard
 import app.saboten.androidApp.ui.screens.main.category.CategoryItem
+import app.saboten.androidApp.ui.screens.main.category.SortSelector
 import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
+import commonClient.domain.entity.post.HotPostSortState
 import commonClient.domain.entity.post.Post
+import commonClient.domain.entity.post.toHotPostSortState
 import commonClient.presentation.main.HomeScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
@@ -48,17 +54,37 @@ import org.orbitmvi.orbit.compose.collectAsState
 @Destination(start = true)
 fun HomeScreen(
     navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<SortHotPostDialogDestination, String>
 ) {
 
     val vm = koinViewModel<HomeScreenViewModel>()
 
+    val hotPostSortState = requireNotNull(vm.collectAsState().value.hotPostSortState.getDataOrNull())
+    LaunchedEffect(hotPostSortState) {
+        vm.loadHotPosts()
+    }
+
     val meState = LocalMeInfo.current
     LaunchedEffect(meState.needLogin) {
+        vm.loadHotPosts()
         vm.loadPage()
+    }
+
+    resultRecipient.onNavResult { result ->
+        when(result) {
+            is NavResult.Canceled -> {
+
+            }
+            is NavResult.Value<String> -> {
+                val newHotPostSortState = result.value.toHotPostSortState()
+                vm.setHotPostSortState(newHotPostSortState)
+            }
+        }
     }
 
     HomeScreenContent(
         vm = vm,
+        hotPostSortState = hotPostSortState,
         onCategoryClicked = {
             navigator.navigate(CategoryScreenDestination(initSelectedItemId = it))
         },
@@ -67,6 +93,9 @@ fun HomeScreen(
         },
         onMorePostClicked = {
             navigator.navigate(MoreScreenDestination(option = it))
+        },
+        onSortHotPostDialogSelectorClicked = {
+            navigator.navigate(SortHotPostDialogDestination(hotPostSortState.toJsonString()))
         }
     )
 }
@@ -74,9 +103,11 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     vm: HomeScreenViewModel,
+    hotPostSortState: HotPostSortState,
     onCategoryClicked: (Long) -> Unit = {},
     onPostClicked: (Post) -> Unit = {},
     onMorePostClicked: (MoreScreenOption) -> Unit = {},
+    onSortHotPostDialogSelectorClicked: () -> Unit = {},
 ) {
 
     val state by vm.collectAsState()
@@ -137,6 +168,15 @@ fun HomeScreenContent(
                         HeaderBar(title = "뜨거웠던 고민거리", moreButtonText = "더보기", moreButtonAction = {
                             onMorePostClicked(MoreScreenOption.HOT)
                         })
+                    }
+
+                    item {
+                        Box(modifier = Modifier.padding(start = 20.dp)
+                            .padding(bottom = 8.dp)) {
+                            SortSelector(hotPostSortState) {
+                                onSortHotPostDialogSelectorClicked()
+                            }
+                        }
                     }
 
                     item {
