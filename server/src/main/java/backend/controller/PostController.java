@@ -348,19 +348,19 @@ class PostController {
         @ApiImplicitParam(name="duration", value="게시물 기간입니다. DAY, WEEK, MONTH, ALL 이 있습니다.")
     })
     @GetMapping("/post/debate")
-    public ApiResponse<PagingResponse<PostReadResponse>> getHotDebatePostList(@RequestParam(required = false) Long categoryId,
+    public ApiResponse<PagingResponse<PostReadResponse>> getHotDebatePostList(@RequestParam(required = true) Long categoryId,
                                                               @RequestParam(required = true) Duration duration,
                                                               @PageableDefault Pageable pageable) {
         Page<PostDto> postPage = null;
         UserDto userDto = getUser();
 
-        if(categoryId != null){
+        if(categoryId == 10){
+            postPage = postService.findAllHotDebatePost(duration, pageable);
+        }
+        else {
             categoryService.findCategory(categoryId);
             Page<CategoryInPostDto> categoryInPostPage = categoryInPostService.findHotDebateCategoryInPost(categoryId, duration, pageable);
             postPage = categoryInPostPage.map(CategoryInPostDto::getPost);
-        }
-        else {
-            postPage = postService.findAllHotDebatePost(duration, pageable);
         }
 
         Page<PostReadResponse> postPageResponse = postPage.map(postDto ->
