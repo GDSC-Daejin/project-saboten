@@ -52,6 +52,13 @@ fun ProfileScreen(
     navigator: DestinationsNavigator,
 ) {
     val viewModel = koinViewModel<ProfileScreenViewModel>()
+
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin) {
+        viewModel.load()
+    }
+
     ProfileScreenContent(
         viewModel = viewModel,
         onPostClicked = { navigator.navigate(DetailPostScreenDestination(postId = it.id)) },

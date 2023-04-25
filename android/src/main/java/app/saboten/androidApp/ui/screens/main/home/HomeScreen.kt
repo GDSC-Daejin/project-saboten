@@ -29,7 +29,6 @@ import app.saboten.androidApp.ui.destinations.CategoryScreenDestination
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.destinations.MoreScreenDestination
 import app.saboten.androidApp.ui.providers.LocalMeInfo
-import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.MainTopBar
 import app.saboten.androidApp.ui.screens.main.home.more.MoreScreenOption
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
@@ -52,6 +51,11 @@ fun HomeScreen(
 ) {
 
     val vm = koinViewModel<HomeScreenViewModel>()
+
+    val meState = LocalMeInfo.current
+    LaunchedEffect(meState.needLogin) {
+        vm.loadPage()
+    }
 
     HomeScreenContent(
         vm = vm,
@@ -93,9 +97,6 @@ fun HomeScreenContent(
         }
     }
 
-    val meState = LocalMeInfo.current
-    val openLoginDialog = LocalOpenLoginDialogEffect.current
-
     val backgroundColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.surface else Color.Transparent)
     val contentColor by animateColorAsState(targetValue = if (isHeaderScrolled) MaterialTheme.colors.primary else Color.White)
 
@@ -132,7 +133,11 @@ fun HomeScreenContent(
                 item { HomeScreenTrendingItems(state) }
 
                 state.hotPost.getDataOrNull()?.let { posts ->
-                    item { HeaderBar(title = "뜨거웠던 고민거리") }
+                    item {
+                        HeaderBar(title = "뜨거웠던 고민거리", moreButtonText = "더보기", moreButtonAction = {
+                            onMorePostClicked(MoreScreenOption.HOT)
+                        })
+                    }
 
                     item {
                         LazyRow(
@@ -143,7 +148,8 @@ fun HomeScreenContent(
                         ) {
                             items(posts, key = { it.id }) { post ->
                                 val observableCache by vm.updatedPostCache.collectAsState()
-                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                val cachedPost =
+                                    observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
                                     LargePostCard(
                                         modifier = Modifier.width(320.dp),
@@ -151,12 +157,18 @@ fun HomeScreenContent(
                                         onClicked = {
                                             onPostClicked(nonNullPost)
                                         },
-                                        onVoteClicked = { vote ->
-
+                                        onCommentClicked = {
+                                            onPostClicked(nonNullPost)
                                         },
-                                        {},
-                                        {},
-                                        {}
+                                        onVoteClicked = { vote ->
+                                            vm.requestVote(nonNullPost.id, vote.id)
+                                        },
+                                        onLikeClicked = {
+                                            vm.requestLike(nonNullPost.id)
+                                        },
+                                        onScrapClicked = {
+                                            vm.requestScrap(nonNullPost.id)
+                                        },
                                     )
                                     Spacer(modifier = Modifier.width(10.dp))
                                 }
@@ -206,7 +218,8 @@ fun HomeScreenContent(
                         ) {
                             items(posts, key = { it.id }) { post ->
                                 val observableCache by vm.updatedPostCache.collectAsState()
-                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                val cachedPost =
+                                    observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
                                     SmallPostCard(
                                         post = nonNullPost,
@@ -214,12 +227,10 @@ fun HomeScreenContent(
                                             onPostClicked(nonNullPost)
                                         },
                                         onLikeClicked = {
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestLike(nonNullPost.id)
+                                            vm.requestLike(nonNullPost.id)
                                         },
                                         onScrapClicked = {
-                                            if (meState.needLogin) openLoginDialog()
-                                            else vm.requestScrap(nonNullPost.id)
+                                            vm.requestScrap(nonNullPost.id)
                                         },
                                         onCommentClicked = {
                                             onPostClicked(nonNullPost)
@@ -250,7 +261,8 @@ fun HomeScreenContent(
                         ) {
                             items(posts, key = { it.id }) { post ->
                                 val observableCache by vm.updatedPostCache.collectAsState()
-                                val cachedPost = observableCache.firstOrNull { post.id == it.id } ?: post
+                                val cachedPost =
+                                    observableCache.firstOrNull { post.id == it.id } ?: post
                                 cachedPost.let { nonNullPost ->
 
                                     SmallPostCard(

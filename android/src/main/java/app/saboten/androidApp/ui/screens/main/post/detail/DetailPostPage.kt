@@ -40,7 +40,6 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.saboten.androidApp.ui.providers.LocalMeInfo
-import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
@@ -51,6 +50,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.ui.providers.MeInfo
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import commonClient.presentation.post.DetailPostScreenEffect
@@ -64,11 +64,13 @@ fun DetailPostScreen(
 ) {
     val viewModel = koinViewModel<DetailPostScreenViewModel>()
 
-    LaunchedEffect(true) {
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin) {
         viewModel.loadPost(postId)
     }
 
-    DetailPostPageContent(viewModel) {
+    DetailPostPageContent(viewModel, meState) {
         navigator.popBackStack()
     }
 }
@@ -76,13 +78,11 @@ fun DetailPostScreen(
 @Composable
 fun DetailPostPageContent(
     viewModel: DetailPostScreenViewModel,
+    meState: MeInfo,
     onBackPressed: () -> Unit,
 ) {
 
     val state by viewModel.collectAsState()
-
-    val meState = LocalMeInfo.current
-    val openLoginDialog = LocalOpenLoginDialogEffect.current
 
     var query by remember { mutableStateOf("") }
     var isPostingComment by remember { mutableStateOf(false) }
@@ -116,7 +116,7 @@ fun DetailPostPageContent(
             })
         },
         bottomBar = {
-            if (post != null && !meState.needLogin) {
+            if (post != null && meState.needLogin.not()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -192,16 +192,13 @@ fun DetailPostPageContent(
                             post = post,
                             onClicked = { /*TODO*/ },
                             onVoteClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestVote(post.id, it.id)
+                                viewModel.requestVote(post.id, it.id)
                             },
                             onScrapClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestScrap(post.id)
+                                viewModel.requestScrap(post.id)
                             },
                             onLikeClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestLike(post.id)
+                                viewModel.requestLike(post.id)
                             }) {
 
                         }

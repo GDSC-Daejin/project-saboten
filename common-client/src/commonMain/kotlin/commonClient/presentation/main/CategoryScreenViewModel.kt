@@ -3,7 +3,6 @@ package commonClient.presentation.main
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.PagingRequest
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -90,10 +88,19 @@ class CategoryScreenViewModel(
     fun selectCategory(categoryId: Long?) = intent {
         val pager = createPagerByCategoryId(categoryId)
         reduce {
-            state.copy(
-                selectedCategoryId = categoryId,
-                items = pager.pagingData.cachedIn(platformViewModelScope)
-            )
+
+            if (categoryId == null) {
+                state.copy(
+                    selectedCategoryId = container.stateFlow.value.selectedCategoryId,
+                    items = pager.pagingData.cachedIn(platformViewModelScope)
+                )
+            } else {
+                state.copy(
+                    selectedCategoryId = categoryId,
+                    items = pager.pagingData.cachedIn(platformViewModelScope)
+                )
+            }
+
         }
     }
 

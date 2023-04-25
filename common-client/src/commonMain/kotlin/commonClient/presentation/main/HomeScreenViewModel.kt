@@ -1,9 +1,7 @@
 package commonClient.presentation.main
 
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
-import commonClient.data.map
 import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
 import commonClient.domain.entity.post.Duration
@@ -18,7 +16,6 @@ import commonClient.domain.usecase.post.GetSelectedPostsUseCase
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
-import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.toLoadState
@@ -26,7 +23,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -61,19 +57,8 @@ class HomeScreenViewModel(
 
     override val container: Container<HomeScreenState, HomeScreenEffect> = container(HomeScreenState())
 
-    init {
-        intent {
-            flow { emit(getCategoriesUseCase()) }
-                .toLoadState()
-                .onEach {
-                    reduce { state.copy(categories = it) }
-                    if (it is LoadState.Success) {
-                        loadHotPosts(it.data.first(), Duration.WEEK)
-                    }
-                }
-                .launchIn(platformViewModelScope)
-        }
-
+    fun loadPage() {
+        loadHotPosts()
         loadBanners()
         loadTrendingCategories()
         loadRecentPosts()
@@ -81,14 +66,26 @@ class HomeScreenViewModel(
         loadScrappedPosts()
     }
 
-    fun loadBanners() = intent {
+    private fun loadHotPosts() = intent {
+        flow { emit(getCategoriesUseCase()) }
+            .toLoadState()
+            .onEach {
+                reduce { state.copy(categories = it) }
+                if (it is LoadState.Success) {
+                    loadHotPosts(it.data.first(), Duration.WEEK)
+                }
+            }
+            .launchIn(platformViewModelScope)
+    }
+
+    private fun loadBanners() = intent {
         flow { emit(getBannerUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(banners = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadHotPosts(
+    private fun loadHotPosts(
         category: Category,
         duration: Duration,
     ) = intent {
@@ -98,28 +95,28 @@ class HomeScreenViewModel(
             .launchIn(platformViewModelScope)
     }
 
-    fun loadTrendingCategories() = intent {
+    private fun loadTrendingCategories() = intent {
         flow { emit(getTrendingCategoriesUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(trendingCategories = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadRecentPosts() = intent {
+    private fun loadRecentPosts() = intent {
         flow { emit(getRecentPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(recentPost = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadSelectedPosts() = intent {
+    private fun loadSelectedPosts() = intent {
         flow { emit(getSelectedPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(selectedPost = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadScrappedPosts() = intent {
+    private fun loadScrappedPosts() = intent {
         flow { emit(getScrappedPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(scrappedPosts = it) } }
