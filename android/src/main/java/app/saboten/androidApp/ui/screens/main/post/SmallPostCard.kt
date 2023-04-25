@@ -29,12 +29,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.saboten.androidApp.extensions.toDuration
+import app.saboten.androidApp.extensions.toAfterCreatedAt
 import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
+import java.time.LocalDateTime
 
 @Composable
 fun SmallPostCard(
@@ -86,7 +89,7 @@ fun SmallPostCard(
                                 fontSize = 12.sp
                             )
                             Text(
-                                post.createdAt,
+                                LocalDateTime.parse(post.createdAt).toDuration().toAfterCreatedAt(),
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colors.onSurface.copy(0.5f)
                             )
