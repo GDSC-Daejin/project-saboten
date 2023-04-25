@@ -26,7 +26,7 @@ public class VoteEntity {
     @JoinColumn(name="post_id", nullable = false)
     private PostEntity post;
 
-    @Column(name = "topic", length = 24, nullable = false)
+    @Column(name = "topic", nullable = false)
     private String topic;
 
     @Column(name = "color", nullable = false)
