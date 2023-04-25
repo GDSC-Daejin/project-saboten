@@ -39,7 +39,10 @@ fun SortSelector(
                 width = 2.dp,
                 color = SabotenColors.green500,
                 shape = RoundedCornerShape(5.dp)
-            ),
+            )
+            .clickable {
+                onExpandMoreClick()
+            },
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -69,10 +72,7 @@ fun SortSelector(
                 imageVector = Icons.Rounded.ExpandMore,
                 contentDescription = "expandMore",
                 modifier = Modifier
-                    .size(12.dp)
-                    .clickable {
-                        onExpandMoreClick()
-                    },
+                    .size(12.dp),
                 tint = SabotenColors.green500
             )
             Spacer(modifier = Modifier.padding(end = 3.dp))
