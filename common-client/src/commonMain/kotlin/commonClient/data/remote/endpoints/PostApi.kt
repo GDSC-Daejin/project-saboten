@@ -11,6 +11,7 @@ import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePost
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
 import org.koin.core.annotation.Single
@@ -51,7 +52,7 @@ interface PostApi : Api {
 }
 
 @Single(binds = [PostApi::class])
-class PostApiImp : PostApi {
+class PostApiImp(override val authTokenManager: AuthTokenManager) : PostApi {
 
     override suspend fun createPost(request: PostCreateRequest) =
         responsePost<PostResponse> { setBody(request) }

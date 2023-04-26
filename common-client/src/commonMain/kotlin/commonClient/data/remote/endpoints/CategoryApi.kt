@@ -4,6 +4,7 @@ import common.model.reseponse.ApiResponse
 import common.model.reseponse.category.CategoryResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
+import commonClient.utils.AuthTokenManager
 import org.koin.core.annotation.Single
 
 interface CategoryApi : Api {
@@ -17,7 +18,7 @@ interface CategoryApi : Api {
 }
 
 @Single(binds = [CategoryApi::class])
-class CategoryApiImp: CategoryApi {
+class CategoryApiImp(override val authTokenManager: AuthTokenManager): CategoryApi {
 
     override suspend fun getCategories() = responseGet<List<CategoryResponse>>()
 

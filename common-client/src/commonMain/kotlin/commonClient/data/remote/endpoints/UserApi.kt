@@ -6,6 +6,7 @@ import common.model.reseponse.user.UserInfoResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePatch
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.request.setBody
 import org.koin.core.annotation.Single
 
@@ -22,7 +23,7 @@ interface UserApi : Api {
 }
 
 @Single(binds = [UserApi::class])
-class UserApiImp : UserApi {
+class UserApiImp(override val authTokenManager: AuthTokenManager) : UserApi {
 
     override suspend fun getMe() = responseGet<UserInfoResponse>("/")
 
