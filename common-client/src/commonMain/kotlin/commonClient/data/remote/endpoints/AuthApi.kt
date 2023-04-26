@@ -7,6 +7,7 @@ import common.model.reseponse.ApiResponse
 import common.model.reseponse.auth.JwtTokenResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responsePost
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.request.setBody
 import org.koin.core.annotation.Single
 
@@ -23,7 +24,7 @@ interface AuthApi : Api {
 }
 
 @Single(binds = [AuthApi::class])
-class AuthApiImp() : AuthApi {
+class AuthApiImp(override val authTokenManager: AuthTokenManager) : AuthApi {
 
     override suspend fun signup(userSignInRequest: UserSignUpRequest): ApiResponse<String> = responsePost("/signup") {
         setBody(userSignInRequest)
