@@ -4,7 +4,9 @@ import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
-import commonClient.domain.entity.post.Duration
+import commonClient.domain.entity.post.CategoryType
+import commonClient.domain.entity.post.HotPostSortState
+import commonClient.domain.entity.post.PeriodType
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
@@ -40,6 +42,7 @@ data class HomeScreenState(
     val recentPost: LoadState<List<Post>> = LoadState.idle(),
     val selectedPost: LoadState<List<Post>> = LoadState.idle(),
     val scrappedPosts: LoadState<List<Post>> = LoadState.idle(),
+    val hotPostSortState: LoadState<HotPostSortState> = LoadState.Success(HotPostSortState()),
 )
 
 class HomeScreenViewModel(
@@ -55,10 +58,11 @@ class HomeScreenViewModel(
     private val requestLikePostUseCase: RequestLikePostUseCase,
 ) : PlatformViewModel<HomeScreenState, HomeScreenEffect>() {
 
-    override val container: Container<HomeScreenState, HomeScreenEffect> = container(HomeScreenState())
+    override val container: Container<HomeScreenState, HomeScreenEffect> =
+        container(HomeScreenState())
 
     fun loadPage() {
-        loadHotPosts()
+        loadCategories()
         loadBanners()
         loadTrendingCategories()
         loadRecentPosts()
@@ -66,15 +70,14 @@ class HomeScreenViewModel(
         loadScrappedPosts()
     }
 
-    private fun loadHotPosts() = intent {
+    fun setHotPostSortState(hotPostSortState: HotPostSortState) = intent {
+        reduce { state.copy(hotPostSortState = LoadState.success(hotPostSortState)) }
+    }
+
+    private fun loadCategories() = intent {
         flow { emit(getCategoriesUseCase()) }
             .toLoadState()
-            .onEach {
-                reduce { state.copy(categories = it) }
-                if (it is LoadState.Success) {
-                    loadHotPosts(it.data.first(), Duration.WEEK)
-                }
-            }
+            .onEach { reduce { state.copy(categories = it) } }
             .launchIn(platformViewModelScope)
     }
 
@@ -85,11 +88,14 @@ class HomeScreenViewModel(
             .launchIn(platformViewModelScope)
     }
 
-    private fun loadHotPosts(
-        category: Category,
-        duration: Duration,
-    ) = intent {
-        flow { emit(getHotPostsUseCase(category, duration)) }
+    fun loadHotPosts() = intent {
+        flow {
+            val hotPostSortState =
+                requireNotNull(container.stateFlow.value.hotPostSortState.getDataOrNull())
+            val category = (hotPostSortState.categoryState.type as CategoryType)
+            val duration = (hotPostSortState.periodState.type as PeriodType).toDuration()
+            emit(getHotPostsUseCase(category.id, duration))
+        }
             .toLoadState()
             .onEach { reduce { state.copy(hotPost = it) } }
             .launchIn(platformViewModelScope)

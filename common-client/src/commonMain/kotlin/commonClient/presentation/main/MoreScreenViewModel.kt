@@ -4,8 +4,11 @@ import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import common.model.request.post.VoteSelectRequest
+import commonClient.data.LoadState
 import commonClient.domain.entity.PagingRequest
-import commonClient.domain.entity.post.Duration
+import commonClient.domain.entity.post.CategoryType
+import commonClient.domain.entity.post.HotPostSortState
+import commonClient.domain.entity.post.PeriodType
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
@@ -42,6 +45,7 @@ enum class MoreScreenType {
 data class MoreScreenState(
     val type: MoreScreenType = MoreScreenType.HOT,
     val items: Flow<PagingData<Post>> = flowOf(),
+    val hotPostSortState: LoadState<HotPostSortState> = LoadState.Success(HotPostSortState()),
 )
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -57,9 +61,18 @@ class MoreScreenViewModel(
 
     override val container: Container<MoreScreenState, MoreScreenEffect> = container(MoreScreenState())
 
-    // TODO: 카테고리, 기간 설정 가능하도록 변경
+    fun setHotPostSortState(hotPostSortState: HotPostSortState) = intent {
+        reduce { state.copy(hotPostSortState = LoadState.success(hotPostSortState)) }
+    }
+
     private val hotPager = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedHotPostsUseCase(null, Duration.WEEK, PagingRequest(page = key))
+
+        val hotPostSortState =
+            requireNotNull(container.stateFlow.value.hotPostSortState.getDataOrNull())
+        val category = (hotPostSortState.categoryState.type as CategoryType)
+        val duration = (hotPostSortState.periodState.type as PeriodType).toDuration()
+
+        val pagingResult = getPagedHotPostsUseCase(category.id, duration, PagingRequest(page = key))
         PagingResult(
             pagingResult.data,
             currentKey = key ?: -1,

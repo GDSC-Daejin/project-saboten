@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,7 +20,7 @@ fun HeaderBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 20.dp, bottom = 20.dp, top = 20.dp, end = 10.dp)
+            .padding(start = 20.dp, bottom= 12.dp, top = 20.dp, end = 10.dp)
     ) {
         Text(
             modifier = Modifier.align(Alignment.CenterStart),

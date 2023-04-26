@@ -7,7 +7,7 @@ interface SortState {
 }
 
 data class PeriodState(
-    override val type: SortType = PeriodType.DAY
+    override val type: SortType = PeriodType.WEEK
 ) : SortState
 
 data class CategoryState(

@@ -35,19 +35,20 @@ import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.result.ResultBackNavigator
 import com.ramcosta.composedestinations.spec.DestinationStyle
 import commonClient.domain.entity.post.CategoryType
-import commonClient.domain.entity.post.HotPostSortState
 import commonClient.domain.entity.post.PeriodType
 import commonClient.domain.entity.post.SortState
 import commonClient.domain.entity.post.SortType
+import commonClient.domain.entity.post.toHotPostSortState
 
 @Composable
 @Destination(style = DestinationStyle.BottomSheet::class)
 fun SortHotPostDialog(
+    initSortState: String,
     resultNavigator: ResultBackNavigator<String>,
 ) {
 
     var hotPostSortState by remember {
-        mutableStateOf(HotPostSortState())
+        mutableStateOf(initSortState.toHotPostSortState())
     }
 
     // TODO: 디테일한 크기 조정 필요.
