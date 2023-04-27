@@ -28,7 +28,7 @@ interface PostApi : Api {
 
     suspend fun scrapPost(postId: Long): ApiResponse<PostResponse>
 
-    suspend fun deletePost(postId: Int): ApiResponse<String>
+    suspend fun deletePost(postId: Long): ApiResponse<String>
 
     suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
@@ -57,8 +57,8 @@ class PostApiImp(override val authTokenManager: AuthTokenManager) : PostApi {
     override suspend fun createPost(request: PostCreateRequest) =
         responsePost<PostResponse> { setBody(request) }
 
-    override suspend fun deletePost(postId: Int) =
-        responseDelete<String>(postId)
+    override suspend fun deletePost(postId: Long) =
+        responseDelete<String>("/$postId")
 
     override suspend fun getPost(postId: Long) =
         responseGet<PostResponse>("/$postId")
