@@ -259,7 +259,7 @@ class PostController {
         Long userId = userDto != null ? userDto.getUserId() : null;
         postService.deletePost(userId, id);
 
-        return ApiResponse.withMessage(null, PostResponseMessage.POST_DELETED);
+        return ApiResponse.withMessage("", PostResponseMessage.POST_DELETED);
     }
 
     @ApiOperation(value = "게시물 좋아요 등록 (사용자 인증 필요)", notes = "사용자가 게시물을 좋아요 합니다.")
