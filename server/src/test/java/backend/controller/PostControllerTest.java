@@ -411,7 +411,7 @@ class PostControllerTest {
                 mockMvc.perform(delete(baseUrl + "/" + postId)
                                 .with(SecurityMockMvcRequestPostProcessors.user(userId)))
                         .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.data").doesNotExist())
+                        .andExpect(jsonPath("$.data").value(""))
                         .andExpect(jsonPath("$.code").value(responseMessage.toString()))
                         .andExpect(jsonPath("$.message").value(responseMessage.getMessage()))
                         .andDo(print());
