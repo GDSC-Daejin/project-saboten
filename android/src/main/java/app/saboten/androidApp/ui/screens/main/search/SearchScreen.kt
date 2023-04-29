@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -70,7 +71,8 @@ fun SearchScreen(
 
         val items = state.items.collectAsLazyPagingItems()
 
-        LazyColumn(modifier = Modifier.padding(padding), contentPadding = PaddingValues(20.dp)) {
+        LazyColumn(modifier = Modifier.padding(padding)
+            .navigationBarsPadding(), contentPadding = PaddingValues(20.dp)) {
 
             stickyHeader {
                 Surface(
