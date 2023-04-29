@@ -34,7 +34,7 @@ public class CommentService {
                 .user(userDto.toEntity())
                 .commentText(text)
                 .commentLikeCount(0L)
-                .commentRegistDate(LocalDateTime.now())
+                .registDate(LocalDateTime.now())
                 .build();
 
         return commentRepository.save(commentEntity).toDto();

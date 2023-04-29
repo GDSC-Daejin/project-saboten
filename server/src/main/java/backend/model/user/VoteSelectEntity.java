@@ -1,5 +1,6 @@
 package backend.model.user;
 
+import backend.model.common.BaseTimeEntity;
 import backend.model.compositekey.VoteSelectPK;
 import backend.model.post.PostEntity;
 import backend.model.user.UserEntity;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Entity @IdClass(VoteSelectPK.class)
 @Table(name = "TB_VoteSelect")
-public class VoteSelectEntity {
+public class VoteSelectEntity extends BaseTimeEntity {
     @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)

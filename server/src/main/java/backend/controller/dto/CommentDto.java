@@ -29,7 +29,7 @@ public class CommentDto {
                 .user(user.toEntity())
                 .commentText(commentText)
                 .commentLikeCount(commentLikeCount)
-                .commentRegistDate(commentRegistDate)
+                .registDate(commentRegistDate)
                 .build();
     }
 

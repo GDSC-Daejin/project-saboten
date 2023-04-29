@@ -41,8 +41,8 @@ public class CommentEntity {
     private Long commentLikeCount;
 
     @Builder.Default
-    @Column(name = "comment_regist_date", nullable = false)
-    private LocalDateTime commentRegistDate = LocalDateTime.now();
+    @Column(name = "registDate", nullable = false)
+    private LocalDateTime registDate = LocalDateTime.now();
 
 //    public CommentResponse toDto(){
 //       return new CommentResponse(this.getCommentId(), this.getCommentText(), this.getUser().toDto(),null, this.getCommentRegistDate().toString());
@@ -55,7 +55,7 @@ public class CommentEntity {
                 .user(user.toDto())
                 .commentText(commentText)
                 .commentLikeCount(commentLikeCount)
-                .commentRegistDate(commentRegistDate)
+                .commentRegistDate(registDate)
                 .build();
     }
 
