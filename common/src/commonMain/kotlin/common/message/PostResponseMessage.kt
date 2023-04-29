@@ -10,6 +10,7 @@ enum class PostResponseMessage(
     POST_FIND_ONE("특정 게시글 조회가 성공했습니다.", 200),
     POST_FIND_USER("해당 유저가 쓴 게시글들이 조회되었습니다.",200),
     POST_FIND_ALL("게시글들이 조회되었습니다.", 200),
+    POST_SEARCH_ALL_COUNT("검색한 게시물들의 개수가 조회되었습니다.", 200),
     POST_HOT_DEBATE_FIND_ALL("뜨거운 고민거리 게시물들이 조회되었습니다.", 200),
     POST_HOT_FIND_ALL("Hot 게시물들이 조회되었습니다.", 200),
     POST_NOT_FOUND("게시글이 존재하지 않습니다.", 404),

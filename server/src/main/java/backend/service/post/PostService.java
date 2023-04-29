@@ -52,6 +52,10 @@ public class PostService {
         return postRepository.findByPostTextContaining(searchText, pageable).map(PostEntity::toDto);
     }
 
+    public Long searchPostCount(String searchText) {
+        return postRepository.countByPostTextContaining(searchText);
+    }
+
     public Page<PostDto> findAllPageable(final Pageable pageable) {
         return postRepository.findAll(pageable).map(PostEntity::toDto);
     }
