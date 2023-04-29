@@ -1,6 +1,7 @@
 package app.saboten.androidApp.ui.screens.main.search
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -37,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -71,8 +73,11 @@ fun SearchScreen(
 
         val items = state.items.collectAsLazyPagingItems()
 
-        LazyColumn(modifier = Modifier.padding(padding)
-            .navigationBarsPadding(), contentPadding = PaddingValues(20.dp)) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(padding)
+                .navigationBarsPadding(), contentPadding = PaddingValues(20.dp)
+        ) {
 
             stickyHeader {
                 Surface(
@@ -151,25 +156,33 @@ fun SearchScreen(
                             state.searchHistories.forEach {
                                 Surface(
                                     shape = CircleShape,
-                                    border = BorderStroke(1.dp, MaterialTheme.colors.onBackground.copy(0.1f)),
+                                    border = BorderStroke(
+                                        1.dp,
+                                        MaterialTheme.colors.onBackground.copy(0.1f)
+                                    ),
                                     onClick = {
                                         query = it
                                         viewModel.search(query)
                                     },
                                 ) {
                                     Row(
-                                        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp),
+                                        modifier = Modifier.padding(
+                                            vertical = 4.dp,
+                                            horizontal = 8.dp
+                                        ),
                                         verticalAlignment = Alignment.CenterVertically
                                     ) {
                                         Text(text = it)
-                                        IconButton(
-                                            modifier = Modifier.size(20.dp),
-                                            onClick = { viewModel.removeSearchHistory(it) }) {
-                                            Icon(
-                                                imageVector = Icons.Rounded.Close,
-                                                contentDescription = "삭제"
-                                            )
-                                        }
+                                        Icon(
+                                            imageVector = Icons.Rounded.Close,
+                                            contentDescription = "삭제",
+                                            modifier = Modifier
+                                                .size(20.dp)
+                                                .clip(CircleShape)
+                                                .clickable {
+
+                                                }
+                                        )
                                     }
                                 }
                                 Spacer(modifier = Modifier.width(10.dp))
@@ -218,7 +231,7 @@ fun SearchScreen(
                     }
                 }
 
-                items(items, key = { it.id }) {post ->
+                items(items, key = { it.id }) { post ->
                     val observableCache by viewModel.updatedPostCache.collectAsState()
                     val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
                     cachedPost?.let { nonNullPost ->
@@ -229,7 +242,12 @@ fun SearchScreen(
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
+                            onVoteClicked = { vote ->
+                                viewModel.requestVote(
+                                    nonNullPost.id,
+                                    vote.id
+                                )
+                            },
                             onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
                             onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
                         )
