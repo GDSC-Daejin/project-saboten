@@ -228,6 +228,14 @@ class PostController {
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 
+    @ApiOperation(value = "게시물 검색 개수 조회",
+            notes = "사용자가 검색어를 입력하면, 검색어가 들어간 게시물에 대한 전체 개수를 조회합니다.")
+    @GetMapping("/post/search/count")
+    public ApiResponse<Long> getSearchPostCount(@RequestParam(required = false) String searchText) {
+        Long postCount = postService.searchPostCount(searchText);
+        return ApiResponse.withMessage(postCount, PostResponseMessage.POST_SEARCH_ALL_COUNT);
+    }
+
     @ApiOperation(value = "게시물 수정 (사용자 인증 필요)", notes = "사용자가 게시물 수정하여 갱신합니다.")
     @PutMapping("/post")
     @ApiResponses({
