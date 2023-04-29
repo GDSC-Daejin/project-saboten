@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -152,40 +153,42 @@ fun SearchScreen(
                                 Text(text = "전체 삭제", style = MaterialTheme.typography.caption)
                             }
                         }
-                        Row {
+                        LazyRow {
                             state.searchHistories.forEach {
-                                Surface(
-                                    shape = CircleShape,
-                                    border = BorderStroke(
-                                        1.dp,
-                                        MaterialTheme.colors.onBackground.copy(0.1f)
-                                    ),
-                                    onClick = {
-                                        query = it
-                                        viewModel.search(query)
-                                    },
-                                ) {
-                                    Row(
-                                        modifier = Modifier.padding(
-                                            vertical = 4.dp,
-                                            horizontal = 8.dp
+                                item {
+                                    Surface(
+                                        shape = CircleShape,
+                                        border = BorderStroke(
+                                            1.dp,
+                                            MaterialTheme.colors.onBackground.copy(0.1f)
                                         ),
-                                        verticalAlignment = Alignment.CenterVertically
+                                        onClick = {
+                                            query = it
+                                            viewModel.search(query)
+                                        },
                                     ) {
-                                        Text(text = it)
-                                        Icon(
-                                            imageVector = Icons.Rounded.Close,
-                                            contentDescription = "삭제",
-                                            modifier = Modifier
-                                                .size(20.dp)
-                                                .clip(CircleShape)
-                                                .clickable {
-
-                                                }
-                                        )
+                                        Row(
+                                            modifier = Modifier.padding(
+                                                vertical = 4.dp,
+                                                horizontal = 8.dp
+                                            ),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Text(text = it)
+                                            Icon(
+                                                imageVector = Icons.Rounded.Close,
+                                                contentDescription = "삭제",
+                                                modifier = Modifier
+                                                    .size(20.dp)
+                                                    .clip(CircleShape)
+                                                    .clickable {
+                                                        viewModel.removeSearchHistory(it)
+                                                    }
+                                            )
+                                        }
                                     }
+                                    Spacer(modifier = Modifier.width(10.dp))
                                 }
-                                Spacer(modifier = Modifier.width(10.dp))
                             }
                         }
                         Divider()
