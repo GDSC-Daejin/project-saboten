@@ -50,11 +50,14 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.extensions.toAfterCreatedAt
+import app.saboten.androidApp.extensions.toDuration
 import app.saboten.androidApp.ui.providers.MeInfo
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import commonClient.presentation.post.DetailPostScreenEffect
 import org.orbitmvi.orbit.compose.collectSideEffect
+import java.time.LocalDateTime
 
 @Composable
 @Destination
@@ -231,7 +234,7 @@ fun DetailPostPageContent(
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
-                                        comment.createdAt,
+                                        LocalDateTime.parse(comment.createdAt).toDuration().toAfterCreatedAt(),
                                         fontSize = 10.sp,
                                         color = SabotenColors.grey400
                                     )
