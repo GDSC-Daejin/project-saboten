@@ -33,4 +33,6 @@ interface PostRepository {
 
     suspend fun createPost(postCreateRequest: PostCreateRequest): Post
 
+    suspend fun deletePost(postId: Long): String
+
 }
