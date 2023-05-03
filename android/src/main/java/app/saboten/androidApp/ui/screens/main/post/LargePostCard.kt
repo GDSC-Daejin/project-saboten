@@ -28,8 +28,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import app.saboten.androidApp.extensions.toAfterCreatedAt
-import app.saboten.androidApp.extensions.toDuration
+import app.saboten.androidApp.extensions.asDurationStringFromNow
 import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.post.vote.SelectedVoteItem
@@ -39,7 +38,6 @@ import app.saboten.androidUi.styles.SabotenColors
 import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
 import commonClient.domain.entity.post.Vote
-import java.time.LocalDateTime
 
 @Composable
 fun LargePostCard(
@@ -89,7 +87,7 @@ fun LargePostCard(
                             fontSize = 12.sp
                         )
                         Text(
-                            LocalDateTime.parse(post.createdAt).toDuration().toAfterCreatedAt(),
+                            post.createdAt.asDurationStringFromNow(),
                             fontSize = 10.sp,
                             color = SabotenColors.grey200
                         )

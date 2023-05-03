@@ -1,6 +1,7 @@
 package commonClient.domain.entity.post
 
 import commonClient.domain.entity.user.User
+import kotlinx.datetime.LocalDateTime
 
 data class Post(
     val id: Long,
@@ -11,6 +12,6 @@ data class Post(
     val selectedVote: Long?,
     val isScraped: Boolean?,
     val isLiked: Boolean?,
-    val createdAt: String,
-    val updatedAt: String?
+    val createdAt: LocalDateTime,
+    val updatedAt: LocalDateTime?
 )

@@ -53,6 +53,7 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.extensions.asDurationStringFromNow
 import app.saboten.androidApp.ui.destinations.PostSettingDialogDestination
 import app.saboten.androidApp.ui.dialog.PostSettingDialogResult
 import app.saboten.androidApp.ui.providers.MeInfo
@@ -335,7 +336,7 @@ fun DetailPostPageContent(
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
-                                        comment.createdAt,
+                                        comment.createdAt.asDurationStringFromNow(),
                                         fontSize = 10.sp,
                                         color = SabotenColors.grey400
                                     )
