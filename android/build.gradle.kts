@@ -33,6 +33,8 @@ dependencies {
     implementation(project(":common-client"))
     implementation(project(":android-ui"))
 
+    implementation(KotlinX.datetime)
+
     implementation(AndroidX.activity.ktx)
     implementation(Google.android.material)
     implementation(AndroidX.paging.compose)
