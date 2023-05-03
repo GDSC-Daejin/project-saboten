@@ -60,6 +60,10 @@ class PostRepositoryImp(
         return postApi.getSearchPosts(searchText, pagingRequest).data!!.map { it.toDomain() }
     }
 
+    override suspend fun getSearchedPostCount(searchText: String): Long {
+        return postApi.getSearchedPostCount(searchText).data!!
+    }
+
     override suspend fun createPost(postCreateRequest: PostCreateRequest): Post {
         return postApi.createPost(postCreateRequest).data!!.toDomain()
     }
