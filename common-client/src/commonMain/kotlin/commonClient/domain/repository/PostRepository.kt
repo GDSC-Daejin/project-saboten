@@ -31,6 +31,10 @@ interface PostRepository {
 
     suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): PagingResponse<Post>
 
+    suspend fun getSearchedPostCount(searchText: String): Long
+
     suspend fun createPost(postCreateRequest: PostCreateRequest): Post
+
+    suspend fun deletePost(postId: Long): String
 
 }

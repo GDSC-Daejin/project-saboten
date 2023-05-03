@@ -28,7 +28,7 @@ interface PostApi : Api {
 
     suspend fun scrapPost(postId: Long): ApiResponse<PostResponse>
 
-    suspend fun deletePost(postId: Int): ApiResponse<String>
+    suspend fun deletePost(postId: Long): ApiResponse<String>
 
     suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
@@ -49,6 +49,8 @@ interface PostApi : Api {
     suspend fun getRecentPosts(pagingRequest: PagingRequest): ApiResponse<PagingResponse<PostResponse>>
 
     suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): ApiResponse<PagingResponse<PostResponse>>
+
+    suspend fun getSearchedPostCount(searchText: String): ApiResponse<Long>
 }
 
 @Single(binds = [PostApi::class])
@@ -57,8 +59,8 @@ class PostApiImp(override val authTokenManager: AuthTokenManager) : PostApi {
     override suspend fun createPost(request: PostCreateRequest) =
         responsePost<PostResponse> { setBody(request) }
 
-    override suspend fun deletePost(postId: Int) =
-        responseDelete<String>(postId)
+    override suspend fun deletePost(postId: Long) =
+        responseDelete<String>("/$postId")
 
     override suspend fun getPost(postId: Long) =
         responseGet<PostResponse>("/$postId")
@@ -100,6 +102,12 @@ class PostApiImp(override val authTokenManager: AuthTokenManager) : PostApi {
     ) = responseGet<PagingResponse<PostResponse>>("/search") {
         parameter("searchText", searchText)
         pagingRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
+    }
+
+    override suspend fun getSearchedPostCount(searchText: String): ApiResponse<Long> {
+        return responseGet("/search/count") {
+            parameter("searchText", searchText)
+        }
     }
 
     override suspend fun getMyPosts(pagingRequest: PagingRequest) = responseGet<PagingResponse<PostResponse>>("/my") {

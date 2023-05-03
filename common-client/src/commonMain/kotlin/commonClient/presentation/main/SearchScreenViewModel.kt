@@ -3,13 +3,13 @@ package commonClient.presentation.main
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.post.AddRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.ClearRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.GetRecentSearchTextsUseCase
+import commonClient.domain.usecase.post.GetSearchedPostCountUseCase
 import commonClient.domain.usecase.post.RemoveRecentSearchTextsUseCase
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
@@ -25,7 +25,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -52,9 +51,11 @@ class SearchScreenViewModel(
     private val requestScrapPostUseCase: RequestScrapPostUseCase,
     private val requestVotePostUseCase: RequestVotePostUseCase,
     private val requestLikePostUseCase: RequestLikePostUseCase,
+    private val getSearchedPostCountUseCase: GetSearchedPostCountUseCase
 ) : PlatformViewModel<SearchScreenState, SearchScreenEffect>() {
 
-    override val container: Container<SearchScreenState, SearchScreenEffect> = container(SearchScreenState())
+    override val container: Container<SearchScreenState, SearchScreenEffect> =
+        container(SearchScreenState())
 
     init {
         intent {
@@ -77,7 +78,12 @@ class SearchScreenViewModel(
     fun search(query: String) = intent {
         addRecentSearchTextsUseCase(query)
 
-        reduce { state.copy(lastSearchedQuery = null, totalCount = null) }
+        intent {
+            val searchedPostCount = getSearchedPostCountUseCase(query)
+            reduce {
+                state.copy(lastSearchedQuery = null, totalCount = searchedPostCount)
+            }
+        }
 
         reduce {
 
@@ -88,7 +94,6 @@ class SearchScreenViewModel(
                     reduce {
                         state.copy(
                             lastSearchedQuery = query,
-                            totalCount = pagingResult.count ?: 0
                         )
                     }
                 }

@@ -60,9 +60,16 @@ class PostRepositoryImp(
         return postApi.getSearchPosts(searchText, pagingRequest).data!!.map { it.toDomain() }
     }
 
+    override suspend fun getSearchedPostCount(searchText: String): Long {
+        return postApi.getSearchedPostCount(searchText).data!!
+    }
+
     override suspend fun createPost(postCreateRequest: PostCreateRequest): Post {
-        // TODO: 사용자 인증
         return postApi.createPost(postCreateRequest).data!!.toDomain()
+    }
+
+    override suspend fun deletePost(postId: Long): String {
+        return postApi.deletePost(postId).data!!
     }
 
 }
