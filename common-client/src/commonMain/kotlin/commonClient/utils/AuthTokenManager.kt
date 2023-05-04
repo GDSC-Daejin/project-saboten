@@ -20,23 +20,12 @@ class AuthTokenManager(
     private val settings: DataStore<Preferences>,
 ) {
 
-    init {
-        CoroutineScope(Dispatchers.Default).launch {
-            val accessToken = accessToken()
-            val refreshToken = refreshToken()
-            if (accessToken != null && refreshToken != null) {
-                _tokenStorage.add(BearerTokens(accessToken, refreshToken))
-            }
-        }
-    }
-
     suspend fun setToken(jwtTokenResponse: JwtTokenResponse) {
         settings.edit {
             it[KEY_ACCESS_TOKEN] = jwtTokenResponse.accessToken
             it[KEY_REFRESH_TOKEN] = jwtTokenResponse.refreshToken
             it[KEY_EXPIRES_IN] = jwtTokenResponse.accessTokenExpiresIn
         }
-        addToken(jwtTokenResponse)
     }
 
     suspend fun accessToken() : String? {
@@ -58,20 +47,9 @@ class AuthTokenManager(
             it.remove(KEY_REFRESH_TOKEN)
             it.remove(KEY_EXPIRES_IN)
         }
-        _tokenStorage.clear()
     }
 
     companion object {
-
-        @Suppress("ObjectPropertyName")
-        private val _tokenStorage = mutableListOf<BearerTokens>()
-        val tokenStorage: List<BearerTokens>
-            get() = _tokenStorage
-
-        fun addToken(token: JwtTokenResponse) {
-            _tokenStorage.add(BearerTokens(token.accessToken, token.refreshToken))
-        }
-
         val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
         val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
         val KEY_EXPIRES_IN = longPreferencesKey("expires_in")

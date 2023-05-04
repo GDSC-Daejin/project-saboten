@@ -1,10 +1,10 @@
 package commonClient.data.remote
 
 import common.model.request.auth.TokenReissueRequest
+import common.model.reseponse.ApiResponse
 import common.model.reseponse.auth.JwtTokenResponse
 import commonClient.logger.ClientLogger
 import commonClient.utils.AuthTokenManager
-import commonClient.utils.ClientProperties
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.engine.*
@@ -21,10 +21,22 @@ import kotlinx.serialization.json.Json
 // TODO Change URL
 private const val URL = "pitapat-adventcalendar.site"
 
-expect fun getHttpClient(): HttpClient
+expect fun getHttpClient(authTokenManager: AuthTokenManager): HttpClient
+
+private val json =
+    Json {
+        ignoreUnknownKeys = true
+        allowSpecialFloatingPointValues = true
+        useArrayPolymorphism = true
+        prettyPrint = true
+        allowStructuredMapKeys = true
+        coerceInputValues = true
+        useAlternativeNames = false
+    }
 
 @Suppress("FunctionName")
 internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
+    authTokenManager: AuthTokenManager,
     engineFactory: HttpClientEngineFactory<T>,
     block: HttpClientConfig<T>.() -> Unit = {},
 ) = HttpClient(engineFactory) {
@@ -40,15 +52,7 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
         register(
             contentType = ContentType.Application.Json,
             converter = KotlinxSerializationConverter(
-                Json {
-                    ignoreUnknownKeys = true
-                    allowSpecialFloatingPointValues = true
-                    useArrayPolymorphism = true
-                    prettyPrint = true
-                    allowStructuredMapKeys = true
-                    coerceInputValues = true
-                    useAlternativeNames = false
-                }
+                json
             )
         )
     }
@@ -56,27 +60,39 @@ internal fun <T : HttpClientEngineConfig> SabotenApiHttpClient(
     install(Auth) {
         bearer {
             loadTokens {
-                val token = AuthTokenManager.tokenStorage.lastOrNull()
-                val accessToken = token?.accessToken
-                val refreshToken = token?.refreshToken
+                val accessToken = authTokenManager.accessToken()
+                val refreshToken = authTokenManager.refreshToken()
+                println("🗝️ accessToken: $accessToken")
+                println("🗝️ refreshToken: $refreshToken")
                 if (accessToken != null && refreshToken != null) BearerTokens(accessToken, refreshToken)
                 else null
             }
             refreshTokens {
-                val token = AuthTokenManager.tokenStorage.lastOrNull()
-                val accessToken = token?.accessToken
-                val refreshToken = token?.refreshToken
+                val accessToken = authTokenManager.accessToken()
+                val refreshToken = authTokenManager.refreshToken()
 
-                if (accessToken == null || refreshToken == null) return@refreshTokens null
+                kotlin.runCatching {
+                    val jwtTokenResponse = client.post("https://$URL/api/v1/auth/reissue") {
+                        markAsRefreshTokenRequest()
+                        setBody(TokenReissueRequest(accessToken!!, refreshToken!!))
+                        contentType(ContentType.Application.Json)
+                    }.body<ApiResponse<JwtTokenResponse>>()
 
-                val response = client.post("https://$URL/refresh") {
-                    setBody(TokenReissueRequest(accessToken, refreshToken))
-                }.body<JwtTokenResponse>()
-                AuthTokenManager.addToken(response)
-                BearerTokens(
-                    accessToken = response.accessToken,
-                    refreshToken = response.refreshToken
-                )
+                    println("🗝️ new accessToken: ${jwtTokenResponse.data!!.accessToken}")
+                    println("🗝️ new refreshToken: ${jwtTokenResponse.data!!.refreshToken}")
+
+                    authTokenManager.setToken(jwtTokenResponse.data!!)
+
+                    BearerTokens(
+                        accessToken = jwtTokenResponse.data!!.accessToken,
+                        refreshToken = jwtTokenResponse.data!!.refreshToken
+                    )
+                }
+                    .onFailure {
+                        println("🗝️ ${it.message}")
+                        authTokenManager.clear()
+                    }
+                    .getOrNull()
             }
         }
     }

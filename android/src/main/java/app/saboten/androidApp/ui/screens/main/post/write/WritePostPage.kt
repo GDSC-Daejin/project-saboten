@@ -1,5 +1,6 @@
 package app.saboten.androidApp.ui.screens.main.post.write
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -41,6 +42,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -75,6 +77,8 @@ fun WritePostScreenContent(
     onBackPressed: () -> Unit,
 ) {
 
+    val context = LocalContext.current
+
     val state by viewModel.collectAsState()
 
     var isPosting by remember { mutableStateOf(false) }
@@ -101,6 +105,9 @@ fun WritePostScreenContent(
 
             is WritePostScreenEffect.CreatePosted -> {
                 onBackPressed()
+            }
+            is WritePostScreenEffect.UnSelectedCategory -> {
+                Toast.makeText(context, "카테고리를 1개 이상 선택해주세요.", Toast.LENGTH_SHORT).show()
             }
 
         }
@@ -188,24 +195,21 @@ fun WritePostScreenContent(
                         Spacer(modifier = Modifier.padding(top = 20.dp))
                         HeaderBar(title = "카테고리 선택")
 
-                        // TODO: 다중 선택 지원
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = 20.dp),
                         ) {
 
                             items(state.categories.getDataOrNull() ?: emptyList()) { item ->
-                                val itemId = if (item.id < 0) null else item.id
+                                val itemId = item.id
                                 Surface(
                                     onClick = { viewModel.selectCategory(itemId) },
-                                    color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
+                                    color = if (itemId in state.selectedCategoryIds) MaterialTheme.colors.secondary
                                     else Color.Transparent,
-                                    contentColor = if (state.selectedCategoryId == itemId) MaterialTheme.colors.onSecondary
+                                    contentColor = if (itemId in state.selectedCategoryIds) MaterialTheme.colors.onSecondary
                                     else MaterialTheme.colors.onBackground,
                                     shape = CircleShape,
-                                    border = if (state.selectedCategoryId == itemId) null
-                                    else {
-                                        BorderStroke(1.dp, MaterialTheme.colors.onBackground)
-                                    },
+                                    border = if (itemId in state.selectedCategoryIds) null
+                                    else BorderStroke(1.dp, MaterialTheme.colors.onBackground),
                                 ) {
                                     Text(
                                         text = item.name,

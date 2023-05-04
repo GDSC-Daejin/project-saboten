@@ -2,6 +2,7 @@ package commonClient.data.remote
 
 import common.model.reseponse.ApiResponse
 import commonClient.data.LoadState
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.*
 import io.ktor.client.call.*
 import io.ktor.client.plugins.*
@@ -9,8 +10,9 @@ import io.ktor.client.request.*
 import io.ktor.http.*
 
 interface Api {
+    val authTokenManager : AuthTokenManager
 
-    val httpClient: HttpClient get() = getHttpClient()
+    val httpClient: HttpClient get() = getHttpClient(authTokenManager)
     val prefixUrl: String
 
 }

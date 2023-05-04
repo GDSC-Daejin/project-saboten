@@ -53,6 +53,13 @@ fun ProfileScreen(
     navigator: DestinationsNavigator,
 ) {
     val viewModel = koinViewModel<ProfileScreenViewModel>()
+
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin) {
+        viewModel.load()
+    }
+
     ProfileScreenContent(
         viewModel = viewModel,
         onPostClicked = { navigator.navigate(DetailPostScreenDestination(postId = it.id)) },
@@ -100,15 +107,14 @@ private fun ProfileScreenContent(
                 ) {
                     Column(modifier = Modifier.fillMaxWidth()) {
 
-                        ProfileBannerUi(viewModel)
+                        ProfileBannerUi()
 
                         PostInfoBox(
                             state.myPageCount,
                             state.selectedType,
-                        ) {
-                            viewModel.load(it)
+                        ) { profileType ->
+                            viewModel.load(profileType)
                         }
-
                     }
 
                 }
@@ -152,9 +158,7 @@ private fun ProfileScreenContent(
 }
 
 @Composable
-private fun ProfileBannerUi(
-    viewModel: ProfileScreenViewModel,
-) {
+private fun ProfileBannerUi() {
 
     val meInfo = LocalMeInfo.current
 
@@ -208,10 +212,6 @@ private fun ProfileBannerUi(
 
     } else {
 
-        LaunchedEffect(key1 = true) {
-            viewModel.load()
-        }
-
         Column {
 
             Box(
@@ -256,7 +256,7 @@ private fun ProfileBannerUi(
 private fun PostInfoBox(
     counts: LoadState<MyPageCount>,
     type: ProfileScreenState.ProfileType,
-    onTypeSelected : (ProfileScreenState.ProfileType) -> Unit
+    onTypeSelected: (ProfileScreenState.ProfileType) -> Unit
 ) {
     val meState = LocalMeInfo.current
 
@@ -278,13 +278,28 @@ private fun PostInfoBox(
             TextWithCount("투표", counts.isLoading())
             TextWithCount("스크랩", counts.isLoading())
         } else {
-            TextWithCount("게시글", counts.isLoading(), counts.getDataOrNull()?.myPost, type == ProfileScreenState.ProfileType.MY_POSTS) {
+            TextWithCount(
+                "게시글",
+                counts.isLoading(),
+                counts.getDataOrNull()?.myPost,
+                type == ProfileScreenState.ProfileType.MY_POSTS
+            ) {
                 onTypeSelected(ProfileScreenState.ProfileType.MY_POSTS)
             }
-            TextWithCount("투표", counts.isLoading(),counts.getDataOrNull()?.votedPost, type == ProfileScreenState.ProfileType.VOTED_POSTS) {
+            TextWithCount(
+                "투표",
+                counts.isLoading(),
+                counts.getDataOrNull()?.votedPost,
+                type == ProfileScreenState.ProfileType.VOTED_POSTS
+            ) {
                 onTypeSelected(ProfileScreenState.ProfileType.VOTED_POSTS)
             }
-            TextWithCount("스크랩",counts.isLoading(), counts.getDataOrNull()?.scrapedPost, type == ProfileScreenState.ProfileType.SCRAPPED_POSTS) {
+            TextWithCount(
+                "스크랩",
+                counts.isLoading(),
+                counts.getDataOrNull()?.scrapedPost,
+                type == ProfileScreenState.ProfileType.SCRAPPED_POSTS
+            ) {
                 onTypeSelected(ProfileScreenState.ProfileType.SCRAPPED_POSTS)
             }
 
@@ -295,7 +310,7 @@ private fun PostInfoBox(
 @Composable
 private fun TextWithCount(
     text: String,
-    isLoading : Boolean,
+    isLoading: Boolean,
     count: Long? = null,
     isSelected: Boolean = false,
     onSelect: () -> Unit = {},
@@ -308,7 +323,10 @@ private fun TextWithCount(
             Box(
                 modifier = Modifier
                     .size(40.dp)
-                    .background(if (isSelected) SabotenColors.green500 else SabotenColors.grey200, shape = CircleShape)
+                    .background(
+                        if (isSelected) SabotenColors.green500 else SabotenColors.grey200,
+                        shape = CircleShape
+                    )
                     .clickable { onSelect() },
                 contentAlignment = Alignment.Center
             ) {
@@ -322,7 +340,10 @@ private fun TextWithCount(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(if (isSelected) SabotenColors.green500 else SabotenColors.grey200, shape = CircleShape)
+                        .background(
+                            if (isSelected) SabotenColors.green500 else SabotenColors.grey200,
+                            shape = CircleShape
+                        )
                         .clickable { onSelect() },
                     contentAlignment = Alignment.Center
                 ) {

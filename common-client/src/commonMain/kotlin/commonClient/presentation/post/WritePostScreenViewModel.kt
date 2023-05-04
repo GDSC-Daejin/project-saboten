@@ -27,13 +27,14 @@ interface WritePostScreenEffect {
     object CreatePosing : WritePostScreenEffect
     object CreatePosted : WritePostScreenEffect
     object CreatePostFailed : WritePostScreenEffect
+    object UnSelectedCategory : WritePostScreenEffect
 
 }
 
 data class WritePostScreenState(
     val createPost: LoadState<Unit> = LoadState.idle(),
     val categories: LoadState<List<Category>> = LoadState.idle(),
-    val selectedCategoryId: Long? = null,
+    val selectedCategoryIds: List<Long> = emptyList(),
 )
 
 class WritePostScreenViewModel(
@@ -63,11 +64,16 @@ class WritePostScreenViewModel(
 
     }
 
-    fun selectCategory(categoryId: Long?) {
+    fun selectCategory(categoryId: Long) {
         intent {
             reduce {
                 state.copy(
-                    selectedCategoryId = categoryId
+                    selectedCategoryIds =
+                    if (categoryId in state.selectedCategoryIds) {
+                        state.selectedCategoryIds.filter { it != categoryId }
+                    } else {
+                        state.selectedCategoryIds + categoryId
+                    }
                 )
             }
         }
@@ -78,34 +84,40 @@ class WritePostScreenViewModel(
         firstTopicText: String,
         secondTopicText: String
     ) = intent {
-        flow {
-            emit(
-                createPostUseCase(
-                    postCreateRequest =
-                    PostCreateRequest(
-                        text = titleText,
-                        voteTopics = listOf(
-                            VoteCreateRequest(firstTopicText, VoteColorsResponse.GREEN),
-                            VoteCreateRequest(secondTopicText, VoteColorsResponse.GREEN),
-                        ),
-                        categoryIds = listOf(state.selectedCategoryId ?: -1)
+
+        if (state.selectedCategoryIds.isNotEmpty()) {
+            flow {
+                emit(
+                    createPostUseCase(
+                        postCreateRequest =
+                        PostCreateRequest(
+                            text = titleText,
+                            voteTopics = listOf(
+                                VoteCreateRequest(firstTopicText, VoteColorsResponse.GREEN),
+                                VoteCreateRequest(secondTopicText, VoteColorsResponse.GREEN),
+                            ),
+                            categoryIds = state.selectedCategoryIds
+                        )
                     )
                 )
-            )
-        }
-            .toLoadState()
-            .onEach {
-                if (it.isSuccess()) {
-                    postSideEffect(WritePostScreenEffect.CreatePosted)
-                }
-                if (it.isLoading()) {
-                    postSideEffect(WritePostScreenEffect.CreatePosing)
-                }
-                if (it.isFailed()) {
-                    postSideEffect(WritePostScreenEffect.CreatePostFailed)
-                }
             }
-            .launchIn(platformViewModelScope)
+                .toLoadState()
+                .onEach {
+                    if (it.isSuccess()) {
+                        postSideEffect(WritePostScreenEffect.CreatePosted)
+                    }
+                    if (it.isLoading()) {
+                        postSideEffect(WritePostScreenEffect.CreatePosing)
+                    }
+                    if (it.isFailed()) {
+                        postSideEffect(WritePostScreenEffect.CreatePostFailed)
+                    }
+                }
+                .launchIn(platformViewModelScope)
+        } else {
+            postSideEffect(WritePostScreenEffect.UnSelectedCategory)
+        }
+
     }
 
 }

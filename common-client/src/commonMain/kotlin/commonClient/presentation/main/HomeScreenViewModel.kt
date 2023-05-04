@@ -1,12 +1,12 @@
 package commonClient.presentation.main
 
-import com.kuuurt.paging.multiplatform.map
 import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
-import commonClient.data.map
 import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
-import commonClient.domain.entity.post.Duration
+import commonClient.domain.entity.post.CategoryType
+import commonClient.domain.entity.post.HotPostSortState
+import commonClient.domain.entity.post.PeriodType
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
@@ -18,7 +18,6 @@ import commonClient.domain.usecase.post.GetSelectedPostsUseCase
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
 import commonClient.domain.usecase.post.RequestVotePostUseCase
-import commonClient.domain.usecase.post.paged.GetPagedScrappedPostsUseCase
 import commonClient.presentation.PlatformViewModel
 import commonClient.presentation.container
 import commonClient.utils.toLoadState
@@ -26,7 +25,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.syntax.simple.intent
@@ -44,6 +42,7 @@ data class HomeScreenState(
     val recentPost: LoadState<List<Post>> = LoadState.idle(),
     val selectedPost: LoadState<List<Post>> = LoadState.idle(),
     val scrappedPosts: LoadState<List<Post>> = LoadState.idle(),
+    val hotPostSortState: LoadState<HotPostSortState> = LoadState.Success(HotPostSortState()),
 )
 
 class HomeScreenViewModel(
@@ -59,21 +58,11 @@ class HomeScreenViewModel(
     private val requestLikePostUseCase: RequestLikePostUseCase,
 ) : PlatformViewModel<HomeScreenState, HomeScreenEffect>() {
 
-    override val container: Container<HomeScreenState, HomeScreenEffect> = container(HomeScreenState())
+    override val container: Container<HomeScreenState, HomeScreenEffect> =
+        container(HomeScreenState())
 
-    init {
-        intent {
-            flow { emit(getCategoriesUseCase()) }
-                .toLoadState()
-                .onEach {
-                    reduce { state.copy(categories = it) }
-                    if (it is LoadState.Success) {
-                        loadHotPosts(it.data.first(), Duration.WEEK)
-                    }
-                }
-                .launchIn(platformViewModelScope)
-        }
-
+    fun loadPage() {
+        loadCategories()
         loadBanners()
         loadTrendingCategories()
         loadRecentPosts()
@@ -81,45 +70,59 @@ class HomeScreenViewModel(
         loadScrappedPosts()
     }
 
-    fun loadBanners() = intent {
+    fun setHotPostSortState(hotPostSortState: HotPostSortState) = intent {
+        reduce { state.copy(hotPostSortState = LoadState.success(hotPostSortState)) }
+    }
+
+    private fun loadCategories() = intent {
+        flow { emit(getCategoriesUseCase()) }
+            .toLoadState()
+            .onEach { reduce { state.copy(categories = it) } }
+            .launchIn(platformViewModelScope)
+    }
+
+    private fun loadBanners() = intent {
         flow { emit(getBannerUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(banners = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadHotPosts(
-        category: Category,
-        duration: Duration,
-    ) = intent {
-        flow { emit(getHotPostsUseCase(category, duration)) }
+    fun loadHotPosts() = intent {
+        flow {
+            val hotPostSortState =
+                requireNotNull(container.stateFlow.value.hotPostSortState.getDataOrNull())
+            val category = (hotPostSortState.categoryState.type as CategoryType)
+            val duration = (hotPostSortState.periodState.type as PeriodType).toDuration()
+            emit(getHotPostsUseCase(category.id, duration))
+        }
             .toLoadState()
             .onEach { reduce { state.copy(hotPost = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadTrendingCategories() = intent {
+    private fun loadTrendingCategories() = intent {
         flow { emit(getTrendingCategoriesUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(trendingCategories = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadRecentPosts() = intent {
+    private fun loadRecentPosts() = intent {
         flow { emit(getRecentPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(recentPost = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadSelectedPosts() = intent {
+    private fun loadSelectedPosts() = intent {
         flow { emit(getSelectedPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(selectedPost = it) } }
             .launchIn(platformViewModelScope)
     }
 
-    fun loadScrappedPosts() = intent {
+    private fun loadScrappedPosts() = intent {
         flow { emit(getScrappedPostsUseCase()) }
             .toLoadState()
             .onEach { reduce { state.copy(scrappedPosts = it) } }

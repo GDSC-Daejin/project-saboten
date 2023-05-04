@@ -11,9 +11,9 @@ import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePost
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Duration
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.request.parameter
 import io.ktor.client.request.setBody
-import okio.ByteString.Companion.encodeUtf8
 import org.koin.core.annotation.Single
 
 interface PostApi : Api {
@@ -28,7 +28,7 @@ interface PostApi : Api {
 
     suspend fun scrapPost(postId: Long): ApiResponse<PostResponse>
 
-    suspend fun deletePost(postId: Int): ApiResponse<String>
+    suspend fun deletePost(postId: Long): ApiResponse<String>
 
     suspend fun getPost(postId: Long): ApiResponse<PostResponse>
 
@@ -49,16 +49,18 @@ interface PostApi : Api {
     suspend fun getRecentPosts(pagingRequest: PagingRequest): ApiResponse<PagingResponse<PostResponse>>
 
     suspend fun getSearchPosts(searchText: String, pagingRequest: PagingRequest): ApiResponse<PagingResponse<PostResponse>>
+
+    suspend fun getSearchedPostCount(searchText: String): ApiResponse<Long>
 }
 
 @Single(binds = [PostApi::class])
-class PostApiImp : PostApi {
+class PostApiImp(override val authTokenManager: AuthTokenManager) : PostApi {
 
     override suspend fun createPost(request: PostCreateRequest) =
         responsePost<PostResponse> { setBody(request) }
 
-    override suspend fun deletePost(postId: Int) =
-        responseDelete<String>(postId)
+    override suspend fun deletePost(postId: Long) =
+        responseDelete<String>("/$postId")
 
     override suspend fun getPost(postId: Long) =
         responseGet<PostResponse>("/$postId")
@@ -84,9 +86,9 @@ class PostApiImp : PostApi {
         categoryId: Long?,
         duration: Duration?,
         pagingRequest: PagingRequest,
-    ) = responseGet<PagingResponse<PostResponse>>("/hot") {
+    ) = responseGet<PagingResponse<PostResponse>>("/debate") {
         parameter("categoryId", categoryId)
-        parameter("duration", duration?.name)
+        parameter("duration", duration?.name ?: "ALL")
         pagingRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
     }
 
@@ -100,6 +102,12 @@ class PostApiImp : PostApi {
     ) = responseGet<PagingResponse<PostResponse>>("/search") {
         parameter("searchText", searchText)
         pagingRequest.toParameters().forEach { (key, value) -> parameter(key, value) }
+    }
+
+    override suspend fun getSearchedPostCount(searchText: String): ApiResponse<Long> {
+        return responseGet("/search/count") {
+            parameter("searchText", searchText)
+        }
     }
 
     override suspend fun getMyPosts(pagingRequest: PagingRequest) = responseGet<PagingResponse<PostResponse>>("/my") {

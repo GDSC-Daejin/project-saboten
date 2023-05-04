@@ -5,6 +5,7 @@ import common.model.reseponse.post.PostCountResponse
 import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePost
+import commonClient.utils.AuthTokenManager
 import org.koin.core.annotation.Single
 
 interface MyPageApi : Api {
@@ -16,7 +17,7 @@ interface MyPageApi : Api {
 }
 
 @Single(binds = [MyPageApi::class])
-class MyPageApiImp : MyPageApi {
+class MyPageApiImp(override val authTokenManager: AuthTokenManager) : MyPageApi {
 
     override suspend fun getMyPageCounts(): ApiResponse<PostCountResponse> {
         return responseGet("")

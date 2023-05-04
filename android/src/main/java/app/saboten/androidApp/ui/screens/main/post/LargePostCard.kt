@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -26,11 +24,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.saboten.androidApp.extensions.asDurationStringFromNow
 import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.post.vote.SelectedVoteItem
@@ -89,7 +87,7 @@ fun LargePostCard(
                             fontSize = 12.sp
                         )
                         Text(
-                            "24분전",
+                            post.createdAt.asDurationStringFromNow(),
                             fontSize = 10.sp,
                             color = SabotenColors.grey200
                         )
@@ -159,11 +157,11 @@ fun LargePostCard(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                LazyRow(
+                Row(
                     horizontalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    items(post.categories) {
-                        GroupItem(text = it.name)
+                    post.categories.take(2).forEach {
+                        GroupItem(it.name)
                     }
                 }
 

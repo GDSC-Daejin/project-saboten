@@ -8,6 +8,7 @@ import commonClient.data.remote.Api
 import commonClient.data.remote.responseGet
 import commonClient.data.remote.responsePost
 import commonClient.domain.entity.PagingRequest
+import commonClient.utils.AuthTokenManager
 import io.ktor.client.request.*
 import org.koin.core.annotation.Single
 
@@ -28,7 +29,7 @@ interface CommentApi : Api {
 }
 
 @Single(binds = [CommentApi::class])
-class CommentApiImp : CommentApi {
+class CommentApiImp(override val authTokenManager: AuthTokenManager) : CommentApi {
 
     override suspend fun postComment(postId: Long, content: String) = responsePost<CommentResponse>("/$postId/comment") {
         setBody(CommentCreateRequest(content))

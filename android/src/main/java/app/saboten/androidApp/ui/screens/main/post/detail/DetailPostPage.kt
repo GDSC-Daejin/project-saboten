@@ -1,5 +1,6 @@
 package app.saboten.androidApp.ui.screens.main.post.detail
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MoreVert
 import androidx.compose.material.icons.rounded.Send
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,11 +38,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import app.saboten.androidApp.ui.providers.LocalMeInfo
-import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.bars.ToolbarBackButton
@@ -51,8 +53,18 @@ import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.extensions.asDurationStringFromNow
+import app.saboten.androidApp.ui.destinations.PostSettingDialogDestination
+import app.saboten.androidApp.ui.dialog.PostSettingDialogResult
+import app.saboten.androidApp.ui.providers.MeInfo
+import app.saboten.androidUi.buttons.FilledButton
+import app.saboten.androidUi.dialogs.BasicDialog
+import app.saboten.androidUi.dialogs.DialogContentGravity
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
+import app.saboten.androidUi.styles.surfaceOver
+import com.ramcosta.composedestinations.result.NavResult
+import com.ramcosta.composedestinations.result.ResultRecipient
 import commonClient.presentation.post.DetailPostScreenEffect
 import org.orbitmvi.orbit.compose.collectSideEffect
 
@@ -61,31 +73,61 @@ import org.orbitmvi.orbit.compose.collectSideEffect
 fun DetailPostScreen(
     postId: Long,
     navigator: DestinationsNavigator,
+    resultRecipient: ResultRecipient<PostSettingDialogDestination, PostSettingDialogResult>
 ) {
     val viewModel = koinViewModel<DetailPostScreenViewModel>()
 
-    LaunchedEffect(true) {
+    val meState = LocalMeInfo.current
+
+    val context = LocalContext.current
+
+    LaunchedEffect(meState.needLogin) {
         viewModel.loadPost(postId)
     }
 
-    DetailPostPageContent(viewModel) {
+    DetailPostPageContent(viewModel, meState,
+    onBackPressed = {
         navigator.popBackStack()
+    },
+    onKebabButtonClicked = {
+        navigator.navigate(PostSettingDialogDestination)
+    })
+
+    resultRecipient.onNavResult { result ->
+        when (result) {
+            is NavResult.Canceled -> {
+
+            }
+
+            is NavResult.Value<PostSettingDialogResult> -> {
+                when (result.value) {
+                    is PostSettingDialogResult.Delete -> {
+                        viewModel.setShowDeletePostConfirmDialogState(true)
+                    }
+                    is PostSettingDialogResult.Modify -> {
+                        Toast.makeText(context, "준비 중인 기능입니다.", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
 }
 
 @Composable
 fun DetailPostPageContent(
     viewModel: DetailPostScreenViewModel,
+    meState: MeInfo,
     onBackPressed: () -> Unit,
+    onKebabButtonClicked: () -> Unit,
 ) {
+
+    val context = LocalContext.current
 
     val state by viewModel.collectAsState()
 
-    val meState = LocalMeInfo.current
-    val openLoginDialog = LocalOpenLoginDialogEffect.current
-
     var query by remember { mutableStateOf("") }
     var isPostingComment by remember { mutableStateOf(false) }
+    var isDeletingPost by remember { mutableStateOf(false) }
 
     val post = remember(state.post) { state.post.getDataOrNull() }
 
@@ -106,6 +148,21 @@ fun DetailPostPageContent(
             is DetailPostScreenEffect.CommentPostFailed -> {
                 isPostingComment = false
             }
+
+            is DetailPostScreenEffect.PostDeleting -> {
+                isDeletingPost = true
+            }
+
+            is DetailPostScreenEffect.PostDeleted -> {
+                isDeletingPost = false
+                Toast.makeText(context, "게시글이 삭제되었습니다.", Toast.LENGTH_SHORT).show()
+                onBackPressed()
+            }
+
+            is DetailPostScreenEffect.PostDeleteFailed -> {
+                isDeletingPost = false
+            }
+
         }
     }
 
@@ -113,10 +170,18 @@ fun DetailPostPageContent(
         topBar = {
             BasicTopBar(title = { /*TODO*/ }, navigationIcon = {
                 ToolbarBackButton(onBackPressed)
+            }, actions = {
+                if (post?.author?.id == meState.userInfo.getDataOrNull()?.id) {
+                    IconButton(onClick = {
+                        onKebabButtonClicked()
+                    }) {
+                        Icon(Icons.Rounded.MoreVert, null)
+                    }
+                }
             })
         },
         bottomBar = {
-            if (post != null && !meState.needLogin) {
+            if (post != null && meState.needLogin.not()) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -152,7 +217,12 @@ fun DetailPostPageContent(
                                 cursorBrush = SolidColor(MaterialTheme.colors.secondary),
                                 textStyle = MaterialTheme.typography.body1.copy(color = MaterialTheme.colors.onSurface),
                                 onValueChange = { query = it },
-                                keyboardActions = KeyboardActions { viewModel.postComment(post.id, query) },
+                                keyboardActions = KeyboardActions {
+                                    viewModel.postComment(
+                                        post.id,
+                                        query
+                                    )
+                                },
                                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Search)
                             )
 
@@ -183,6 +253,41 @@ fun DetailPostPageContent(
             }
         }
     ) {
+
+        if (isDeletingPost) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(24.dp),
+                color = MaterialTheme.colors.secondary
+            )
+        }
+
+        if (state.showDeletePostConfirmDialog) {
+            BasicDialog(
+                onDismissRequest = {
+                    viewModel.setShowDeletePostConfirmDialogState(false)
+                },
+                title = "정말 삭제하시겠어요??",
+                message = "삭제한 게시글은 다시 되돌릴 수 없어요!.",
+                positiveButton = {
+                    FilledButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        onClick = {
+                            viewModel.deletePost(post!!.id)
+                            viewModel.setShowDeletePostConfirmDialogState(false) },
+                        text = "확인"
+                    )
+                },
+                dialogContentGravity =  DialogContentGravity.Top,
+                negativeButton = {
+                    FilledButton(
+                        modifier = Modifier.fillMaxWidth(),
+                        backgroundColor = MaterialTheme.colors.surfaceOver,
+                        onClick = { viewModel.setShowDeletePostConfirmDialogState(false) },
+                        text = "취소"
+                    )
+                }
+            )
+        }
         if (post != null) {
             LazyColumn(
                 modifier = Modifier.padding(it),
@@ -192,16 +297,13 @@ fun DetailPostPageContent(
                             post = post,
                             onClicked = { /*TODO*/ },
                             onVoteClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestVote(post.id, it.id)
+                                viewModel.requestVote(post.id, it.id)
                             },
                             onScrapClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestScrap(post.id)
+                                viewModel.requestScrap(post.id)
                             },
                             onLikeClicked = {
-                                if (meState.needLogin) openLoginDialog()
-                                else viewModel.requestLike(post.id)
+                                viewModel.requestLike(post.id)
                             }) {
 
                         }
@@ -234,7 +336,7 @@ fun DetailPostPageContent(
                                     )
                                     Spacer(modifier = Modifier.height(2.dp))
                                     Text(
-                                        comment.createdAt,
+                                        comment.createdAt.asDurationStringFromNow(),
                                         fontSize = 10.sp,
                                         color = SabotenColors.grey400
                                     )

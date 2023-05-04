@@ -29,10 +29,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import app.saboten.androidApp.extensions.asDurationStringFromNow
+import app.saboten.androidApp.ui.providers.LocalMeInfo
+import app.saboten.androidApp.ui.screens.LocalOpenLoginDialogEffect
 import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
+import java.time.LocalDateTime
 
 @Composable
 fun SmallPostCard(
@@ -42,6 +46,10 @@ fun SmallPostCard(
     onLikeClicked: () -> Unit = {},
     onCommentClicked: () -> Unit = {}
 ) {
+
+    val meState = LocalMeInfo.current
+    val openLoginDialog = LocalOpenLoginDialogEffect.current
+
     Box(
         modifier = Modifier
             .width(320.dp)
@@ -80,7 +88,7 @@ fun SmallPostCard(
                                 fontSize = 12.sp
                             )
                             Text(
-                                post.createdAt,
+                                post.createdAt.asDurationStringFromNow(),
                                 fontSize = 10.sp,
                                 color = MaterialTheme.colors.onSurface.copy(0.5f)
                             )
@@ -91,7 +99,8 @@ fun SmallPostCard(
                         modifier = Modifier
                             .size(34.dp)
                             .clickable {
-                                onScrapClicked()
+                                if(meState.needLogin) openLoginDialog()
+                                else onScrapClicked()
                             },
                         imageVector = Icons.Rounded.Bookmark,
                         tint =
@@ -128,7 +137,8 @@ fun SmallPostCard(
                             .padding(2.dp)
                             .size(26.dp)
                             .clickable {
-                                onLikeClicked()
+                                if(meState.needLogin) openLoginDialog()
+                                else onLikeClicked()
                             },
                         imageVector = Icons.Rounded.Favorite,
                         contentDescription = "하트",

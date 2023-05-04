@@ -11,6 +11,7 @@ import commonClient.data.isSuccess
 import commonClient.domain.entity.PagingRequest
 import commonClient.domain.entity.post.Comment
 import commonClient.domain.entity.post.Post
+import commonClient.domain.usecase.post.DeletePostUseCase
 import commonClient.domain.usecase.post.GetPostByIdUseCase
 import commonClient.domain.usecase.post.RequestLikePostUseCase
 import commonClient.domain.usecase.post.RequestScrapPostUseCase
@@ -37,13 +38,18 @@ interface DetailPostScreenEffect {
     object CommentBlank : DetailPostScreenEffect
     object CommentPosting : DetailPostScreenEffect
     object CommentPosted : DetailPostScreenEffect
-
     object CommentPostFailed : DetailPostScreenEffect
+
+    object PostDeleting : DetailPostScreenEffect
+    object PostDeleted : DetailPostScreenEffect
+    object PostDeleteFailed : DetailPostScreenEffect
+
 }
 
 data class DetailPostScreenState(
     val post: LoadState<Post> = LoadState.idle(),
     val comments: Flow<PagingData<Comment>> = flowOf(),
+    val showDeletePostConfirmDialog: Boolean = false
 )
 
 @OptIn(FlowPreview::class, ExperimentalCoroutinesApi::class)
@@ -54,6 +60,7 @@ class DetailPostScreenViewModel(
     private val requestScrapPostUseCase: RequestScrapPostUseCase,
     private val requestVotePostUseCase: RequestVotePostUseCase,
     private val requestLikePostUseCase: RequestLikePostUseCase,
+    private val deletePostUseCase: DeletePostUseCase
 ) : PlatformViewModel<DetailPostScreenState, DetailPostScreenEffect>() {
 
     override val container: Container<DetailPostScreenState, DetailPostScreenEffect> =
@@ -107,7 +114,10 @@ class DetailPostScreenViewModel(
         intent {
             reduce {
                 val flow = createPager<Long, Comment>(20, -1) { key, _ ->
-                    val pagingResult = getPagedCommentForPostUseCase(state.post.getDataOrNull()?.id ?: -1, PagingRequest(page = key))
+                    val pagingResult = getPagedCommentForPostUseCase(
+                        state.post.getDataOrNull()?.id ?: -1,
+                        PagingRequest(page = key)
+                    )
                     PagingResult(
                         pagingResult.data,
                         currentKey = key ?: -1,
@@ -147,6 +157,33 @@ class DetailPostScreenViewModel(
         intent {
             val post = requestScrapPostUseCase(postId)
             onPostUpdated(post)
+        }
+    }
+
+    fun deletePost(postId: Long) {
+        intent {
+            flow { emit(deletePostUseCase(postId)) }
+                .toLoadState()
+                .onEach {
+                    if (it.isSuccess()) {
+                        postSideEffect(DetailPostScreenEffect.PostDeleted)
+                    }
+                    if (it.isLoading()) {
+                        postSideEffect(DetailPostScreenEffect.PostDeleting)
+                    }
+                    if (it.isFailed()) {
+                        postSideEffect(DetailPostScreenEffect.PostDeleteFailed)
+                    }
+                }
+                .launchIn(platformViewModelScope)
+        }
+    }
+
+    fun setShowDeletePostConfirmDialogState(show: Boolean) {
+        intent {
+            reduce {
+                state.copy(showDeletePostConfirmDialog = show)
+            }
         }
     }
 

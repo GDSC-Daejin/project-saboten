@@ -6,6 +6,7 @@ import common.model.reseponse.comment.CommentResponse
 import common.model.reseponse.post.PostResponse
 import common.model.reseponse.post.VoteResponse
 import commonClient.domain.entity.post.*
+import kotlinx.datetime.LocalDateTime
 
 fun PostResponse.toDomain(): Post {
     return Post(
@@ -17,8 +18,8 @@ fun PostResponse.toDomain(): Post {
         selectedVote,
         isScraped,
         isLiked,
-        createdAt,
-        updatedAt
+        LocalDateTime.parse(createdAt),
+        updatedAt?.let { LocalDateTime.parse(it) }
     )
 }
 
@@ -52,6 +53,6 @@ fun CommentResponse.toDomain(): Comment {
         text,
         author.toDomain(),
         selectedVote,
-        createdAt
+        LocalDateTime.parse(createdAt)
     )
 }

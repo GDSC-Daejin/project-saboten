@@ -23,9 +23,11 @@ import org.orbitmvi.orbit.compose.collectAsState
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
+import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.ToolbarBackButton
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import commonClient.domain.entity.post.toHotPostSortState
 
 enum class MoreScreenOption {
     HOT,
@@ -38,14 +40,23 @@ enum class MoreScreenOption {
 @Destination
 fun MoreScreen(
     option: MoreScreenOption,
+    initHotPostSortState: String?,
     navigator: DestinationsNavigator,
 ) {
 
     val viewModel = koinViewModel<MoreScreenViewModel>()
 
+    LaunchedEffect(true) {
+        initHotPostSortState?.toHotPostSortState()?.let {
+            viewModel.setHotPostSortState(it)
+        }
+    }
+
     val state by viewModel.collectAsState()
 
-    LaunchedEffect(true) {
+    val meState = LocalMeInfo.current
+
+    LaunchedEffect(meState.needLogin) {
         viewModel.setType(
             when (option) {
                 MoreScreenOption.HOT -> MoreScreenType.HOT
