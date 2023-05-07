@@ -12,6 +12,8 @@ public class BannerDto {
     private String bannerTItle;
     private String bannerSubtitle;
     private String bannerUrl;
+    private String bannerStartColor;
+    private String bannerEndColor;
     private CategoryDto category;
 
     public BannerResponse toBannerResponse() {
@@ -20,6 +22,8 @@ public class BannerDto {
                 this.bannerTItle,
                 this.bannerSubtitle,
                 this.category.getCategoryName(),
+                this.bannerStartColor,
+                this.bannerEndColor,
                 this.bannerUrl);
     }
 
@@ -28,6 +32,8 @@ public class BannerDto {
                 .bannerId(bannerId)
                 .bannerTitle(bannerTItle)
                 .bannerSubtitle(bannerSubtitle)
+                .bannerStartColor(bannerStartColor)
+                .bannerEndColor(bannerEndColor)
                 .category(category.toEntity())
                 .bannerUrl(bannerUrl)
                 .build();

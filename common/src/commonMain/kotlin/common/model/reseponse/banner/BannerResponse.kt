@@ -9,5 +9,7 @@ data class BannerResponse(
     @SerialName("title") val title: String,
     @SerialName("subtitle") val subtitle: String,
     @SerialName("category") val category: String,
+    @SerialName("start_color") val startColor: String,
+    @SerialName("end_color") val endColor: String,
     @SerialName("icon_url") val iconUrl: String
 )

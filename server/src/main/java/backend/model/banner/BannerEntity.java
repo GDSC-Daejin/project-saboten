@@ -39,6 +39,9 @@ public class BannerEntity {
     @Column(name = "banner_url", nullable = false)
     private String bannerUrl;
 
+    private String bannerStartColor;
+    private String bannerEndColor;
+
     @OneToOne(fetch = FetchType.LAZY)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "category_id", nullable = false)
@@ -49,6 +52,8 @@ public class BannerEntity {
                 .bannerId(bannerId)
                 .bannerTItle(bannerTitle)
                 .bannerSubtitle(bannerSubtitle)
+                .bannerStartColor(bannerStartColor)
+                .bannerEndColor(bannerEndColor)
                 .category(category.toDto())
                 .bannerUrl(bannerUrl)
                 .build();
