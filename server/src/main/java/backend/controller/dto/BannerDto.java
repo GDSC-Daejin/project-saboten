@@ -10,18 +10,25 @@ import lombok.Getter;
 public class BannerDto {
     private Long bannerId;
     private String bannerTItle;
-    private String bannerText;
+    private String bannerSubtitle;
     private String bannerUrl;
+    private CategoryDto category;
 
     public BannerResponse toBannerResponse() {
-        return new BannerResponse(this.bannerId, this.bannerTItle, this.bannerTItle, this.bannerUrl);
+        return new BannerResponse(
+                this.bannerId,
+                this.bannerTItle,
+                this.bannerSubtitle,
+                this.category.getCategoryName(),
+                this.bannerUrl);
     }
 
     public BannerEntity toEntity() {
         return BannerEntity.builder()
                 .bannerId(bannerId)
                 .bannerTitle(bannerTItle)
-                .bannerText(bannerText)
+                .bannerSubtitle(bannerSubtitle)
+                .category(category.toEntity())
                 .bannerUrl(bannerUrl)
                 .build();
     }
