@@ -1,6 +1,7 @@
 package app.saboten.androidApp.ui.screens.main.search
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,9 +42,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.R
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.BasicTopBar
@@ -234,29 +237,47 @@ fun SearchScreen(
                     }
                 }
 
-                items(items, key = { it.id }) { post ->
-                    val observableCache by viewModel.updatedPostCache.collectAsState()
-                    val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
-                    cachedPost?.let { nonNullPost ->
-                        LargePostCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            post = nonNullPost,
-                            onClicked = { navigator.navigate(DetailPostScreenDestination(postId = nonNullPost.id)) },
-                            onCommentClicked = {
+                if (state.totalCount == 0L) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                modifier = Modifier.size(200.dp),
+                                painter = painterResource(R.drawable.not_found_image),
+                                contentDescription = "검색된 항목이 없을 때 나타나는 이미지"
+                            )
+                        }
+                    }
+                } else {
+                    items(items, key = { it.id }) { post ->
+                        val observableCache by viewModel.updatedPostCache.collectAsState()
+                        val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                        cachedPost?.let { nonNullPost ->
+                            LargePostCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                post = nonNullPost,
+                                onClicked = { navigator.navigate(DetailPostScreenDestination(postId = nonNullPost.id)) },
+                                onCommentClicked = {
 
-                            },
-                            onVoteClicked = { vote ->
-                                viewModel.requestVote(
-                                    nonNullPost.id,
-                                    vote.id
-                                )
-                            },
-                            onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
-                            onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
-                        )
-                        Spacer(modifier = Modifier.height(20.dp))
+                                },
+                                onVoteClicked = { vote ->
+                                    viewModel.requestVote(
+                                        nonNullPost.id,
+                                        vote.id
+                                    )
+                                },
+                                onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                                onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
                     }
                 }
+
+
             }
 
         }
