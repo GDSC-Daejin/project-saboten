@@ -1,16 +1,22 @@
 package backend.model.banner;
 
 import backend.controller.dto.BannerDto;
+import backend.model.category.CategoryEntity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Builder
 @Getter
@@ -27,17 +33,23 @@ public class BannerEntity {
     @Column(name = "banner_title", nullable = false, length = 50)
     private String bannerTitle;
 
-    @Column(name = "banner_text", length = 50)
-    private String bannerText;
+    @Column(name = "banner_subtitle", nullable = false, length = 50)
+    private String bannerSubtitle;
 
     @Column(name = "banner_url", nullable = false)
     private String bannerUrl;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "category_id", nullable = false)
+    private CategoryEntity category;
 
     public BannerDto toDto() {
         return BannerDto.builder()
                 .bannerId(bannerId)
                 .bannerTItle(bannerTitle)
-                .bannerText(bannerText)
+                .bannerSubtitle(bannerSubtitle)
+                .category(category.toDto())
                 .bannerUrl(bannerUrl)
                 .build();
     }
