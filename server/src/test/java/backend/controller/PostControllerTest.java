@@ -190,7 +190,8 @@ class PostControllerTest {
             ResponseMessage responseMessage = PostResponseMessage.POST_FIND_ALL;
 
             // when then
-            mockMvc.perform(get(baseUrl))
+            mockMvc.perform(get(baseUrl)
+                            .param("categoryId", "10"))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.data.data").isArray())
                     .andExpect(jsonPath("$.data.data").isNotEmpty())

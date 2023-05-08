@@ -132,49 +132,23 @@ class PostController {
             notes = "기본적으로는 전체 게시물 리스트를 조회하지만 특정 카테고리에 해당하는 게시물 리스트를 조회할 수도 있습니다.")
     @ApiImplicitParam(name="categoryId", value="카테고리 id 입니다. (필터 역할)")
     @GetMapping("/post")
-    public ApiResponse<PagingResponse<PostResponse>> getPostList(@RequestParam(required = false) Long categoryId,
+    public ApiResponse<PagingResponse<PostReadResponse>> getPostList(@RequestParam Long categoryId,
                                                    @PageableDefault(sort = "registDate", direction = Direction.DESC) Pageable pageable){
-        Page<PostResponse> postPage;
+        Page<PostReadResponse> postPage;
         UserDto userDto = getUser();
 
-        if(categoryId != null){
-            CategoryDto categoryDto = categoryService.findCategory(categoryId);
-            postPage = categoryInPostService.findCategoryInPostPageByCategoryId(categoryDto.getCategoryId(), pageable)
-                    .map(categoryInPostDto -> {
-                        PostDto postDto = categoryInPostDto.getPost();
-                        Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-                        List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-
-                        Long userId = userDto != null ? userDto.getUserId() : null;
-                        Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
-                        boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
-
-                        return postDto.toResponse(voteService.findVotes(postDto.getPostId()),
-                                categories,
-                                voteResult,
-                                isLike,
-                                isScrap);
-                    });
+        if(categoryId == 10){ // 전체 게시물 조회
+            postPage = postService.findAllPageable(pageable)
+                    .map(postDto -> makeReadResponse(postDto, userDto));
         }
         else {
-            postPage = postService.findAllPageable(pageable).map(postDto -> {
-                Boolean isScrap = userDto != null ? postScrapService.findPostIsScrap(userDto.getUserId(), postDto.getPostId()) : false;
-                List<CategoryResponse> categories = categoryInPostService.findCategoriesInPost(postDto.getPostId());
-
-                Long userId = userDto != null ? userDto.getUserId() : null;
-                Long voteResult = voteSelectService.findVoteSelectResult(userId, postDto.getPostId());
-                boolean isLike = postLikeService.findPostIsLike(userId, postDto.getPostId());
-
-                return postDto.toResponse(voteService.findVotes(postDto.getPostId()),
-                        categories,
-                        voteResult,
-                        isLike,
-                        isScrap);
-            });
+            CategoryDto categoryDto = categoryService.findCategory(categoryId);
+            postPage = categoryInPostService.findCategoryInPostPageByCategoryId(categoryDto.getCategoryId(), pageable)
+                    .map(categoryInPostDto -> makeReadResponse(categoryInPostDto.getPost(), userDto));
         }
 
         Long nextPage = postPage.isLast() ? null : (long) postPage.getNumber() + 2;
-        PagingResponse<PostResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
+        PagingResponse<PostReadResponse> myPostPage = new PagingResponse<>(postPage.getContent(), nextPage, postPage.getTotalPages());
         return ApiResponse.withMessage(myPostPage, PostResponseMessage.POST_FIND_ALL);
     }
 

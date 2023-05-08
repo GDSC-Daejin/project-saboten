@@ -44,8 +44,7 @@ public class PostDto {
                 .build();
     }
 
-    public PostResponse toResponse(List<VoteResponse> votes, List<CategoryResponse> categories, Long voteResult,
-                                   Boolean isLike, Boolean isScrap) {
+    public PostResponse toResponse(List<VoteResponse> votes, List<CategoryResponse> categories, Long voteResult, Boolean isLike, Boolean isScrap) {
         return new PostResponse(
                 postId,
                 postText,
