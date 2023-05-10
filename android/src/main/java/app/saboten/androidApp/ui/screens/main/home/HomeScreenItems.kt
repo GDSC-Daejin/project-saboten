@@ -24,9 +24,11 @@ import androidx.compose.ui.unit.dp
 import app.saboten.androidUi.styles.SabotenColors
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.runtime.LaunchedEffect
 import app.saboten.androidUi.image.NetworkImage
 import commonClient.data.LoadState
 import commonClient.presentation.main.HomeScreenState
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreenTrendingItems(
@@ -53,6 +55,17 @@ fun HomeScreenTrendingItems(
                     .fillMaxWidth()
                     .aspectRatio(0.96f)
             ) {
+
+                LaunchedEffect(true) {
+                    while (true) {
+                        delay(2000)
+                        runCatching {
+                            pagerState.animateScrollToPage(
+                                page = if (pagerState.currentPage == banner.data.size - 1) 0 else pagerState.currentPage + 1,
+                            )
+                        }
+                    }
+                }
 
                 HorizontalPager(
                     state = pagerState,
