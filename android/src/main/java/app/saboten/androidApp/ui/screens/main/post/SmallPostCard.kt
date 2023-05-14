@@ -36,7 +36,6 @@ import app.saboten.androidUi.image.NetworkImage
 import app.saboten.androidUi.styles.SabotenColors
 import app.saboten.androidUi.utils.sabotenShadow
 import commonClient.domain.entity.post.Post
-import java.time.LocalDateTime
 
 @Composable
 fun SmallPostCard(
@@ -53,7 +52,7 @@ fun SmallPostCard(
     Box(
         modifier = Modifier
             .width(320.dp)
-            .height(200.dp)
+            .height(168.dp)
             .sabotenShadow()
             .background(
                 color = MaterialTheme.colors.surface,
@@ -110,13 +109,19 @@ fun SmallPostCard(
                 }
                 Spacer(modifier = Modifier.padding(vertical = 9.dp))
 
-                Text(
-                    text = post.text,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
-                )
+                Box(
+                    modifier = Modifier
+                        .height(45.dp),
+                    contentAlignment = Alignment.TopStart
+                ) {
+                    Text(
+                        text = post.text,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                    )
+                }
             }
 
             Row(
