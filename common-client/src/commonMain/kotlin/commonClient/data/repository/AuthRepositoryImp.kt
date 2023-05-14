@@ -43,6 +43,7 @@ class AuthRepositoryImp constructor(
                 refreshToken = refreshToken
             )
             emit(authApi.reissue(refreshTokenRequest).data?.run {
+                authTokenManager.setToken(this)
                 JwtToken(
                     grantType = grantType,
                     accessToken = accessToken,

@@ -70,19 +70,19 @@ class CategoryScreenViewModel(
         }
     }
 
-    fun scrap(postId: Long) = intent {
-        val post = requestScrapPostUseCase(postId)
-        updatePost(post)
+    fun requestScrap(postId: Long) = intent {
+        runCatching { requestScrapPostUseCase(postId) }
+            .onSuccess(::updatePost)
     }
 
-    fun like(postId: Long) = intent {
-        val post = requestLikePostUseCase(postId)
-        updatePost(post)
+    fun requestLike(postId: Long) = intent {
+        runCatching { requestLikePostUseCase(postId) }
+            .onSuccess(::updatePost)
     }
 
-    fun vote(postId: Long, voteId: Long) = intent {
-        val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-        updatePost(post)
+    fun requestVote(postId: Long, voteId: Long) = intent {
+        runCatching { requestVotePostUseCase(postId, VoteSelectRequest(voteId)) }
+            .onSuccess(::updatePost)
     }
 
     fun selectCategory(categoryId: Long?) = intent {

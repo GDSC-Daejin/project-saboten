@@ -57,7 +57,7 @@ fun SelectedVoteItem(
                 .padding(top = 14.dp)
                 .size(18.dp)
                 .clip(CircleShape)
-                .background(MaterialTheme.colors.surface),
+                .background(if (isSelected) Color.White else Color.Black.copy(0.1f)),
             contentAlignment = Alignment.Center
         ) {
             Text(
