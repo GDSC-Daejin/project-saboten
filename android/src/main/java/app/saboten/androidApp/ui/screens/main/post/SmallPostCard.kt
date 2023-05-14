@@ -96,14 +96,14 @@ fun SmallPostCard(
 
                     Icon(
                         modifier = Modifier
-                            .size(34.dp)
+                            .size(24.dp)
                             .clickable {
                                 if(meState.needLogin) openLoginDialog()
                                 else onScrapClicked()
                             },
                         imageVector = Icons.Rounded.Bookmark,
                         tint =
-                        if (post.isScraped == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f),
+                        if (post.isScraped == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.2f),
                         contentDescription = "북마크"
                     )
                 }
@@ -140,7 +140,7 @@ fun SmallPostCard(
                     Icon(
                         modifier = Modifier
                             .padding(2.dp)
-                            .size(26.dp)
+                            .size(24.dp)
                             .clickable {
                                 if(meState.needLogin) openLoginDialog()
                                 else onLikeClicked()
@@ -148,19 +148,19 @@ fun SmallPostCard(
                         imageVector = Icons.Rounded.Favorite,
                         contentDescription = "하트",
                         tint =
-                        if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.5f)
+                        if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.2f)
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 6.dp))
                     Icon(
                         modifier = Modifier
                             .padding(2.dp)
-                            .size(26.dp)
+                            .size(24.dp)
                             .clickable {
                                 onCommentClicked()
                             },
                         imageVector = Icons.Rounded.Forum,
                         contentDescription = "댓글",
-                        tint = MaterialTheme.colors.onSurface.copy(0.5f)
+                        tint = MaterialTheme.colors.onSurface.copy(0.2f)
                     )
                 }
             }

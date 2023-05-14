@@ -1,10 +1,8 @@
 package commonClient.domain.entity.post
 
-interface SortType {
-    val text: String
-}
+import kotlinx.serialization.Serializable
 
-enum class PeriodType(override val text: String) : SortType {
+enum class PeriodType(val text: String) {
     DAY("하루동안"),
     WEEK("일주일간"),
     MONTH("한달간"),
@@ -20,7 +18,8 @@ enum class PeriodType(override val text: String) : SortType {
     }
 }
 
-enum class CategoryType(override val text: String, val id: Long) : SortType {
+@Serializable
+enum class CategoryType(val text: String, val id: Long) {
     ALL("전체", 10),
     LOVE("연애", 1),
     SHOPPING("쇼핑", 4),

@@ -36,7 +36,7 @@ fun SortSelector(
             .height(26.dp)
             .clip(RoundedCornerShape(5.dp))
             .border(
-                width = 2.dp,
+                width = 1.dp,
                 color = SabotenColors.green500,
                 shape = RoundedCornerShape(5.dp)
             )
