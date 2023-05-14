@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
@@ -41,10 +42,10 @@ import commonClient.domain.entity.post.Vote
 
 @Composable
 fun LargePostCard(
-    modifier : Modifier = Modifier,
+    modifier: Modifier = Modifier,
     post: Post,
     onClicked: () -> Unit,
-    onVoteClicked : (Vote) -> Unit,
+    onVoteClicked: (Vote) -> Unit,
     onScrapClicked: () -> Unit,
     onLikeClicked: () -> Unit,
     onCommentClicked: () -> Unit
@@ -101,20 +102,29 @@ fun LargePostCard(
                             if (meState.needLogin) openLoginDialog() else onScrapClicked()
                         },
                     imageVector = Icons.Rounded.Bookmark,
-                    tint =
-                    if (post.isScraped == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.2f),
+                    tint = if (post.isScraped == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.2f),
                     contentDescription = "스크랩"
                 )
             }
-            Spacer(modifier = Modifier.padding(vertical = 9.dp))
 
-            Text(
-                text = post.text,
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+
+
+            Spacer(modifier = Modifier.padding(vertical = 8.dp))
+
+            Box(
+                modifier = Modifier
+                    .height(45.dp),
+                contentAlignment = Alignment.TopStart
+            ) {
+                Text(
+                    text = post.text,
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+
 
             Spacer(modifier = Modifier.padding(vertical = 8.dp))
 
@@ -124,7 +134,8 @@ fun LargePostCard(
                 SelectedVoteItem(
                     vote = post.voteResponses.first(),
                     onVoteItemClicked = {
-                        if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses.first()) },
+                        if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses.first())
+                    },
                     isFirst = true,
                     isSelected = post.selectedVote == post.voteResponses.first().id,
                     sum = sum
@@ -134,7 +145,11 @@ fun LargePostCard(
 
                 SelectedVoteItem(
                     vote = post.voteResponses[1],
-                    onVoteItemClicked = { if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses[1]) },
+                    onVoteItemClicked = {
+                        if (meState.needLogin) openLoginDialog() else onVoteClicked(
+                            post.voteResponses[1]
+                        )
+                    },
                     isFirst = false,
                     isSelected = post.selectedVote == post.voteResponses[1].id,
                     sum = sum
@@ -148,7 +163,7 @@ fun LargePostCard(
 
                 UnSelectedVoteItem(
                     post.voteResponses[1]
-                ) {if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses[1]) }
+                ) { if (meState.needLogin) openLoginDialog() else onVoteClicked(post.voteResponses[1]) }
             }
 
             Spacer(modifier = Modifier.padding(vertical = 9.dp))
@@ -177,9 +192,7 @@ fun LargePostCard(
                             },
                         imageVector = Icons.Rounded.Favorite,
                         contentDescription = "하트",
-                        tint =
-                        if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.2f)
-
+                        tint = if (post.isLiked == true) SabotenColors.green500 else MaterialTheme.colors.onSurface.copy(0.2f)
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 6.dp))
                     Icon(
