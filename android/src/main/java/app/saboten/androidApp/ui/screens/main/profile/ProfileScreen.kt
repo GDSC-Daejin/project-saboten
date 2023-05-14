@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
@@ -86,6 +87,7 @@ private fun ProfileScreenContent(
     })
 
     BasicScaffold(
+        modifier = Modifier.pullRefresh(state = ptrState),
         topBar = {
             BasicTopBar(
                 title = {
@@ -106,7 +108,6 @@ private fun ProfileScreenContent(
         LazyColumn(
             modifier = Modifier
                 .padding(it)
-                .pullRefresh(state = ptrState)
         ) {
             item {
 
@@ -162,6 +163,12 @@ private fun ProfileScreenContent(
 
         }
 
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            PullRefreshIndicator(
+                refreshing = state.isLoading,
+                state = ptrState
+            )
+        }
     }
 
 
@@ -266,7 +273,7 @@ private fun ProfileBannerUi() {
 private fun PostInfoBox(
     counts: LoadState<MyPageCount>,
     type: ProfileScreenState.ProfileType,
-    onTypeSelected: (ProfileScreenState.ProfileType) -> Unit
+    onTypeSelected: (ProfileScreenState.ProfileType) -> Unit,
 ) {
     val meState = LocalMeInfo.current
 
