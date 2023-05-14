@@ -4,9 +4,7 @@ import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
-import commonClient.domain.entity.post.CategoryType
 import commonClient.domain.entity.post.HotPostSortState
-import commonClient.domain.entity.post.PeriodType
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
@@ -61,14 +59,14 @@ class HomeScreenViewModel(
     override val container: Container<HomeScreenState, HomeScreenEffect> =
         container(HomeScreenState())
 
-    fun loadPage(isLoggedIn : Boolean) {
+    fun loadPage(isNeedLogIn : Boolean) {
         loadHotPosts()
         loadCategories()
         loadBanners()
         loadTrendingCategories()
         loadRecentPosts()
         // Need Login
-        if (isLoggedIn) {
+        if (isNeedLogIn.not()) {
             loadSelectedPosts()
             loadScrappedPosts()
         }
@@ -95,8 +93,8 @@ class HomeScreenViewModel(
     fun loadHotPosts() = intent {
         flow {
             val hotPostSortState = container.stateFlow.value.hotPostSortState
-            val category = (hotPostSortState.categoryState.type as CategoryType)
-            val duration = (hotPostSortState.periodState.type as PeriodType).toDuration()
+            val category = (hotPostSortState.categoryState.type)
+            val duration = (hotPostSortState.periodState.type).toDuration()
             emit(getHotPostsUseCase(category.id, duration))
         }
             .toLoadState()
