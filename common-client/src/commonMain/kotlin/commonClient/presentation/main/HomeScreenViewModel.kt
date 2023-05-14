@@ -4,9 +4,7 @@ import common.model.request.post.VoteSelectRequest
 import commonClient.data.LoadState
 import commonClient.domain.entity.banner.Banner
 import commonClient.domain.entity.post.Category
-import commonClient.domain.entity.post.CategoryType
 import commonClient.domain.entity.post.HotPostSortState
-import commonClient.domain.entity.post.PeriodType
 import commonClient.domain.entity.post.Post
 import commonClient.domain.usecase.banner.GetBannerUseCase
 import commonClient.domain.usecase.category.GetCategoriesUseCase
@@ -42,7 +40,7 @@ data class HomeScreenState(
     val recentPost: LoadState<List<Post>> = LoadState.idle(),
     val selectedPost: LoadState<List<Post>> = LoadState.idle(),
     val scrappedPosts: LoadState<List<Post>> = LoadState.idle(),
-    val hotPostSortState: LoadState<HotPostSortState> = LoadState.Success(HotPostSortState()),
+    val hotPostSortState: HotPostSortState = HotPostSortState(),
 )
 
 class HomeScreenViewModel(
@@ -61,17 +59,21 @@ class HomeScreenViewModel(
     override val container: Container<HomeScreenState, HomeScreenEffect> =
         container(HomeScreenState())
 
-    fun loadPage() {
+    fun loadPage(isNeedLogIn : Boolean) {
+        loadHotPosts()
         loadCategories()
         loadBanners()
         loadTrendingCategories()
         loadRecentPosts()
-        loadSelectedPosts()
-        loadScrappedPosts()
+        // Need Login
+        if (isNeedLogIn.not()) {
+            loadSelectedPosts()
+            loadScrappedPosts()
+        }
     }
 
     fun setHotPostSortState(hotPostSortState: HotPostSortState) = intent {
-        reduce { state.copy(hotPostSortState = LoadState.success(hotPostSortState)) }
+        reduce { state.copy(hotPostSortState = hotPostSortState) }
     }
 
     private fun loadCategories() = intent {
@@ -90,10 +92,9 @@ class HomeScreenViewModel(
 
     fun loadHotPosts() = intent {
         flow {
-            val hotPostSortState =
-                requireNotNull(container.stateFlow.value.hotPostSortState.getDataOrNull())
-            val category = (hotPostSortState.categoryState.type as CategoryType)
-            val duration = (hotPostSortState.periodState.type as PeriodType).toDuration()
+            val hotPostSortState = container.stateFlow.value.hotPostSortState
+            val category = (hotPostSortState.categoryState.type)
+            val duration = (hotPostSortState.periodState.type).toDuration()
             emit(getHotPostsUseCase(category.id, duration))
         }
             .toLoadState()
@@ -142,23 +143,24 @@ class HomeScreenViewModel(
 
     fun requestVote(postId: Long, voteId: Long) {
         intent {
-            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-            updatePost(post)
+            runCatching { requestVotePostUseCase(postId, VoteSelectRequest(voteId)) }
+                .onSuccess(::updatePost)
         }
     }
 
     fun requestLike(postId: Long) {
         intent {
-            val post = requestLikePostUseCase(postId)
-            updatePost(post)
+            runCatching { requestLikePostUseCase(postId) }
+                .onSuccess(::updatePost)
         }
     }
 
     fun requestScrap(postId: Long) {
         intent {
-            val post = requestScrapPostUseCase(postId)
-            updatePost(post)
+            runCatching { requestScrapPostUseCase(postId) }
+                .onSuccess(::updatePost)
         }
     }
+
 
 }

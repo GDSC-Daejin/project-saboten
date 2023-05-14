@@ -28,7 +28,7 @@ platform :android do
         slack(
            message: ":rocket: 싱싱한 빌드가 업로드 되었습니다. :cactus:",
            success: true,
-           slack_url: "https://hooks.slack.com/services/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",
+           slack_url: "https://hooks.slack.com/services/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",
            default_payloads: [:git_branch, :last_git_commit_message],
            attachment_properties: {
                fields: [

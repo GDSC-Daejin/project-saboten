@@ -45,14 +45,14 @@ fun CategoryScreen(
 
     val viewModel = koinViewModel<CategoryScreenViewModel>()
 
-    LaunchedEffect(true) {
-        viewModel.selectCategory(initSelectedItemId)
-    }
-
     val meState = LocalMeInfo.current
 
+    LaunchedEffect(true) {
+        viewModel.initSelectedCategory(initSelectedItemId)
+    }
+
     LaunchedEffect(meState.needLogin){
-        viewModel.selectCategory(null)
+        viewModel.refreshCurrentCategoryItems()
     }
 
     CategoryScreenContent(viewModel = viewModel) {
@@ -95,7 +95,7 @@ private fun CategoryScreenContent(
                         ) {
 
                             items(state.categories.getDataOrNull() ?: emptyList()) { item ->
-                                val itemId = if (item.id < 0) null else item.id
+                                val itemId = if (item.id < 0) 10 else item.id
                                 Surface(
                                     onClick = { viewModel.selectCategory(itemId) },
                                     color = if (state.selectedCategoryId == itemId) MaterialTheme.colors.secondary
@@ -141,9 +141,9 @@ private fun CategoryScreenContent(
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.vote(nonNullPost.id, vote.id) },
-                            onScrapClicked = { viewModel.scrap(nonNullPost.id) },
-                            onLikeClicked = { viewModel.like(nonNullPost.id) },
+                            onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
+                            onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                            onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }

@@ -57,7 +57,11 @@ fun AppScreen(globalAppViewModel: GlobalAppViewModel) {
     val bottomSheetNavigator = rememberBottomSheetNavigator()
     val navController = rememberAnimatedNavController(bottomSheetNavigator)
 
-    ModalBottomSheetLayout(bottomSheetNavigator) {
+    ModalBottomSheetLayout(
+        bottomSheetNavigator,
+
+        scrimColor = Color.Black.copy(alpha = 0.5f),
+    ) {
         CompositionLocalProvider(LocalOpenLoginDialogEffect provides {
             navController.navigate(LoginDialogDestination.route)
         }) {

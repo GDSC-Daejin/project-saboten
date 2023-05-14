@@ -12,6 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.rounded.ArrowForwardIos
 import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -58,6 +61,7 @@ fun ProfileScreen(
 
     LaunchedEffect(meState.needLogin) {
         viewModel.load()
+        viewModel.loadMyPageCount()
     }
 
     ProfileScreenContent(
@@ -77,7 +81,13 @@ private fun ProfileScreenContent(
 
     val state by viewModel.collectAsState()
 
+    val ptrState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
+        viewModel.load()
+        viewModel.loadMyPageCount()
+    })
+
     BasicScaffold(
+        modifier = Modifier.pullRefresh(state = ptrState),
         topBar = {
             BasicTopBar(
                 title = {
@@ -96,7 +106,8 @@ private fun ProfileScreenContent(
         val items = state.myPosts.collectAsLazyPagingItems()
 
         LazyColumn(
-            modifier = Modifier.padding(it),
+            modifier = Modifier
+                .padding(it)
         ) {
             item {
 
@@ -152,6 +163,12 @@ private fun ProfileScreenContent(
 
         }
 
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+            PullRefreshIndicator(
+                refreshing = state.isLoading,
+                state = ptrState
+            )
+        }
     }
 
 
@@ -256,20 +273,20 @@ private fun ProfileBannerUi() {
 private fun PostInfoBox(
     counts: LoadState<MyPageCount>,
     type: ProfileScreenState.ProfileType,
-    onTypeSelected: (ProfileScreenState.ProfileType) -> Unit
+    onTypeSelected: (ProfileScreenState.ProfileType) -> Unit,
 ) {
     val meState = LocalMeInfo.current
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 20.dp)
-            .height(90.dp)
+            .padding(20.dp)
             .border(
                 width = 1.dp,
-                color = SabotenColors.grey200,
+                color = MaterialTheme.colors.onSurface.copy(0.1f),
                 shape = RoundedCornerShape(10.dp)
-            ),
+            )
+            .padding(20.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -308,7 +325,7 @@ private fun PostInfoBox(
 }
 
 @Composable
-private fun TextWithCount(
+private fun RowScope.TextWithCount(
     text: String,
     isLoading: Boolean,
     count: Long? = null,
@@ -316,6 +333,7 @@ private fun TextWithCount(
     onSelect: () -> Unit = {},
 ) {
     Column(
+        modifier = Modifier.weight(1f),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -324,14 +342,14 @@ private fun TextWithCount(
                 modifier = Modifier
                     .size(40.dp)
                     .background(
-                        if (isSelected) SabotenColors.green500 else SabotenColors.grey200,
+                        if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.1f),
                         shape = CircleShape
                     )
                     .clickable { onSelect() },
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
-                    color = if (isSelected) Color.White else SabotenColors.grey600,
+                    color = if (isSelected) Color.White else MaterialTheme.colors.onSurface,
                     strokeWidth = 2.dp
                 )
             }
@@ -341,7 +359,7 @@ private fun TextWithCount(
                     modifier = Modifier
                         .size(40.dp)
                         .background(
-                            if (isSelected) SabotenColors.green500 else SabotenColors.grey200,
+                            if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.1f),
                             shape = CircleShape
                         )
                         .clickable { onSelect() },
@@ -350,7 +368,7 @@ private fun TextWithCount(
                     Text(
                         text = "$count",
                         fontSize = 20.sp,
-                        color = if (isSelected) Color.White else SabotenColors.grey600,
+                        color = if (isSelected) Color.White else MaterialTheme.colors.onSurface,
                     )
                 }
             } else {
@@ -365,8 +383,8 @@ private fun TextWithCount(
         Spacer(modifier = Modifier.padding(top = 10.dp))
         Text(
             text = text,
-            fontSize = 10.sp,
-            color = SabotenColors.grey600
+            fontSize = 12.sp,
+            color = if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.5f),
         )
     }
 }

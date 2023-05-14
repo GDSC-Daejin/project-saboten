@@ -40,18 +40,21 @@ import app.saboten.androidUi.bars.HeaderBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.ramcosta.composedestinations.annotation.Destination
+import com.ramcosta.composedestinations.annotation.RootNavGraph
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
 import com.ramcosta.composedestinations.result.NavResult
 import com.ramcosta.composedestinations.result.ResultRecipient
 import commonClient.domain.entity.post.HotPostSortState
 import commonClient.domain.entity.post.Post
-import commonClient.domain.entity.post.toHotPostSortState
 import commonClient.presentation.main.HomeScreenViewModel
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import org.koin.androidx.compose.koinViewModel
 import org.orbitmvi.orbit.compose.collectAsState
 
 @Composable
-@Destination(start = true)
+@Destination
+@RootNavGraph(start = true)
 fun HomeScreen(
     navigator: DestinationsNavigator,
     resultRecipient: ResultRecipient<SortHotPostDialogDestination, String>
@@ -59,16 +62,9 @@ fun HomeScreen(
 
     val vm = koinViewModel<HomeScreenViewModel>()
 
-    val hotPostSortState =
-        requireNotNull(vm.collectAsState().value.hotPostSortState.getDataOrNull())
-    LaunchedEffect(hotPostSortState) {
-        vm.loadHotPosts()
-    }
-
     val meState = LocalMeInfo.current
     LaunchedEffect(meState.needLogin) {
-        vm.loadHotPosts()
-        vm.loadPage()
+        vm.loadPage(meState.needLogin)
     }
 
     resultRecipient.onNavResult { result ->
@@ -78,15 +74,13 @@ fun HomeScreen(
             }
 
             is NavResult.Value<String> -> {
-                val newHotPostSortState = result.value.toHotPostSortState()
-                vm.setHotPostSortState(newHotPostSortState)
+                vm.setHotPostSortState(Json.decodeFromString(result.value))
             }
         }
     }
 
     HomeScreenContent(
         vm = vm,
-        hotPostSortState = hotPostSortState,
         onCategoryClicked = {
             navigator.navigate(CategoryScreenDestination(initSelectedItemId = it))
         },
@@ -97,7 +91,7 @@ fun HomeScreen(
             navigator.navigate(MoreScreenDestination(option, initHotPostSortState))
         },
         onSortHotPostDialogSelectorClicked = {
-            navigator.navigate(SortHotPostDialogDestination(hotPostSortState.toJsonString()))
+            navigator.navigate(SortHotPostDialogDestination(it))
         }
     )
 }
@@ -105,11 +99,10 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     vm: HomeScreenViewModel,
-    hotPostSortState: HotPostSortState,
     onCategoryClicked: (Long) -> Unit = {},
     onPostClicked: (Post) -> Unit = {},
-    onMorePostClicked: (MoreScreenOption, String?) -> Unit = { _, _ -> },
-    onSortHotPostDialogSelectorClicked: () -> Unit = {},
+    onMorePostClicked: (MoreScreenOption, HotPostSortState?) -> Unit = { _, _ -> },
+    onSortHotPostDialogSelectorClicked: (HotPostSortState) -> Unit = {},
 ) {
 
     val state by vm.collectAsState()
@@ -168,7 +161,7 @@ fun HomeScreenContent(
                 state.hotPost.getDataOrNull()?.let { posts ->
                     item {
                         HeaderBar(title = "뜨거웠던 고민거리", moreButtonText = "더보기", moreButtonAction = {
-                            onMorePostClicked(MoreScreenOption.HOT, hotPostSortState.toJsonString())
+                            onMorePostClicked(MoreScreenOption.HOT, state.hotPostSortState)
                         })
                     }
 
@@ -178,8 +171,8 @@ fun HomeScreenContent(
                                 .padding(start = 20.dp)
                                 .padding(bottom = 8.dp)
                         ) {
-                            SortSelector(hotPostSortState) {
-                                onSortHotPostDialogSelectorClicked()
+                            SortSelector(state.hotPostSortState) {
+                                onSortHotPostDialogSelectorClicked(state.hotPostSortState)
                             }
                         }
                     }

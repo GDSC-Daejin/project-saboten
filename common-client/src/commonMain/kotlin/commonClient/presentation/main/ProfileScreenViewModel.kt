@@ -41,6 +41,9 @@ data class ProfileScreenState(
     val myPageCount: LoadState<MyPageCount> = LoadState.Idle(),
     val myPosts: Flow<PagingData<Post>> = flowOf(),
 ) {
+
+    val isLoading get() = myPageCount is LoadState.Loading
+
     enum class ProfileType {
         MY_POSTS,
         SCRAPPED_POSTS,
@@ -64,12 +67,11 @@ class ProfileScreenViewModel(
     fun load(type: ProfileScreenState.ProfileType = ProfileScreenState.ProfileType.MY_POSTS) {
         intent {
             reduce { state.copy(selectedType = type) }
-            loadMyPageCount()
             loadMyPagePosts(type)
         }
     }
 
-    private fun loadMyPageCount() {
+    fun loadMyPageCount() {
         intent {
             flow { emit(getMyPageCountUseCase()) }
                 .toLoadState()
@@ -133,25 +135,19 @@ class ProfileScreenViewModel(
         }
     }
 
-    fun requestVote(postId: Long, voteId: Long) {
-        intent {
-            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-            updatePost(post)
-        }
+    fun requestScrap(postId: Long) = intent {
+        runCatching { requestScrapPostUseCase(postId) }
+            .onSuccess(::updatePost)
     }
 
-    fun requestLike(postId: Long) {
-        intent {
-            val post = requestLikePostUseCase(postId)
-            updatePost(post)
-        }
+    fun requestLike(postId: Long) = intent {
+        runCatching { requestLikePostUseCase(postId) }
+            .onSuccess(::updatePost)
     }
 
-    fun requestScrap(postId: Long) {
-        intent {
-            val post = requestScrapPostUseCase(postId)
-            updatePost(post)
-        }
+    fun requestVote(postId: Long, voteId: Long) = intent {
+        runCatching { requestVotePostUseCase(postId, VoteSelectRequest(voteId)) }
+            .onSuccess(::updatePost)
     }
 
 }

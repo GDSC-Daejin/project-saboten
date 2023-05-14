@@ -37,7 +37,7 @@ interface CategoryScreenEffect {
 
 data class CategoryScreenState(
     val categories: LoadState<List<Category>> = LoadState.idle(),
-    val selectedCategoryId: Long? = null,
+    val selectedCategoryId: Long = 10,
     val items: Flow<PagingData<Post>> = flowOf(),
 )
 
@@ -50,69 +50,71 @@ class CategoryScreenViewModel(
     private val requestLikePostUseCase: RequestLikePostUseCase,
 ) : PlatformViewModel<CategoryScreenState, CategoryScreenEffect>() {
 
-    override val container: Container<CategoryScreenState, CategoryScreenEffect> = container(CategoryScreenState())
+    override val container: Container<CategoryScreenState, CategoryScreenEffect> =
+        container(CategoryScreenState())
 
     init {
         intent {
             flow { emit(getCategoriesUseCase()) }
                 .toLoadState()
                 .onEach { categories ->
-                    categories.getDataOrNull()?.firstOrNull()?.id?.let { selectCategory(it) }
-                    // 전체 보여주기
-                    val pager = createPagerByCategoryId(null)
                     reduce {
-                        state.copy(
-                            categories = categories,
-                            items = pager.pagingData.cachedIn(platformViewModelScope)
-                        )
+                        state.copy(categories = categories)
                     }
                 }.launchIn(platformViewModelScope)
         }
     }
 
-    fun scrap(postId: Long) = intent {
-        val post = requestScrapPostUseCase(postId)
-        updatePost(post)
+    fun requestScrap(postId: Long) = intent {
+        runCatching { requestScrapPostUseCase(postId) }
+            .onSuccess(::updatePost)
     }
 
-    fun like(postId: Long) = intent {
-        val post = requestLikePostUseCase(postId)
-        updatePost(post)
+    fun requestLike(postId: Long) = intent {
+        runCatching { requestLikePostUseCase(postId) }
+            .onSuccess(::updatePost)
     }
 
-    fun vote(postId: Long, voteId: Long) = intent {
-        val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-        updatePost(post)
+    fun requestVote(postId: Long, voteId: Long) = intent {
+        runCatching { requestVotePostUseCase(postId, VoteSelectRequest(voteId)) }
+            .onSuccess(::updatePost)
     }
 
-    fun selectCategory(categoryId: Long?) = intent {
+    fun selectCategory(categoryId: Long) = intent {
         val pager = createPagerByCategoryId(categoryId)
         reduce {
-
-            if (categoryId == null) {
-                state.copy(
-                    selectedCategoryId = container.stateFlow.value.selectedCategoryId,
-                    items = pager.pagingData.cachedIn(platformViewModelScope)
-                )
-            } else {
-                state.copy(
-                    selectedCategoryId = categoryId,
-                    items = pager.pagingData.cachedIn(platformViewModelScope)
-                )
-            }
-
+            state.copy(
+                selectedCategoryId = categoryId,
+                items = pager.pagingData.cachedIn(platformViewModelScope)
+            )
         }
     }
 
-    private fun createPagerByCategoryId(categoryId: Long?) = createPager<Long, Post>(20, -1) { key, _ ->
-        val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(page = key))
-        PagingResult(
-            pagingResult.data,
-            currentKey = key ?: -1,
-            prevKey = { null },
-            nextKey = { pagingResult.nextKey }
-        )
+    fun initSelectedCategory(categoryId: Long) = intent {
+        reduce {
+            state.copy(selectedCategoryId = categoryId)
+        }
     }
+
+    fun refreshCurrentCategoryItems() = intent {
+        val pager = createPagerByCategoryId(state.selectedCategoryId)
+        reduce {
+            state.copy(
+                items = pager.pagingData.cachedIn(platformViewModelScope)
+            )
+        }
+    }
+
+    private fun createPagerByCategoryId(categoryId: Long) =
+        createPager<Long, Post>(20, -1) { key, _ ->
+            val pagingResult = getPagedPostsByCategoryUseCase(categoryId, PagingRequest(page = key))
+            PagingResult(
+                pagingResult.data,
+                currentKey = key ?: -1,
+                prevKey = { null },
+                nextKey = { pagingResult.nextKey }
+            )
+        }
 
     private val _updatedPostCache = MutableStateFlow(mutableListOf<Post>())
     val updatedPostCache: StateFlow<List<Post>> = _updatedPostCache

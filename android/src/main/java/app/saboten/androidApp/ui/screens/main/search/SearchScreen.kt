@@ -1,6 +1,8 @@
 package app.saboten.androidApp.ui.screens.main.search
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,11 +43,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
+import app.saboten.androidApp.R
 import app.saboten.androidApp.ui.destinations.DetailPostScreenDestination
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
+import app.saboten.androidApp.ui.screens.main.search.card.RankSection
 import app.saboten.androidUi.bars.BasicTopBar
 import app.saboten.androidUi.scaffolds.BasicScaffold
 import com.ramcosta.composedestinations.annotation.Destination
@@ -82,7 +87,8 @@ fun SearchScreen(
 
             stickyHeader {
                 Surface(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth()
+                        .background(color = MaterialTheme.colors.background),
                     color = MaterialTheme.colors.surface,
                     border = BorderStroke(1.dp, MaterialTheme.colors.secondary),
                     shape = MaterialTheme.shapes.medium
@@ -138,7 +144,8 @@ fun SearchScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 10.dp)
+                            .background(color = MaterialTheme.colors.background)
+                            .padding(top = 10.dp)
                     ) {
                         Box(modifier = Modifier.fillMaxWidth()) {
                             Text(
@@ -196,6 +203,40 @@ fun SearchScreen(
                 }
             }
 
+            item {
+                if (query.isEmpty()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(start = 2.dp, end = 2.dp, bottom = 20.dp)
+                    ) {
+
+                        // TODO: 서버에서 인기 주제 가져오기
+                        RankSection(
+                            SectionTitle = "실시간 인기 주제", contentList =
+                            listOf(
+                                "똥구멍에 이빨이 난다면",
+                                "당신은 고친놈인가 감친놈인가",
+                                "100억 받고 똥먹기 vs 100억 받고 똥먹기",
+                            )
+                        )
+
+                        // TODO: 서버에서 인기 카테고리 가져오기
+                        RankSection(
+                            SectionTitle = "실시간 인기 카테고리", contentList =
+                            listOf(
+                                "음식",
+                                "연애",
+                                "MBTI",
+                            )
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+
+            }
+
             if (
                 state.totalCount != null
                 && state.lastSearchedQuery != null
@@ -234,35 +275,55 @@ fun SearchScreen(
                     }
                 }
 
-                items(items, key = { it.id }) { post ->
-                    val observableCache by viewModel.updatedPostCache.collectAsState()
-                    val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
-                    cachedPost?.let { nonNullPost ->
-                        LargePostCard(
-                            modifier = Modifier.fillMaxWidth(),
-                            post = nonNullPost,
-                            onClicked = { navigator.navigate(DetailPostScreenDestination(postId = nonNullPost.id)) },
-                            onCommentClicked = {
+                if (state.totalCount == 0L) {
+                    item {
+                        Box(
+                            modifier = Modifier
+                                .fillParentMaxSize(),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                modifier = Modifier.size(200.dp),
+                                painter = painterResource(R.drawable.not_found_image),
+                                contentDescription = "검색된 항목이 없을 때 나타나는 이미지"
+                            )
+                        }
+                    }
+                } else {
+                    items(items, key = { it.id }) { post ->
+                        val observableCache by viewModel.updatedPostCache.collectAsState()
+                        val cachedPost = observableCache.firstOrNull { post?.id == it.id } ?: post
+                        cachedPost?.let { nonNullPost ->
+                            LargePostCard(
+                                modifier = Modifier.fillMaxWidth(),
+                                post = nonNullPost,
+                                onClicked = { navigator.navigate(DetailPostScreenDestination(postId = nonNullPost.id)) },
+                                onCommentClicked = {
 
-                            },
-                            onVoteClicked = { vote ->
-                                viewModel.requestVote(
-                                    nonNullPost.id,
-                                    vote.id
-                                )
-                            },
-                            onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
-                            onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
-                        )
+                                },
+                                onVoteClicked = { vote ->
+                                    viewModel.requestVote(
+                                        nonNullPost.id,
+                                        vote.id
+                                    )
+                                },
+                                onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                                onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
+                            )
+                            Spacer(modifier = Modifier.height(20.dp))
+                        }
+                    }
+                    item {
                         Spacer(modifier = Modifier.height(20.dp))
                     }
                 }
+
+
             }
 
         }
 
 
     }
-
 
 }
