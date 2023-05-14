@@ -141,9 +141,9 @@ private fun CategoryScreenContent(
                             onCommentClicked = {
 
                             },
-                            onVoteClicked = { vote -> viewModel.vote(nonNullPost.id, vote.id) },
-                            onScrapClicked = { viewModel.scrap(nonNullPost.id) },
-                            onLikeClicked = { viewModel.like(nonNullPost.id) },
+                            onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
+                            onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
+                            onLikeClicked = { viewModel.requestLike(nonNullPost.id) },
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                     }

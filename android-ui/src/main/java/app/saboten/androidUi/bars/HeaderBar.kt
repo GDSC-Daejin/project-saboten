@@ -25,7 +25,7 @@ fun HeaderBar(
         Text(
             modifier = Modifier.align(Alignment.CenterStart),
             text = title,
-            style = MaterialTheme.typography.subtitle1
+            style = MaterialTheme.typography.h6
         )
         if (moreButtonText != null) {
             TextOnlyButton(

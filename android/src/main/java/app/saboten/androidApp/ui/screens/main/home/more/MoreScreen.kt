@@ -27,7 +27,7 @@ import app.saboten.androidApp.ui.providers.LocalMeInfo
 import app.saboten.androidApp.ui.screens.main.post.LargePostCard
 import app.saboten.androidUi.bars.ToolbarBackButton
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import commonClient.domain.entity.post.toHotPostSortState
+import commonClient.domain.entity.post.HotPostSortState
 
 enum class MoreScreenOption {
     HOT,
@@ -40,14 +40,14 @@ enum class MoreScreenOption {
 @Destination
 fun MoreScreen(
     option: MoreScreenOption,
-    initHotPostSortState: String?,
+    initHotPostSortState: HotPostSortState?,
     navigator: DestinationsNavigator,
 ) {
 
     val viewModel = koinViewModel<MoreScreenViewModel>()
 
     LaunchedEffect(true) {
-        initHotPostSortState?.toHotPostSortState()?.let {
+        initHotPostSortState?.let {
             viewModel.setHotPostSortState(it)
         }
     }

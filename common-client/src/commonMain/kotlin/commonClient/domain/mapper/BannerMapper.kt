@@ -6,6 +6,6 @@ import commonClient.domain.entity.banner.Banner
 fun BannerResponse.toDomain() = Banner(
     id = id,
     title = title,
-    text = text,
+    text = subtitle,
     iconUrl = iconUrl,
 )

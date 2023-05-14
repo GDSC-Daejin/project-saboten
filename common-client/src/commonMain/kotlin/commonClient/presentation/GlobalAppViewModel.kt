@@ -3,6 +3,7 @@ package commonClient.presentation
 import common.coroutines.PlatformDispatchers
 import commonClient.data.LoadState
 import commonClient.data.isFailed
+import commonClient.data.isSuccess
 import commonClient.data.map
 import commonClient.domain.entity.settings.AppTheme
 import commonClient.domain.entity.user.UserInfo
@@ -49,33 +50,34 @@ class GlobalAppViewModel(
     */
     private fun initializeApp() = intent {
 
-        platformViewModelScope.launch(PlatformDispatchers.IO) {
-            kotlin.runCatching { getMeUseCase() }
+        platformViewModelScope.launch {
             observeMeUseCase()
                 .toLoadState()
-                .onEach {
-                    reduce { state.copy(meState = it) }
-                }
+                .onEach { reduce { state.copy(meState = it) } }
                 .collect()
         }
 
-        platformViewModelScope.launch(PlatformDispatchers.IO) {
+        platformViewModelScope.launch {
             observeAppThemeSettingsUseCase()
                 .filterNotNull()
-                .onEach {
-                    reduce { state.copy(appTheme = it) }
-                }
+                .onEach { reduce { state.copy(appTheme = it) } }
                 .collect()
         }
 
-        platformViewModelScope.launch(PlatformDispatchers.IO) {
+        platformViewModelScope.launch {
             refreshTokenUseCase(true)
                 .toLoadState()
                 .onEach { refreshTokenState ->
-                    if (refreshTokenState.isFailed()) postSideEffect(GlobalAppSideEffect.ShowNetworkErrorUi)
-                    reduce {
-                        state.copy(appLoadingState = refreshTokenState.map { })
+
+                    if (refreshTokenState.isFailed()) {
+                        postSideEffect(GlobalAppSideEffect.ShowNetworkErrorUi)
                     }
+
+                    if (refreshTokenState.isSuccess()) {
+                        kotlin.runCatching { getMeUseCase() }
+                    }
+
+                    reduce { state.copy(appLoadingState = refreshTokenState.map { }) }
                 }
                 .collect()
         }

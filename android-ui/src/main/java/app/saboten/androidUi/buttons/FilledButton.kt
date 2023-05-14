@@ -23,7 +23,7 @@ fun FilledButton(
     shape: Shape = MaterialTheme.shapes.small,
     backgroundColor: Color = MaterialTheme.colors.primary,
     icon: ImageVector? = null,
-    text: String
+    text: String,
 ) {
     Button(
         onClick, modifier.height(DEFAULT_BUTTON_HEIGHT), enabled,
@@ -36,7 +36,10 @@ fun FilledButton(
                     Icon(imageVector = icon, contentDescription = text, tint = Color.Unspecified)
                     Spacer(modifier = Modifier.width(20.dp))
                 }
-                Text(text)
+                Text(
+                    text,
+                    style = MaterialTheme.typography.subtitle1
+                )
             }
         }
     )

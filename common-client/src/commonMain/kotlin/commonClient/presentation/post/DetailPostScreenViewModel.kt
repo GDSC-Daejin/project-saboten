@@ -141,22 +141,22 @@ class DetailPostScreenViewModel(
 
     fun requestVote(postId: Long, voteId: Long) {
         intent {
-            val post = requestVotePostUseCase(postId, VoteSelectRequest(voteId))
-            onPostUpdated(post)
+            runCatching { requestVotePostUseCase(postId, VoteSelectRequest(voteId)) }
+                .onSuccess(onPostUpdated)
         }
     }
 
     fun requestLike(postId: Long) {
         intent {
-            val post = requestLikePostUseCase(postId)
-            onPostUpdated(post)
+            runCatching {  requestLikePostUseCase(postId) }
+                .onSuccess(onPostUpdated)
         }
     }
 
     fun requestScrap(postId: Long) {
         intent {
-            val post = requestScrapPostUseCase(postId)
-            onPostUpdated(post)
+            runCatching { requestScrapPostUseCase(postId) }
+                .onSuccess(onPostUpdated)
         }
     }
 
