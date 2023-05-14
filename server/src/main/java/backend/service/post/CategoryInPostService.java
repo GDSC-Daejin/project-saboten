@@ -3,6 +3,7 @@ package backend.service.post;
 import backend.controller.dto.CategoryDto;
 import backend.controller.dto.CategoryInPostDto;
 import backend.controller.dto.PostDto;
+import backend.model.category.CategoryCountEntity;
 import backend.model.category.CategoryEntity;
 import backend.model.post.CategoryInPostEntity;
 import backend.model.post.PostEntity;
@@ -10,6 +11,11 @@ import backend.repository.post.CategoryInPostRepository;
 import backend.util.DurationUtil;
 import common.model.request.Duration;
 import common.model.reseponse.category.CategoryResponse;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +39,15 @@ public class CategoryInPostService {
             categories.add(categoryInPostEntity.getCategory().toDto().toCategoryResponse());
         }
         return categories;
+    }
+    public List<CategoryResponse> findHotCategories() {
+        List<CategoryCountEntity> categoryEntities = categoryInPostRepository.countCategoriesGroupByPostId();
+        for(CategoryCountEntity categoryCountEntity : categoryEntities) {
+            System.out.println(categoryCountEntity.getCategory().getCategoryName() + " " + categoryCountEntity.getCount());
+        }
+        return categoryEntities.stream()
+                .map(categoryCountEntity -> categoryCountEntity.getCategory().toDto().toCategoryResponse())
+                .toList();
     }
 
     @Transactional
