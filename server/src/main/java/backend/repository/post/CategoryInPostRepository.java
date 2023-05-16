@@ -20,8 +20,6 @@ public interface CategoryInPostRepository extends JpaRepository<CategoryInPostEn
 
     void deleteAllByPost(PostEntity post);
 
-//    @Query("SELECT c as category, COUNT(cip) as count FROM CategoryInPostEntity cip, CategoryEntity c GROUP BY c.categoryId order by count(cip) desc")
     @Query("SELECT c as category, COUNT(cip) as count FROM CategoryInPostEntity cip INNER JOIN CategoryEntity c ON cip.category.categoryId = c.categoryId GROUP BY c.categoryId order by count(cip) desc")
     List<CategoryCountEntity> countCategoriesGroupByPostId();
-//     @Query("select cip.category as category, count(cip.post.postId) as count from CategoryInPostEntity cip group by cip.category order by count(cip.post.postId) desc")
 }
