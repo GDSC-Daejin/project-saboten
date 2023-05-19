@@ -82,7 +82,7 @@ private fun ProfileScreenContent(
     val state by viewModel.collectAsState()
 
     val ptrState = rememberPullRefreshState(refreshing = state.isLoading, onRefresh = {
-        viewModel.load()
+        viewModel.load(state.selectedType)
         viewModel.loadMyPageCount()
     })
 
