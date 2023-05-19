@@ -341,10 +341,9 @@ private fun RowScope.TextWithCount(
             Box(
                 modifier = Modifier
                     .size(40.dp)
+                    .clip(shape = CircleShape)
                     .background(
-                        if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.1f),
-                        shape = CircleShape
-                    )
+                        if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.1f))
                     .clickable { onSelect() },
                 contentAlignment = Alignment.Center
             ) {
@@ -358,10 +357,8 @@ private fun RowScope.TextWithCount(
                 Box(
                     modifier = Modifier
                         .size(40.dp)
-                        .background(
-                            if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.1f),
-                            shape = CircleShape
-                        )
+                        .clip(shape = CircleShape)
+                        .background(if (isSelected) MaterialTheme.colors.secondary else MaterialTheme.colors.onSurface.copy(0.1f))
                         .clickable { onSelect() },
                     contentAlignment = Alignment.Center
                 ) {
