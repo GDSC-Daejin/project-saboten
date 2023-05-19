@@ -139,7 +139,7 @@ private fun CategoryScreenContent(
                             post = nonNullPost,
                             onClicked = { onPostClicked(nonNullPost) },
                             onCommentClicked = {
-
+                                onPostClicked(nonNullPost)
                             },
                             onVoteClicked = { vote -> viewModel.requestVote(nonNullPost.id, vote.id) },
                             onScrapClicked = { viewModel.requestScrap(nonNullPost.id) },
